@@ -1,0 +1,28 @@
+<script setup lang="ts">
+import Button from '@/components/ui/button/Button.vue';
+import { ChevronRight } from 'lucide-vue-next';
+import { useLearningStore } from '@/stores/learning';
+
+const learningStore = useLearningStore();
+</script>
+
+<template>
+    <div class="bg-secondary/40 flex-2/3 rounded-lg overflow-y-auto">
+
+        <div class="p-10 ">
+            <div class="text-2xl font-bold mb-2">{{ learningStore.selectedModule.title }}</div>
+            <hr class="border-background mb-4">
+            <component :is="learningStore.selectedModule.component" />
+        </div>
+        <hr class="border-background">
+        <div class="p-10">
+            <Button class="bg-accent" size="lg">
+                <p class="font-bold text-white">Next</p>
+                <ChevronRight class="text-primary"></ChevronRight>
+            </Button>
+        </div>
+        
+
+    </div>
+</template>
+
