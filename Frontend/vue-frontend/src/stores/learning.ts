@@ -1,43 +1,55 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { lessons } from '@/data/lessons'
+import type { Module, Lesson } from '@/stores/types/learning'
 
-import WhatPhishing from '@/views/Learn/Phishing/Modules/WhatPhishing.vue'
-import EmailPhishing from '@/views/Learn/Phishing/Modules/EmailPhishing.vue'
-import WebsitePhishing from '@/views/Learn/Phishing/Modules/WebsitePhishing.vue'
-import SocialMediaPhishing from '@/views/Learn/Phishing/Modules/SocialMediaPhishing.vue'
-import VoicePhishing from '@/views/Learn/Phishing/Modules/VoicePhishing.vue'
-import SmsPhishing from '@/views/Learn/Phishing/Modules/SmsPhishing.vue'
-import HowToProtect from '@/views/Learn/Phishing/Modules/HowToProtect.vue'
-import Introduction from '@/views/Learn/Phishing/Modules/introduction.vue'
-
-export interface Module {
-  title: string
-  routerLink: string
-  interactive?: boolean
-  component: object
-}
-
-export const useLearningStore = defineStore('learning', () => {
-  const phishingModules = ref<Module[]>([
-    {
-      title: 'Introduction to Social Engineering',
-      routerLink: 'phishing1',
-      interactive: true,
-      component: Introduction
+export const useLearningStore = defineStore('learning', {
+  state: () => ({
+    lessons: lessons,
+    currentLessonId: null as string | null,
+    selectedModule: null as Module | null
+  }),
+  getters: {
+    currentLesson: (state): Lesson | null => {
+      if (!state.currentLessonId) return null
+      return state.lessons[state.currentLessonId]
     },
-    { title: 'Email Phishing', routerLink: 'phishing1', component: EmailPhishing },
-    { title: 'Website Phishing', routerLink: 'phishing1', component: WebsitePhishing },
-    { title: 'Social Media Phishing', routerLink: 'phishing1', component: SocialMediaPhishing },
-    { title: 'Voice Phishing', routerLink: 'phishing1', component: VoicePhishing },
-    { title: 'SMS Phishing', routerLink: 'phishing1', component: SmsPhishing },
-    { title: 'How to Protect Yourself', routerLink: 'phishing1', component: HowToProtect }
-  ])
+    currentModules: (state): Module[] => {
+      const lesson = state.lessons[state.currentLessonId as keyof typeof state.lessons]
 
-  const selectedModule = ref<Module>(phishingModules.value[0])
+      if (!lesson) return []
+      
+      return lesson?.modules
+    }
+  },
+  actions: {
+    loadLesson(lessonId: string) {
+      if (!this.lessons[lessonId]) {
+        console.error(`Lesson with id '${lessonId}' not found.`)
+        return
+      }
+      this.currentLessonId = lessonId
+      this.selectedModule = this.lessons[lessonId].modules[0] || null
+    },
 
-  function setSelectedModule(module: Module) {
-    selectedModule.value = module
+    setSelectedModule(module: Module) {
+      this.selectedModule = module
+    },
+
+    nextModule() {
+      const modules = this.currentModules
+      const currentIndex = modules.findIndex((m) => m.title === this.selectedModule?.title)
+      if (currentIndex !== -1 && currentIndex < modules.length - 1) {
+        this.selectedModule = modules[currentIndex + 1]
+      }
+    },
+
+    previousModule() {
+      const modules = this.currentModules
+      const currentIndex = modules.findIndex((m) => m.title === this.selectedModule?.title)
+      if (currentIndex > 0) {
+        this.selectedModule = modules[currentIndex - 1]
+      }
+    }
   }
-
-  return { phishingModules, selectedModule, setSelectedModule }
 })
+

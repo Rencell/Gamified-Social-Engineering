@@ -48,7 +48,7 @@ const props = defineProps({
             <div class="grow gap-3 space-y-3">
                 <h3 class="font-semibold">{{ title }}</h3>
                 <Button v-if="interactive" asChild size="sm" class="font-semibold bg-accent">
-                    <RouterLink :to="{ name: routerLink }">Start</RouterLink>
+                    <RouterLink :to="routerLink">Start</RouterLink>
                 </Button>
 
             </div>

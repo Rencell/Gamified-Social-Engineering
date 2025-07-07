@@ -20,12 +20,12 @@ const router = createRouter({
       component: LearnView,
     },
     {
-      path: '/learn/phishing',
+      path: '/learn/:lessonId',
       name: 'Learn-Phishing',
       component: modules,
     },
     {
-      path: '/learn/phishing/session',
+      path: '/learn/:lessonId/session',
       name: 'phishing1',
       component: index,
       meta: { layout: 'fullscreen' }
