@@ -1,6 +1,6 @@
 #!/bin/bash
 
-npm --prefix frontend/vue-frontend run build
+npm --prefix Frontend/vue-frontend run build
 
 git add .
 
@@ -10,4 +10,4 @@ MYVAR=$(date +"%Y-%d-%m %I:%M%p")
 
 git commit -m "$MYVAR"
 
-git subtree push --prefix frontend/vue-frontend/dist origin gh-page
+git subtree push --prefix Frontend/vue-frontend/dist origin gh-page
