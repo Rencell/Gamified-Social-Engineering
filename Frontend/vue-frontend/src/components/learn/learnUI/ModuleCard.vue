@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
 import Button from '@/components/ui/button/Button.vue';
-
+import { ArrowRight } from 'lucide-vue-next';
 const props = defineProps({
     title: {
         type: String,
@@ -44,11 +44,12 @@ const props = defineProps({
                     </div>
                 </div>
             </div>
-
-            <div class="grow gap-3 space-y-3">
-                <h3 class="font-semibold">{{ title }}</h3>
-                <Button v-if="interactive" asChild size="sm" class="font-semibold bg-accent">
-                    <RouterLink :to="routerLink">Start</RouterLink>
+            
+            <div class="grow gap-3 space-y-3 flex justify-between items-center">
+                <div class="font-semibold">{{ title }}</div>
+                <Button asChild size="sm" class="font-semibold bg-accent">
+                    <RouterLink :to="routerLink">Start <ArrowRight :size="18"></ArrowRight></RouterLink>
+                    
                 </Button>
 
             </div>

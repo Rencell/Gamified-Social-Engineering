@@ -1,13 +1,13 @@
 import type { Lesson } from "@/stores/types/learning";
 
 // Import all module components
-import PhishingIntro from '@/views/Learn/Phishing/Modules/introduction.vue';
-import EmailPhishing from '@/views/Learn/Phishing/Modules/EmailPhishing.vue'
-import WebsitePhishing from '@/views/Learn/Phishing/Modules/WebsitePhishing.vue'
-import SocialMediaPhishing from '@/views/Learn/Phishing/Modules/SocialMediaPhishing.vue'
-import VoicePhishing from '@/views/Learn/Phishing/Modules/VoicePhishing.vue'
-import SmsPhishing from '@/views/Learn/Phishing/Modules/SmsPhishing.vue'
-import HowToProtect from '@/views/Learn/Phishing/Modules/HowToProtect.vue'
+import PhishingIntro from '@/components/learn/content/phishing/introduction.vue';
+import EmailPhishing from '@/components/learn/content/phishing/EmailPhishing.vue'
+import WebsitePhishing from '@/components/learn/content/phishing/WebsitePhishing.vue'
+import SocialMediaPhishing from '@/components/learn/content/phishing/SocialMediaPhishing.vue'
+import VoicePhishing from '@/components/learn/content/phishing/VoicePhishing.vue'
+import SmsPhishing from '@/components/learn/content/phishing/SmsPhishing.vue'
+import HowToProtect from '@/components/learn/content/phishing/HowToProtect.vue'
 
 export const lessons: Record<string, Lesson> = {
     'phishing': {

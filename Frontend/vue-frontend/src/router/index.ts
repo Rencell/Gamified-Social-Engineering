@@ -3,7 +3,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LearnView from '@/views/LearnView.vue'
 import HomeView from '@/views/HomeView.vue'
 import modules from '@/views/Learn/ModuleView.vue'
-import WhatPhishing from '@/views/Learn/Phishing/Modules/WhatPhishing.vue'
 import index from '@/views/Learn/SessionContents.vue'
 
 const router = createRouter({
@@ -22,7 +21,7 @@ const router = createRouter({
     {
       path: '/learn/:lessonId',
       name: 'Learn-Phishing',
-      component: modules,
+      component: modules
     },
     {
       path: '/learn/:lessonId/session',
