@@ -10,13 +10,17 @@ const learningStore = useLearningStore();
     <div class="bg-secondary/40 flex-2/3 rounded-lg overflow-y-auto">
 
         <div class="p-10 ">
-            <div class="text-2xl font-bold mb-2">{{ learningStore.selectedModule.title }}</div>
+            <div class="text-2xl font-bold mb-2">{{ learningStore.selectedModule?.title }}</div>
             <hr class="border-background mb-4">
-            <component :is="learningStore.selectedModule.component" />
+            <component :is="learningStore.selectedModule?.component" />
         </div>
         <hr class="border-background">
-        <div class="p-10">
-            <Button class="bg-accent" size="lg">
+        <div class="p-10 flex gap-2">
+            <Button v-show="learningStore.selectedModule && learningStore.currentModules().findIndex(m => m.title === learningStore.selectedModule?.title) > 0" variant="outline" class="bg-accent" size="lg" @click="learningStore.previousModule()">
+                <p class="font-bold text-white">Previous</p>
+            </Button>
+
+            <Button class="bg-accent" size="lg" @click="learningStore.nextModule()">
                 <p class="font-bold text-white">Next</p>
                 <ChevronRight class="text-primary"></ChevronRight>
             </Button>

@@ -2,9 +2,9 @@ import App from '@/App.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import LearnView from '@/views/LearnView.vue'
 import HomeView from '@/views/HomeView.vue'
-import modules from '@/views/Learn/Phishing/modules.vue'
+import modules from '@/views/Learn/ModuleView.vue'
 import WhatPhishing from '@/views/Learn/Phishing/Modules/WhatPhishing.vue'
-import index from '@/views/Learn/Phishing/Modules/index.vue'
+import index from '@/views/Learn/SessionContents.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,12 +20,12 @@ const router = createRouter({
       component: LearnView,
     },
     {
-      path: '/learn/phishing',
+      path: '/learn/:lessonId',
       name: 'Learn-Phishing',
       component: modules,
     },
     {
-      path: '/learn/phishing/session',
+      path: '/learn/:lessonId/session',
       name: 'phishing1',
       component: index,
       meta: { layout: 'fullscreen' }
