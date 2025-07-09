@@ -48,7 +48,9 @@ const props = defineProps({
             <div class="grow gap-3 space-y-3 flex justify-between items-center">
                 <div class="font-semibold">{{ title }}</div>
                 <Button asChild size="sm" class="font-semibold bg-accent">
-                    <RouterLink :to="routerLink">Start <ArrowRight :size="18"></ArrowRight></RouterLink>
+                    <RouterLink :to="routerLink">
+                        Start <ArrowRight :size="18"></ArrowRight>
+                    </RouterLink>
                     
                 </Button>
 

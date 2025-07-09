@@ -20,14 +20,21 @@ learningStore.loadLessons(lessonId )
             <ArrowLeft :size="15"></ArrowLeft> Back
         </div>
     </RouterLink>
-    <LessonCard :progress="75" :title="learningStore.currentLesson()?.title ?? 'Untitled Lesson'"></LessonCard>
+    <LessonCard 
+        :progress="75" 
+        :description="learningStore.currentLesson()?.description"  
+        :title="learningStore.currentLesson()?.title">
+    </LessonCard>
+    
     <div class="flex flex-col mt-2">
         <ModuleCard 
             v-for="module in learningStore.currentModules()" 
             :key="module.title" :title="module.title"
-            :router-link="`/learn/${lessonId}/session`" :interactive="module.interactive" 
+            :router-link="`/learn/${lessonId}/session`" 
+            :interactive="module.interactive"
+            @click="learningStore.setSelectedModule(module)" 
         />
-
+        
     </div>
 
 

@@ -2,8 +2,9 @@
 import ProgressCircle from '@/components/learn/learnUI/ProgressCircle.vue';
 
 interface Props {
-  title: string
+  title?: string | 'title not set'
   progress: number
+  description?: string | 'description not set'
 }
 
 const props = defineProps<Props>()
@@ -26,7 +27,8 @@ const props = defineProps<Props>()
 
         <!-- Text -->
         <div class="flex flex-col justi-between grow">
-            <h2 class="text-center font-bold text-2xl my-6">{{title}}</h2>
+            <h2 class="text-center font-bold text-2xl my-3">{{title}}</h2>
+            <p class="text-center text-gray-400 mb-2 text-xs">{{ description }}</p>
         </div>
     </div>
 </template>

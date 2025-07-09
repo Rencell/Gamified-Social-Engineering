@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import sidebar from './components/Layout/sidebar.vue';
-import { Home, BookOpen, Trophy, AlertTriangle, User, Flag } from 'lucide-vue-next'
+import { Home, BookOpen, Trophy, AlertTriangle, User, Flag, ChevronRight } from 'lucide-vue-next'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import LearnView from './views/LearnView.vue';
 
@@ -17,7 +17,9 @@ const isFullscreen = computed(() => route.meta.layout === 'fullscreen')
 <template>
 
 
-  <div v-if="isFullscreen" class="flex justify-center">
+  <div v-if="isFullscreen">
+    
+    
     <RouterView />
   </div>
 
