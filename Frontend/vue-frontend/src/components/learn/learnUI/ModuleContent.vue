@@ -9,8 +9,8 @@ const learningStore = useLearningStore();
 <template>
     <div class="bg-secondary/40 flex-2/3 rounded-lg overflow-y-auto">
 
-        <div class="p-10 ">
-            <div class="text-2xl font-bold mb-2">{{ learningStore.selectedModule?.title }}</div>
+        <div>
+            <div class="text-2xl font-bold mb-2 p-6 ">{{ learningStore.selectedModule?.title }}</div>
             <hr class="border-background mb-4">
             <component :is="learningStore.selectedModule?.component" />
         </div>

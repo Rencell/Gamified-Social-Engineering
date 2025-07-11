@@ -23,9 +23,9 @@ const start = ref(false);
 
 <template>
     <div class="mt-4"></div>
-    <ModuleStartScreen v-if="!start" @start="start = true" />
+    <!-- <ModuleStartScreen v-if="!start" @start="start = true" /> -->
     
-    <div v-else class="flex justify-center items-center flex-col">
+    <div class="flex justify-center items-center flex-col">
         <div class="flex w-7xl mb-4 text-sm">
           <div>Learn</div> 
           <ChevronRight></ChevronRight>
