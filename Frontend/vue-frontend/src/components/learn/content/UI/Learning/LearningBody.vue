@@ -1,7 +1,6 @@
 <template>
-
-
-    <p class="text-sm leading-relaxed mb-4">
+    <div class="mb-3 text-lg/loose font-extralight text-gray-300">
         <slot></slot>
-    </p>
+
+    </div>
 </template>

@@ -1,0 +1,8 @@
+export { default as EmailPhishing } from './EmailPhishing.vue'
+export { default as HowToProtect } from './HowToProtect.vue'
+export { default as Introduction } from './introduction.vue'
+export { default as SmsPhishing } from './SmsPhishing.vue'
+export { default as SocialMediaPhishing } from './SocialMediaPhishing.vue'
+export { default as VoicePhishing } from './VoicePhishing.vue'
+export { default as WebsitePhishing } from './WebsitePhishing.vue'
+export { default as WhatPhishing } from './WhatPhishing.vue'

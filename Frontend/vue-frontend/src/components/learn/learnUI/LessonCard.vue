@@ -21,7 +21,7 @@ const props = defineProps<Props>()
         <!-- images -->
         <div class="flex justify-center py-3 lg:py-6 grow-0 shrink-0 relative">
             <div class="aspect-video md:aspect-h-5 w-full max-w-sm h-full flex items-center justify-center">
-                <img class="object-scale-down mx-auto h-full" src="/SecurityAwarenessEssentials@3x.webp" alt="">
+                <img class="object-scale-down mx-auto h-full" src="/SecurityAwarenessEssentials@3x.svg" alt="">
             </div>
         </div>
 

@@ -1,18 +1,15 @@
 <template>
   <span class="citation-container">
-    <a
-      :href="citationLink"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="highlighted-word"
-      @mouseover="showTooltip"
-      @mouseleave="hideTooltip"
-    >
+    <a :href="citationLink" target="_blank" rel="noopener noreferrer" class="highlighted-word" @mouseover="showTooltip"
+      @mouseleave="hideTooltip">
       {{ word }}
     </a>
-    <div v-if="tooltipVisible" class="tooltip">
+    <div v-if="tooltipVisible"
+      class="tooltip max-w-xs truncate whitespace-nowrap overflow-hidden text-ellipsis bg-gray-800 text-white px-3 py-1 rounded"
+      :title="citationLink">
       {{ citationLink }}
     </div>
+
   </span>
 </template>
 

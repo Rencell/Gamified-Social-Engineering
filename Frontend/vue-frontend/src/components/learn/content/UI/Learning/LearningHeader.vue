@@ -1,7 +1,6 @@
 <template>
-    <div class="text-xl font-semibold my-4 text-accent">
-
+    <div class="text-3xl font-bold mb-3">
         <slot></slot>
-    </div>
 
+    </div>
 </template>

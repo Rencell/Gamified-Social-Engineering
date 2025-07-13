@@ -1,40 +1,67 @@
 <script setup lang="ts">
-import LearningContent from '../UI/Learning/LearningContent.vue'
 import LearningImage from '../UI/Learning/LearningImage.vue'
+import Citation from '../UI/Learning/Citation.vue'
+import LearningSection from '../UI/Learning/LearningSection.vue'
 import LearningHeader from '../UI/Learning/LearningHeader.vue'
 import LearningBody from '../UI/Learning/LearningBody.vue'
-import Citation from '../UI/Learning/Citation.vue'
-
-
+import LearningContent from '../UI/Learning/LearningContent.vue'
+import LearningSpan from '../UI/Learning/LearningSpan.vue'
+import LearningQuote from '../UI/Learning/LearningQuote.vue'
 </script>
 
 
 <template>
   <LearningContent>
-    <LearningBody>
-      Ever thought about how hackers break into systems? While many imagine complex code and green and black on screens,
-      one of
-      the most effective methods is surprisingly simple. It's called <strong>Social engineering</strong>, and it
-      targets people, not computers. Social engineers exploit human psychology to gain access to sensitive information.
-      The
-      way it is effective is because they will attempt to convice you to perform certain actions by impersonation
-      a reliable party like a bank or collegue from your work.
-    </LearningBody>
 
     <LearningImage image="https://images5.alphacoders.com/134/1349437.png" source="colcampus.com" />
 
-    <LearningHeader>How can you become a victim?</LearningHeader>
+    <LearningSection>
+      <LearningHeader>Basically...</LearningHeader>
+      <LearningBody>
+        Ever thought about how hackers break into systems? While many imagine complex code and green and black on
+        screens,
+        one of the most effective methods is surprisingly simple. It's called
+        <LearningSpan>Social engineering</LearningSpan>, and it targets people, not computers.
+        Social engineers exploit <LearningSpan>human psychology</LearningSpan> to gain access to
+        <LearningSpan>sensitive information</LearningSpan>. The way it is effective is because they will attempt to
+        <LearningSpan>convince you to perform certain actions</LearningSpan> by impersonation
+        a reliable party like a <LearningSpan>bank</LearningSpan> or <LearningSpan>colleague from your work
+        </LearningSpan>.
+      </LearningBody>
 
-    <LearningBody>
-      Social engineers are extremely good at manipulating people. They extract information from social media, receipts,
-      and can cause a lot of damage. They can trick you into giving away your passwords, personal information, or even
-      money. They can do this through phishing emails, fake websites, or even phone calls that seem legitimate.
-    </LearningBody>
+    </LearningSection>
 
-    <LearningBody>
-      If you are someone who frequently shares personal information online, you might be at risk. Social
-      engineers can use this information to create convincing scams that target you specifically.
-    </LearningBody>
+
+    <LearningQuote>
+      "Social engineering is the art of manipulating people so they give up confidential information."
+    </LearningQuote>
+
+    <LearningSection>
+      <LearningHeader><i>Why</i> is this important?</LearningHeader>
+      <LearningBody>
+        <LearningSpan>Social engineers</LearningSpan> are extremely good at <LearningSpan>manipulating people
+        </LearningSpan>.
+        They extract information from <LearningSpan>social media</LearningSpan>, <LearningSpan>receipts</LearningSpan>,
+        and can cause a lot of damage. They can trick you into giving away your
+        <LearningSpan>passwords</LearningSpan>, <LearningSpan>personal information</LearningSpan>, or even
+        <LearningSpan>money</LearningSpan>. They can do this through <LearningSpan>phishing emails</LearningSpan>,
+        <LearningSpan>fake websites</LearningSpan>, or even <LearningSpan>phone calls that seem legitimate
+        </LearningSpan>.
+      </LearningBody>
+
+      <LearningBody>
+        If you are someone who frequently shares <LearningSpan>personal information online</LearningSpan>,
+        you might be at risk. <LearningSpan>Social engineers</LearningSpan> can use this information to create
+        <LearningSpan>convincing scams</LearningSpan> that <LearningSpan>target you specifically</LearningSpan>.
+      </LearningBody>
+
+    </LearningSection>
+
+    <LearningQuote>
+      Statistically says, 98% of cyber attacks involve some form of social engineering. <Citation word="(Indusface, 2025)" citation-link="https://www.indusface.com/learning/what-is-a-social-engineering-attack/" />
+    </LearningQuote>
+    <!-- 
+
 
     <LearningHeader>How relevant is Social engineering?</LearningHeader>
 
@@ -46,11 +73,10 @@ import Citation from '../UI/Learning/Citation.vue'
     </LearningBody>
 
     <LearningBody>
-      Statistically saying, 98% of cyber attacks involve some form of social engineering. This means that even with the
-      best security measures in place, if you fall for a social engineering attack, your data can still be compromised.
+       
       
-      <Citation word="(Indusface, 2025)" citation-link="https://www.indusface.com/learning/what-is-a-social-engineering-attack/" />
-    </LearningBody>
+      
+    </LearningBody>  -->
 
   </LearningContent>
 </template>

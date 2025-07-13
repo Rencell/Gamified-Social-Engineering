@@ -4,60 +4,98 @@ import LearningHeader from '../UI/Learning/LearningHeader.vue'
 import LearningBody from '../UI/Learning/LearningBody.vue'
 import QuestionProgress from '../UI/Question/QuestionProgress.vue'
 import QuestionCard from '../UI/Question/QuestionCard.vue'
+import LearningSectionUI from '../UI/Learning/LearningSection.vue'
+import LearningHeaderUI from '../UI/Learning/LearningHeader.vue'
+import LearningBodyUI from '../UI/Learning/LearningBody.vue'
+import LearningSpan from '../UI/Learning/LearningSpan.vue'
+import LearningQuote from '../UI/Learning/LearningQuote.vue'
+import LearningList from '../UI/Learning/LearningList.vue'
+import LearningImage from '../UI/Learning/LearningImage.vue'
+import LearningImageBanner from '../UI/Learning/LearningImageBanner.vue'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+
+import { ref } from 'vue'
+
+
+const principles = ref([
+  "Authority: People are more likely to comply with a request if it comes from someone they perceive as an authority figure.",
+  "Scarcity: The fear of missing out on a limited-time offer can pressure people into making hasty decisions.",
+  "Urgency: Creating a sense of urgency (e.g., 'your account will be deleted in 24 hours') prompts immediate action without thinking.",
+  "Likability/Rapport: Attackers often try to build a friendly rapport or pretend to be someone you know and trust.",
+  "Social Proof: People tend to do what others are doing. Scammers might claim that 'many others' have already taken advantage of an offer.",
+  "Reciprocation: If someone gives you something for free, you might feel obligated to give something back in return."
+]);
+
 </script>
 
 <template>
   <LearningContent>
-    <LearningHeader>Psychological Principles Used in Social Engineering</LearningHeader>
 
-    <LearningBody>
-      Social engineers are masters of manipulation, and they use a variety of psychological principles to trick their
-      victims. Understanding these principles is the first step to defending yourself against them.
-    </LearningBody>
+    <LearningImageBanner />
 
-    <LearningHeader>1. Authority</LearningHeader>
-    <LearningBody>
-      People tend to obey authority figures. Social engineers often impersonate individuals in positions of power,
-      such as IT support, law enforcement, or senior management, to gain compliance. For example, an attacker might
-      pretend to be from the IT department and demand your password to fix a critical issue.
-    </LearningBody>
+    <LearningSectionUI>
+      <LearningHeaderUI>
+        <i>Who</i> Creates Phishing Scams?
+      </LearningHeaderUI>
+      <LearningBodyUI>
+        Phishing scams are <LearningSpan>created</LearningSpan> by cybercriminals looking for financial gain, individual
+        hackers showcasing their
+        skills, bad actors trying to engage others for <LearningSpan>political</LearningSpan> gain or even disgruntled
+        students and/or employees.
+      </LearningBodyUI>
+    </LearningSectionUI>
 
-    <LearningHeader>2. Scarcity</LearningHeader>
-    <LearningBody>
-      Opportunities seem more valuable when their availability is limited. Social engineers create a sense of urgency
-      to pressure victims into immediate action. For example, an email stating, "Your account will be suspended in 24
-      hours if you don't click this link!" creates a sense of urgency.
-    </LearningBody>
+    <Accordion type="single" collapsible class="w-xl">
+      <AccordionItem value="item-1">
+        <AccordionTrigger>What is Social Engineering?</AccordionTrigger>
+        <AccordionContent>
+          Social engineering is a manipulation technique that exploits human error to gain private information.
+        </AccordionContent>
+      </AccordionItem>
 
-    <LearningHeader>3. Liking</LearningHeader>
-    <LearningBody>
-      People are more likely to be persuaded by those they like. Social engineers often build rapport with their
-      targets by finding common interests or offering compliments. For example, a new "friend" on social media who
-      shares many mutual connections might subtly try to extract personal information.
-    </LearningBody>
+      <AccordionItem value="item-2">
+        <AccordionTrigger>What is Phishing?</AccordionTrigger>
+        <AccordionContent>
+          Phishing is a type of social engineering where attackers trick users into revealing personal information.
+        </AccordionContent>
+      </AccordionItem>
 
-    <LearningHeader>4. Consistency and Commitment</LearningHeader>
-    <LearningBody>
-      Once people commit to something, they are more likely to stick with it. Social engineers often start with small,
-      seemingly harmless requests and gradually escalate them. For example, an attacker might first ask for a small
-      piece of non-sensitive information and then follow up with a larger request.
-    </LearningBody>
+      <AccordionItem value="item-3">
+        <AccordionTrigger>How can I protect myself?</AccordionTrigger>
+        <AccordionContent>
+          Be skeptical of unsolicited messages, verify links before clicking, and use multi-factor authentication.
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
 
-    <LearningHeader>5. Reciprocity</LearningHeader>
-    <LearningBody>
-      People feel obligated to return favors. Social engineers might offer something seemingly valuable, like a free
-      download, before asking for something in return. For example, receiving an unsolicited "gift" from someone who
-      then asks for sensitive information.
-    </LearningBody>
+    <LearningQuote>
+      Phishing scams are often created by individuals or groups with malicious intent, seeking to exploit
+      vulnerabilities for personal gain.
+    </LearningQuote>
 
-    <LearningHeader>6. Social Proof (Consensus)</LearningHeader>
-    <LearningBody>
-      People tend to follow the actions of others. Social engineers might claim that "everyone else is doing it" or
-      show fake testimonials to convince targets. For example, a phishing email designed to look like it's from a
-      widely used service, implying that many users are updating their information.
-    </LearningBody>
+    <LearningSectionUI>
+      <LearningHeaderUI>
+        <i>Who</i> Creates Phishing Scams?
+      </LearningHeaderUI>
+      <LearningBodyUI>
+        Phishing scams are <LearningSpan>created</LearningSpan> by cybercriminals looking for financial gain, individual
+        hackers showcasing their
+        skills, bad actors trying to engage others for <LearningSpan>political</LearningSpan> gain or even disgruntled
+        students and/or employees.
+      </LearningBodyUI>
+      <LearningList :items="principles" />
+    </LearningSectionUI>
+
   </LearningContent>
+
+
 
   <QuestionProgress />
   <QuestionCard />
+  <QuestionCard />
+  <QuestionCard />
+
+  <div class="mb-10">
+    
+  </div>
 </template>

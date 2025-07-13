@@ -1,0 +1,6 @@
+export {default as WhatIsSocialEngineering} from './WhatIsSocialEngineering.vue'
+export { default as CommonAttacks } from './CommonAttacks.vue'
+export { default as FinalQuiz } from './FinalQuiz.vue'
+export { default as HowToProtectYourself } from './HowToProtectYourself.vue'
+export { default as InteractiveScenarioSpotTheAttack } from './InteractiveScenarioSpotTheAttack.vue'
+export { default as PsychologicalPrinciplesUsed } from './PsychologicalPrinciplesUsed.vue'

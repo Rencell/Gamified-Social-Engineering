@@ -1,22 +1,10 @@
 import type { Lesson } from "@/stores/types/learning";
 
-// Import all module components
-import PhishingIntro from '@/components/learn/content/phishing/introduction.vue';
-import EmailPhishing from '@/components/learn/content/phishing/EmailPhishing.vue'
-import WebsitePhishing from '@/components/learn/content/phishing/WebsitePhishing.vue'
-import SocialMediaPhishing from '@/components/learn/content/phishing/SocialMediaPhishing.vue'
-import VoicePhishing from '@/components/learn/content/phishing/VoicePhishing.vue'
-import SmsPhishing from '@/components/learn/content/phishing/SmsPhishing.vue'
-import HowToProtect from '@/components/learn/content/phishing/HowToProtect.vue'
+//IntroToSocEng
+import { WhatIsSocialEngineering, PsychologicalPrinciplesUsed, CommonAttacks, InteractiveScenarioSpotTheAttack, HowToProtectYourself, FinalQuiz } from "@/components/learn/content/introToSocialEngineering";
+//Phishing
+import { Introduction, EmailPhishing, WebsitePhishing, SocialMediaPhishing, VoicePhishing, SmsPhishing, HowToProtect } from "@/components/learn/content/phishing";
 
-import WhatIsSocialEngineering from '@/components/learn/content/introToSocialEngineering/WhatIsSocialEngineering.vue';
-import PsychologicalPrinciplesUsed from '@/components/learn/content/introToSocialEngineering/PsychologicalPrinciplesUsed.vue';
-import PhishingAndSocialMediaAttacks from '@/components/learn/content/introToSocialEngineering/PhishingAndSocialMediaAttacks.vue';
-import BaitingAndPretexting from '@/components/learn/content/introToSocialEngineering/BaitingAndPretexting.vue';
-import TailgatingAndPhysicalBreaches from '@/components/learn/content/introToSocialEngineering/TailgatingAndPhysicalBreaches.vue';
-import InteractiveScenarioSpotTheAttack from '@/components/learn/content/introToSocialEngineering/InteractiveScenarioSpotTheAttack.vue';
-import HowToProtectYourselfSocialEngineering from '@/components/learn/content/introToSocialEngineering/HowToProtectYourself.vue';
-import FinalQuiz from '@/components/learn/content/introToSocialEngineering/FinalQuiz.vue';
 
 export const lessons: Record<string, Lesson> = {
     'introToSocialEngineering': {
@@ -26,11 +14,9 @@ export const lessons: Record<string, Lesson> = {
         modules: [
             { title: 'What is Social Engineering?', component: WhatIsSocialEngineering, interactive: true },
             { title: 'Psychological Principles Used', component: PsychologicalPrinciplesUsed },
-            { title: 'Phishing & Social Media Attacks', component: PhishingAndSocialMediaAttacks },
-            { title: 'Baiting & Pretexting', component: BaitingAndPretexting },
-            { title: 'Tailgating and Physical Breaches', component: TailgatingAndPhysicalBreaches },
+            { title: 'Common Social Engineering Attacks', component: CommonAttacks },
             { title: 'Interactive Scenario: Spot the Attack', component: InteractiveScenarioSpotTheAttack },
-            { title: 'How to Protect Yourself', component: HowToProtectYourselfSocialEngineering },
+            { title: 'How to Protect Yourself', component: HowToProtectYourself },
             { title: 'Final Quiz', component: FinalQuiz },
         ]
     },
@@ -41,7 +27,7 @@ export const lessons: Record<string, Lesson> = {
         modules: [
             {
                 title: 'brombadilla',
-                component: PhishingIntro,
+                component: Introduction,
                 interactive: true,
             },
             { title: 'crocodilla    ', component: EmailPhishing },
