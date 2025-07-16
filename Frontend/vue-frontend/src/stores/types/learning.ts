@@ -7,6 +7,8 @@ export interface Module {
 export interface Lesson {
   id: string
   title: string
-  description: string
+  description: string,
+  image?: string
+  bg?: string
   modules: Module[]
 }

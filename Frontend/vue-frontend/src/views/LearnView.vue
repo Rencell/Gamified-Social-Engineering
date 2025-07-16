@@ -17,7 +17,7 @@ const route = useRoute();
 
         <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
             <RouterLink v-for="lesson in learningStore.lessons" :key="lesson.id" :to="`${route.path}/${lesson.id}`">
-                <LessonCard :progress="75" :title="lesson.title"></LessonCard>
+                <LessonCard :progress="75" :title="lesson.title" :image="lesson.image" :bg="lesson.bg"></LessonCard>
             </RouterLink>
         </div>
     </div>

@@ -2,14 +2,24 @@
 import Button from '@/components/ui/button/Button.vue';
 import { ChevronRight } from 'lucide-vue-next';
 import { useLearningStore } from '@/stores/learning';
+import { ref, watch } from 'vue';
 
 const learningStore = useLearningStore();
+const moduleContent = ref<HTMLElement | null>(null);
+
+watch(() => learningStore.selectedModule, () => {
+  if (moduleContent.value) {
+    moduleContent.value.scrollTop = 0;
+  }
+});
+
 </script>
 
 <template>
-    <div class="bg-secondary/40 flex-2/3 rounded-lg overflow-y-auto">
+    <div ref="moduleContent" class="bg-secondary/40 flex-[2_2_0%] rounded-lg h-screen overflow-y-scroll snap-y snap-mandatory scroll-hidden">
 
-        <div>
+
+        <div class="snap-start">
             <div class=" font-bold mb-2 p-11 pb-6 relative">
                 <div class="h-1 w-11 bg-accent absolute bottom-0"></div>
                 <p class="text-3xl">{{ learningStore.selectedModule?.title }}</p>
@@ -18,7 +28,7 @@ const learningStore = useLearningStore();
             <component :is="learningStore.selectedModule?.component" />
         </div>
         <hr class="border-background border-2">
-        <div class="p-10 flex gap-2">
+        <div class="p-10 flex gap-2 snap-start">
             <Button v-show="learningStore.selectedModule && learningStore.currentModules().findIndex(m => m.title === learningStore.selectedModule?.title) > 0" variant="outline" class="bg-accent" size="lg" @click="learningStore.previousModule()">
                 <p class="font-bold text-white">Previous</p>
             </Button>
@@ -33,3 +43,16 @@ const learningStore = useLearningStore();
     </div>
 </template>
 
+
+<style scoped>
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-hidden {
+  -ms-overflow-style: none;
+  /* IE/Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+</style>

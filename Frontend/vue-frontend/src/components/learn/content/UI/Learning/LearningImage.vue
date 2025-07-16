@@ -6,8 +6,8 @@ defineProps<{
 </script>
 
 <template>
-  <div>
-    <img v-if="image" :src="image" alt="Learning content image" class="h-96 rounded-lg shadow-md mb-2" />
-    <i class="text-xs">(Image Source: <span>{{ source }}</span>)</i> 
+  <div class="relative h-40 mb-2">
+    <img v-if="image" :src="image" alt="Learning content image" class="w-full h-full rounded-lg mb-2" />
+    <!-- <i class="text-xs absolute right-0 bottom-3 p-4 bg-black/50 rounded-s-full">(Image Source: <span>{{ source }}</span>)</i>  -->
   </div>
 </template>

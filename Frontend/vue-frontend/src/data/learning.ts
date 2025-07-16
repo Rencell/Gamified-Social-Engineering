@@ -1,5 +1,9 @@
 import type { Lesson } from "@/stores/types/learning";
 
+import phishing from "/public/Phishing.webp?url";
+import socialEngineering from "/public/SecurityAwarenessEssentials@3x.svg?url";
+import human from "/public/Human.webp?url";
+
 //IntroToSocEng
 import { WhatIsSocialEngineering, PsychologicalPrinciplesUsed, CommonAttacks, InteractiveScenarioSpotTheAttack, HowToProtectYourself, FinalQuiz } from "@/components/learn/content/introToSocialEngineering";
 //Phishing
@@ -10,7 +14,10 @@ export const lessons: Record<string, Lesson> = {
     'introToSocialEngineering': {
         id: 'introToSocialEngineering', 
         title: 'Introduction to Social Engineering',
+        image: human,
+        bg: 'bg-[#4f1c51]',
         description: 'Learn the basics of how social engineering works and how attackers manipulate people to gain access.',
+        
         modules: [
             { title: 'What is Social Engineering?', component: WhatIsSocialEngineering, interactive: true },
             { title: 'Psychological Principles Used', component: PsychologicalPrinciplesUsed },
@@ -20,9 +27,11 @@ export const lessons: Record<string, Lesson> = {
             { title: 'Final Quiz', component: FinalQuiz },
         ]
     },
-    'bayag': {
-        id: 'bayag`', 
-        title: 'bayag',
+    'phishing': {
+        id: 'phishing`', 
+        title: 'Phishing',
+        image: phishing,
+        bg: 'bg-[#2E236C]',
         description: 'Learn about phishing attacks, how to recognize them, and how to protect yourself.',
         modules: [
             {

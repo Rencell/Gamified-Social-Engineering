@@ -5,6 +5,8 @@ interface Props {
   title?: string | 'title not set'
   progress: number
   description?: string | 'description not set'
+  image?: string
+  bg?: string
 }
 
 const props = defineProps<Props>()
@@ -14,14 +16,14 @@ const props = defineProps<Props>()
 
 <template>
 
-    <div class="bg-[#4f1c51] p-3 rounded-xl">
+    <div class="p-3 rounded-xl" :class="bg ? bg : 'bg-[#4f1c51]'">
         <!-- loading  -->
         <ProgressCircle :progress="progress" size="lg"></ProgressCircle>
 
         <!-- images -->
         <div class="flex justify-center py-3 lg:py-6 grow-0 shrink-0 relative">
             <div class="aspect-video md:aspect-h-5 w-full max-w-sm h-full flex items-center justify-center">
-                <img class="object-scale-down mx-auto h-full" src="/SecurityAwarenessEssentials@3x.svg" alt="">
+                <img class="object-scale-down mx-auto w-72" :src="image ? image : '/SecurityAwarenessEssentials@3x.svg'" alt="">
             </div>
         </div>
 

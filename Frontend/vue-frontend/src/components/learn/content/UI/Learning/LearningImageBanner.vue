@@ -1,5 +1,5 @@
 <template>
-    <div class="relative w-full h-[400px] overflow-hidden shadow-lg">
+    <div class="relative w-full h-[200px] overflow-hidden shadow-lg">
         <!-- Background Image -->
         <img src="https://picsum.photos/1200/800?grayscale" alt="Phishing awareness background"
             class="absolute inset-0 w-full h-full object-cover" />
@@ -12,9 +12,7 @@
             <div class="max-w-xl">
                 <div class="h-1 w-10 bg-white mb-4"></div>
                 <p class="text-2xl leading-relaxed font-light">
-                    Phishing scams are popular because they work. However, there are steps
-                    you can take to protect yourself and avoid becoming a victim of a
-                    phishing scam.
+                    Phishing scams are popular because they work. However
                 </p>
             </div>
         </div>

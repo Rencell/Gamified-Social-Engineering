@@ -23,7 +23,9 @@ learningStore.loadLessons(lessonId )
     <LessonCard 
         :progress="75" 
         :description="learningStore.currentLesson()?.description"  
-        :title="learningStore.currentLesson()?.title">
+        :title="learningStore.currentLesson()?.title"
+        :image="learningStore.currentLesson()?.image"
+        :bg="learningStore.currentLesson()?.bg">
     </LessonCard>
     
     <div class="flex flex-col mt-2">

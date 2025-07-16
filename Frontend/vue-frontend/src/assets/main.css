@@ -3,7 +3,7 @@
 @import "tw-animate-css";
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-Quicksand);
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -66,6 +66,9 @@ body {
 }
 
 :root {
+  --font-family: 'Baloo 2', cursive;
+  --font-Nunito: "Nunito", sans-serif;
+  --font-Quicksand: "Quicksand", sans-serif;
   --font-sans: 'Poppins', sans-serif;
   --font-display: 'Oswald', sans-serif;
   --background: oklch(1 0 0);

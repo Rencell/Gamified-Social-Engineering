@@ -3,7 +3,10 @@ import { RouterLink, useRoute } from 'vue-router'
 
 import { computed, onMounted,ref } from 'vue'
 
-
+import home from '/public/Icons/Home.svg?url'
+import learn from '/public/Icons/Learn.svg?url'
+import learns from '/public/Icons/Learns.svg?url'
+import trophy from '/public/Icons/Trophy.svg?url'
 import { Home, BookOpen, Trophy, AlertTriangle, User, Flag } from 'lucide-vue-next'
 import {
   Sidebar,
@@ -28,17 +31,20 @@ const navigationData = {
     {
       title: 'Home', 
       url: '/home',
-      icon: Home
+      icon: Home,
+      Image: home
     },
     { 
       title: 'Learn', 
       url: '/learn', 
-      icon: BookOpen
+      icon: BookOpen,
+      Image: learn
     },
     { 
       title: 'Leaderboards', 
       url: '#', 
-      icon: Trophy 
+      icon: Trophy ,
+      Image: trophy
     },
   ],
   account: [
@@ -79,9 +85,9 @@ onMounted(()=> {
                   data-[active=true]:text-white
                   data-[active=true]:shadow-sm
                 ">
-                
-                  <component :is="item.icon" class="h-5 w-5 flex-shrink-0" />
-                  <span class="font-medium">{{ item.title }} </span>
+                  <img :src="item.Image" alt="" class="h-6 w-6 flex-shrink-0" />
+                  <!-- <component :is="item.icon" class="h-5 w-5 flex-shrink-0" /> -->
+                  <span class="font-bold">{{ item.title }} </span>
                   
                 </SidebarMenuButton>
               </RouterLink>
