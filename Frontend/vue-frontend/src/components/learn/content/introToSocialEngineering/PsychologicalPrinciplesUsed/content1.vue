@@ -41,15 +41,15 @@
 </template>
 
 <script setup lang="ts">
-import LearningContent from '../../UI/Learning/LearningContent.vue';
-import LearningSection from '../../UI/Learning/LearningSection.vue';
-import LearningHeader from '../../UI/Learning/LearningHeader.vue';
-import LearningBody from '../../UI/Learning/LearningBody.vue';
-import LearningSpan from '../../UI/Learning/LearningSpan.vue';
-import LearningList from '../../UI/Learning/LearningList.vue'
+import LearningContent from '../../UI/Learning/Core/LearningContent.vue';
+import LearningSection from '../../UI/Learning/Core/LearningSection.vue';
+import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue';
+import LearningBody from '../../UI/Learning/Core/LearningBody.vue';
+import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue';
+import LearningList from '../../UI/Learning/Listing/LearningList.vue'
 import { ref } from 'vue';
-import LearningImageBanner from '../../UI/Learning/LearningImageBanner.vue'
-import LearningImage from '../../UI/Learning/LearningImage.vue';
+import LearningImageBanner from '../../UI/Learning/Image/LearningImageBanner.vue'
+import LearningImage from '../../UI/Learning/Image/LearningImage.vue';
 import content1_assets from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content1-asset.svg?url';
 import Human from '/public/Human.webp?url';
 
@@ -58,7 +58,7 @@ import cryingemoji from '/public/Learning/Content/introToSocialEngineering/Psych
 import worryemoji from '/public/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/worry-emoji.svg?url';
 import curiousemoji from '/public/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/curious-emoji.svg?url';
 
-import LearningListItem from '../../UI/Learning/LearningListItem.vue'
+import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue'
 
 
 </script>

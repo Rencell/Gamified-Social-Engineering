@@ -36,20 +36,20 @@
 </template>
 
 <script setup lang="ts">
-import LearningImage from '../../UI/Learning/LearningImage.vue'
-import Citation from '../../UI/Learning/Citation.vue'
-import LearningSection from '../../UI/Learning/LearningSection.vue'
-import LearningHeader from '../../UI/Learning/LearningHeader.vue'
-import LearningBody from '../../UI/Learning/LearningBody.vue'
-import LearningContent from '../../UI/Learning/LearningContent.vue'
-import LearningSpan from '../../UI/Learning/LearningSpan.vue'
-import LearningQuote from '../../UI/Learning/LearningQuote.vue'
-import LearningList from '../../UI/Learning/LearningList.vue'
+import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
+import Citation from '../../UI/Learning/Highlight/Citation.vue'
+import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
+import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
+import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
+import LearningContent from '../../UI/Learning/Core/LearningContent.vue'
+import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue'
+import LearningQuote from '../../UI/Learning/Highlight/LearningQuote.vue'
+import LearningList from '../../UI/Learning/Listing/LearningList.vue'
 
 import list1_image from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/list1-icon.svg?url'
 import list2_image from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/list2-icon.svg?url'
 
 import content2_assets from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content2-asset.svg?url';
-import LearningListItem from '../../UI/Learning/LearningListItem.vue'
+import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue'
 
 </script>

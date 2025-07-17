@@ -31,15 +31,15 @@
 </template>
 
 <script setup lang="ts">
-import LearningSection from '../../UI/Learning/LearningSection.vue'
-import LearningHeader from '../../UI/Learning/LearningHeader.vue'
-import LearningSpan from '../../UI/Learning/LearningSpan.vue'
-import LearningList from '../../UI/Learning/LearningList.vue'
-import LearningListItem from '../../UI/Learning/LearningListItem.vue'
-import LearningBody from '../../UI/Learning/LearningBody.vue'
-import LearningSpan2 from '../../UI/Learning/LearningSpan2.vue'
-import LearningImage from '../../UI/Learning/LearningImage.vue'
+import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
+import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
+import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue'
+import LearningList from '../../UI/Learning/Listing/LearningList.vue'
+import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue'
+import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
+import LearningSpan2 from '../../UI/Learning/Highlight/LearningSpan2.vue'
+import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
 
 import content1_asset from '/public/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/content1-asset.svg?url'
-import LearningListItemNumbered from '../../UI/Learning/LearningListItemNumbered.vue'
+import LearningListItemNumbered from '../../UI/Learning/Listing/LearningListItemNumbered.vue'
 </script>

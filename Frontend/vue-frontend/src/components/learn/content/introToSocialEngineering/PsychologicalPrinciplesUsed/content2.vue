@@ -56,17 +56,17 @@
 </template>
 
 <script setup lang="ts">
-import LearningContent from '../../UI/Learning/LearningContent.vue';
-import LearningSection from '../../UI/Learning/LearningSection.vue';
-import LearningHeader from '../../UI/Learning/LearningHeader.vue';
-import LearningBody from '../../UI/Learning/LearningBody.vue';
-import LearningSpan from '../../UI/Learning/LearningSpan.vue';
-import LearningList from '../../UI/Learning/LearningList.vue'
+import LearningContent from '../../UI/Learning/Core/LearningContent.vue';
+import LearningSection from '../../UI/Learning/Core/LearningSection.vue';
+import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue';
+import LearningBody from '../../UI/Learning/Core/LearningBody.vue';
+import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue';
+import LearningList from '../../UI/Learning/Listing/LearningList.vue'
 import { ref } from 'vue';
-import LearningImageBanner from '../../UI/Learning/LearningImageBanner.vue'
+import LearningImageBanner from '../../UI/Learning/Image/LearningImageBanner.vue'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import content2_assets from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/loveletter.png?url';
-import LearningImage from '../../UI/Learning/LearningImage.vue'
+import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
 const principles = ref([
     "Authority: People are more likely to comply.",
     "Scarcity: The fear of missing out ons.",
