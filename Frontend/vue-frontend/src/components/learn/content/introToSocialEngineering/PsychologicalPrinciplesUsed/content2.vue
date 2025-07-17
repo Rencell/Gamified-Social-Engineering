@@ -65,7 +65,7 @@ import LearningList from '../../UI/Learning/LearningList.vue'
 import { ref } from 'vue';
 import LearningImageBanner from '../../UI/Learning/LearningImageBanner.vue'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import content2_assets from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content2-asset.svg?url';
+import content2_assets from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/loveletter.png?url';
 import LearningImage from '../../UI/Learning/LearningImage.vue'
 const principles = ref([
     "Authority: People are more likely to comply.",

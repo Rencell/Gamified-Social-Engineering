@@ -6,7 +6,7 @@
         <slot></slot>
       </div>
     </div>
-    <img v-if="image" :src="image" alt="list item image" class="w-12 h-12 object-cover rounded-md ml-6" />
+    <img v-if="image" :src="image" alt="list item image" class="w-15 h-15 object-cover rounded-md ml-6" />
   </li>
 </template>
 
