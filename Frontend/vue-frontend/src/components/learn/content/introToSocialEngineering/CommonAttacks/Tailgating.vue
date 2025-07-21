@@ -40,8 +40,8 @@
                 <Button @click="showExample = !showExample" class="mx-auto">Click for visual scenario</Button>
                 
             </div>
-            <div v-if="showExample">
-                <img class="rounded-lg" :src="tailgating_Explain" alt="">
+            <div v-if="showExample" class="animate-in fade-in zoom-in duration-500">
+                <img class="rounded-lg transition-all duration-300" :src="tailgating_Explain" alt="">
                 <div class="mt-2">
                     <LearningSpan>Image Reference: </LearningSpan>
                     <Citation class=" text-gray-400 italic"

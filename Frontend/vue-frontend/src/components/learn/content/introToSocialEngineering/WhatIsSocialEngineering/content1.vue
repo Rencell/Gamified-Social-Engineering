@@ -22,8 +22,8 @@
                 </LearningSpan>.
             </LearningBody>
         </LearningSection>
-        <LearningQuote>
-            "Social engineering is the art of manipulating people so they give up confidential information."
+        <LearningQuote variant="danger">
+            Social engineering is the art of manipulating people so they give up confidential information.
         </LearningQuote>
     </div>
 </template>

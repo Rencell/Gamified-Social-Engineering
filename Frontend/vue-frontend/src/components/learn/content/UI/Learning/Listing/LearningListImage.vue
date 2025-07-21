@@ -3,7 +3,7 @@
     <div class="flex-shrink-0 mr-4">
       <img :src="imageSrc" :alt="altText" class="w-12 h-12 object-cover rounded-full" />
     </div>
-    <div class="flex-grow text-sm">
+    <div class="flex-grow text-sm/loose font-medium">
       <slot></slot>
     </div>
   </div>

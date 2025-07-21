@@ -1,7 +1,7 @@
 <template>
   <li class="flex items-center justify-between mb-4 last:mb-0">
     <div class="flex items-start">
-      <span class="flex-shrink-0 w-6 h-6 rounded-full bg-[#299F69] text-white flex items-center justify-center text-xs font-bold mt-1.5 mr-6">{{ number }}</span>
+      <span class="flex-shrink-0 w-6 h-6 rounded-full bg-[#299F69] text-white flex items-center justify-center text-xs font-bold mt-1 mr-6">{{ number }}</span>
       <div class="text-gray-200 text-sm/loose font-medium">
         <slot></slot>
       </div>
