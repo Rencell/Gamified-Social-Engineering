@@ -1,14 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import DragPair from '../../../QuizUI/DragPair/DragPair.vue'
+import type { Question } from '@/components/learn/QuizUI/DragPair/type'
 
-interface Question {
-    id: number
-    question: string
-    topAnswer: string
-    bottomAnswer: string
-    correctAnswer: "top" | "bottom"
-}
 
 const sampleQuestions: Question[] = [
     {
@@ -17,6 +11,7 @@ const sampleQuestions: Question[] = [
         topAnswer: "Metaphor",
         bottomAnswer: "Analogy",
         correctAnswer: "bottom",
+        feedback: "Analogy is used to compare seemingly unrelated subjects, while metaphor is a direct comparison."
     },
     {
         id: 2,
@@ -24,6 +19,7 @@ const sampleQuestions: Question[] = [
         topAnswer: "Personification",
         bottomAnswer: "Alliteration",
         correctAnswer: "top",
+        feedback: "Personification gives human traits to non-human things; alliteration is about repeating consonant sounds."
     },
     {
         id: 3,
@@ -31,6 +27,7 @@ const sampleQuestions: Question[] = [
         topAnswer: "Assonance",
         bottomAnswer: "Alliteration",
         correctAnswer: "bottom",
+        feedback: "Alliteration is the repetition of consonant sounds at the start of words; assonance is about vowel sounds."
     },
 ]
 
@@ -44,6 +41,6 @@ const handleScoreUpdate = (score: number) => {
 
 
 <template>
-    <DragPair :questions="sampleQuestions" :feedback="'nigga'" @update:score="handleScoreUpdate"></DragPair>
+    <DragPair :questions="sampleQuestions"  @update:score="handleScoreUpdate"></DragPair>
     
 </template>

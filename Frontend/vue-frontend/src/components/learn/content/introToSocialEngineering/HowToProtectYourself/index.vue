@@ -1,19 +1,20 @@
-<template>
-  <Content1 />
-  <Content2 />
-  <Quiz />
-  <Content3 />
-</template>
-
 <script setup lang="ts">
 import Content1 from './content1.vue'
 import Content2 from './content2.vue'
 import Quiz from './quiz.vue'
 import Content3 from './content3.vue'
+import ScrollReveal from '../../UI/ScrollReveal.vue';
 
-// Script for How to Protect Yourself
+const components = [
+  { id: '1', component: Content1 },
+  { id: '2', component: Content2 },
+  { id: '3', component: Quiz },
+  { id: '4', component: Content3 }
+];
 </script>
 
-<style scoped>
-/* Styles for How to Protect Yourself */
-</style>
+
+<template>
+  <ScrollReveal :components="components" />
+</template>
+

@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <!-- Content for Final Quiz -->
-  </div>
+  <Content1 />
 </template>
 
 <script setup lang="ts">
+import Content1 from './content1.vue'
+
 // Script for Final Quiz
 </script>
 

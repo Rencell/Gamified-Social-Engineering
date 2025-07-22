@@ -52,4 +52,5 @@ import list2_image from '/public/Learning/Content/introToSocialEngineering/WhatI
 import content2_assets from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content2-asset.svg?url';
 import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue'
 
+
 </script>

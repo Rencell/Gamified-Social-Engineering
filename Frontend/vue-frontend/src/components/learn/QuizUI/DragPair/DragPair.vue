@@ -9,7 +9,6 @@ import type { Question } from './type'
 
 const props = defineProps<{
   questions: Question[];
-  feedback: string;
 }>();
 
 const emit = defineEmits(["update:score"]);
@@ -115,7 +114,7 @@ const isTop = computed(() => {
                     : 'Incorrect' }}</span>
             </div>
             <div class="text-sm border-s-4 ps-4" :class="isCorrect ? 'border-green-500' : 'border-red-500'">
-                <p>{{ feedback }}</p>
+                <p>{{ question.feedback }}</p>
             </div>
         </div>
 

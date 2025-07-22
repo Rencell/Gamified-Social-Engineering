@@ -9,7 +9,7 @@
       </div>
       <p :class="titleVariants({ variant })">{{ title }}</p>
     </div>
-    <div class="w-xl ps-15 font-medium">
+    <div class="w-full ps-15 font-medium">
       <slot></slot>
     </div>
   </div>

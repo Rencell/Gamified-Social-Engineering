@@ -6,15 +6,19 @@
   import SocialMedia from './SocialMedia.vue'
   import Tailgating from './Tailgating.vue'
   import Others from './Others.vue'
+  import ScrollReveal from '../../UI/ScrollReveal.vue'
+  const components = [
+    { id: '1', component: Content1 },
+    { id: '2', component: Phishing },
+    { id: '3', component: Baiting },
+    { id: '4', component: Impersonation },
+    { id: '5', component: SocialMedia },
+    { id: '6', component: Tailgating },
+    { id: '7', component: Others }
+  ];
 
 </script>
 
 <template>
-  <Content1 />
-  <Phishing />
-  <Baiting />
-  <Impersonation />
-  <SocialMedia />
-  <Tailgating />
-  <Others />
+  <ScrollReveal :components="components" />
 </template>

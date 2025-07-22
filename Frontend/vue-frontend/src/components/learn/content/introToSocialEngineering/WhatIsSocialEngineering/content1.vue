@@ -12,6 +12,8 @@
                 <LearningSpan>Social engineering</LearningSpan>, and it targets people, not computers.
                 Social engineers exploit <LearningSpan>human psychology</LearningSpan> to gain access to
                 <LearningSpan>sensitive information</LearningSpan>.
+                Learning how to recognize and defend against these tactics is crucial for everyone, not just IT
+                professionals.
             </LearningBody>
 
             <LearningBody>
@@ -21,10 +23,10 @@
                 a reliable party like a <LearningSpan>bank</LearningSpan> or <LearningSpan>colleague from your work
                 </LearningSpan>.
             </LearningBody>
+            <LearningQuote variant="danger">
+                Social engineering is the art of manipulating people so they give up confidential information.
+            </LearningQuote>
         </LearningSection>
-        <LearningQuote variant="danger">
-            Social engineering is the art of manipulating people so they give up confidential information.
-        </LearningQuote>
     </div>
 </template>
 
@@ -39,5 +41,7 @@ import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue'
 import LearningQuote from '../../UI/Learning/Highlight/LearningQuote.vue'
 import imageUrl from '/public/SecurityAwarenessEssentials@3x.svg?url'
 
-import content1_assets from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content1-asset.svg?url';
+import content1_assets from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content1-asset.png?url';
 </script>
+
+
