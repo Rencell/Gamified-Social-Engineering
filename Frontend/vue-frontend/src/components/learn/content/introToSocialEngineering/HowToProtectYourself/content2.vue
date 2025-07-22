@@ -47,19 +47,13 @@ import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
 import LearningSpan2 from '../../UI/Learning/Highlight/LearningSpan2.vue'
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
 
-import content1_asset from '/public/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/content2-asset.svg?url'
 import LearningListItemNumbered from '../../UI/Learning/Listing/LearningListItemNumbered.vue'
 
 
-import LearningListImage from '../../UI/Learning/Listing/LearningListImage.vue'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 
 import eye_icon from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon/eye-icon.svg'
 import gift_icon from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon/gift-icon.svg'
-import chat_icon from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon/chat-icon.svg'
-import money_icon from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon/money-icon.svg'
-import book_icon from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon/book-icon.svg'
 import fingerprint_icon from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon/fingerprint-vibrant.svg'
 import LearningQuote from '../../UI/Learning/Highlight/LearningQuote.vue'
 
