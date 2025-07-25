@@ -1,6 +1,6 @@
 <template>
 
-    <div class="snap-center min-h-screen flex flex-col items-center justify-center ">
+    <div class="snap-start min-h-screen flex flex-col items-center justify-center ">
         <div class="w-full max-w-3xl space-y-6">
             <Card :class="['border-t-4 border-t-accent']">
                 <CardContent class="p-8">

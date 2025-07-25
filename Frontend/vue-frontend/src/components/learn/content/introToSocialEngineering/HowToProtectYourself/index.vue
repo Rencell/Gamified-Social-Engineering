@@ -3,7 +3,7 @@ import Content1 from './content1.vue'
 import Content2 from './content2.vue'
 import Quiz from './quiz.vue'
 import Content3 from './content3.vue'
-import ScrollReveal from '../../UI/ScrollReveal.vue';
+import LessonReveal from '../../UI/LessonReveal.vue';
 
 const components = [
   { id: '1', component: Content1 },
@@ -15,6 +15,6 @@ const components = [
 
 
 <template>
-  <ScrollReveal :components="components" />
+  <LessonReveal :components="components" />
 </template>
 

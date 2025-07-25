@@ -50,13 +50,13 @@ import LearningList from '../../UI/Learning/Listing/LearningList.vue'
 import { ref } from 'vue';
 import LearningImageBanner from '../../UI/Learning/Image/LearningImageBanner.vue'
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue';
-import content1_assets from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content1-asset.svg?url';
-import Human from '/public/Human.webp?url';
+import content1_assets from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content1-asset.svg?url';
+import Human from '/Human.webp?url';
 
-import imageUrl from '/public/SecurityAwarenessEssentials@3x.svg?url'
-import cryingemoji from '/public/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/crying-emoji.svg?url';
-import worryemoji from '/public/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/worry-emoji.svg?url';
-import curiousemoji from '/public/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/curious-emoji.svg?url';
+import imageUrl from '/SecurityAwarenessEssentials@3x.svg?url'
+import cryingemoji from '/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/crying-emoji.svg?url';
+import worryemoji from '/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/worry-emoji.svg?url';
+import curiousemoji from '/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/curious-emoji.svg?url';
 
 import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue'
 

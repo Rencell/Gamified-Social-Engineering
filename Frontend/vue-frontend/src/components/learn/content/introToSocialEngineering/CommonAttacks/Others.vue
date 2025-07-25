@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
-import desktopWarning from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/ExclusiveUsePolicy@3x.png'
+import desktopWarning from '/Learning/Content/introToSocialEngineering/CommonAttacks/ExclusiveUsePolicy@3x.png'
 import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'

@@ -50,9 +50,8 @@ const handleAnswerClick = (answer: "top" | "bottom") => {
 
     if (answer === question.value.correctAnswer) {
         score.value++
-        emit("update:score", score.value);
     }
-
+    
     setTimeout(() => {
         nextQuestion()
     }, 4000)
@@ -66,6 +65,7 @@ const nextQuestion = () => {
         answered.value = false
         isAnimating.value = false
     } else {
+        emit("update:score", score.value);
         alert(`Game finished! Your score: ${score.value}/${props.questions.length}`)
         isAnimationFinished.value = false
         currentQuestionIndex.value = 0
@@ -89,7 +89,7 @@ const isTop = computed(() => {
 </script>
 
 <template>
-    <div class="rounded-lg relative min-h-screen bg-gradient-to-b from-secondary to-black flex flex-col w-full">
+    <div class="w-4xl rounded-lg relative min-h-[90dvh] bg-secondary border-t-4 border-t-blue-500 flex flex-col">
 
 
         <!-- Header -->
@@ -134,7 +134,7 @@ const isTop = computed(() => {
                 <h3 class="text-xl font-semibold text-white">{{ question.topAnswer }}</h3>
                 <div v-if="isTop"
                     class="absolute inset-0 rounded-3xl animate-pulse"
-                    :class="[isCorrect ? 'bg-green-400 border-green-400' : 'bg-red-400 border-red-400']"
+                    :class="[isCorrect ? 'bg-green-400/80 border-green-400/80' : 'bg-red-400/80 border-red-400/80']"
                 />
             </Card>
 
@@ -166,7 +166,7 @@ const isTop = computed(() => {
                 <h3 class="text-xl font-semibold text-white">{{ question.bottomAnswer }}</h3>
                 <div v-if="isBottom"
                     class="absolute inset-0 rounded-3xl animate-pulse"
-                    :class="[isCorrect ? 'bg-green-400 border-green-400' : 'bg-red-400 border-red-400']"
+                    :class="[isCorrect ? 'bg-green-400/80 border-green-400/80' : 'bg-red-400/80 border-red-400/80']"
                 />
             </Card>
 

@@ -3,10 +3,11 @@ import { RouterLink, useRoute } from 'vue-router'
 
 import { computed, onMounted,ref } from 'vue'
 
-import home from '/public/Icons/Home.svg?url'
-import learn from '/public/Icons/Learn.svg?url'
-import learns from '/public/Icons/Learns.svg?url'
-import trophy from '/public/Icons/Trophy.svg?url'
+import home from '/Icons/Home.svg?url'
+import learn from '/Icons/Learn.svg?url'
+import learns from '/Icons/Learns.svg?url'
+import trophy from '/Icons/Trophy.svg?url'
+import game from '/Icons/Game.svg?url'
 import { Home, BookOpen, Trophy, AlertTriangle, User, Flag } from 'lucide-vue-next'
 import {
   Sidebar,
@@ -31,20 +32,22 @@ const navigationData = {
     {
       title: 'Home', 
       url: '/home',
-      icon: Home,
       Image: home
     },
     { 
       title: 'Learn', 
       url: '/learn', 
-      icon: BookOpen,
       Image: learn
     },
     { 
       title: 'Leaderboards', 
       url: '#', 
-      icon: Trophy ,
       Image: trophy
+    },
+    { 
+      title: 'Mini Games', 
+      url: '#', 
+      Image: game
     },
   ],
   account: [

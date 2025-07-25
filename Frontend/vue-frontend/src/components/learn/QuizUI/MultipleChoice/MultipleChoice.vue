@@ -30,6 +30,9 @@ const selectedAnswer = ref<string | null>(null)
 const showResult = ref(false)
 
 const handleAnswerSelect = (answer: string) => {
+    if (showResult.value) {
+        return
+    }
     selectedAnswer.value = answer
 }
 

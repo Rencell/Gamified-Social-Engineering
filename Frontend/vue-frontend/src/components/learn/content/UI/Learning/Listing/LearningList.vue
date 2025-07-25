@@ -1,13 +1,20 @@
 <template>
   <div class="p-4 rounded-xl">
-    <ul class="list-none p-0 m-0 animate-parent">
+    <ul :class="[animation ? 'animate-parent' : 'animate-default']" class="list-none p-0 m-0">
       <slot></slot>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-// No props needed anymore
+
+defineProps({
+  animation: {
+    type: Boolean,
+    default: true 
+  }
+})
+
 </script>
 
 
@@ -23,9 +30,23 @@
   }
 }
 
+@keyframes drop-in-default {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
 .animate-parent > * {
   opacity: 0;
   animation: drop-in 0.5s ease-out forwards;
+}
+
+.animate-default > * {
+  animation: drop-in-default 0.5s ease-out forwards;
+  transition: opacity 0.3s ease-in-out;
 }
 
 /* Optional: staggered effect */

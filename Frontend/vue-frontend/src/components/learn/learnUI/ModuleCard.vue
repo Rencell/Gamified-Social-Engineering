@@ -25,7 +25,7 @@ const props = defineProps({
 
 
         <div class="grow my-2 p-3 flex items-center rounded-xl bg-secondary gap-6">
-            <div :class="interactive ? 'flex' : 'opacity-0' " class="items-center justify-center">
+            <div class="flex items-center justify-center">
                 <div class="w-12 h-12 relative mx-auto">
                     <!-- Gray background circle -->
                     <svg class="w-full h-full" viewBox="0 0 36 36">
@@ -35,7 +35,7 @@ const props = defineProps({
                     <!-- Progress circle -->
                     <svg class="w-full h-full absolute top-0 left-0" viewBox="0 0 36 36">
                         <circle class="stroke-current text-accent transition-all" stroke-width="4"
-                            stroke-dasharray="100" stroke-dashoffset="calc((100 - 0.1) )" fill="none" cx="18" cy="18"
+                            stroke-dasharray="100" :stroke-dashoffset="interactive ? 5 : 99" fill="none" cx="18" cy="18"
                             r="16" stroke-linecap="round" transform="rotate(-90 18 18)">
                         </circle>
                     </svg>

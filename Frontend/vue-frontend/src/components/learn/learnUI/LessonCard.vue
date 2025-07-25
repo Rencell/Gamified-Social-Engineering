@@ -30,7 +30,7 @@ const props = defineProps<Props>()
         <!-- Text -->
         <div class="flex flex-col justi-between grow">
             <h2 class="text-center font-bold text-2xl my-3">{{title}}</h2>
-            <p class="text-center text-gray-400 mb-2 text-xs">{{ description }}</p>
+            <p class="text-center text-gray-400 mb-2 text-xs font-bold">{{ description }}</p>
         </div>
     </div>
 </template>

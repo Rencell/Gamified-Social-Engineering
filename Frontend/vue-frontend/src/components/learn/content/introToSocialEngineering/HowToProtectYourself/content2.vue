@@ -12,7 +12,7 @@
         <LearningSection>
 
             
-            <LearningList>
+            <LearningList :animation="false">
                 <TransitionGroup name="fade">
                     <template v-for="(item, index) in visibleItems" :key="index">
                         <LearningListItemNumbered :image="item.image" :number="index + 1"
@@ -52,9 +52,9 @@ import LearningListItemNumbered from '../../UI/Learning/Listing/LearningListItem
 
 import { Button } from '@/components/ui/button'
 
-import eye_icon from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon/eye-icon.svg'
-import gift_icon from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon/gift-icon.svg'
-import fingerprint_icon from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon/fingerprint-vibrant.svg'
+import eye_icon from '/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon/eye-icon.svg'
+import gift_icon from '/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon/gift-icon.svg'
+import fingerprint_icon from '/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon/fingerprint-vibrant.svg'
 import LearningQuote from '../../UI/Learning/Highlight/LearningQuote.vue'
 
 const items = [

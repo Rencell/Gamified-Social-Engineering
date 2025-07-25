@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
-import tailgating from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/tailgating.png'
+import tailgating from '/Learning/Content/introToSocialEngineering/CommonAttacks/tailgating.png'
 import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
@@ -66,7 +66,7 @@ import LearningList from '../../UI/Learning/Listing/LearningList.vue'
 import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue'
 import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue'
 
-import tailgating_Explain from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/tailgating-attacks-explained.avif'
+import tailgating_Explain from '/Learning/Content/introToSocialEngineering/CommonAttacks/tailgating-attacks-explained.avif'
 import Citation from '../../UI/Learning/Highlight/Citation.vue'
 import Button from '@/components/ui/button/Button.vue'
 import { ref } from 'vue'

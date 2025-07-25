@@ -40,6 +40,6 @@ import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
 import LearningSpan2 from '../../UI/Learning/Highlight/LearningSpan2.vue'
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
 
-import content1_asset from '/public/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/content1-asset.svg?url'
+import content1_asset from '/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/content1-asset.svg?url'
 import LearningListItemNumbered from '../../UI/Learning/Listing/LearningListItemNumbered.vue'
 </script>

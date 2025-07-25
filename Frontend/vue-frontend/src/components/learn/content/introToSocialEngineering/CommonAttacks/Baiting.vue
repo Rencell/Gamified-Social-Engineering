@@ -47,7 +47,7 @@ import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
 
-import baitingImage from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/Baiting.png'
+import baitingImage from '/Learning/Content/introToSocialEngineering/CommonAttacks/Baiting.png'
 import LearningList from '../../UI/Learning/Listing/LearningList.vue'
 import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue'
 import LearningSpan2 from '../../UI/Learning/Highlight/LearningSpan2.vue'

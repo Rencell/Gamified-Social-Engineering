@@ -13,7 +13,7 @@ import { RouterLink } from 'vue-router';
 
 
         <RouterLink :to="{ name: 'Learn-Phishing' }" class="absolute top-0 left-0 p-4">
-            <div class="flex gap-2 mb-5 text-sm items-center text-accent">
+            <div class="flex gap-2 mb-5 text-sm items-center text-accent ">
                 <ArrowLeft :size="15"></ArrowLeft> Back
             </div>
         </RouterLink>

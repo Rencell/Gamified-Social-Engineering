@@ -40,7 +40,15 @@ export const useLearningStore = defineStore('learning', () => {
   const setSelectedModule = (module: Module) => {
     selectedModule.value = module
   }
-
+  
+  const activateModuleInteraction = () => {
+    if (selectedModule.value) {
+      selectedModule.value.interactive = true
+      console.log(selectedModule.value)
+    } else {
+      console.error('No module is currently selected.')
+    }
+  }
 
   const nextModule = () => {
     if (!selectedModule.value || !currentModules().length) return
@@ -66,6 +74,7 @@ export const useLearningStore = defineStore('learning', () => {
     currentModules,
     loadLessons, 
     setSelectedModule,
+    activateModuleInteraction,
     previousModule,
     nextModule
   }

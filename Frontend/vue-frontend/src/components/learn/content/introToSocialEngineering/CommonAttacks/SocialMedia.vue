@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
-import Social_Media from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/Social_Media.webp'
+import Social_Media from '/Learning/Content/introToSocialEngineering/CommonAttacks/Social_Media.webp'
 import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'

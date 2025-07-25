@@ -16,7 +16,7 @@ learningStore.loadLessons(lessonId )
 
 <template>
     <RouterLink :to="{ name: 'Learn' }">
-        <div class="flex gap-2 mb-5 text-sm items-center text-accent">
+        <div class="flex gap-2 mb-5 text-sm items-center text-accent font-bold">
             <ArrowLeft :size="15"></ArrowLeft> Back
         </div>
     </RouterLink>

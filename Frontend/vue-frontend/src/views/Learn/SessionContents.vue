@@ -39,6 +39,7 @@ const start = ref(false);
                     v-for="module in learningStore.currentModules()" 
                     :key="module.title" 
                     :active="module.title === learningStore.selectedModule?.title"
+                    :completed="module.interactive"
                     @click="learningStore.setSelectedModule(module)"
                     >
                     {{ module.title }}

@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
-import phishingIcon from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/phishing@2x.webp'
+import phishingIcon from '/Learning/Content/introToSocialEngineering/CommonAttacks/phishing@2x.webp'
 import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
@@ -50,10 +50,10 @@ import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue'
 import LearningSpan2 from '../../UI/Learning/Highlight/LearningSpan2.vue'
 
 
-import emailListIcon from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/listIcons/email-phishing-icon.svg'
-import TelephoneListIcon from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/listIcons/telephone-icon.svg'
-import MobilePhoneListIcon from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/listIcons/mobile-phone-icon.svg'
-import whaleIcon from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/listIcons/whale-icon.svg'
+import emailListIcon from '/Learning/Content/introToSocialEngineering/CommonAttacks/listIcons/email-phishing-icon.svg'
+import TelephoneListIcon from '/Learning/Content/introToSocialEngineering/CommonAttacks/listIcons/telephone-icon.svg'
+import MobilePhoneListIcon from '/Learning/Content/introToSocialEngineering/CommonAttacks/listIcons/mobile-phone-icon.svg'
+import whaleIcon from '/Learning/Content/introToSocialEngineering/CommonAttacks/listIcons/whale-icon.svg'
 import LearningListImage from '../../UI/Learning/Listing/LearningListImage.vue'
 
 </script>

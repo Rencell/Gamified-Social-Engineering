@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
-import anoynymous from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/anoynymous.svg'
+import anoynymous from '/Learning/Content/introToSocialEngineering/CommonAttacks/anoynymous.svg'
 import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'

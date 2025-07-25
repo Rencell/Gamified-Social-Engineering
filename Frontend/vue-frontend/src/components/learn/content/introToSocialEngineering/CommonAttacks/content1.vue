@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Monitor, Lock, Shield } from 'lucide-vue-next'
+import { Monitor, Lock, Shield, ChevronRight } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
-import hackMan from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/EnableFirewall@3x.png'
-import desktopWarning from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/ExclusiveUsePolicy@3x.png'
-import hacks from '/public/Learning/Content/introToSocialEngineering/CommonAttacks/Hacker.png'
+import hackMan from '/Learning/Content/introToSocialEngineering/CommonAttacks/EnableFirewall@3x.png'
+import desktopWarning from '/Learning/Content/introToSocialEngineering/CommonAttacks/ExclusiveUsePolicy@3x.png'
+import hacks from '/Learning/Content/introToSocialEngineering/CommonAttacks/Hacker.png'
 import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
@@ -59,11 +59,11 @@ const pretest: Question[] =  [
             <LearningBody>
                 But before we dive into the types of attacks, let's take a Pre-test.
             </LearningBody>
+            <Button variant="link" size="lg" @click="isPretest = true">
+                <ChevronRight></ChevronRight>Take Pre-test
+            </Button>
         </LearningSection>
 
-        <Button size="lg" @click="isPretest = true">
-            <Monitor></Monitor>Take Pre-test
-        </Button>
 
     </div>
 

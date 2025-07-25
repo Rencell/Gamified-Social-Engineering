@@ -16,7 +16,7 @@ watch(() => learningStore.selectedModule, () => {
 </script>
 
 <template>
-    <div ref="moduleContent" class="bg-secondary/40 flex-[2_2_0%] rounded-lg h-screen overflow-y-scroll snap-y snap-mandatory scroll-hidden">
+    <div ref="moduleContent" class="bg-secondary/40 flex-[2_2_0%] rounded-lg h-screen overflow-y-scroll scroll-hidden">
 
 
         <div class="snap-start">
@@ -27,7 +27,7 @@ watch(() => learningStore.selectedModule, () => {
             <hr class="border-background mb-10">
             <component :is="learningStore.selectedModule?.component" />
         </div>
-        <hr class="border-background border-2">
+        <!-- <hr class="border-background border-2">
         <div class="p-10 flex gap-2 snap-start">
             <Button v-show="learningStore.selectedModule && learningStore.currentModules().findIndex(m => m.title === learningStore.selectedModule?.title) > 0" variant="outline" class="bg-accent" size="lg" @click="learningStore.previousModule()">
                 <p class="font-bold text-white">Previous</p>
@@ -37,7 +37,7 @@ watch(() => learningStore.selectedModule, () => {
                 <p class="font-bold text-white">Next</p>
                 <ChevronRight class="text-primary"></ChevronRight>
             </Button>
-        </div>
+        </div> -->
         
 
     </div>

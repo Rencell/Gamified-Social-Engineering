@@ -25,13 +25,13 @@
             </LearningList>
 
 
+            <LearningQuote>
+                Statistically says, 98% of cyber attacks involve some form of social engineering.
+                <Citation word="(Indusface, 2025)"
+                    citation-link="https://www.indusface.com/learning/what-is-a-social-engineering-attack/" />
+            </LearningQuote>
         </LearningSection>
 
-        <LearningQuote>
-            Statistically says, 98% of cyber attacks involve some form of social engineering.
-            <Citation word="(Indusface, 2025)"
-                citation-link="https://www.indusface.com/learning/what-is-a-social-engineering-attack/" />
-        </LearningQuote>
     </div>
 </template>
 
@@ -46,10 +46,10 @@ import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue'
 import LearningQuote from '../../UI/Learning/Highlight/LearningQuote.vue'
 import LearningList from '../../UI/Learning/Listing/LearningList.vue'
 
-import list1_image from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/list1-icon.svg?url'
-import list2_image from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/list2-icon.svg?url'
+import list1_image from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/list1-icon.svg?url'
+import list2_image from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/list2-icon.svg?url'
 
-import content2_assets from '/public/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content2-asset.svg?url';
+import content2_assets from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content2-asset.svg?url';
 import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue'
 
 

@@ -1,8 +1,8 @@
 import type { Lesson } from "@/stores/types/learning";
 
-import phishing from "/public/Phishing.webp?url";
-import socialEngineering from "/public/SecurityAwarenessEssentials@3x.svg?url";
-import human from "/public/Human.webp?url";
+import phishing from "/Phishing.webp?url";
+import socialEngineering from "/SecurityAwarenessEssentials@3x.svg?url";
+import human from "/Human.webp?url";
 
 //IntroToSocEng
 import { WhatIsSocialEngineering, PsychologicalPrinciplesUsed, CommonAttacks, InteractiveScenarioSpotTheAttack, HowToProtectYourself, FinalQuiz } from "@/components/learn/content/introToSocialEngineering";
@@ -20,10 +20,10 @@ export const lessons: Record<string, Lesson> = {
         
         modules: [
             { title: 'What is Social Engineering?', component: WhatIsSocialEngineering, interactive: true },
-            { title: 'Psychological Principles Used', component: PsychologicalPrinciplesUsed },
-            { title: 'Common Social Engineering Attacks', component: CommonAttacks },
-            { title: 'Interactive Scenario: Spot the Attack', component: InteractiveScenarioSpotTheAttack },
-            { title: 'How to Protect Yourself', component: HowToProtectYourself },
+            { title: 'Psychological Principles Used', component: PsychologicalPrinciplesUsed, interactive: false },
+            { title: 'Types of Social Engineering Attacks', component: CommonAttacks, interactive: false },
+            { title: 'Interactive Scenario: Spot the Attack', component: InteractiveScenarioSpotTheAttack, interactive: false },
+            { title: 'How to Protect Yourself', component: HowToProtectYourself, interactive: false },
             { title: 'Final Quiz', component: FinalQuiz },
         ]
     },

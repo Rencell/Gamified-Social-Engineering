@@ -42,13 +42,13 @@ import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue';
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue';
-import content2_asset from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/content2-asset.png'
+import content2_asset from '/Learning/Content/introToSocialEngineering/HowToProtectYourself/content2-asset.png'
 import LearningList from '../../UI/Learning/Listing/LearningList.vue'
 import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue';
 import LearningListImage from '../../UI/Learning/Listing/LearningListImage.vue';
 import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue';
-import malwareIconVibrant from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon3/malwareicon-vibrant.svg'
-import magnifyingVibrant from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon3/magnifying-glass-icon-vibrant.svg'
-import questionVibrant from '/public/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon3/question-icon-vibrant.svg'
+import malwareIconVibrant from '/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon3/malwareicon-vibrant.svg'
+import magnifyingVibrant from '/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon3/magnifying-glass-icon-vibrant.svg'
+import questionVibrant from '/Learning/Content/introToSocialEngineering/HowToProtectYourself/list-icon3/question-icon-vibrant.svg'
 
 </script>
