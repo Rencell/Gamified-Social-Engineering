@@ -1,10 +1,52 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
 import { CardContent,Card } from "@/components/ui/card";
-import { Star, Coins, Shield } from "lucide-vue-next";
+import { Shield } from "lucide-vue-next";
 import coins from "/Home/coin.svg";
 import star from "/Home/star.png";
-import my_xp from "/Home/my_xp.svg";
+import my_xp from "/Home/exp.png";
+import { onMounted, ref } from "vue";
+
+const animatedCoins = ref(0);
+const animatedXp = ref(0);
+
+const finalCoins = 8;
+const finalXp = 16;
+
+const animationDuration = 2000; // in milliseconds
+
+// You can use setTimeout or setInterval, but requestAnimationFrame is preferred for smooth UI animations.
+// If you want to use setTimeout, here's how you could rewrite it:
+
+const animateValue = (
+  start: number,
+  end: number,
+  duration: number,
+  updater: (value: number) => void
+) => {
+  const frameRate = 60; // frames per second
+  const totalFrames = Math.round((duration / 1000) * frameRate);
+  let currentFrame = 0;
+
+  const step = () => {
+    currentFrame++;
+    const progress = Math.min(currentFrame / totalFrames, 1);
+    updater(Math.floor(progress * (end - start) + start));
+    if (progress < 1) {
+      setTimeout(step, 1000 / frameRate);
+    }
+  };
+  step();
+};
+
+onMounted(() => {
+  animateValue(0, finalCoins, animationDuration, (value) => {
+    animatedCoins.value = value;
+  });
+  animateValue(0, finalXp, animationDuration, (value) => {
+    animatedXp.value = value;
+  });
+});
 </script>
 
 <template>
@@ -31,7 +73,7 @@ import my_xp from "/Home/my_xp.svg";
                 <img :src="coins" class="w-full h-full text-white" />
               </div>
               <div class="text-left">
-                <div class="text-white text-xl font-bold">8</div>
+                <div class="text-white text-xl font-bold">{{ animatedCoins }}</div>
                 <div class="text-slate-400 text-sm">Coins</div>
               </div>
             </div>
@@ -41,7 +83,7 @@ import my_xp from "/Home/my_xp.svg";
                 <img :src="my_xp" class="w-full h-full text-white" />
               </div>
               <div class="text-left">
-                <div class="text-white text-xl font-bold">16</div>
+                <div class="text-white text-xl font-bold">{{ animatedXp }}</div>
                 <div class="text-slate-400 text-sm">Xp</div>
               </div>
             </div>
@@ -83,7 +125,7 @@ import my_xp from "/Home/my_xp.svg";
               <div class="bg-orange-500 h-2 rounded-full" :style="{ width: '45%' }"></div>
             </div>
           </div>
-        </CardContent class="space-y-4">
+        </CardContent>
       </Card>
 
       <!-- Continue Button -->

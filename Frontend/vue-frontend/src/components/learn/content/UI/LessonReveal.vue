@@ -2,6 +2,7 @@
 import { ref, watchEffect, nextTick } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
 import { useLearningStore } from '@/stores/learning';
+import { ArrowBigDown, MoveDown } from 'lucide-vue-next';
 const learningStore = useLearningStore();
 interface ScrollComponent {
   id: string | number;
@@ -47,13 +48,15 @@ const showNextComponent = async () => {
     </div>
 
      
-    <div v-if="components[currentVisibleIndex].next || components[currentVisibleIndex].next == null" class="flex justify-center mt-4 mb-10">
-      <Button class="w-2xl" v-if="currentVisibleIndex < components.length - 1" @click="showNextComponent">
-        Continue
-      </Button>
-      <Button class="w-2xl" v-else @click="showNextComponent">
-        Next Lesson
-      </Button>
+    <div class="flex justify-center items-center">
+      <div v-if="components[currentVisibleIndex].next || components[currentVisibleIndex].next == null" class="w-2xl flex my-10">
+        <Button class="ml-auto" v-if="currentVisibleIndex < components.length - 1" @click="showNextComponent">
+          <MoveDown />
+        </Button>
+        <Button class="w-2xl" v-else @click="showNextComponent">
+          Next Lesson
+        </Button>
+      </div>
     </div>
   </div>
 </template>

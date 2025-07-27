@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
 import Button from '@/components/ui/button/Button.vue';
-import { ArrowRight } from 'lucide-vue-next';
+import book from '/Learning/book.png'
+import { ArrowRight, Circle, CircleCheck, Play } from 'lucide-vue-next';
 const props = defineProps({
     title: {
         type: String,
@@ -14,6 +15,10 @@ const props = defineProps({
     interactive: {
         type: Boolean,
         default: false
+    },
+    lessonkey: {
+        type: Number,
+        required: true
     }
 });
 </script>
@@ -25,35 +30,27 @@ const props = defineProps({
 
 
         <div class="grow my-2 p-3 flex items-center rounded-xl bg-secondary gap-6">
-            <div class="flex items-center justify-center">
-                <div class="w-12 h-12 relative mx-auto">
-                    <!-- Gray background circle -->
-                    <svg class="w-full h-full" viewBox="0 0 36 36">
-                        <circle class="stroke-current text-background" stroke-width="4" fill="none" cx="18" cy="18"
-                            r="16"></circle>
-                    </svg>
-                    <!-- Progress circle -->
-                    <svg class="w-full h-full absolute top-0 left-0" viewBox="0 0 36 36">
-                        <circle class="stroke-current text-accent transition-all" stroke-width="4"
-                            stroke-dasharray="100" :stroke-dashoffset="interactive ? 5 : 99" fill="none" cx="18" cy="18"
-                            r="16" stroke-linecap="round" transform="rotate(-90 18 18)">
-                        </circle>
-                    </svg>
-                    <!-- Center Text (optional) -->
-                    <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                    </div>
-                </div>
+            <div class="flex items-center justify-center pl-5">
+                
+                <img :src="book" alt="">
             </div>
             
-            <div class="grow gap-3 space-y-3 flex justify-between items-center">
-                <div class="font-semibold text-sm">{{ title }}</div>
-                <Button asChild size="sm" class="font-semibold bg-accent">
-                    <RouterLink :to="routerLink">
-                        Start <ArrowRight :size="18"></ArrowRight>
-                    </RouterLink>
-                    
-                </Button>
-
+            <div class="grow gap-3 space-y-3 flex justify-between items-center pr-5">
+                <div class="font-semibold text-sm space-y-3">
+                    <p class="uppercase text-xs font-bold text-slate-600">Lesson {{lessonkey}}</p>
+                    <p>{{ title }}</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <Button asChild variant="ghost" size="lg" class="font-semibold border-1 border-accent/60">
+                        <RouterLink :to="routerLink">
+                            <Play :size="18" fill="white" ></Play>
+                            <p class="font-bold">Learn</p> 
+                        </RouterLink>
+                        
+                    </Button>
+                    <Circle class="text-slate-600"  v-if="!interactive" />
+                    <CircleCheck v-else class="text-green-400" fill="green" />
+                </div>
             </div>
 
 

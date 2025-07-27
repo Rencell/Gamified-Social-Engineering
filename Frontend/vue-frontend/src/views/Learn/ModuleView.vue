@@ -30,7 +30,8 @@ learningStore.loadLessons(lessonId )
     
     <div class="flex flex-col mt-2">
         <ModuleCard 
-            v-for="module in learningStore.currentModules()" 
+            v-for="(module,key) in learningStore.currentModules()"
+             :lessonkey="key + 1"
             :key="module.title" :title="module.title"
             :router-link="`/learn/${lessonId}/session`" 
             :interactive="module.interactive"
