@@ -5,12 +5,16 @@ import Quiz from './quiz.vue'
 import Content3 from './content3.vue'
 import LessonReveal from '../../UI/LessonReveal.vue';
 
+import { ref } from 'vue'
+
 const components = [
   { id: '1', component: Content1 },
   { id: '2', component: Content2 },
-  { id: '3', component: Quiz },
-  { id: '4', component: Content3 }
+  { id: '3', component: Content3 },
+  { id: '4', component: Quiz, emits: true },
 ];
+
+
 </script>
 
 

@@ -12,6 +12,7 @@ const route = useRoute()
 const lessonId = route.params.lessonId as string;
 learningStore.loadLessons(lessonId )
 
+
 </script>
 
 <template>
@@ -20,6 +21,7 @@ learningStore.loadLessons(lessonId )
             <ArrowLeft :size="15"></ArrowLeft> Back
         </div>
     </RouterLink>
+    
     <LessonCard 
         :progress="75" 
         :description="learningStore.currentLesson()?.description"  

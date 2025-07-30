@@ -13,6 +13,12 @@ import type { Question } from '@/components/learn/QuizUI/MultipleChoice/type'
 import MultipleChoice from '@/components/learn/QuizUI/MultipleChoice/MultipleChoice.vue'
 const isPretest = ref(false)
 
+const emit = defineEmits(['showDown'])
+
+const toggleActive = () => {
+  emit('showDown', false)
+  isPretest.value = true
+}
 
 const pretest: Question[] =  [
     {
@@ -59,7 +65,7 @@ const pretest: Question[] =  [
             <LearningBody>
                 But before we dive into the types of attacks, let's take a Pre-test.
             </LearningBody>
-            <Button variant="link" size="lg" @click="isPretest = true">
+            <Button variant="link" size="lg" @click="toggleActive">
                 <ChevronRight></ChevronRight>Take Pre-test
             </Button>
         </LearningSection>

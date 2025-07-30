@@ -2,23 +2,40 @@
 import shop from '/Home/shop.svg';
 import bag from '/Home/bag.svg';
 import coin from '/Home/coin.svg';
+import badge from '/Home/badge.svg';
 import christmasBackground from '/Home/christmasBackground@3x.webp';
+import { Button } from '@/components/ui/button';
+import { LessonService } from '@/services';
+import { onMounted, ref } from 'vue';
 
+const lessons = ref<Lesson[]>([]);
+
+onMounted(async () => {
+  try {
+    lessons.value = await LessonService.getAll();
+    console.log("Fetched lessons:", lessons);
+  } catch (err) {
+    console.error("Error fetching lessons:", err);
+  }
+});
 
 </script>
 
 <template>
+    
     <div class="flex flex-col gap-5">
         <div class="flex justify-between h-15">
-            <div class="h-15 relative flex items-center">
-                <div class="absolute h-15 w-15">
-                    <img class="h-15 w-15" :src="shop" alt="">
+            <router-link :to="{ name: 'Shop' }">
+                <div class="h-15 relative flex items-center">
+                    <div class="absolute h-15 w-15">
+                        <img class="h-15 w-15" :src="shop" alt="">
+                    </div>
+                    <div class="bg-secondary rounded-full pl-15 pr-3 flex items-center">
+                        <img class="w-8 h-8" :src="coin" alt="">
+                        <span class="font-semibold text-sm">112</span>
+                    </div>
                 </div>
-                <div class="bg-secondary rounded-full pl-15 pr-3 flex items-center">
-                    <img class="w-8 h-8" :src="coin" alt="">
-                    <span class="font-semibold text-sm">112</span>
-                </div>
-            </div>
+            </router-link>
             <div class="h-full">
                 <img class="h-full" :src="bag" alt="">
             </div>
@@ -41,16 +58,21 @@ import christmasBackground from '/Home/christmasBackground@3x.webp';
         </div>
 
         <div class="flex flex-col gap-2">
-            <p class="font-bold text-lg">Badges</p>
+            <div class="flex justify-between items-center">
+                <p class="font-bold text-lg">Badges</p>
+                <RouterLink :to="{ name: 'Badges' }">
+                    <Button asChild variant="link" class="my-auto text-sm">see more</Button>
+                </RouterLink>
+            </div>
 
             <div>
                 <div class="flex gap-5">
-                    <div class="bg-secondary rounded-xl p-7">
 
-                        <img class="grayscale-100" :src="shop" alt="">
+                    <img class="bg-secondary rounded-xl p-7 w-50 h-50" :src="badge" alt="">
+                    <img class="bg-secondary rounded-xl p-7 w-50 h-50" :src="badge" alt="">
+                    <div class="h-50 flex items-center justify-center">
+
                     </div>
-                    <img class="bg-secondary rounded-xl p-7" :src="shop" alt="">
-                    <img class="bg-secondary rounded-xl p-7" :src="shop" alt="">
                 </div>
             </div>
         </div>

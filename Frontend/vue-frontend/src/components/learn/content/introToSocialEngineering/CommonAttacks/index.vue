@@ -9,7 +9,7 @@
   import LessonReveal from '../../UI/LessonReveal.vue'
   import Question from './question.vue'
   const components = [
-    { id: '1', component: Content1, next:false },
+    { id: '1', component: Content1 },
     { id: '2', component: Phishing },
     { id: '3', component: Baiting },
     { id: '4', component: Impersonation },

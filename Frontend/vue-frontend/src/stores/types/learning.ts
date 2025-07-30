@@ -10,5 +10,6 @@ export interface Lesson {
   description: string,
   image?: string
   bg?: string
+  locked?: boolean
   modules: Module[]
 }

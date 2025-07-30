@@ -1,0 +1,14 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+	<title>vector path</title>
+	<style>
+		.s0 { fill: none;stroke: #ffffff;stroke-linecap: round;stroke-linejoin: round;stroke-width: 15 } 
+		.s1 { fill: none;stroke: #666a81;stroke-linecap: round;stroke-linejoin: round;stroke-width: 15;stroke-dasharray: 60,30 } 
+		.s2 { fill: #bf7dcd } 
+	</style>
+	<path id="Layer 4" fill-rule="evenodd" class="s0" d="m309.8 245.4c-12 0-21.8-10.2-21.8-22.7 0-12.6 9.8-22.7 21.8-22.7 12.1 0 21.9 10.1 21.9 22.7 0 12.5-9.8 22.7-21.9 22.7z"/>
+	<path id="Layer 6" class="s1" d="m311 271c-7.7 49.1-195.6 79.8-213.6 114.8"/>
+	<path id="Layer 8" class="s1" d=""/>
+	<path id="Shape 3" class="s1" d=""/>
+	<path id="Shape 4" class="s1" d="m314 37c-0.1 0.8-1.1 16.6-17.3 48.2-26 50.5-79.8 124.9-147.7 119.8-99.5-7.5-96.2-108.8-27-125 68.8-16.1 213.8 1.9 187 85"/>
+	<path id="Shape 2" fill-rule="evenodd" class="s2" d="m307.7 221.7c0.6 1.4 1.9 2.3 3.3 2.4 1.5 0 2.7-0.7 3.2-2l14.6-38.2c0.6-1.6 0-3.4-1.5-4.4-1.4-1-3.3-0.9-4.5 0.2l-13.2 13.2-14.4-14.6c-1.3-1.2-3.2-1.5-4.5-0.6-1.4 0.8-1.9 2.6-1.1 4.2z"/>
+</svg>

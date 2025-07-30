@@ -62,7 +62,7 @@ const resetQuiz = () => {
 
         <!-- Question -->
         <div class="text-center w-full h-20">
-            <div class="text-3xl font-bold mb-2">
+            <div class="text-2xl font-bold mb-2">
                 <Typewriter :text="currentQuestion.question" @animationEnd="onAnimationEnd" />
             </div>
         </div>

@@ -5,7 +5,7 @@
             <!-- Question Card -->
             <Card :class="['border-t-4 border-t-blue-500', { 'vibrate': isWrong }]">
                 <CardContent class="p-8">
-                    <div v-if="!quizCompleted" class="text-center space-y-8">
+                    <div class="text-center space-y-8">
                         <h2 class="text-xl font-semibold text-gray-300 space-y-8">
                             <Typewriter :text="currentQuestion.text"></Typewriter>
                             <div class="flex justify-center">
@@ -48,17 +48,6 @@
                             </Card>
                         </div>
                     </div>
-                    <div v-else class="font-bold text-xl gap-7 flex flex-col text-center">
-                        <div>{{ score }} / {{ questions.length }} Question Correct</div>
-                        <div class="flex justify-center">
-                            <div class="w-16 h-0.5 bg-gray-300"></div>
-                        </div>
-                        <div class="flex flex-col gap-2 justify-center items-center text-xs hover:text-slate-400 cursor-pointer"
-                            @click="resetQuiz">
-                            <p>REPLAY</p>
-                            <RotateCcw />
-                        </div>
-                    </div>
                 </CardContent>
             </Card>
             <!-- Navigation -->
@@ -74,20 +63,35 @@
 
             </div>
         </div>
+
     </div>
+
 </template>
 
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { Card, CardContent } from '@/components/ui/card';
 import { Typewriter } from '@/components/ui/typewriter';
 import { CircleCheck, CircleX, RotateCcw } from 'lucide-vue-next';
 import type { Question } from './type';
+import quizSummary from '../quizSummary.vue'
+import { useLearningStore } from '@/stores/learning';
+const learningStore = useLearningStore();
 
 const props = defineProps<{
     questions: Question[];
 }>();
+
+const nextLesson = () => {
+    learningStore.nextModule();
+    resetQuiz();
+};
+
+const emit = defineEmits(['finish'])
+const finish = () => {
+  emit('finish', score) // score, answers
+}
 
 const currentQuestionIndex = ref(0);
 const currentQuestion = computed(() => props.questions[currentQuestionIndex.value]);
@@ -131,6 +135,13 @@ const nextQuestion = () => {
     tryCount.value = 0
     if (currentQuestionIndex.value < props.questions.length) {
         currentQuestionIndex.value++;
+    } 
+    
+
+    if (currentQuestionIndex.value >= props.questions.length) {
+        finish();
+    } else {
+        setCurrentQuestion(currentQuestionIndex.value);
     }
 };
 

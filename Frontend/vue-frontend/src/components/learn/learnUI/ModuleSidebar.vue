@@ -1,40 +1,76 @@
 <script setup lang="ts">
-import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-vue-next';
+import { ArrowLeft, ChevronLeft, ChevronRight, PanelLeftClose, PanelRightClose } from 'lucide-vue-next';
 import { RouterLink } from 'vue-router';
 import Button from '@/components/ui/button/Button.vue';
 import ModuleSidebarItem from './ModuleSidebarItem.vue';
 import { useLearningStore } from '@/stores/learning';
+import { ref, Transition } from 'vue';
 
 const learningStore = useLearningStore();
+
+const hideSideBar = ref(false);
+
 </script>
 
 <template>
     <div class="sticky top-0 self-start">
         <div class="bg-secondary rounded-lg">
 
-            <RouterLink :to="{ name: 'Learn-Phishing' }"
-                class="p-4 flex gap-2 text-sm items-center text-accent border-b-1 border-background">
+            <div class="flex items-center justify-between">
+                <Transition name="hideLeft" mode="out-in">
+                    <RouterLink :to="{ name: 'Learn-Phishing' }" v-show="!hideSideBar"
+                        class="p-4 flex gap-2 text-sm items-center text-accent border-b-1 border-background">
 
-                <ArrowLeft :size="15"></ArrowLeft> Back
+                        <ArrowLeft :size="15"></ArrowLeft> Back
+                    </RouterLink>
+                </Transition>
 
-            </RouterLink>
-            <div class="p-4 ">
-                <div class="flex justify-between">
-
-                    <p class="font-semibold text-xl">All lessons</p>
-
-                    <div class="gap-2 flex">
-                        <Button size="sm" variant="outline">
-                            <ChevronLeft :size="17"></ChevronLeft>
-                        </Button>
-                        <Button size="sm" variant="outline">
-                            <ChevronRight :size="17"></ChevronRight>
-                        </Button>
-                    </div>
+                <div class="p-4 animate-in" @click="hideSideBar = !hideSideBar ">
+                    <PanelRightClose v-if="hideSideBar" />
+                    <PanelLeftClose v-else />
                 </div>
-                <slot></slot>
-                
             </div>
+
+            <Transition name="hideLeft" mode="out-in">
+                <div v-show="!hideSideBar" class="p-4 ">
+                    <div class="flex justify-between">
+
+                        <p class="font-semibold text-xl">All lessons</p>
+
+                        <div class="gap-2 flex">
+                            <Button size="sm" variant="outline">
+                                <ChevronLeft :size="17"></ChevronLeft>
+                            </Button>
+                            <Button size="sm" variant="outline">
+                                <ChevronRight :size="17"></ChevronRight>
+                            </Button>
+                        </div>
+                    </div>
+                    <slot></slot>
+                </div>
+            </Transition>
         </div>
     </div>
 </template>
+
+<style scoped>
+.hideLeft-enter-active,
+.hideLeft-leave-active {
+    transition: opacity 0.3s, width 0.3s;
+    overflow: hidden;
+}
+
+.hideLeft-enter-from,
+.hideLeft-leave-to {
+    opacity: 0;
+    width: 0;
+    white-space: nowrap;
+}
+
+.hideLeft-enter-to,
+.hideLeft-leave-from {
+    opacity: 1;
+    width: 100%;
+    white-space: nowrap;
+}
+</style>

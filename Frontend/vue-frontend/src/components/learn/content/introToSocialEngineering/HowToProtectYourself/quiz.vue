@@ -1,10 +1,16 @@
 <template>
-    <DoDont :questions="questions" />
+    <!-- <DoDont :questions="questions" /> -->
+
+    <QuizFlowShell 
+        :questions="questions" 
+        :quiz-component="DoDont" 
+    />
 </template>
 
 <script setup lang="ts">
 import DoDont from '@/components/learn/QuizUI/DoDont/DoDont.vue'
 import type { Question } from '@/components/learn/QuizUI/DoDont/type';
+import QuizFlowShell from '@/components/learn/QuizUI/quizFlowShell.vue'
 
 const questions: Question[] = [
     {
@@ -19,34 +25,36 @@ const questions: Question[] = [
         text: 'click on suspicious email links',
         answer: 0
     },
-    {
-        text: 'use public Wi-Fi for banking',
-        answer: 0
-    },
-    {
-        text: 'use two-factor authentication',
-        answer: 1
-    },
-    {
-        text: 'save passwords in your browser',
-        answer: 0
-    },
-    {
-        text: 'download software from unknown sources',
-        answer: 0
-    },
-    {
-        text: 'ignore software updates',
-        answer: 0
-    },
-    {
-        text: 'backup your important data regularly',
-        answer: 1
-    },
-    {
-        text: 'check privacy settings on apps',
-        answer: 1
-    },
+    // {
+    //     text: 'use public Wi-Fi for banking',
+    //     answer: 0
+    // },
+    // {
+    //     text: 'use two-factor authentication',
+    //     answer: 1
+    // },
+    // {
+    //     text: 'save passwords in your browser',
+    //     answer: 0
+    // },
+    // {
+    //     text: 'download software from unknown sources',
+    //     answer: 0
+    // },
+    // {
+    //     text: 'ignore software updates',
+    //     answer: 0
+    // },
+    // {
+    //     text: 'backup your important data regularly',
+    //     answer: 1
+    // },
+    // {
+    //     text: 'check privacy settings on apps',
+    //     answer: 1
+    // },
 ];
+
+
 
 </script>

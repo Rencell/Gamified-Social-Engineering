@@ -11,7 +11,7 @@ const components = [
   { id: '1', component: Content1 },
   { id: '2', component: Content2 },
   { id: '3', component: Content3 },
-  { id: '4', component: Quiz }
+  { id: '4', component: Quiz, emits:true }
 ];
 
 </script>

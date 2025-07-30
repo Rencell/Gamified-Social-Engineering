@@ -31,7 +31,7 @@ const navigationData = {
   learning: [
     {
       title: 'Home', 
-      url: '/home',
+      url: ['/home', '/shop', '/badge'],
       Image: home
     },
     { 
@@ -77,8 +77,8 @@ onMounted(()=> {
         <SidebarGroupContent>
           <SidebarMenu class="space-y-1">
             <SidebarMenuItem v-for="item in navigationData.learning" :key="item.title">
-              <RouterLink :to="item.url" class="flex items-center gap-3">
-              <SidebarMenuButton :data-active="route.path.startsWith(item.url)" class="
+              <RouterLink :to="Array.isArray(item.url) ? item.url[0] : item.url" class="flex items-center gap-3">
+              <SidebarMenuButton :data-active="Array.isArray(item.url) ? item.url.some(path => route.path.startsWith(path)) : route.path.startsWith(item.url)" class="
                   h-11 px-3 rounded-sm transition-all duration-200
                   text-slate-300 hover:text-white
                   hover:bg-slate-700/50

@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { ref, watchEffect, nextTick } from 'vue';
+import { ref, watchEffect, nextTick, onMounted } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
 import { useLearningStore } from '@/stores/learning';
-import { ArrowBigDown, MoveDown } from 'lucide-vue-next';
+import { ArrowBigDown, Check, MoveDown } from 'lucide-vue-next';
 const learningStore = useLearningStore();
 interface ScrollComponent {
   id: string | number;
   component: any;
-  next?: boolean; // Optional property to indicate if this is the last component
+  emits?: boolean; 
 }
 
 const props = defineProps<{
   components: ScrollComponent[];
 }>();
+
 
 const currentVisibleIndex = ref(0);
 
@@ -22,6 +23,17 @@ const componentRefs = ref<(HTMLElement | null)[]>([]);
 watchEffect(() => {
   componentRefs.value = Array(props.components.length).fill(null);
 });
+
+const active = ref(true);
+const toggleActive = (toggle: boolean) => {
+  active.value = toggle;
+};
+
+const active2 = ref(true);
+
+const toggleActive2 = (toggle: boolean) => {
+  active2.value = toggle;
+};
 
 
 
@@ -35,26 +47,36 @@ const showNextComponent = async () => {
       nextRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   } else{
+    learningStore.activateModuleInteraction();
     learningStore.nextModule();
   }
 };
+
+ 
+
 </script>
 
 <template>
   <div>
     <div v-for="(Comp, idx) in components" class="reset-contents"
-      v-show="idx <= currentVisibleIndex" :ref="el => componentRefs[idx] = el">
-      <component :is="Comp.component" />
+      v-show="idx <= currentVisibleIndex" 
+      :ref="el => componentRefs[idx] = el">
+      <!-- Component -->
+      <component 
+      :is="Comp.component" 
+      @showDown="toggleActive" 
+      @toggleA="toggleActive2" 
+      />
     </div>
 
-     
     <div class="flex justify-center items-center">
-      <div v-if="components[currentVisibleIndex].next || components[currentVisibleIndex].next == null" class="w-2xl flex my-10">
+      <div v-if="active" class="w-2xl flex my-10">
         <Button class="ml-auto" v-if="currentVisibleIndex < components.length - 1" @click="showNextComponent">
           <MoveDown />
         </Button>
-        <Button class="w-2xl" v-else @click="showNextComponent">
-          Next Lesson
+        <Button class="ml-auto" :disabled="active2" v-else @click="showNextComponent">
+          {{active2 ? 'Check as Completed' : 'Next Lesson'}}
+          <Check />
         </Button>
       </div>
     </div>

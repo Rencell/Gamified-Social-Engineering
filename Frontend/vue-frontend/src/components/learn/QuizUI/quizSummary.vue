@@ -3,57 +3,36 @@ import { Button } from "@/components/ui/button";
 import asset from "/Home/image.png";
 import coins from "/Home/coin.svg";
 import my_xp from "/Home/exp.png";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, onActivated, watch } from "vue";
 import LearningImage from '../content/UI/Learning/Image/LearningImage.vue'
 import { Card, CardContent } from "@/components/ui/card";
 import LearningSpan from "../content/UI/Learning/Highlight/LearningSpan.vue";
-import LearningSpan2 from "../content/UI/Learning/Highlight/LearningSpan2.vue";
+import { CountTo } from 'vue3-count-to';
+import NumberCountdown from './numberCountdown.vue'
 
-const animatedCoins = ref(0);
-const animatedXp = ref(0);
+const props = defineProps({
+  score: {
+    type: Number,
+    default: 8,
+  },
+  length: {
+    type: Number,
+    default: 10,
+  },
+});
 
-const finalCoins = 8;
-const finalXp = 16;
+const emit = defineEmits(['retryQuiz']);
 
-const animationDuration = 2000; // in milliseconds
 
-// You can use setTimeout or setInterval, but requestAnimationFrame is preferred for smooth UI animations.
-// If you want to use setTimeout, here's how you could rewrite it:
-
-const animateValue = (
-  start: number,
-  end: number,
-  duration: number,
-  updater: (value: number) => void
-) => {
-  const frameRate = 60; // frames per second
-  const totalFrames = Math.round((duration / 1000) * frameRate);
-  let currentFrame = 0;
-
-  const step = () => {
-    currentFrame++;
-    const progress = Math.min(currentFrame / totalFrames, 1);
-    updater(Math.floor(progress * (end - start) + start));
-    if (progress < 1) {
-      setTimeout(step, 1000 / frameRate);
-    }
-  };
-  step();
+const retryQuiz = () => {
+  emit('retryQuiz');
 };
 
-onMounted(() => {
-  animateValue(0, finalCoins, animationDuration, (value) => {
-    animatedCoins.value = value;
-  });
-  animateValue(0, finalXp, animationDuration, (value) => {
-    animatedXp.value = value;
-  });
-});
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md mx-auto text-center space-y-4 animate-parent">
+  <div class="min-h-screen flex items-center justify-center p-4 w-full">
+    <div class="w-xl max-w-md mx-auto text-center space-y-4 animate-parent">
 
 
       <!-- Score and Title -->
@@ -61,7 +40,7 @@ onMounted(() => {
         <!-- <p class="text-slate-600 text-XS font-bold">SCORE</p> -->
         <div class=" bg-accent/20 rounded-full w-15 h-15 mx-auto flex items-center justify-center">
           <h1 class="text-white text-xl font-bold">
-            <LearningSpan>8/10</LearningSpan>
+            <LearningSpan>{{score}}/{{length}}</LearningSpan>
           </h1>
         </div>
         <h1 class="text-white text-2xl font-bold">Outstanding Performance</h1>
@@ -82,7 +61,9 @@ onMounted(() => {
                 <img :src="coins" class="w-full h-full text-white" />
               </div>
               <div class="text-left">
-                <div class="text-white text-xl font-bold">{{ animatedCoins }}</div>
+                <div class="text-white text-xl font-bold counter">
+                  {{score}}
+                </div>
               </div>
             </div>
           </div>
@@ -99,7 +80,9 @@ onMounted(() => {
                 <img :src="my_xp" class="w-full h-full text-white" />
               </div>
               <div class="text-left">
-                <div class="text-white text-xl font-bold">{{ animatedXp }}</div>
+                <div class="text-white text-xl font-bold counter">
+                  8
+                </div>
               </div>
             </div>
           </div>
@@ -111,10 +94,15 @@ onMounted(() => {
 
       <!-- Continue Button -->
       <div class="space-y-4 mt-10">
-        <Button size="lg" class="w-full font-bold border-b-4 border-primary/30 transition-all duration-200">
-          NEXT LESSON
-        </Button>
-        <Button size="lg" variant="ghost" class="w-full font-medium bg-background">
+        <div >
+          <Button  
+          size="lg" 
+          class="w-full font-bold border-b-4 border-primary/30 transition-all duration-200"
+          >
+            Next Lesson
+          </Button>
+        </div>
+        <Button @click="retryQuiz" size="lg" variant="ghost" class="w-full font-medium bg-background">
           Retry Quiz
         </Button>
       </div>
@@ -124,6 +112,22 @@ onMounted(() => {
 
 
 <style scoped>
+
+
+
+@keyframes pop {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.counter {
+  opacity: 0;
+  animation: pop 0.3s ease-out 1s forwards;
+}
+
+
+
+
+
 @keyframes drop-in {
   0% {
     opacity: 0;

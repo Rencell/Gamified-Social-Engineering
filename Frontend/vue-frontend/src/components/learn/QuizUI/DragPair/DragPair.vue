@@ -11,7 +11,10 @@ const props = defineProps<{
   questions: Question[];
 }>();
 
-const emit = defineEmits(["update:score"]);
+const emit = defineEmits(['finish'])
+const finish = () => {
+  emit('finish', score.value) 
+}
 
 const isAnimationFinished = ref(false)
 
@@ -65,8 +68,7 @@ const nextQuestion = () => {
         answered.value = false
         isAnimating.value = false
     } else {
-        emit("update:score", score.value);
-        alert(`Game finished! Your score: ${score.value}/${props.questions.length}`)
+        finish();
         isAnimationFinished.value = false
         currentQuestionIndex.value = 0
         score.value = 0

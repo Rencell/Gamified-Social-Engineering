@@ -1,5 +1,5 @@
 <template>
-  <div class="snap-start min-h-screen flex flex-col items-center justify-center">
+  <div class="flex items-center justify-center mb-5">
     <Quiz />
   </div>
 </template>

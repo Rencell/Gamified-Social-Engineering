@@ -32,16 +32,22 @@
 
 <script setup lang="ts">
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
-import Citation from '../../UI/Learning/Highlight/Citation.vue'
 import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
-import LearningContent from '../../UI/Learning/Core/LearningContent.vue'
 import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue'
 import LearningQuote from '../../UI/Learning/Highlight/LearningQuote.vue'
-import imageUrl from '/SecurityAwarenessEssentials@3x.svg?url'
-
 import content1_assets from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content1-asset.png?url';
+import { Button } from '@/components/ui/button'
+import { onMounted } from 'vue'
+
+const emit = defineEmits(['toggleA']);
+
+onMounted(() => {
+    emit('toggleA', false);
+});
+
+
 </script>
 
 
