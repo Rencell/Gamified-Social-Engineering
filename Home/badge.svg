@@ -1,0 +1,7 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+	<title>vector path</title>
+	<style>
+		.s0 { fill: #1f2232;stroke: #666a81;stroke-linecap: round;stroke-linejoin: round;stroke-width: 13 } 
+	</style>
+	<path id="Shape 2" fill-rule="evenodd" class="s0" d="m347.9 302.5l-133.6 77.3c-9 5.1-20 5.1-29 0l-133.7-77.1c-9-5.2-14.5-14.8-14.5-25.1l-0.1-154.4c0-10.3 5.5-19.9 14.5-25.1l133.6-77.2c9-5.2 20-5.2 29 0l133.7 77.1c9 5.1 14.5 14.7 14.5 25.1l0.1 154.3c0 10.4-5.5 19.9-14.5 25.1z"/>
+</svg>
