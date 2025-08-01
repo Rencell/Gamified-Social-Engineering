@@ -6,10 +6,28 @@ import BadgeView from '@/views/BadgeView.vue'
 import ShopView from '@/views/ShopView.vue'
 import modules from '@/views/Learn/ModuleView.vue'
 import index from '@/views/Learn/SessionContents.vue'
+import login from '@/views/Authentication/signup.vue'
+import SuccessVerify from '@/views/Authentication/successVerify.vue'
+import { useAuthStore } from '@/stores/auth'
+import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+
+export const redirectLogout = (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {
+  const authStore = useAuthStore()
+  authStore.logout().then(() => next('/login'))
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '',
+      name: 'Home',
+      component: HomeView,
+    },
     {
       path: '/home',
       name: 'Home',
@@ -39,6 +57,31 @@ const router = createRouter({
       path: '/learn/:lessonId/session',
       name: 'phishing1',
       component: index,
+      meta: { layout: 'fullscreen' }
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: login,
+      beforeEnter: redirectLogout,
+      meta: { layout: 'fullscreen' }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: login,
+      meta: { layout: 'fullscreen' }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: login,
+      meta: { layout: 'fullscreen' }
+    },
+    {
+      path: '/email-confirmation/:key',
+      name: 'emailconfirm',
+      component: SuccessVerify,
       meta: { layout: 'fullscreen' }
     },
   ],

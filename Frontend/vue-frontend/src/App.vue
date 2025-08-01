@@ -6,11 +6,17 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import LearnView from './views/LearnView.vue';
 
 import { useRoute } from 'vue-router'
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+const authStore = useAuthStore();
 
 const route = useRoute()
 
 const isFullscreen = computed(() => route.meta.layout === 'fullscreen')
+
+onMounted(() => {
+  authStore.init();
+});
 
 </script>
 

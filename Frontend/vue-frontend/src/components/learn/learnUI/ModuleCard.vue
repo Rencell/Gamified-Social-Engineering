@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router';
 import Button from '@/components/ui/button/Button.vue';
 import book from '/Learning/book.png'
+import learns from '/Icons/Learns.svg?url'
 import { ArrowRight, Circle, CircleCheck, Play } from 'lucide-vue-next';
 const props = defineProps({
     title: {
@@ -32,7 +33,7 @@ const props = defineProps({
         <div class="grow my-2 p-3 flex items-center rounded-xl bg-secondary gap-6">
             <div class="flex items-center justify-center pl-5">
                 
-                <img :src="book" alt="">
+                <img class="w-10 h-10" :src="learns" alt="">
             </div>
             
             <div class="grow gap-3 space-y-3 flex justify-between items-center pr-5">

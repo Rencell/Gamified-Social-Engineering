@@ -1,0 +1,12 @@
+Hello {{ user.username }},
+
+Thank you for signing up on Example.com!asdaffkkkkk
+
+Please confirm your email by clicking the link below:
+
+http://localhost:5173/Gamified-Social-Engineering/email-confirmation/{{ key }}
+
+If you did not request this, please ignore this email.
+
+Thanks,
+The Example.com Team

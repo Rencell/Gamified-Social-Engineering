@@ -1,3 +1,4 @@
+from django.urls import path
 from rest_framework.routers import DefaultRouter
 from .views import LessonViewSet, UserLessonProgressViewSet
 
@@ -6,3 +7,4 @@ router.register(r'lesson', LessonViewSet, basename='lesson')
 router.register(r'user-lesson-progress', UserLessonProgressViewSet, basename='userlessonprogress')
 
 urlpatterns = router.urls
+

@@ -1,15 +1,15 @@
-import session from './api';
+import session from './api'
 
 export interface Lesson {
-  id: number;
-  name: string;
+  id: number
+  name: string
 }
 
-const END_POINT = "/lessons/";
+const END_POINT = '/api/lessons/'
 
 const lessonService = {
-  getAll: (): Promise<Lesson[]> =>
-    session.get(END_POINT + 'lesson/').then(res => res.data),
-};
+  get_all: (): Promise<Lesson[]> => session.get(END_POINT + 'lesson/').then((res) => res.data),
+  get_unlocked_lessons: (): Promise<any> => session.get(END_POINT + 'lesson/unlocked/'),
+}
 
-export default lessonService;
+export default lessonService

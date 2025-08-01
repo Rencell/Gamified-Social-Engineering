@@ -3,14 +3,14 @@ import type { Lesson } from "@/stores/types/learning";
 import phishing from "/Phishing.webp?url";
 import socialEngineering from "/SecurityAwarenessEssentials@3x.svg?url";
 import human from "/Human.webp?url";
-
+import { LessonService } from "@/services";
 //IntroToSocEng
 import { WhatIsSocialEngineering, PsychologicalPrinciplesUsed, CommonAttacks, InteractiveScenarioSpotTheAttack, HowToProtectYourself, FinalQuiz } from "@/components/learn/content/introToSocialEngineering";
 //Phishing
 import { Introduction, EmailPhishing, WebsitePhishing, SocialMediaPhishing, VoicePhishing, SmsPhishing, HowToProtect } from "@/components/learn/content/phishing";
 
 
-export const lessons: Record<string, Lesson> = {
+const lessons: Record<string, Lesson> = {
     'introToSocialEngineering': {
         id: 'introToSocialEngineering', 
         title: 'Introduction to Social Engineering',
@@ -29,7 +29,7 @@ export const lessons: Record<string, Lesson> = {
         ]
     },
     'phishing': {
-        id: 'phishing`', 
+        id: 'phishing', 
         title: 'Phishing',
         image: phishing,
         bg: 'bg-[#2E236C]',
@@ -50,3 +50,7 @@ export const lessons: Record<string, Lesson> = {
         ]
     },
 };
+
+
+export { lessons };
+

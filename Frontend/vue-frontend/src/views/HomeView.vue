@@ -3,21 +3,18 @@ import shop from '/Home/shop.svg';
 import bag from '/Home/bag.svg';
 import coin from '/Home/coin.svg';
 import badge from '/Home/badge.svg';
+import avatar from '/Home/avatar.svg';
 import christmasBackground from '/Home/christmasBackground@3x.webp';
 import { Button } from '@/components/ui/button';
-import { LessonService } from '@/services';
+import { LessonService, AuthService } from '@/services';
 import { onMounted, ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 
-const lessons = ref<Lesson[]>([]);
+const authStore = useAuthStore();
 
-onMounted(async () => {
-  try {
-    lessons.value = await LessonService.getAll();
-    console.log("Fetched lessons:", lessons);
-  } catch (err) {
-    console.error("Error fetching lessons:", err);
-  }
-});
+
+
+
 
 </script>
 
@@ -25,6 +22,8 @@ onMounted(async () => {
     
     <div class="flex flex-col gap-5">
         <div class="flex justify-between h-15">
+            
+           
             <router-link :to="{ name: 'Shop' }">
                 <div class="h-15 relative flex items-center">
                     <div class="absolute h-15 w-15">
@@ -48,8 +47,8 @@ onMounted(async () => {
                 :style="{ backgroundImage: `url(${christmasBackground})` }">
             </div>
             <div class="flex rounded-b-lg justify-center">
-                <div class="relative bottom-10 w-30 h-30 bg-secondary rounded-full flex items-center justify-center">
-                    <img class="w-full" :src="shop" alt="">
+                <div class="overflow-hidden relative bottom-10 w-30 h-30 bg-black border-secondary border-5 rounded-full flex items-center justify-center">
+                    <img class="absolute -bottom-1 z-1 scale-110" :src="avatar" alt="">
 
                 </div>
 

@@ -8,7 +8,10 @@ import learn from '/Icons/Learn.svg?url'
 import learns from '/Icons/Learns.svg?url'
 import trophy from '/Icons/Trophy.svg?url'
 import game from '/Icons/Game.svg?url'
-import { Home, BookOpen, Trophy, AlertTriangle, User, Flag } from 'lucide-vue-next'
+
+import logout from '/sidebar/door.svg'
+
+import { Home, BookOpen, Trophy, AlertTriangle, User, Flag, ChevronDown, LogOut } from 'lucide-vue-next'
 import {
   Sidebar,
   SidebarContent,
@@ -23,6 +26,8 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore();
 
 const route = useRoute()
 const pathname = computed(() => route.path)
@@ -56,6 +61,10 @@ const navigationData = {
   ],
 }
 
+const toggleFooter = ref(false)
+const toggleFooterMenu = () => {
+  toggleFooter.value = !toggleFooter.value
+}
 
 onMounted(()=> {
   console.log(pathname)
@@ -126,15 +135,36 @@ onMounted(()=> {
 
     <SidebarFooter class="p-4 border-t border-slate-700">
 
-      <div class="mt-4 pt-3 border-slate-700">
-        <div class="flex items-center gap-2 text-sm text-slate-300">
-          <User class="h-4 w-4" />
-          <span>475eastern@edmy.net</span>
+      <div class="relative flex items-center justify-between rounded-lg border-1 border-ternary">
+        <div class="p-3 rounded-lg w-full flex items-center justify-between hover:bg-background cursor-pointer" @click="toggleFooterMenu">
+          <div class="flex items-center gap-2 text-sm text-slate-300">
+            <User class="h-7 w-7 text-ternary"  />
+            <span class="text-xs">{{authStore.User.username}}</span>
+          </div>
+          <div>
+            <ChevronDown class="w-5 h-5"></ChevronDown>
+          </div>
         </div>
+        <Transition
+          enter-active-class="transition ease-out duration-200"
+          enter-from-class="transform opacity-0 scale-95"
+          enter-to-class="transform opacity-100 scale-100"
+          leave-active-class="transition ease-in duration-150"
+          leave-from-class="transform opacity-100 scale-100"
+          leave-to-class="transform opacity-0 scale-95"
+        >
+          <div v-if="toggleFooter" class="w-full h-fit bg-background/80 backdrop-blur-lg border border-slate-700 rounded-lg absolute bottom-15 left-0 right-0 mt-4 shadow-lg" >
+            
+            <RouterLink :to="{name:'logout'}"  class="flex items-center gap-2 my-3 p-2 text-sm text-slate-300 hover:bg-accent hover:text-white cursor-pointer" >
+              <img :src="logout" alt="" class="h-7"> Sign Out
+            </RouterLink>
+          </div>
+        </Transition>
       </div>
+
     </SidebarFooter>
 
-    <SidebarRail />
+    <!-- <SidebarRail /> -->
 
 
   </Sidebar>

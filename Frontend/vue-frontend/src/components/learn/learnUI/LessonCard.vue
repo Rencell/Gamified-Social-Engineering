@@ -31,7 +31,7 @@ const bgDefined = () => {
 
 <template>
 
-    <div class="p-3 rounded-xl" :class="[bgDefined()]">
+    <div class="p-3 rounded-2xl" :class="[bgDefined()]">
 
         <!-- loading  -->
         <ProgressCircle v-if="!locked" :progress="progress" size="lg"></ProgressCircle>
