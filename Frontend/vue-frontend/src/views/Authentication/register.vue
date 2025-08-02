@@ -24,11 +24,12 @@ const clearForm = () => {
 };
 
 const form = reactive<SignupForm>({
-  username: 'janice9s',
+  username: '',
   email: '',
-  password1: 'password@gmail.com',
-  password2: 'password@gmail.com',
+  password1: '',
+  password2: '',
 });
+
 const emit = defineEmits(['switchComponent']);
 const loading = ref(false);
 const errors = ref<string[]>([]);
@@ -58,6 +59,13 @@ const submit = async (): Promise<void> => {
             </div>
 
             <div class="space-y-5">
+                <div class="space-y-2">
+                    <Label for="username" class="text-white font-bold text-xs">
+                        Username
+                    </Label>
+                    <Input v-model="form.username" id="username" type="text" placeholder="username"
+                        class="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
+                </div>
                 <div class="space-y-2">
                     <Label for="email" class="text-white font-bold text-xs">
                         Email

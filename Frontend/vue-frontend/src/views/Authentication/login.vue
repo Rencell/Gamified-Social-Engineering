@@ -67,7 +67,7 @@ const login = async (): Promise<void> => {
                     <p v-if="step === 1" class="text-xs font-bold mt-3">
                         Don't have an account?
                         <a
-                            href="/Gamified-Social-Engineering/register"
+                            href="/register"
                             class="text-blue-400 underline hover:text-blue-600 font-bold ml-1"
                         >
                             Sign up
