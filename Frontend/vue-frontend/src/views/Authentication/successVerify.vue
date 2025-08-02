@@ -29,8 +29,10 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import email from '/Authentication/email.svg';
-import { AuthService } from '@/services';
+import { AuthService, LessonService } from '@/services';
 import { onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+const authStore = useAuthStore();
 const route = useRoute();
 
 const key = route.params.key as string;
@@ -39,8 +41,12 @@ const key = route.params.key as string;
 onMounted(async() => {
     try {
         await AuthService.confirm_email(key);
+        await LessonService.create_lesson({
+            user: authStore.User.pk, 
+            lesson: 1
+        });
         setTimeout(() => {
-            window.location.href = '/Gamified-Social-Engineering/home';
+            window.location.href = '/home';
         }, 3000);
     } catch (error) {
         console.error('Error confirming email:', error);

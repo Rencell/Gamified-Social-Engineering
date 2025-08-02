@@ -8,8 +8,11 @@ from django.db import migrations, models
 def add_lesson_data(apps, schema_editor):
     Lesson = apps.get_model('app_lesson', 'Lesson')
     
+    # Create initial lessons
     Lesson.objects.create(name="introToSocialEngineering")
     Lesson.objects.create(name="phishing")
+    
+    
     
     
 class Migration(migrations.Migration):
