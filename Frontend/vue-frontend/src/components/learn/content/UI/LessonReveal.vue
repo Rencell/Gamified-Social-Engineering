@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect, nextTick, onMounted } from 'vue';
+import { ref, watchEffect, nextTick, onMounted, type ComponentPublicInstance } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
 import { useLearningStore } from '@/stores/learning';
 import { ArrowBigDown, Check, MoveDown } from 'lucide-vue-next';
@@ -18,7 +18,7 @@ const props = defineProps<{
 const currentVisibleIndex = ref(0);
 
 // Refs for each component container
-const componentRefs = ref<(HTMLElement | null)[]>([]);
+const componentRefs = ref<(HTMLElement | Element | ComponentPublicInstance | null)[]>([]);
 
 watchEffect(() => {
   componentRefs.value = Array(props.components.length).fill(null);
@@ -42,7 +42,7 @@ const showNextComponent = async () => {
     currentVisibleIndex.value++;
     await nextTick();
     // Scroll to the next component
-    const nextRef = componentRefs.value[currentVisibleIndex.value];
+    const nextRef = componentRefs.value[currentVisibleIndex.value] as HTMLElement | null;
     if (nextRef) {
       nextRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -60,6 +60,7 @@ const showNextComponent = async () => {
   <div>
     <div v-for="(Comp, idx) in components" class="reset-contents"
       v-show="idx <= currentVisibleIndex" 
+      
       :ref="el => componentRefs[idx] = el">
       <!-- Component -->
       <component 
