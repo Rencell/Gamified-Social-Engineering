@@ -25,5 +25,3 @@ Thumbs.db # Windows
 .coverage
 .tox/
 .eggs/
-
-*staticfiles
