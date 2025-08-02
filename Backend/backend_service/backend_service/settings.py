@@ -180,14 +180,14 @@ ACCOUNT_LOGIN_METHOD = 'email'
 
 
 CORS_ALLOWED_ORIGINS = [  
-    'https://frontend-student-management-system.onrender.com',
+    'https://gamified-frontend-caps.onrender.com',
     'http://localhost:5173',  
 ]
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
-    'https://frontend-student-management-system.onrender.com'
+    'https://gamified-frontend-caps.onrender.com'
 ]
 
 
