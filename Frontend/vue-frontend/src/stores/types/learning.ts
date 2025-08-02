@@ -3,6 +3,7 @@ export interface Module {
   title: string
   component: object
   module_order?: number
+  unlocksLessonId: number
   interactive?: boolean
 }
 

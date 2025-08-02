@@ -8,4 +8,5 @@ urlpatterns = [
     path('auth0/', include('app_auth.urls')),
     path('api/lessons/', include('app_lesson.urls')),
     path('api/modules/', include('app_modules.urls')),
+    path('api/quizzes/', include('app_quizzes.urls')),
 ]

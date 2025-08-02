@@ -3,7 +3,7 @@ import { RouterLink, RouterView } from 'vue-router';
 import Button from '@/components/ui/button/Button.vue';
 import book from '/Learning/book.png'
 import learns from '/Icons/Learns.svg?url'
-import { ArrowRight, Circle, CircleCheck, Play } from 'lucide-vue-next';
+import { ArrowRight, Circle, CircleCheck, LockKeyhole, Play } from 'lucide-vue-next';
 const props = defineProps({
     title: {
         type: String,
@@ -20,7 +20,11 @@ const props = defineProps({
     lessonkey: {
         type: Number,
         required: true
-    }
+    },
+    lockedIndex: {
+        type: Boolean,
+        default: false
+    },
 });
 </script>
 
@@ -42,15 +46,26 @@ const props = defineProps({
                     <p>{{ title }}</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <Button asChild variant="ghost" size="lg" class="font-semibold border-1 border-accent/60">
+                    <Button v-if="!lockedIndex" asChild variant="ghost" size="lg" class="font-semibold border-1 border-accent/60">
                         <RouterLink :to="routerLink">
                             <Play :size="18" fill="white" ></Play>
                             <p class="font-bold">Learn</p> 
                         </RouterLink>
                         
                     </Button>
-                    <Circle class="text-slate-600"  v-if="!interactive" />
-                    <CircleCheck v-else class="text-green-400" fill="green" />
+
+                    <div v-else class="text-ternary text-sm font-semibold">
+                        Complete the previous lessons to unlock
+                    </div>
+            
+                    <div v-if="!lockedIndex">
+                        <Circle class="text-slate-600"  v-if="!interactive" />
+                        <CircleCheck v-else class="text-green-400" fill="green" />
+                    </div>
+
+                    <div v-else>
+                        <LockKeyhole  class="text-slate-600"/>
+                    </div>
                 </div>
             </div>
 

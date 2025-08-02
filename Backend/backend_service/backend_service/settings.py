@@ -6,7 +6,7 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENVIRONMENT = "LOCAL"
+ENVIRONMENT = "PROD"
 
 if ENVIRONMENT == "LOCAL":
     load_dotenv()
@@ -18,7 +18,7 @@ if ENVIRONMENT == "LOCAL":
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG','False').lower == 'true'
+DEBUG = os.getenv('DEBUG','False').lower() == 'true'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
 
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'app_auth',
     'app_lesson',
     'app_modules',
+    'app_quizzes',
     'rest_framework',
     'rest_framework.authtoken',
     

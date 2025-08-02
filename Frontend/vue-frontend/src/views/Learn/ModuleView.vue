@@ -35,7 +35,7 @@ onMounted(() => {
     <div class="flex flex-col mt-2">
         <ModuleCard v-for="(module, key) in learningStore.modules" :lessonkey="key + 1" :key="module.title"
             :title="module.title" :router-link="`/learn/${lessonId}/session`" :interactive="module.interactive"
-            @click="learningStore.setSelectedModule(module)" />
+            @click="learningStore.setSelectedModule(module)" :locked-index="learningStore.modules.length == key + 1" />
 
     </div>
 
