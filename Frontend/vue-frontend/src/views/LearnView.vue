@@ -10,9 +10,10 @@ import { onMounted } from 'vue';
 const learningStore = useLearningStore();
 const route = useRoute();
 
-
-onMounted(() => {
+onMounted(async() => {
     learningStore.fetchLessons();
+   
+    
 });
 
 </script>

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { LessonService, AuthService } from '@/services';
 import { onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import Spinner from '@/components/ui/spinner/spinner.vue'
 
 const authStore = useAuthStore();
 
@@ -23,7 +24,6 @@ const authStore = useAuthStore();
     <div class="flex flex-col gap-5">
         <div class="flex justify-between h-15">
             
-           
             <router-link :to="{ name: 'Shop' }">
                 <div class="h-15 relative flex items-center">
                     <div class="absolute h-15 w-15">

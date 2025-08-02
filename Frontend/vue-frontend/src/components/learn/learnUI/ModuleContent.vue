@@ -2,7 +2,9 @@
 import Button from '@/components/ui/button/Button.vue';
 import { ChevronRight } from 'lucide-vue-next';
 import { useLearningStore } from '@/stores/learning';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import LessonCard from './LessonCard.vue';
+import lessonService from '@/services/lessonService';
 
 const learningStore = useLearningStore();
 const moduleContent = ref<HTMLElement | null>(null);
@@ -12,6 +14,7 @@ watch(() => learningStore.selectedModule, () => {
     moduleContent.value.scrollTop = 0;
   }
 });
+
 
 </script>
 

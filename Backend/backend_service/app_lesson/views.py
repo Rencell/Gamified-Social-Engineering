@@ -3,7 +3,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Lesson, UserLessonProgress
 from .serializers import LessonSerializer, UserLessonProgressSerializer
-
+from app_modules.models import Modules, UserModuleProgress
+from app_modules.serializers import ModuleSerializer
+from rest_framework import status
 
 class LessonViewSet(viewsets.ModelViewSet):
 
@@ -15,9 +17,18 @@ class LessonViewSet(viewsets.ModelViewSet):
         user = request.user
         unlocked_lessons = UserLessonProgress.objects.filter(user=user).values_list('lesson__name', flat=True)
         unlocked_lesson_names = [name.lower() for name in unlocked_lessons]
-        return Response(list(unlocked_lesson_names))
+        return Response(list(unlocked_lesson_names), status=status.HTTP_200_OK)
     
+    @action(detail=True, methods=['get'], url_path='unlocked-modules', url_name='unlocked-modules')
+    def get_unlocked_modules(self, request, pk=None):
+        try:
+            lesson = self.get_object()
+        except Lesson.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
+        unlocked_modules = Modules.objects.filter(lesson=lesson, users=request.user).values_list('name', flat=True)    
+        unlocked_modules_names = [name.lower() for name in unlocked_modules]
+        return Response(list(unlocked_modules_names), status=status.HTTP_200_OK)
 
 class UserLessonProgressViewSet(viewsets.ModelViewSet):
 

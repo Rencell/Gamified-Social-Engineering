@@ -4,9 +4,21 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
-
+def add_module_data(apps, schema_editor):
+    Lesson = apps.get_model('app_lesson', 'lesson')
+    Module = apps.get_model('app_modules', 'modules')
+    
+    get_lesson = Lesson.objects.get(pk=1) 
+    
+    Module.objects.create(name="whatisSocialEngineering", phase_order=1, lesson=get_lesson)
+    Module.objects.create(name="psychologicalPrinciplesUsed", phase_order=2, lesson=get_lesson)
+    Module.objects.create(name="typesOfSocialEngineeringAttacks", phase_order=3, lesson=get_lesson)
+    Module.objects.create(name="interactiveScenarioSpotTheAttack", phase_order=4, lesson=get_lesson)
+    Module.objects.create(name="howToProtectYourself", phase_order=5, lesson=get_lesson)
+    Module.objects.create(name="finalQuiz", phase_order=6, lesson=get_lesson)
 class Migration(migrations.Migration):
 
+    
     initial = True
 
     dependencies = [
@@ -43,4 +55,6 @@ class Migration(migrations.Migration):
             name='users',
             field=models.ManyToManyField(related_name='modules', through='app_modules.UserModuleProgress', to=settings.AUTH_USER_MODEL),
         ),
+        
+        migrations.RunPython(add_module_data),
     ]

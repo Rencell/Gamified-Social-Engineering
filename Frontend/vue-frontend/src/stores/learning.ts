@@ -2,10 +2,15 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Module, Lesson } from '@/stores/types/learning'
 import { lessons as dataLessons } from '@/data/learning'
-import { LessonService } from '@/services'
+import { LessonService, ModuleService } from '@/services'
+import { useAuthStore } from './auth'
+
 export const useLearningStore = defineStore('learning', () => {
   // State
+  const authStore = useAuthStore()
   const lessons = ref<Lesson[]>(Object.values(dataLessons))
+  const modules = ref<Module[]>([])
+  const currentModuleId = ref(0)
   const currentLessonId = ref<String | null>(null)
   const selectedModule = ref<Module | null>(null)
 
@@ -16,22 +21,35 @@ export const useLearningStore = defineStore('learning', () => {
     }
     return lessons.value.find((lesson) => lesson.id === currentLessonId.value) || null
   }
-  const currentModules = () => {
-    const lesson = lessons.value?.find((lesson) => lesson.id === currentLessonId.value)
-    console.log('Current Modules:', lesson?.modules)
-    return lesson ? lesson.modules : []
-  }
 
   // Actions
+  const loadModules = () => {
+    const lesson = lessons.value?.find((lesson) => lesson.id === currentLessonId.value)
+    currentModuleId.value = lesson ? (lesson.lesson_order ?? 0) : 0
+    modules.value = lesson ? lesson.modules : []
+  }
 
-  const fetchLessons = async() => {
+  const fetchModules = async () => {
+    try {
+      const unlockedModules = await LessonService.get_unlocked_modules_from_lessons(
+        currentModuleId.value,
+      )
+      modules.value.forEach((module) => {
+        module.interactive = unlockedModules.includes(module.id.toLowerCase())
+      })
+    } catch (error) {
+      console.error('Failed to fetch unlocked modules:', error)
+    }
+  }
+
+  const fetchLessons = async () => {
     try {
       const unlockedIds = await LessonService.get_unlocked_lessons()
-    
+
       // Dynamically update the locked status
-      Object.keys(lessons.value).forEach((id) => {
-        const data = lessons.value[id].id.toLowerCase()
-        lessons.value[id].locked = !unlockedIds.data.includes(data)
+      lessons.value.forEach((lesson) => {
+        const data = lesson.id.toLowerCase()
+        lesson.locked = !unlockedIds.data.includes(data)
       })
     } catch (error) {
       console.error('Failed to load unlocked lessons:', error)
@@ -53,39 +71,47 @@ export const useLearningStore = defineStore('learning', () => {
     selectedModule.value = module
   }
 
-  const activateModuleInteraction = () => {
-    if (selectedModule.value) {
-      selectedModule.value.interactive = true
-      console.log(selectedModule.value)
-    } else {
-      console.error('No module is currently selected.')
+  const activateModuleInteraction = async () => {
+    try {
+      if (selectedModule.value) {
+        const response = await ModuleService.create_module({
+          user: authStore.User?.pk,
+          module: selectedModule.value.module_order ?? 1,
+        })
+      } else {
+        console.error('No module is currently selected.')
+      }
+    } catch (error) {
+      console.error('Failed to activate module interaction:', error)
     }
   }
 
   const nextModule = () => {
-    if (!selectedModule.value || !currentModules().length) return
-    const currentIndex = currentModules().findIndex((m) => m.title === selectedModule.value?.title)
-    if (currentIndex < currentModules().length - 1) {
-      selectedModule.value = currentModules()[currentIndex + 1]
+    if (!selectedModule.value || !modules.value.length) return
+    const currentIndex = modules.value.findIndex((m) => m.title === selectedModule.value?.title)
+    if (currentIndex < modules.value.length - 1) {
+      selectedModule.value = modules.value[currentIndex + 1]
     }
   }
 
   const previousModule = () => {
-    if (!selectedModule.value || !currentModules().length) return
-    const currentIndex = currentModules().findIndex((m) => m.title === selectedModule.value?.title)
+    if (!selectedModule.value || !modules.value.length) return
+    const currentIndex = modules.value.findIndex((m) => m.title === selectedModule.value?.title)
     if (currentIndex > 0) {
-      selectedModule.value = currentModules()[currentIndex - 1]
+      selectedModule.value = modules.value[currentIndex - 1]
     }
   }
 
   return {
     lessons,
+    modules,
     currentLessonId,
     selectedModule,
     fetchLessons,
+    fetchModules,
     currentLesson,
-    currentModules,
     loadLessons,
+    loadModules,
     setSelectedModule,
     activateModuleInteraction,
     previousModule,

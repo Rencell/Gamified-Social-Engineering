@@ -5,13 +5,18 @@ import { RouterLink, RouterView, useRoute } from 'vue-router';
 import Button from '@/components/ui/button/Button.vue';
 import ModuleCard from '@/components/learn/learnUI/ModuleCard.vue'
 import { useLearningStore } from '@/stores/learning'
+import { onMounted } from 'vue';
 
 const learningStore = useLearningStore()
 const route = useRoute()
 
 const lessonId = route.params.lessonId as string;
-learningStore.loadLessons(lessonId )
+learningStore.loadLessons(lessonId)
 
+onMounted(() => {
+    learningStore.loadModules()
+    learningStore.fetchModules()
+});
 
 </script>
 
@@ -21,25 +26,17 @@ learningStore.loadLessons(lessonId )
             <ArrowLeft :size="15"></ArrowLeft> Back
         </div>
     </RouterLink>
-    
-    <LessonCard 
-        :progress="75" 
-        :description="learningStore.currentLesson()?.description"  
-        :title="learningStore.currentLesson()?.title"
-        :image="learningStore.currentLesson()?.image"
+
+    <LessonCard :progress="75" :description="learningStore.currentLesson()?.description"
+        :title="learningStore.currentLesson()?.title" :image="learningStore.currentLesson()?.image"
         :bg="learningStore.currentLesson()?.bg">
     </LessonCard>
-    
+
     <div class="flex flex-col mt-2">
-        <ModuleCard 
-            v-for="(module,key) in learningStore.currentModules()"
-             :lessonkey="key + 1"
-            :key="module.title" :title="module.title"
-            :router-link="`/learn/${lessonId}/session`" 
-            :interactive="module.interactive"
-            @click="learningStore.setSelectedModule(module)" 
-        />
-        
+        <ModuleCard v-for="(module, key) in learningStore.modules" :lessonkey="key + 1" :key="module.title"
+            :title="module.title" :router-link="`/learn/${lessonId}/session`" :interactive="module.interactive"
+            @click="learningStore.setSelectedModule(module)" />
+
     </div>
 
 

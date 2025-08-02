@@ -15,6 +15,8 @@ const route = useRoute();
 onMounted(() => {
   const lessonId = route.params.lessonId as string;
   learningStore.loadLessons(lessonId);
+  learningStore.loadModules();
+  learningStore.fetchModules();
 });
 
 
@@ -36,7 +38,7 @@ const start = ref(false);
         <ModuleLayout >
             <ModuleSidebar>
                 <ModuleSidebarItem 
-                    v-for="module in learningStore.currentModules()" 
+                    v-for="module in learningStore.modules" 
                     :key="module.title" 
                     :active="module.title === learningStore.selectedModule?.title"
                     :completed="module.interactive"

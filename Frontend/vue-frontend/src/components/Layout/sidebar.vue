@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, useRoute } from 'vue-router'
 
-import { computed, onMounted,ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted,ref } from 'vue'
 
 import home from '/Icons/Home.svg?url'
 import learn from '/Icons/Learn.svg?url'
@@ -60,14 +60,24 @@ const navigationData = {
     { title: 'Profile', url: '#', icon: User },
   ],
 }
-
+const panelRef = ref<HTMLElement | null>(null)
 const toggleFooter = ref(false)
 const toggleFooterMenu = () => {
   toggleFooter.value = !toggleFooter.value
 }
 
-onMounted(()=> {
-  console.log(pathname)
+const handleClickOutside = (event: MouseEvent) => {
+  if (panelRef.value && !panelRef.value.contains(event.target as Node)) {
+    toggleFooter.value = false
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -136,10 +146,11 @@ onMounted(()=> {
     <SidebarFooter class="p-4 border-t border-slate-700">
 
       <div class="relative flex items-center justify-between rounded-lg border-1 border-ternary">
-        <div class="p-3 rounded-lg w-full flex items-center justify-between hover:bg-background cursor-pointer" @click="toggleFooterMenu">
+        <div class="p-3 rounded-lg w-full flex items-center justify-between hover:bg-background cursor-pointer" @click="toggleFooterMenu" ref="panelRef">
           <div class="flex items-center gap-2 text-sm text-slate-300">
             <User class="h-7 w-7 text-ternary"  />
             <span class="text-xs">{{authStore.User.username}}</span>
+          
           </div>
           <div>
             <ChevronDown class="w-5 h-5"></ChevronDown>
@@ -153,7 +164,7 @@ onMounted(()=> {
           leave-from-class="transform opacity-100 scale-100"
           leave-to-class="transform opacity-0 scale-95"
         >
-          <div v-if="toggleFooter" class="w-full h-fit bg-background/80 backdrop-blur-lg border border-slate-700 rounded-lg absolute bottom-15 left-0 right-0 mt-4 shadow-lg" >
+          <div v-if="toggleFooter"  class="w-full h-fit bg-background/80 backdrop-blur-lg border border-slate-700 rounded-lg absolute bottom-15 left-0 right-0 mt-4 shadow-lg" >
             
             <RouterLink :to="{name:'logout'}"  class="flex items-center gap-2 my-3 p-2 text-sm text-slate-300 hover:bg-accent hover:text-white cursor-pointer" >
               <img :src="logout" alt="" class="h-7"> Sign Out

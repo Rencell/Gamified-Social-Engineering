@@ -20,6 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
   const TOKEN_STORAGE = 'auth_token'
 
   const User = ref<any>({
+    pk: 1,
     username: 'testuser',
     email: '',
   }) //User
@@ -45,6 +46,7 @@ export const useAuthStore = defineStore('auth', () => {
     } catch (error) {
       console.warn('Failed to fetch current user, using fake data as fallback:', error)
       User.value = {
+        pk: 1,
         username: 'testuser',
         email: 'test@example.com',
       }
