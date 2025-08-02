@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import QuestionCard from '../../UI/Question/QuestionCard.vue'
-import QuestionProgress from '../../UI/Question/QuestionProgress.vue'
 
 </script>
 

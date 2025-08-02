@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import ModuleCard from '@/components/learn/learnUI/ModuleCard.vue'
 
-defineProps({
-  modules: {
-    type: Array,
-    required: true
-  }
-});
+interface Module {
+  title: string;
+  routerLink: string;
+  interactive: boolean;
+  // Add other properties as needed
+}
+
+const props = defineProps<{
+  modules: Module[]
+}>();
 </script>
 
 <template>
@@ -16,6 +20,7 @@ defineProps({
       :key="index" 
       :title="module.title" 
       :router-link="module.routerLink"
-      :interactive="module.interactive" />
+      :interactive="module.interactive"
+      :lessonkey="1" />
   </div>
 </template>
