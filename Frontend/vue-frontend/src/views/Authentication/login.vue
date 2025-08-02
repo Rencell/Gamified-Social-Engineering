@@ -63,6 +63,16 @@ const login = async (): Promise<void> => {
                     <Input v-model="form.email" id="email" type="email" placeholder="email@example.com"
                         class="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
                         @keydown.enter="nextStep" @keyup.enter="nextStep" />
+
+                    <p v-if="step === 1" class="text-xs font-bold mt-3">
+                        Don't have an account?
+                        <a
+                            href="/Gamified-Social-Engineering/register"
+                            class="text-blue-400 underline hover:text-blue-600 font-bold ml-1"
+                        >
+                            Sign up
+                    </a>
+                    </p>
                 </div>
 
                 <div v-if="step === 2" class="space-y-2">

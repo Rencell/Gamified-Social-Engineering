@@ -11,6 +11,24 @@ import SuccessVerify from '@/views/Authentication/successVerify.vue'
 import { useAuthStore } from '@/stores/auth'
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 
+
+
+const requireAuthenticated = (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {
+  const authStore = useAuthStore();
+  if (!authStore.isAuthenticated) {
+    next({
+      path: '/login'
+    });
+  } else {
+    next(
+    );
+  }
+};
+
 export const redirectLogout = (
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
@@ -26,11 +44,13 @@ const router = createRouter({
     {
       path: '',
       name: 'Home',
+      beforeEnter: requireAuthenticated,
       component: HomeView,
     },
     {
       path: '/home',
       name: 'Home',
+      beforeEnter: requireAuthenticated,
       component: HomeView,
     },
     {
