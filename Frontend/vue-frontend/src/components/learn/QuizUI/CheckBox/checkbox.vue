@@ -51,6 +51,8 @@ const arraysMatch = (a: string[], b: string[]): boolean => {
 const submitQuiz = () => {
   showResult.value = true;
   isCorrect.value = arraysMatch(selectedOptions.value, props.quiz.correctAnswer);
-  emit('toggleA', false);
+  if (isCorrect.value) {
+    emit('toggleA', false);
+  }
 };
 </script>

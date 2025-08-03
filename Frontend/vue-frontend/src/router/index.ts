@@ -13,12 +13,13 @@ import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 
 
 
-const requireAuthenticated = (
-  to: RouteLocationNormalized,
-  from: RouteLocationNormalized,
+const requireAuthenticated = async (
+  _to: RouteLocationNormalized,
+  _from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
   const authStore = useAuthStore();
+  await authStore.init()
   if (!authStore.isAuthenticated) {
     next({
       path: '/login'

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { AuthService } from '@/services'
+import { AuthService, RewardService } from '@/services'
 import { computed, reactive, ref } from 'vue'
 import { type RouteLocationNormalizedLoaded, type Router, useRoute, useRouter } from 'vue-router'
 
@@ -23,6 +23,9 @@ export const useAuthStore = defineStore('auth', () => {
     pk: 1,
     username: 'testuser',
     email: '',
+    exp: 0,
+    coin: 0,
+    level: 1
   }) //User
 
   const isAuthenticated = computed(() => !!localStorage.getItem(TOKEN_STORAGE) )
@@ -33,23 +36,39 @@ export const useAuthStore = defineStore('auth', () => {
     token: '' as string | null,
   })
 
-  const init = async () => {
-    try {
-      if (!isAuthenticated.value) {
-        throw new Error('No token found in localStorage')
-      }
-      const token = actionStates.token
-      MUTATIONS.SET_TOKEN(localStorage.getItem(TOKEN_STORAGE) as string)
 
-      const response = await AuthService.getUser()
-      User.value = response.data
-    } catch (error) {
-      console.warn('Failed to fetch current user, using fake data as fallback:', error)
+  const clearUser = () => {
+    User.value = {
+      pk: 1,
+      username: 'testuser',
+      email: 'test@example.com',
+      exp: 0,
+      coin: 0,
+      level: 1,
+    }
+  }
+  const init = async () => {
+    if (!isAuthenticated.value) {
+      clearUser()
+      return
+    }
+
+    try {
+      const token = localStorage.getItem(TOKEN_STORAGE)
+      if (token) MUTATIONS.SET_TOKEN(token)
+
+      const userRes = await AuthService.getUser();
+      const rewardRes = await RewardService.user_stats(userRes.data.pk);
+
       User.value = {
-        pk: 1,
-        username: 'testuser',
-        email: 'test@example.com',
+        ...userRes.data,
+        exp: rewardRes?.exp || 0,
+        coin: rewardRes?.coins || 0,
+        level: rewardRes?.level || 1,
       }
+    } catch (error) {
+      console.warn('Failed to fetch current user, using fallback:', error)
+      clearUser()
     }
   }
 

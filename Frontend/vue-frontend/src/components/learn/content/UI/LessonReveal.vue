@@ -7,12 +7,15 @@ const learningStore = useLearningStore();
 interface ScrollComponent {
   id: string | number;
   component: any;
-  emits?: boolean; 
+  emits?: boolean;
 }
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   components: ScrollComponent[];
-}>();
+  withQuiz?: boolean;
+}>(), {
+  withQuiz: false,
+});
 
 
 const currentVisibleIndex = ref(0);
@@ -29,10 +32,10 @@ const toggleActive = (toggle: boolean) => {
   active.value = toggle;
 };
 
-const active2 = ref(true);
+const markComplete = ref(true);
 
 const toggleActive2 = (toggle: boolean) => {
-  active2.value = toggle;
+  markComplete.value = toggle;
 };
 
 
@@ -46,39 +49,42 @@ const showNextComponent = async () => {
     if (nextRef) {
       nextRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  } else{
+  } else {
+    if (markComplete.value)
+      return;
+
     learningStore.activateModuleInteraction();
     learningStore.nextModule();
   }
 };
 
- 
+onMounted(() => {
+  if (markComplete.value) {
+    markComplete.value = !learningStore.selectedModule?.interactive;
+  }
+});
 
 </script>
 
 <template>
   <div>
-    <div v-for="(Comp, idx) in components" class="reset-contents"
-      v-show="idx <= currentVisibleIndex" 
-      
+    <div v-for="(Comp, idx) in components" class="reset-contents" v-show="idx <= currentVisibleIndex"
       :ref="el => componentRefs[idx] = el">
       <!-- Component -->
-      <component 
-      :is="Comp.component" 
-      @showDown="toggleActive" 
-      @toggleA="toggleActive2" 
-      />
+      <component :is="Comp.component" @showDown="toggleActive" @toggleA="toggleActive2" />
     </div>
 
     <div class="flex justify-center items-center">
       <div v-if="active" class="w-2xl flex my-10">
-        <Button class="ml-auto" v-if="currentVisibleIndex < components.length - 1" @click="showNextComponent">
+        <Button v-if="currentVisibleIndex < components.length - 1" class="ml-auto" @click="showNextComponent">
           <MoveDown />
         </Button>
-        <Button class="ml-auto" :disabled="active2" v-else @click="showNextComponent">
-          {{active2 ? 'Check as Completed' : 'Next Lesson'}}
-          <Check />
-        </Button>
+        <div v-else class="ml-auto">
+          <Button v-if="!withQuiz" :disabled="markComplete" @click="showNextComponent">
+            {{ markComplete ? 'Check as Completed' : 'Next Lesson' }}
+            <Check />
+          </Button>
+        </div>
       </div>
     </div>
   </div>

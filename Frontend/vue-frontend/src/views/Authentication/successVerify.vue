@@ -41,10 +41,6 @@ const key = route.params.key as string;
 onMounted(async() => {
     try {
         await AuthService.confirm_email(key);
-        await LessonService.create_lesson({
-            user: authStore.User.pk, 
-            lesson: 1
-        });
         setTimeout(() => {
             window.location.href = '/home';
         }, 3000);

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'app_lesson',
     'app_modules',
     'app_quizzes',
+    'app_reward',
     'rest_framework',
     'rest_framework.authtoken',
     

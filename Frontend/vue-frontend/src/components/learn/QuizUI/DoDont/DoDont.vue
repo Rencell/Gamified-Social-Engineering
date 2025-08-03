@@ -90,7 +90,7 @@ const nextLesson = () => {
 
 const emit = defineEmits(['finish'])
 const finish = () => {
-  emit('finish', score) // score, answers
+  emit('finish', score.value) // score, answers
 }
 
 const currentQuestionIndex = ref(0);

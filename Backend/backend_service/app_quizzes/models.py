@@ -13,6 +13,4 @@ class QuizProgress(models.Model):
     score = models.IntegerField(default=0)
     quiz_type = models.CharField(QuizType, default=1) 
     total_questions = models.IntegerField(default=0)
-    xp_earned = models.IntegerField(default=0)
-    coins_earned = models.IntegerField(default=0)
     completed_at = models.DateTimeField(auto_now_add=True)

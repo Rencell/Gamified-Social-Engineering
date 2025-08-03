@@ -75,13 +75,13 @@ export const useLearningStore = defineStore('learning', () => {
     try {
       if (selectedModule.value) {
         const lesson = lessons.value?.find((lesson) => lesson.lesson_order === selectedModule.value?.unlocksLessonId)
-        if (lesson) {
+        if (lesson) 
           lesson.locked = false
-          alert(1)
-        }
+        if (selectedModule.value.interactive)
+          return // Module is already interactive
 
         selectedModule.value.interactive = true
-        const response = await ModuleService.create_module({
+        await ModuleService.create_module({
           user: authStore.User?.pk,
           module: selectedModule.value.module_order ?? 1,
         })

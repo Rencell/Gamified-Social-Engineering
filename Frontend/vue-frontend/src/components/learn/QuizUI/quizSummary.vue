@@ -21,9 +21,12 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['retryQuiz']);
+const emit = defineEmits(['retryQuiz', 'nextLesson']);
 
 
+const nextLesson = () => {
+  emit('nextLesson');
+};
 const retryQuiz = () => {
   emit('retryQuiz');
 };
@@ -95,7 +98,7 @@ const retryQuiz = () => {
       <!-- Continue Button -->
       <div class="space-y-4 mt-10">
         <div >
-          <Button  
+          <Button  @click="nextLesson"
           size="lg" 
           class="w-full font-bold border-b-4 border-primary/30 transition-all duration-200"
           >

@@ -9,4 +9,5 @@ urlpatterns = [
     path('api/lessons/', include('app_lesson.urls')),
     path('api/modules/', include('app_modules.urls')),
     path('api/quizzes/', include('app_quizzes.urls')),
+    path('api/rewards/', include('app_reward.urls')),
 ]
