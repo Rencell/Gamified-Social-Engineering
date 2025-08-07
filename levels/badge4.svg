@@ -1,0 +1,19 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1501" width="1500" height="1501">
+	<title>4</title>
+	<style>
+		.s0 { fill: #bb6623;stroke: #fb9a34;stroke-miterlimit:100;stroke-width: 40 } 
+		.s1 { fill: #ffffff } 
+	</style>
+	<g id="left">
+		<path id="Second Tails copy" class="s0" d="m114 497l33.8 288 6.2 12 18 17 398 223 107-282-541-265c0 0-21.3-3.7-22 7z"/>
+		<path id="Main Tail copy" class="s0" d="m38 299l33.8 288 6.2 12 18 17 398 223 107-282-541-265c0 0-21.3-3.7-22 7z"/>
+		<path id="Main Tail copy 2" class="s0" d="m335 220l33.8 288 6.2 12 18 17 398 223 107-282-541-265c0 0-21.3-3.7-22 7z"/>
+	</g>
+	<g id="right">
+		<path id="Second Tails" class="s0" d="m1384 497l-33.8 288-6.2 12-18 17-398 223-107-282 541-265c0 0 21.3-3.7 22 7z"/>
+		<path id="Main Tail" class="s0" d="m1460 299l-33.8 288-6.2 12-18 17-398 223-107-282 541-265c0 0 21.3-3.7 22 7z"/>
+		<path id="Main Tail copy 3" class="s0" d="m1172 220l-33.8 288-6.2 12-18 17-398 223-107-282 541-265c0 0 21.3-3.7 22 7z"/>
+	</g>
+	<path id="Layer 1" fill-rule="evenodd" class="s0" d="m749.5 1212c-237.5 0-429.5-192-429.5-429.5 0-237.5 192-429.5 429.5-429.5 237.5 0 429.5 192 429.5 429.5 0 237.5-192 429.5-429.5 429.5z"/>
+	<path id="4" class="s1" aria-label="4"  d="m771.2 937h88.9v-67.6h42.7v-77h-42.7v-229.8h-99.3l-164.3 235v71.8h174.7zm-81.1-144.6l87.3-132v132z"/>
+</svg>
