@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { Monitor, Lock, Shield, ChevronRight } from 'lucide-vue-next'
+import { ref } from 'vue'
+import { ChevronRight } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
 import hackMan from '/Learning/Content/introToSocialEngineering/CommonAttacks/EnableFirewall@3x.png'

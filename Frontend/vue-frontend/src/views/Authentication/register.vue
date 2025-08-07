@@ -2,18 +2,18 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 import { reactive, ref } from "vue";
-import { AuthService } from "@/services";
 import { Spinner } from "@/components/ui/spinner";
-import { useRouter, useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import Attributes from '@/components/authentication/FormInput.vue'
 const authStore = useAuthStore();
 
 interface SignupForm {
-  username: string;
-  email: string;
-  password1: string;
-  password2: string;
+    username: string;
+    email: string;
+    password1: string;
+    password2: string;
 }
 
 const clearForm = () => {
@@ -24,30 +24,58 @@ const clearForm = () => {
 };
 
 const form = reactive<SignupForm>({
-  username: '',
-  email: '',
-  password1: '',
-  password2: '',
+    username: '',
+    email: '',
+    password1: '',
+    password2: '',
 });
 
 const emit = defineEmits(['switchComponent']);
 const loading = ref(false);
-const errors = ref<string[]>([]);
+const errors = reactive({
+    username: '',
+    email: '',
+    password1: '',
+    password2: '',
+    server: ''
+});
+
+
+const validateForm = () => {
+    errors.username = !form.username ? 'Username is required' : '';
+    errors.email = !form.email ? 'Email is required' : '';
+    errors.password1 = !form.password1 ? 'Password is required' : '';
+    errors.password2 = !form.password2 ? 'Confirm Password is required' : '';
+
+    if (form.password1 && form.password2 && form.password1 !== form.password2) {
+        errors.password2 = 'Passwords do not match';
+    }
+
+    return !errors.username && !errors.email && !errors.password1 && !errors.password2;
+}
 
 const submit = async (): Promise<void> => {
-  loading.value = true;
-  try {
-    const response = await authStore.registration(form);
-    errors.value = [];
-    clearForm(); 
-    emit('switchComponent', 'inbox');
-  } catch (error: any) {
-    console.error('Registration failed:', error?.response?.data);
-    errors.value = error?.response?.data || ['Registration failed'];
-  } finally {
-    loading.value = false;
-  }
+    if (!validateForm()) {
+        return;
+    }
+
+    loading.value = true;
+    try {
+        await authStore.registration(form);
+        Object.keys(errors).forEach(key => errors[key] = '');
+        clearForm();
+        emit('switchComponent', 'inbox');
+    } catch (error: any) {
+        console.error('Registration failed:', error?.response?.data);
+        errors.server = error?.response?.data?.message || 'Registration failed';
+    } finally {
+        loading.value = false;
+    }
 };
+
+const clear = (value: keyof typeof errors) => {
+    errors[value] = '';
+}
 </script>
 
 <template>
@@ -59,39 +87,23 @@ const submit = async (): Promise<void> => {
             </div>
 
             <div class="space-y-5">
-                <div class="space-y-2">
-                    <Label for="username" class="text-white font-bold text-xs">
-                        Username
-                    </Label>
-                    <Input v-model="form.username" id="username" type="text" placeholder="username"
-                        class="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
-                </div>
-                <div class="space-y-2">
-                    <Label for="email" class="text-white font-bold text-xs">
-                        Email
-                    </Label>
-                    <Input v-model="form.email" id="email" type="email" placeholder="email@example.com"
-                        class="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
-                </div>
-                <div class="space-y-2">
-                    <Label for="password" class="text-white font-bold text-xs">
-                        Password
-                    </Label>
-                    <Input v-model="form.password1" id="password" type="password" placeholder="Enter your password"
-                        class="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
-                </div>
-                <div class="space-y-2">
-                    <Label for="password2" class="text-white font-bold text-xs">
-                        Confirm Password
-                    </Label>
-                    <Input v-model="form.password2" id="password" type="password" placeholder="Confirm your password"
-                        class="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
-                </div>
+                <Attributes v-model="form.username" id="Username" type="text" :error="errors.username" @clear="clear('username')" />
+                <Attributes v-model="form.email" id="Email Adress" type="email" :error="errors.email" @clear="clear('email')" />
+                <Attributes v-model="form.password1" id="Password" type="password" :error="errors.password1" @clear="clear('password1')"/>
+                <Attributes v-model="form.password2" id="Confim Password" type="password" :error="errors.password2" @clear="clear('password2')" />
+
 
                 <Button @click="submit()" class="w-full font-bold" size="lg">
                     <Spinner v-if="loading" variant="white" size="sm"></Spinner>
                     Continue
                 </Button>
+
+                <p class="text-xs font-bold">
+                    Already have an account?
+                    <a href="/login" class="text-blue-400 underline hover:text-blue-600 font-bold ml-1">
+                        Here
+                    </a>
+                </p>
             </div>
 
             <div class="relative">
