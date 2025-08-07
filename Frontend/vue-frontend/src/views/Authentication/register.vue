@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 import { reactive, ref } from "vue";
 import { Spinner } from "@/components/ui/spinner";
@@ -62,7 +60,7 @@ const submit = async (): Promise<void> => {
     loading.value = true;
     try {
         await authStore.registration(form);
-        Object.keys(errors).forEach(key => errors[key] = '');
+        (Object.keys(errors) as Array<keyof typeof errors>).forEach(key => errors[key] = '');
         clearForm();
         emit('switchComponent', 'inbox');
     } catch (error: any) {

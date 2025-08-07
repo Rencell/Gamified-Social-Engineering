@@ -69,7 +69,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <div v-for="(Comp, idx) in components" class="reset-contents" v-show="idx <= currentVisibleIndex"
+    <div v-for="(Comp, idx) in components" :key="Comp.id" class="reset-contents" v-show="idx <= currentVisibleIndex"
       :ref="el => componentRefs[idx] = el">
       <!-- Component -->
        
