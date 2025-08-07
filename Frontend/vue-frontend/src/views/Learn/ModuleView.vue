@@ -5,18 +5,28 @@ import { RouterLink, RouterView, useRoute } from 'vue-router';
 import Button from '@/components/ui/button/Button.vue';
 import ModuleCard from '@/components/learn/learnUI/ModuleCard.vue'
 import { useLearningStore } from '@/stores/learning'
-import { onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const learningStore = useLearningStore()
 const route = useRoute()
-
 const lessonId = route.params.lessonId as string;
 learningStore.loadLessons(lessonId)
 
-onMounted(() => {
-    learningStore.loadModules()
-    learningStore.fetchModules()
-});
+learningStore.loadModules()
+learningStore.fetchModules()
+
+
+const isFinalQuizUnlocked = computed(() => {
+    return learningStore.isFinalQuizUnlocked
+})
+
+const isModuleLocked = computed(() => {
+  return (module: any) => {
+    if (learningStore.currentLesson()?.locked) return true
+    return module.final ? !isFinalQuizUnlocked.value : false
+  }
+})
+
 
 </script>
 
@@ -27,18 +37,18 @@ onMounted(() => {
         </div>
     </RouterLink>
 
-    <LessonCard :progress="75" :description="learningStore.currentLesson()?.description"
+
+    <LessonCard :progress="learningStore.completionPercentage" :description="learningStore.currentLesson()?.description"
         :title="learningStore.currentLesson()?.title" :image="learningStore.currentLesson()?.image"
-        :bg="learningStore.currentLesson()?.bg">
+        :bg="learningStore.currentLesson()?.bg" :locked="learningStore.currentLesson()?.locked">
     </LessonCard>
 
     <div class="flex flex-col mt-2">
         <ModuleCard v-for="(module, key) in learningStore.modules" :lessonkey="key + 1" :key="module.title"
             :title="module.title" :router-link="`/learn/${lessonId}/session`" :interactive="module.interactive"
-            @click="learningStore.setSelectedModule(module)" :locked-index="learningStore.modules.length == key + 1" />
+            @click="learningStore.setSelectedModule(module)" :locked-index="isModuleLocked(module)" />
 
     </div>
-
 
 
     <RouterView />

@@ -23,6 +23,7 @@ import {
   SmsPhishing,
   HowToProtect,
 } from '@/components/learn/content/phishing'
+import { markRaw } from 'vue'
 
 export const lessons: Record<string, Lesson> = {
   introToSocialEngineering: {
@@ -38,7 +39,7 @@ export const lessons: Record<string, Lesson> = {
       {
         id: 'whatIsSocialEngineering',
         title: 'What is Social Engineering?',
-        component: WhatIsSocialEngineering,
+        component: markRaw(WhatIsSocialEngineering), // Wrapped with markRaw
         module_order: 1,
         unlocksLessonId: 1,
         interactive: false,
@@ -46,7 +47,7 @@ export const lessons: Record<string, Lesson> = {
       {
         id: 'psychologicalPrinciplesUsed',
         title: 'Psychological Principles Used',
-        component: PsychologicalPrinciplesUsed,
+        component: markRaw(PsychologicalPrinciplesUsed), // Wrapped with markRaw
         module_order: 2,
         unlocksLessonId: 1,
         interactive: false,
@@ -54,7 +55,7 @@ export const lessons: Record<string, Lesson> = {
       {
         id: 'typesOfSocialEngineeringAttacks',
         title: 'Types of Social Engineering Attacks',
-        component: CommonAttacks,
+        component: markRaw(CommonAttacks), // Wrapped with markRaw
         module_order: 3,
         unlocksLessonId: 1,
         interactive: false,
@@ -62,7 +63,7 @@ export const lessons: Record<string, Lesson> = {
       {
         id: 'interactiveScenarioSpotTheAttack',
         title: 'Interactive Scenario: Spot the Attack',
-        component: InteractiveScenarioSpotTheAttack,
+        component: markRaw(InteractiveScenarioSpotTheAttack), // Wrapped with markRaw
         module_order: 4,
         unlocksLessonId: 1,
         interactive: false,
@@ -70,7 +71,7 @@ export const lessons: Record<string, Lesson> = {
       {
         id: 'howToProtectYourself',
         title: 'How to Protect Yourself',
-        component: HowToProtectYourself,
+        component: markRaw(HowToProtectYourself), // Wrapped with markRaw
         module_order: 5,
         unlocksLessonId: 1,
         interactive: false,
@@ -78,10 +79,11 @@ export const lessons: Record<string, Lesson> = {
       {
         id: 'finalQuiz',
         title: 'Final Quiz',
-        component: FinalQuiz,
+        component: markRaw(FinalQuiz), // Wrapped with markRaw
         module_order: 6,
         unlocksLessonId: 2,
         interactive: false,
+        final: true,
       },
     ],
   },
@@ -97,16 +99,16 @@ export const lessons: Record<string, Lesson> = {
     modules: [
       {
         id: 'phishingIntro',
-        title: 'phishingIntro',
-        component: Introduction,
+        title: 'Phishing Introduction',
+        component: markRaw(Introduction), // Wrapped with markRaw
         module_order: 7,
         unlocksLessonId: 2,
         interactive: true,
       },
       {
         id: 'phishing2',
-        title: 'phishing2',
-        component: EmailPhishing,
+        title: 'Email Phishing',
+        component: markRaw(EmailPhishing), // Wrapped with markRaw
         module_order: 8,
         unlocksLessonId: 2,
         interactive: false,
@@ -114,7 +116,7 @@ export const lessons: Record<string, Lesson> = {
       {
         id: 'websitePhishing',
         title: 'Website Phishing',
-        component: WebsitePhishing,
+        component: markRaw(WebsitePhishing), // Wrapped with markRaw
         module_order: 9,
         unlocksLessonId: 2,
         interactive: false,
@@ -122,7 +124,7 @@ export const lessons: Record<string, Lesson> = {
       {
         id: 'socialMediaPhishing',
         title: 'Social Media Phishing',
-        component: SocialMediaPhishing,
+        component: markRaw(SocialMediaPhishing), // Wrapped with markRaw
         module_order: 10,
         unlocksLessonId: 2,
         interactive: false,
@@ -130,7 +132,7 @@ export const lessons: Record<string, Lesson> = {
       {
         id: 'voicePhishing',
         title: 'Voice Phishing',
-        component: VoicePhishing,
+        component: markRaw(VoicePhishing), // Wrapped with markRaw
         module_order: 11,
         unlocksLessonId: 2,
         interactive: false,
@@ -138,7 +140,7 @@ export const lessons: Record<string, Lesson> = {
       {
         id: 'smsPhishing',
         title: 'SMS Phishing',
-        component: SmsPhishing,
+        component: markRaw(SmsPhishing), // Wrapped with markRaw
         module_order: 12,
         unlocksLessonId: 2,
         interactive: false,
@@ -146,11 +148,12 @@ export const lessons: Record<string, Lesson> = {
       {
         id: 'howToProtectYourself',
         title: 'How to Protect Yourself',
-        component: HowToProtect,
+        component: markRaw(HowToProtect), // Wrapped with markRaw
         module_order: 13,
         unlocksLessonId: 2,
         interactive: false,
+        final: true,
       },
     ],
   },
-}
+};

@@ -5,6 +5,7 @@ export interface Module {
   module_order?: number
   unlocksLessonId: number
   interactive?: boolean
+  final?: boolean
 }
 
 export interface Lesson {

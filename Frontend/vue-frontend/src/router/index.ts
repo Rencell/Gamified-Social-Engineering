@@ -1,5 +1,6 @@
 import App from '@/App.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import ProfileView from '@/views/ProfileView.vue'
 import LearnView from '@/views/LearnView.vue'
 import HomeView from '@/views/HomeView.vue'
 import BadgeView from '@/views/BadgeView.vue'
@@ -9,6 +10,7 @@ import index from '@/views/Learn/SessionContents.vue'
 import login from '@/views/Authentication/signup.vue'
 import SuccessVerify from '@/views/Authentication/successVerify.vue'
 import { useAuthStore } from '@/stores/auth'
+import { useLevelStore } from '@/stores/level'
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 
 
@@ -18,8 +20,11 @@ const requireAuthenticated = async (
   _from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
+
   const authStore = useAuthStore();
+  const levelStore = useLevelStore();
   await authStore.init()
+  await levelStore.loadLevel();
   if (!authStore.isAuthenticated) {
     next({
       path: '/login'
@@ -66,16 +71,25 @@ const router = createRouter({
     {
       path: '/learn',
       name: 'Learn',
+      beforeEnter: requireAuthenticated,
       component: LearnView,
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      beforeEnter: requireAuthenticated,
+      component: ProfileView,
     },
     {
       path: '/learn/:lessonId',
       name: 'Learn-Phishing',
+      beforeEnter: requireAuthenticated,
       component: modules
     },
     {
       path: '/learn/:lessonId/session',
       name: 'phishing1',
+      beforeEnter: requireAuthenticated,
       component: index,
       meta: { layout: 'fullscreen' }
     },

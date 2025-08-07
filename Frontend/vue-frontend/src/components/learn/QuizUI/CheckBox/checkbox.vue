@@ -34,7 +34,7 @@ const props = defineProps<{
   };
 }>();
 
-const emit = defineEmits(['toggleA']);
+const emit = defineEmits(['completeModule']);
 
 
 const selectedOptions = ref<string[]>([]);
@@ -52,7 +52,7 @@ const submitQuiz = () => {
   showResult.value = true;
   isCorrect.value = arraysMatch(selectedOptions.value, props.quiz.correctAnswer);
   if (isCorrect.value) {
-    emit('toggleA', false);
+    emit('completeModule', false);
   }
 };
 </script>

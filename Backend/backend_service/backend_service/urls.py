@@ -10,4 +10,5 @@ urlpatterns = [
     path('api/modules/', include('app_modules.urls')),
     path('api/quizzes/', include('app_quizzes.urls')),
     path('api/rewards/', include('app_reward.urls')),
+    path('api/levels/', include('app_level.urls')),
 ]

@@ -11,6 +11,7 @@ export const useRewardStore = defineStore('reward', () => {
     const rewardCoin = ref();
 
     const USER = authStore.User.pk || null
+
     // Actions
     const action = ref<'increase' | 'decrease'>('increase');
 
@@ -50,18 +51,31 @@ export const useRewardStore = defineStore('reward', () => {
             await updateUserRewards('decrease', reason, coin, xp);
     };
 
+    const calculateScore = (score: number, length: number): number => {
+        if (score > length || length <= 0) return 0;
+
+        let multiplier = 1;
+        if (length <= 3) multiplier = 1.2;
+        else if (length <= 5) multiplier = 1.5;
+
+        const baseScore = Math.floor((score / length) * 10);
+        return Math.floor(baseScore * multiplier);
+    };
+
     const REASONS = {
-        content: 'content',
-        quiz: 'quiz',
-        bonus: 'bonus',
-        spend: 'spend',
-        admin: 'admin',
+        content : 'content',
+        quiz    : 'quiz',
+        bonus   : 'bonus',
+        spend   : 'spend',
+        admin   : 'admin',
     };
     
     return {
         rewardXp,
         rewardCoin,
         increaseUserRewards,
+        decreaseUserRewards,
+        calculateScore,
         REASONS,
     }
 })

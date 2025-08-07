@@ -46,7 +46,7 @@ const props = defineProps({
                     <p>{{ title }}</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <Button v-if="!lockedIndex" asChild variant="ghost" size="lg" class="font-semibold border-1 border-accent/60">
+                    <Button v-if="!lockedIndex" asChild variant="ghost" size="lg" class="font-semibold border-1 border-ternary">
                         <RouterLink :to="routerLink">
                             <Play :size="18" fill="white" ></Play>
                             <p class="font-bold">Learn</p> 

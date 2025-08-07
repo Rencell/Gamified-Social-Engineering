@@ -33,20 +33,12 @@
 <script setup lang="ts">
 import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
 import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
-import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
 import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue'
 import LearningQuote from '../../UI/Learning/Highlight/LearningQuote.vue'
 import content1_assets from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content1-asset.png?url';
-import { Button } from '@/components/ui/button'
-import { onMounted } from 'vue'
-
-const emit = defineEmits(['toggleA']);
-
-onMounted(() => {
-    emit('toggleA', false);
-});
-
+import { useModuleReward } from '@/composables/useModuleRewards'
+import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 
 </script>
 

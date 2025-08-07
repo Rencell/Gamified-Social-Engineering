@@ -16,6 +16,8 @@ onMounted(async() => {
     
 });
 
+
+
 </script>
 
 
@@ -31,9 +33,8 @@ onMounted(async() => {
                 <div
                     :class="['border-10  p-2 rounded-4xl', lesson.locked ? 'opacity-50 cursor-not-allowed ' : 'cursor-pointer border-accent animate-pulse']">
 
-                    <LessonCard :progress="75" :title="lesson.title" :image="lesson.image" :bg="lesson.bg"
+                    <LessonCard :progress="learningStore.completionPercentage" :title="lesson.title" :image="lesson.image" :bg="lesson.bg"
                         :locked="lesson.locked" />
-
                 </div>
 
                 <div class="relative left-1/2 transform -translate-x-1/2 flex justify-center items-center">

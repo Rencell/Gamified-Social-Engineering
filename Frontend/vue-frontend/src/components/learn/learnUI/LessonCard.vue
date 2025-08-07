@@ -9,6 +9,7 @@ interface Props {
     image?: string
     bg?: string
     locked?: boolean
+    AllowProgress?: boolean
 }
 
 
@@ -34,6 +35,7 @@ const bgDefined = () => {
     <div class="p-3 rounded-2xl" :class="[bgDefined()]">
 
         <!-- loading  -->
+         
         <ProgressCircle v-if="!locked" :progress="progress" size="lg"></ProgressCircle>
 
         <div v-else class="border-3 w-15 h-15 bg-background rounded-full flex items-center justify-center">

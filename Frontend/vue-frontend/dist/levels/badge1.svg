@@ -1,0 +1,9 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1500" width="1500" height="1500">
+	<title>1</title>
+	<style>
+		.s0 { fill: #bb6623;stroke: #fb9a34;stroke-miterlimit:100;stroke-width: 40 } 
+		.s1 { fill: #ffffff } 
+	</style>
+	<path id="Layer 1" fill-rule="evenodd" class="s0" d="m749.5 1212c-237.5 0-429.5-192-429.5-429.5 0-237.5 192-429.5 429.5-429.5 237.5 0 429.5 192 429.5 429.5 0 237.5-192 429.5-429.5 429.5z"/>
+	<path id="1" class="s1" aria-label="1"  d="m717.5 978h92.6v-379.6h-144.1v82.7h51.5z"/>
+</svg>

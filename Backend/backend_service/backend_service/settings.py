@@ -6,7 +6,7 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENVIRONMENT = "PROD"
+ENVIRONMENT = "LOCAL"
 
 if ENVIRONMENT == "LOCAL":
     load_dotenv()
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'app_modules',
     'app_quizzes',
     'app_reward',
+    'app_level',
     'rest_framework',
     'rest_framework.authtoken',
     

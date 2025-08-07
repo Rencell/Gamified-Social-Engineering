@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Module, Lesson } from '@/stores/types/learning'
 import { lessons as dataLessons } from '@/data/learning'
@@ -11,7 +11,7 @@ export const useLearningStore = defineStore('learning', () => {
   const lessons = ref<Lesson[]>(Object.values(dataLessons))
   const modules = ref<Module[]>([])
   const currentModuleId = ref(0)
-  const currentLessonId = ref<String | null>(null)
+  const currentLessonId = ref<string | null>(null)
   const selectedModule = ref<Module | null>(null)
 
   // Getters
@@ -21,6 +21,21 @@ export const useLearningStore = defineStore('learning', () => {
     }
     return lessons.value.find((lesson) => lesson.id === currentLessonId.value) || null
   }
+
+  const isFinalQuizUnlocked = computed(() => {
+    const requiredModules = modules.value.filter((module) => !module.final)
+    const completedModules = requiredModules.filter((module) => module.interactive)
+
+    return completedModules.length === requiredModules.length
+  })
+
+  const completionPercentage = computed(() => {
+
+    const total = modules.value.length;
+    const completed = modules.value.filter(m => m.interactive).length;
+  
+    return total > 0 ? Math.round((completed / total) * 100) : 0;
+  });
 
   // Actions
   const loadModules = () => {
@@ -64,21 +79,34 @@ export const useLearningStore = defineStore('learning', () => {
       return
     }
     currentLessonId.value = lessonId
-    selectedModule.value = isLesson.modules[0] || null
+
+    if(selectedModule.value == undefined)
+      selectedModule.value = isLesson.modules[0] || null
   }
 
   const setSelectedModule = (module: Module) => {
+
+    if (currentLesson()?.locked){
+      console.warn('Current lesson is locked. Please unlock it first.')
+      return;
+    }
+    
+    if (module.final && !isFinalQuizUnlocked.value) {
+      console.warn('Final Quiz is locked. Complete all modules first.');
+      return;
+    }
+
     selectedModule.value = module
   }
 
   const activateModuleInteraction = async () => {
     try {
       if (selectedModule.value) {
-        const lesson = lessons.value?.find((lesson) => lesson.lesson_order === selectedModule.value?.unlocksLessonId)
-        if (lesson) 
-          lesson.locked = false
-        if (selectedModule.value.interactive)
-          return // Module is already interactive
+        const lesson = lessons.value?.find(
+          (lesson) => lesson.lesson_order === selectedModule.value?.unlocksLessonId,
+        )
+        if (lesson) lesson.locked = false
+        if (selectedModule.value.interactive) return // Module is already interactive
 
         selectedModule.value.interactive = true
         await ModuleService.create_module({
@@ -114,6 +142,8 @@ export const useLearningStore = defineStore('learning', () => {
     modules,
     currentLessonId,
     selectedModule,
+    isFinalQuizUnlocked,
+    completionPercentage,
     fetchLessons,
     fetchModules,
     currentLesson,

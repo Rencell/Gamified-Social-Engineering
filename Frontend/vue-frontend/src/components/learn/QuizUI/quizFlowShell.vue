@@ -22,7 +22,7 @@ interface QuizProps {
 }
 
 
-const emit = defineEmits(['toggleA', 'showDown']);
+const emit = defineEmits(['completeModule', 'showDown']);
 
 
 const props = defineProps<QuizProps>();
@@ -35,7 +35,7 @@ const max_score = ref(0)
 const finishQuiz = (finalScore: number) => {
   score.value = finalScore
   quizCompleted.value = true
-  emit('toggleA', false)
+  emit('completeModule', false)
 
   if (score.value <= max_score.value)
     return;
@@ -63,6 +63,7 @@ onMounted(async () => {
     if (response) {
       const quiz = response;
       quizCompleted.value = true;
+      // max_score.value = quiz.score || 0;
       score.value = quiz.score || 0;
       total_questions.value = quiz.total_questions || 0;
     } 
@@ -72,7 +73,7 @@ onMounted(async () => {
 
 });
 
-async function saveQuizResult() {
+const saveQuizResult = async () => {
   try {
     await QuizService.create_quiz({
       score: score.value,
@@ -84,11 +85,15 @@ async function saveQuizResult() {
     console.error('Failed to create quiz:', error);
   }
 
-  const reason = rewardStore.REASONS.quiz
-  const coin = 10
-  const xp = 20
-  rewardStore.increaseUserRewards(reason, coin, xp)
-}
+  const reason = rewardStore.REASONS.quiz;
+  const prevScore = max_score.value || 0;
+  const prevCoin = rewardStore.calculateScore(prevScore, total_questions.value);
+  const coin = rewardStore.calculateScore(score.value, total_questions.value);
+  const xp = 20;
 
+  if (coin > prevCoin) {
+    rewardStore.increaseUserRewards(reason, (coin - prevCoin), xp);
+  }
+}
 
 </script>

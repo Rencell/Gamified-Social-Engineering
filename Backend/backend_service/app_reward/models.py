@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from app_level.models import Level
 
 class UserStats(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='stats')
     exp = models.IntegerField(default=0)
     coins = models.IntegerField(default=0)
-    level = models.IntegerField(default=1)
+    level = models.ForeignKey(Level, on_delete=models.CASCADE, related_name='user_stats', default=1)
 
     def __str__(self):
         return f"{self.user.username} | XP: {self.exp} | Coins: {self.coins}"

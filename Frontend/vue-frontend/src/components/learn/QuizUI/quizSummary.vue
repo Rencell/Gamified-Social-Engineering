@@ -55,7 +55,7 @@ const retryQuiz = () => {
 
       <!-- Stats -->
 
-      <Card class="border-2 border-accent/20 py-4">
+      <Card class="border-2 border-ternary py-4">
         <CardContent>
           <div class="flex justify-between items-center gap-2">
             <div class="text-sm font-bold">LESSON COINS</div>
@@ -73,7 +73,7 @@ const retryQuiz = () => {
         </CardContent>
       </Card>
 
-      <Card class="border-2 border-accent/20 py-4">
+      <Card class="border-2 border-ternary py-4">
         <CardContent>
           <div class="flex justify-between items-center gap-2">
             <div class="text-sm font-bold">LESSON XP</div>

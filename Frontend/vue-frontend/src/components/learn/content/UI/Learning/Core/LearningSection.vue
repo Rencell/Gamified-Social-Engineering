@@ -27,22 +27,22 @@
 
 /* Optional: staggered effect */
 .animate-parent > *:nth-child(1) {
-  animation-delay: 0.1s;
-}
-.animate-parent > *:nth-child(2) {
   animation-delay: 0.3s;
 }
-.animate-parent > *:nth-child(3) {
+.animate-parent > *:nth-child(2) {
   animation-delay: 0.5s;
 }
-.animate-parent > *:nth-child(4) {
+.animate-parent > *:nth-child(3) {
   animation-delay: 0.7s;
+}
+.animate-parent > *:nth-child(4) {
+  animation-delay: 0.9s;
 }
 .animate-parent > *:nth-child(5) {
-  animation-delay: 0.7s;
+  animation-delay: 1.1s;
 }
 .animate-parent > *:nth-child(6) {
-  animation-delay: 0.7s;
+  animation-delay: 1.3s;
 }
 /* ...you can extend this further or use JS for dynamic staggering */
 </style>

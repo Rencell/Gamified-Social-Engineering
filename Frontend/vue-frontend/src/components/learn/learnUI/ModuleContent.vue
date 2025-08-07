@@ -29,18 +29,9 @@ watch(() => learningStore.selectedModule, () => {
             </div>
             <hr class="border-background mb-10">
             <component :is="learningStore.selectedModule?.component" />
-        </div>
-        <!-- <hr class="border-background border-2">
-        <div class="p-10 flex gap-2 snap-start">
-            <Button v-show="learningStore.selectedModule && learningStore.currentModules().findIndex(m => m.title === learningStore.selectedModule?.title) > 0" variant="outline" class="bg-accent" size="lg" @click="learningStore.previousModule()">
-                <p class="font-bold text-white">Previous</p>
-            </Button>
 
-            <Button class="bg-accent" size="lg" @click="learningStore.nextModule()">
-                <p class="font-bold text-white">Next</p>
-                <ChevronRight class="text-primary"></ChevronRight>
-            </Button>
-        </div> -->
+            
+        </div>
         
 
     </div>
