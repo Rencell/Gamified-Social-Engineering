@@ -5,7 +5,7 @@
 </script>
 <template>
 
-    <RouterLink :to="{ name: 'Profile' }" class="absolute top-0 left-0 p-4">
+    <RouterLink :to="{ name: 'Profile' }">
         <div class="flex gap-2 mb-5 text-sm items-center text-accent">
             <ArrowLeft :size="15"></ArrowLeft> Back
         </div>

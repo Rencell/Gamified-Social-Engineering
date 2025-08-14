@@ -3,27 +3,26 @@ import shop from '/Home/shop.svg';
 import bag from '/Home/bag.svg';
 import coin from '/Home/coin.svg';
 import exp from '/Home/exp.png';
-import avatar from '/Home/avatar.svg';
 import christmasBackground from '/Home/christmasBackground@3x.webp';
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
-import rank from '/Home/rank.webp';
-import { useRewardStore } from '@/stores/reward';
 import { useLevelStore } from '@/stores/level';
-const rewardStore = useRewardStore();
-const levelStore = useLevelStore();
 
+import { toast } from 'vue-sonner'
+import { useCosmeticStore } from '@/stores/cosmetic';
+import RivePlayer from '@/components/RivePlayer.vue';
+const levelStore = useLevelStore();
+const cosmeticStore = useCosmeticStore();
 const authStore = useAuthStore();
 
 const coins = computed(() => authStore.User.coin || 0);
-const xp = computed(() => authStore.User.exp || 0);
-const level = computed(() => authStore.User.level || 0);
+
+cosmeticStore.fetchCosmetics()
 
 
 </script>
 
 <template>
-    
     <div class="flex flex-col gap-5 p-3 sm:p-0">
         <div class="flex justify-between h-15">
             <router-link :to="{ name: 'Shop' }">
@@ -37,17 +36,21 @@ const level = computed(() => authStore.User.level || 0);
                     </div>
                 </div>
             </router-link>
-            <div class="h-full">
-                <img class="h-full" :src="bag" alt="">
-            </div>
+
+            <router-link :to="{ name: 'Inventory' }">
+
+                <div class="h-full">
+                    <img class="h-full" :src="bag" alt="">
+                </div>
+            </router-link>
         </div>
         <RouterLink :to="{ name: 'Profile' }" class="cursor-pointer">
 
-            
+
             <div class="cursor-pointer">
                 <div class="w-full h-72 bg-secondary rounded-lg flex flex-col">
                     <div class="w-full bg-amber-300 h-2/3 bg-contain bg-repeat rounded-t-lg"
-                        :style="{ backgroundImage: `url(${christmasBackground})` }">
+                        :style="{ backgroundImage: `url(${cosmeticStore.equipBackground?.image})` }">
                     </div>
                     <div class="flex rounded-b-lg justify-evenly items-center">
 
@@ -55,15 +58,19 @@ const level = computed(() => authStore.User.level || 0);
                             <div class="w-full flex justify-center items-center">
                                 <img :src="levelStore.currentBadge.image" class="w-15 h-15" alt="">
                             </div>
-                            <div class="rounded-full h-3 w-30 bg-ternary/50 relative">
-                                <div class="w-20 bg-yellow-600/60 h-full rounded-full flex items-center pl-10 text-xs">
+                            <div class="relative flex items-center">
+                                <div class="rounded-full h-5 w-30 bg-ternary/50 ">
+                                    <div class="w-20 bg-yellow-700 h-full rounded-full flex items-center pl-10 text-xs">
+                                    </div>
                                 </div>
-                                <img class="w-8 h-8 absolute -top-2.5 -left-3 " :src="exp" alt="">
+                                <img class="h-8 w-8 absolute -left-3" :src="exp" alt="">
                             </div>
                         </div>
                         <div
                             class="overflow-hidden relative bottom-10 w-30 h-30 bg-black border-secondary border-5 rounded-full flex items-center justify-center">
-                            <img class="absolute -bottom-1 z-1 scale-110" :src="avatar" alt="">
+                            <div class="w-50 absolute -bottom-20">
+                                <RivePlayer />
+                            </div>
 
                         </div>
                         <div class="rounded-full h-6 w-30 bg-primary">
@@ -74,6 +81,6 @@ const level = computed(() => authStore.User.level || 0);
                 </div>
             </div>
         </RouterLink>
-       
+
     </div>
 </template>

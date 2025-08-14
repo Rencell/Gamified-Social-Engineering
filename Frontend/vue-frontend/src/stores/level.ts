@@ -40,6 +40,11 @@ export const useLevelStore = defineStore('level', () => {
     return levels.value.find((badge) => badge.id === currentLevel.value + 1) || levels.value[0]
   })
 
+
+  const previousLevel = computed(() => {
+    return level_list.value?.find((level: level) => level.id === currentLevel.value - 1) || level_list.value[0]
+  })
+
   const currentSelectedLevel = computed(() => {
     return level_list.value?.find((level: level) => level.id === currentLevel.value) || level_list.value[0]
   })
@@ -57,6 +62,7 @@ export const useLevelStore = defineStore('level', () => {
   return {
     currentLevel,
     currentBadge,
+    previousLevel,
     nextBadge,
     loadLevel,
     level_list,

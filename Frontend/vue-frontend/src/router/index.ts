@@ -8,48 +8,18 @@ import ShopView from '@/views/ShopView.vue'
 import modules from '@/views/Learn/ModuleView.vue'
 import index from '@/views/Learn/SessionContents.vue'
 import login from '@/views/Authentication/signup.vue'
+import InventoryView from '@/views/InventoryView.vue'
 import SuccessVerify from '@/views/Authentication/successVerify.vue'
-import { useAuthStore } from '@/stores/auth'
-import { useLevelStore } from '@/stores/level'
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
-
-
-
-const requireAuthenticated = async (
-  _to: RouteLocationNormalized,
-  _from: RouteLocationNormalized,
-  next: NavigationGuardNext
-) => {
-
-  const authStore = useAuthStore();
-  const levelStore = useLevelStore();
-  await authStore.init()
-  await levelStore.loadLevel();
-  if (!authStore.isAuthenticated) {
-    next({
-      path: '/login'
-    });
-  } else {
-    next(
-    );
-  }
-};
-
-export const redirectLogout = (
-  to: RouteLocationNormalized,
-  from: RouteLocationNormalized,
-  next: NavigationGuardNext
-) => {
-  const authStore = useAuthStore()
-  authStore.logout().then(() => next('/login'))
-}
-
+import { requireAuthenticated, redirectLogout } from './guards'
+import { useLoadingPageStore } from '@/stores/pageLoading'
+import { set } from '@vueuse/core'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '',
       name: 'Home',
+      beforeEnter: requireAuthenticated,
       component: HomeView,
     },
     {
@@ -66,7 +36,14 @@ const router = createRouter({
     {
       path: '/shop',
       name: 'Shop',
+      beforeEnter: requireAuthenticated,
       component: ShopView,
+    },
+    {
+      path: '/inventory-items',
+      name: 'Inventory',
+      beforeEnter: requireAuthenticated,
+      component: InventoryView,
     },
     {
       path: '/learn',
@@ -120,5 +97,18 @@ const router = createRouter({
     },
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  useLoadingPageStore().startLoading()
+  next()
+})
+
+router.afterEach(() => {
+  useLoadingPageStore().stopLoading()
+  setTimeout(() => {
+    useLoadingPageStore().stopLoading()
+  }, 300);
+})
+
 
 export default router

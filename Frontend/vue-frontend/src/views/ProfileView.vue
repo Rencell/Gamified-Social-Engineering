@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Card, CardContent } from '@/components/ui/card';
 import home from '/Home/avatar.svg';
+import robot from '/Home/robot.svg';
 import { ArrowLeft } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth';
 import badge from '/Home/badge.svg';
@@ -8,19 +9,29 @@ import { Button } from '@/components/ui/button';
 import exp from '/Home/exp.png';
 import rank from '/Home/rank.webp';
 import { useLevelStore } from '@/stores/level';
+import RivePlayer from '@/components/RivePlayer.vue'
+import { computed } from 'vue';
+import { RouterLink } from 'vue-router';
 const authStore = useAuthStore();
 const levelStore = useLevelStore();
 
 
 const currentXP = authStore.User?.exp || 0
+const currentLevelXP = computed(() => {
+    if(levelStore.previousLevel.xp_required === levelStore.currentSelectedLevel?.xp_required){
+        return 0
+    }
+    return levelStore.previousLevel?.xp_required || 0
+})
+    
 const nextLevelXP = levelStore.currentSelectedLevel?.xp_required || 0
+
+const progressPercentage = ((currentXP - currentLevelXP.value) / (nextLevelXP - currentLevelXP.value)) * 100
 const xpToNext = nextLevelXP - currentXP
-const progressPercentage = (currentXP / nextLevelXP) * 100
 
 </script>
 
 <template>
-
     <RouterLink :to="{ name: 'Home' }">
         <div class="flex gap-2 mb-5 text-sm items-center text-accent -mt-3">
             <ArrowLeft :size="15"></ArrowLeft> 
@@ -29,11 +40,11 @@ const progressPercentage = (currentXP / nextLevelXP) * 100
     </RouterLink>
     <div class="grid grid-cols-1 grid-rows-2 sm:grid-cols-3 sm:grid-rows-2 gap-4 min-h-[85dvh] p-5 sm:p-0">
         <div class="row-span-2 col-span-2 sm:row-span-2 sm:col-span-1 flex flex-1">
-            <Card class="flex-1 h-full p-4">
+            <Card class="flex-1 h-full">
                 <CardContent class="flex justify-center items-center h-full flex-col">
                     <p class="italic font-bold text-3xl text-center">{{ authStore.User.username.toUpperCase() }}</p>
-                    <img class="py-6" :src="home" alt="">
-                    <p class="font-bold text-accent">Change Avatar</p>
+                    <RivePlayer />
+                    <RouterLink :to="{name: 'Inventory'}" class="font-bold text-accent">Change Avatar</RouterLink>
                 </CardContent>
             </Card>
         </div>
@@ -41,7 +52,7 @@ const progressPercentage = (currentXP / nextLevelXP) * 100
             <Card class="flex-1">
                 <CardContent class="px-5 sm:px-10">
                     <!-- Header -->
-                    <p class="font-bold mb-0 sm:mb-6 text-xl">Career</p>
+                    <p class="font-bold mb-0 sm:mb-6 text-xl">Exp Points</p>
 
                     <!-- Level Progression -->
                     <div class="flex items-center justify-between h-full">
@@ -60,7 +71,7 @@ const progressPercentage = (currentXP / nextLevelXP) * 100
                         <div class="flex-1 mx-10">
                             <div class="relative">
                                 <div class="w-full h-3 bg-ternary rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full transition-all duration-500"
+                                    <div class="h-full bg-gradient-to-r from-yellow-400 to-yellow-700 rounded-full transition-all duration-500"
                                         :style="{ width: `${progressPercentage}%` }" />
                                 </div>
                             </div>

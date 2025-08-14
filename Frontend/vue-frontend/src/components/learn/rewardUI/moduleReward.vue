@@ -10,6 +10,7 @@ import { computed, ref } from 'vue';
 import { useRewardStore } from '@/stores/reward';
 import LearningSection from '../content/UI/Learning/Core/LearningSection.vue';
 import LearningHeader from '../content/UI/Learning/Core/LearningHeader.vue';
+import { useAuthStore } from '@/stores/auth';
 const rewardStore = useRewardStore();
 const learningStore = useLearningStore();
 
@@ -29,8 +30,11 @@ const toggleReward = () => {
     const coins = props.totalLength * 2
     const xp = props.totalLength * 4
 
+    
     rewardStore.increaseUserRewards(rewardStore.REASONS.content, coins, xp)
     coinAnimate.value = true;
+    useAuthStore().User.exp += xp;
+    useAuthStore().User.coin += coins;
   } else {
     learningStore.nextModule();
   }

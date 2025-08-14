@@ -1,28 +1,37 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import sidebar from './components/Layout/sidebar.vue';
-import { Home, BookOpen, Trophy, AlertTriangle, User, Flag, ChevronRight } from 'lucide-vue-next'
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import LearnView from './views/LearnView.vue';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 
 import { useRoute } from 'vue-router'
-import { computed, onBeforeMount, onMounted } from 'vue';
-import { useAuthStore } from '@/stores/auth';
-const authStore = useAuthStore();
+import { computed, onMounted } from 'vue';
+import { Toaster } from '@/components/ui/sonner'
+import { useLoadingPageStore } from './stores/pageLoading';
+import { Spinner } from './components/ui/spinner';
+import { useAuthStore } from '@/stores/auth'
+import 'vue-sonner/style.css'
 
 const route = useRoute()
 
 const isFullscreen = computed(() => route.meta.layout === 'fullscreen')
 
-
-
+onMounted(() => {
+  useAuthStore().init()
+})
 </script>
 
 <template>
+  <Toaster />
+  <div v-if="useLoadingPageStore().isLoading">
+    <div class="fixed inset-0 flex items-center justify-center bg-black/70 z-50 flex-col gap-4">
+      
+      <Spinner size="lg" variant="white">
 
-
+      </Spinner>
+      <div>Loading ...</div>
+    </div>
+  </div>
   <div v-if="isFullscreen">
-    
     
     <RouterView />
   </div>

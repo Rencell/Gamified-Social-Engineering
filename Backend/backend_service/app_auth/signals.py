@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from app_reward.models import UserStats
 from app_lesson.models import Lesson, UserLessonProgress
+from app_cosmetic.models import UserCosmetics, BackpackItem, Item
 
 @receiver(post_save, sender=User)
 def handle_new_user_registration(sender, instance, created, **kwargs):
@@ -17,3 +18,14 @@ def handle_new_user_registration(sender, instance, created, **kwargs):
         stats.exp = 0
         stats.coins = 0
         stats.save()
+        
+        item = Item.objects.filter(rive_code=0, type="avatar").first()
+        if item:
+            backpack = BackpackItem.objects.create(user=instance, item=item)
+        else:
+            raise ValueError("Default avatar not found")
+        
+        item = Item.objects.filter(type="background", price=0).first()
+        backpackBackground = BackpackItem.objects.create(user=instance, item=item)
+        
+        UserCosmetics.objects.create(user=instance, equipped_avatar=backpack, equipped_background=backpackBackground)

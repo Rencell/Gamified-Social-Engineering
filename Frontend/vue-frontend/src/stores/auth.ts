@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 import { AuthService, RewardService } from '@/services'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { type RouteLocationNormalizedLoaded, type Router, useRoute, useRouter } from 'vue-router'
+import { toast } from 'vue-sonner'
+import { useLevelStore } from './level'
 
 export interface Register {
   username: string
@@ -25,50 +27,65 @@ export const useAuthStore = defineStore('auth', () => {
     email: '',
     exp: 0,
     coin: 0,
-    level: 1
+    level: 1,
   }) //User
 
-  const isAuthenticated = computed(() => !!localStorage.getItem(TOKEN_STORAGE) )
+  watch(
+    () => User.value.exp,
+    (newExp, oldExp) => {
+      if (oldExp < 0 && newExp < oldExp) 
+        return;
+
+      if(newExp >= useLevelStore().currentSelectedLevel.xp_required) {
+        toast.success(`Congratulations you just reached ${User.value.level + 1}`, {
+          action: {
+            label: 'Close',
+            onClick: () => console.log('Closed notification'),
+          },
+          position: 'top-right',
+          duration: 5000,
+        })
+      }
+      
+    },
+  )
 
   const actionStates = reactive({
     authenticating: false,
     error: false,
-    token: '' as string | null,
+    token: localStorage.getItem(TOKEN_STORAGE) || null,
   })
 
+  const isAuthenticated = computed(() => !!actionStates.token)
 
   const clearUser = () => {
-    User.value = {
-      pk: 1,
-      username: 'testuser',
-      email: 'test@example.com',
-      exp: 0,
-      coin: 0,
-      level: 1,
-    }
+    User.value = null
   }
+
   const init = async () => {
     if (!isAuthenticated.value) {
-      clearUser()
-      return
+      return clearUser()
     }
 
     try {
-      const token = localStorage.getItem(TOKEN_STORAGE)
+      const token = actionStates.token
       if (token) MUTATIONS.SET_TOKEN(token)
-
-      const userRes = await AuthService.getUser();
-      const rewardRes = await RewardService.user_stats(userRes.data.pk);
-
-      User.value = {
-        ...userRes.data,
-        exp: rewardRes?.exp || 0,
-        coin: rewardRes?.coins || 0,
-        level: rewardRes?.level || 1,
-      }
+      await refreshUser()
     } catch (error) {
       console.warn('Failed to fetch current user, using fallback:', error)
       clearUser()
+    }
+  }
+
+  const refreshUser = async () => {
+    const userRes = await AuthService.getUser()
+    const rewardRes = await RewardService.user_stats(userRes.data.pk)
+
+    User.value = {
+      ...userRes.data,
+      exp: rewardRes.exp,
+      coin: rewardRes.coins,
+      level: rewardRes.level,
     }
   }
 
@@ -79,13 +96,13 @@ export const useAuthStore = defineStore('auth', () => {
       console.log('Registration successful:', response)
       MUTATIONS.SET_TOKEN(response.data['key'])
       MUTATIONS.ACTION_TERMINATE()
-      init();
+      init()
     } catch (error) {
       console.error('Login failed:', error)
       MUTATIONS.LOGIN_FAILURE()
     }
   }
-  
+
   const login = async (
     payload: LoginPayload,
     router: Router,
@@ -96,7 +113,7 @@ export const useAuthStore = defineStore('auth', () => {
       const response = await AuthService.login(payload)
       MUTATIONS.SET_TOKEN(response.data['key'])
       MUTATIONS.LOGIN_SUCCESS(router, route)
-      init();
+      init()
     } catch (error) {
       console.error('Login failed:', error)
       MUTATIONS.LOGIN_FAILURE()
@@ -104,16 +121,10 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const logout = async () => {
-    try {
-      
-      await AuthService.logout()
-      MUTATIONS.REMOVE_TOKEN()
-    } catch (error) {
-      console.error('Logout failed:', error)
-    } finally {
-      MUTATIONS.ACTION_TERMINATE()
-      console.log('User logged out')
-    }
+    await AuthService.logout().catch(() => {})
+    MUTATIONS.REMOVE_TOKEN()
+    clearUser()
+    MUTATIONS.ACTION_TERMINATE()
   }
 
   const MUTATIONS = {
@@ -123,7 +134,6 @@ export const useAuthStore = defineStore('auth', () => {
       actionStates.error = false
     },
     LOGIN_SUCCESS: (router: Router, route: RouteLocationNormalizedLoaded) => {
-      
       actionStates.authenticating = false
       actionStates.error = false
       const redirectPath = route.query.redirect || '/home'
@@ -138,7 +148,7 @@ export const useAuthStore = defineStore('auth', () => {
       actionStates.authenticating = false
       actionStates.error = false
     },
-    
+
     SET_TOKEN: (token: string) => {
       localStorage.setItem(TOKEN_STORAGE, token)
       AuthService.setToken(token)
@@ -155,6 +165,7 @@ export const useAuthStore = defineStore('auth', () => {
     User,
     login,
     registration,
+    refreshUser,
     logout,
     isAuthenticated,
     actionStates,
