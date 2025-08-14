@@ -20,12 +20,16 @@ def handle_new_user_registration(sender, instance, created, **kwargs):
         stats.save()
         
         item = Item.objects.filter(rive_code=0, type="avatar").first()
-        if item:
-            backpack = BackpackItem.objects.create(user=instance, item=item)
+        item2 = Item.objects.filter(rive_code=1, type="avatar").first()
+        if item and item2:
+            backpack1 = BackpackItem.objects.create(user=instance, item=item)
+            BackpackItem.objects.create(user=instance, item=item2)
         else:
-            raise ValueError("Default avatar not found")
+            raise ValueError("Default avatar(s) not found")
         
-        item = Item.objects.filter(type="background", price=0).first()
-        backpackBackground = BackpackItem.objects.create(user=instance, item=item)
+        background_item = Item.objects.filter(type="background", price=0).first()
+        if not background_item:
+            raise ValueError("Default background not found")
+        backpackBackground = BackpackItem.objects.create(user=instance, item=background_item)
         
-        UserCosmetics.objects.create(user=instance, equipped_avatar=backpack, equipped_background=backpackBackground)
+        UserCosmetics.objects.create(user=instance, equipped_avatar=backpack1, equipped_background=backpackBackground)
