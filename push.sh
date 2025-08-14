@@ -1,5 +1,5 @@
 #!/bin/bash
 
 git add .
-git commit -m "deployment"
+git commit -m "Avatar and Background"
 git push origin main
