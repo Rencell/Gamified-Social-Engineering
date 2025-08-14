@@ -24,7 +24,7 @@ onMounted(() => {
         numberInput = inputs.find(i => i.name === 'numColor');
 
         if (numberInput) {
-          numberInput.value = cosmeticStore.avatarRive;
+          numberInput.value = cosmeticStore.avatarRive || 0;
         }
       }
 
