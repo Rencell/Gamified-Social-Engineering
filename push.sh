@@ -1,5 +1,5 @@
 #!/bin/bash
 
 git add .
-git commit -m "Avatar and Background"
+git commit -m "S3 BUCKET CONFIGURATION"
 git push origin main
