@@ -58,6 +58,7 @@ export const useLearningStore = defineStore('learning', () => {
   }
 
   const fetchLessons = async () => {
+
     try {
       const unlockedIds = await LessonService.get_unlocked_lessons()
 

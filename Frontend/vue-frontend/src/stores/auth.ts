@@ -63,6 +63,9 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const init = async () => {
+    if (User.value.username !== 'testuser') {
+      return
+    }
     if (!isAuthenticated.value) {
       return clearUser()
     }
@@ -73,6 +76,7 @@ export const useAuthStore = defineStore('auth', () => {
       await refreshUser()
     } catch (error) {
       console.warn('Failed to fetch current user, using fallback:', error)
+      MUTATIONS.REMOVE_TOKEN()
       clearUser()
     }
   }

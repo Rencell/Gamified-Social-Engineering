@@ -22,15 +22,14 @@ const props = defineProps<{
 }>()
 
 const coinAnimate = ref(false);
-
+const totalModule = computed(() => props.totalLength - 1);
 const toggleReward = () => {
 
   if (!isRewardClaimed.value) {
     learningStore.activateModuleInteraction();
-    const coins = props.totalLength * 2
-    const xp = props.totalLength * 4
+    const coins = totalModule.value * 2
+    const xp = totalModule.value * 4
 
-    
     rewardStore.increaseUserRewards(rewardStore.REASONS.content, coins, xp)
     coinAnimate.value = true;
     useAuthStore().User.exp += xp;
@@ -62,7 +61,7 @@ const toggleReward = () => {
           <div class="flex-2 border-r-2 border-primary/30 pr-4 space-y-1">
             <div class="flex justify-between">
               <p class="text-sm font-semibold">Total Modules</p>
-              <p>12</p>
+              <p>{{totalModule}}</p>
             </div>
             <div class="flex justify-between">
               <p class="text-sm font-semibold">Level 1 Multiplier</p>

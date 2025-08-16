@@ -23,6 +23,7 @@ onMounted(() => {
 <template>
   <Toaster />
   <div v-if="useLoadingPageStore().isLoading">
+    sdfsdfsd
     <div class="fixed inset-0 flex items-center justify-center bg-black/70 z-50 flex-col gap-4">
       
       <Spinner size="lg" variant="white">

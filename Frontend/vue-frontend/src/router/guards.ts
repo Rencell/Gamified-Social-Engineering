@@ -11,7 +11,7 @@ export const requireAuthenticated = async (
 
   const authStore = useAuthStore();
   const levelStore = useLevelStore();
-  await authStore.init()
+  // await authStore.init()
   await levelStore.loadLevel();
   
   if (!authStore.isAuthenticated) {

@@ -1,6 +1,7 @@
 import session from './api'
 
 export interface Cosmetic {
+  id: number
   name: string
   type: string
   image: string
@@ -10,9 +11,13 @@ export interface Cosmetic {
 
 export interface CosmeticInventory {
   id: number
-  User: string
+  user: string
   item: Cosmetic
   acquired_at: string
+}
+export interface createCosmeticInventory {
+  user: string
+  item_id: number
 }
 
 export interface UserCosmetic {
@@ -36,6 +41,8 @@ const cosmeticService = {
     session.get(END_POINT + 'user-cosmetics/').then((res) => res.data),
   create_cosmetic: (cosmetic: createUserCosmetic): Promise<createUserCosmetic> =>
     session.post(END_POINT + 'user-cosmetics/',  cosmetic ).then((res) => res.data),
+  create_backpack_item: (item: createCosmeticInventory): Promise<createCosmeticInventory> =>
+    session.post(END_POINT + 'backpack-item/', item).then((res) => res.data),
 }
 
 export default cosmeticService

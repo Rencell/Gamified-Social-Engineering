@@ -51,6 +51,13 @@ export const useRewardStore = defineStore('reward', () => {
             await updateUserRewards('decrease', reason, coin, xp);
     };
 
+    const purchaseCoinDeduct = async (coin: number) => {
+        if (coin > 0) {
+            decreaseUserRewards(REASONS.spend, -coin, 0);
+        }
+
+    }
+
     const calculateScore = (score: number, length: number): number => {
         if (score > length || length <= 0) return 0;
 
@@ -77,5 +84,6 @@ export const useRewardStore = defineStore('reward', () => {
         decreaseUserRewards,
         calculateScore,
         REASONS,
+        purchaseCoinDeduct,
     }
 })

@@ -24,6 +24,7 @@ const nextQuestion = () => {
     if (selectedAnswers.value !== null) {
         answers.value[currentQuestionIndex.value] = selectedAnswers.value as 0 | 1;
     }
+
     if (currentQuestionIndex.value < props.questions.length - 1) {
         currentQuestionIndex.value++;
         selectedAnswers.value = answers.value[currentQuestionIndex.value] ?? null;
@@ -78,7 +79,14 @@ const percentage = computed(() => {
                         class="mb-4 text-sm w-full px-4 py-2 rounded bg-[#2A2A3B] text-white focus:outline-none focus:ring-2 focus:ring-accent" />
                     <div class="flex justify-between">
                         <Button @click="prevQuestion()" variant="outline">Previous</Button>
-                        <Button @click="nextQuestion()">Next</Button>
+                        <template v-if="currentQuestionIndex < props.questions.length - 1">
+                            <Button @click="nextQuestion()">Next</Button>
+
+                        </template>
+                        <template v-else>
+
+                            <Button>Submit</Button>
+                        </template>
                     </div>
                 </LearningBody>
             </LearningSection>

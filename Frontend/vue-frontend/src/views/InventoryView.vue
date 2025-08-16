@@ -11,17 +11,14 @@ const filterInvetory = ref<CosmeticInventory[]>([]);
 const filterBackground = ref<CosmeticInventory[]>([]);
 const cosmeticStore = useCosmeticStore();
 
-cosmeticStore.fetchCosmetics()
-
 onMounted(async () => {
-    try {
-        inventory_items.value = await CosmeticService.get_inventory();
-        filterInvetory.value = inventory_items.value.filter(item => item.item.type === 'avatar');
-        filterBackground.value = inventory_items.value.filter(item => item.item.type === 'background');
-    } catch (error) {
-        console.error('Error fetching cosmetics:', error);
-    }
+    await cosmeticStore.fetchCosmetics();
+    await cosmeticStore.fetchInventory();
+    inventory_items.value = cosmeticStore.inventory_items;
+    filterInvetory.value = inventory_items.value.filter(item => item.item.type === 'avatar');
+    filterBackground.value = inventory_items.value.filter(item => item.item.type === 'background');
 });
+   
 
 
 </script>

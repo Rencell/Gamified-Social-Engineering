@@ -7,14 +7,15 @@
         </div>
     </RouterLink>
     <div class="space-y-4">
-        <p class="text-3xl font-bold text-center">Welcome to Cyber Shop</p>
-        <div class="p-4 w-full bg-blue-600 rounded-lg">
-
-            f
+        <div>
+            <div class="p-4 w-full bg-blue-600 rounded-tr-lg rounded-tl-lg">
+                <p class="text-2xl font-bold text-white text-center">Welcome to Cyber Shop</p>
+            </div>
+            <div class="h-3 bg-[#6070A3]"></div>
+            <div class="h-6 bg-[#9EACDA] w-full"></div>
         </div>
-
         <div class="grid grid-cols-2 md:grid-cols-4 sm:grid-cols-3 gap-3 md:gap-6">
-            <div v-for="(value, index) in sht" :key="index" class="p-2 space-y-4 bg-secondary rounded-lg">
+            <div v-for="(value, index) in shop_list" :key="index" class="p-2 space-y-4 bg-secondary rounded-lg">
                 <div>
                     <img :src="value.image" class="rounded-lg h-45 w-full object-top object-cover" alt="">
                 </div>
@@ -24,16 +25,23 @@
                 </div>
 
                 <div class="text-center space-y-2">
-                    <h1 class="text-sm font-bold">{{value.name}}</h1>
+                    <h1 class="text-sm font-bold">{{ value.name }}</h1>
                     <p class="text-sm text-gray-500">
                         Lorem ipsum dolor sit amet.
                     </p>
                 </div>
 
                 <div>
-                    <Button class="w-full" :disabled="value.price > authStore.User.coin" :class="value.price > authStore.User.coin ? 'bg-background' : ''">
-                        <img :src="coin" class="w-8 h-8" alt="">
-                        <p class="font-bold text-lg -ms-2">{{value.price}}</p>
+                    <Button class="w-full" :disabled="value.price > authStore.User.coin"
+                        :class="value.price > authStore.User.coin ? 'bg-background' : ''" @click="buyItem(value)">
+
+                        <template v-if="value.purchased">
+                            <p class="font-bold text-sm text-green-500">Owned</p>
+                        </template>
+                        <template v-else>
+                            <img :src="coin" class="w-6 h-6" alt="">
+                            <p class="font-bold text-sm -ms-1">{{ value.price }}</p>
+                        </template>
                     </Button>
                 </div>
             </div>
@@ -43,20 +51,36 @@
 
 <script setup lang="ts">
 import { ArrowLeft } from 'lucide-vue-next';
-// import christmasBackground from '/Home/christmasBackground@3x.webp';
 import { Button } from '@/components/ui/button';
 import coin from '/Home/coin.svg';
 import { onMounted, ref } from 'vue';
 import { CosmeticService } from '@/services';
 import type { Cosmetic } from '@/services/cosmeticService';
 import { useAuthStore } from '@/stores/auth';
-
+import { useRewardStore } from '@/stores/reward';
+import { useCosmeticStore } from '@/stores/cosmetic';
+const cosmeticStore = useCosmeticStore();
+const purchaseItem = useRewardStore();
 const authStore = useAuthStore();
-const sht = ref<Cosmetic[]>([]);
+const shop_list = ref<(Cosmetic & { purchased: boolean })[]>([]);
+
+const buyItem = (item: Cosmetic & { purchased: boolean }) => {
+    if (authStore.User.coin >= item.price) {
+        purchaseItem.purchaseCoinDeduct(item.price)
+        cosmeticStore.purchaseCosmetic(item);
+        authStore.User.coin -= item.price;
+        item.purchased = true;
+        console.log('Purchase successful');
+    };
+}
 
 onMounted(async () => {
     try {
-        sht.value = await CosmeticService.get_all();
+        shop_list.value = (await CosmeticService.get_all()).map(item => ({
+            ...item,
+            purchased: false
+        }));
+
     } catch (error) {
         console.error('Error fetching cosmetics:', error);
     }

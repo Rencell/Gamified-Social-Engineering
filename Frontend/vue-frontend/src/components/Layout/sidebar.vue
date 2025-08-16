@@ -45,7 +45,7 @@ const navigationData = {
     },
     {
       title: 'Leaderboards',
-      url: '#',
+      url: '/leaderboard',
       Image: trophy
     },
     {
@@ -53,10 +53,6 @@ const navigationData = {
       url: '#',
       Image: game
     },
-  ],
-  account: [
-    { title: 'Data Breaches', url: '#', icon: AlertTriangle, variant: 'destructive' },
-    { title: 'Profile', url: '#', icon: User },
   ],
 }
 const panelRef = ref<HTMLElement | null>(null)
@@ -120,28 +116,6 @@ onBeforeUnmount(() => {
       </SidebarGroup>
 
       <!-- Account Section -->
-      <SidebarGroup class="mt-8">
-        <SidebarGroupLabel class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-3">
-          Account
-        </SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu class="space-y-1">
-            <SidebarMenuItem v-for="item in navigationData.account" :key="item.title">
-              <SidebarMenuButton class="
-                  h-11 px-3 rounded-lg transition-all duration-200
-                  text-slate-300 hover:text-white
-                  hover:bg-slate-700/50
-                  " :class="item.variant === 'destructive' ? 'hover:bg-red-900/20 hover:text-red-400' : ''">
-                <a :href="item.url" class="flex items-center gap-3">
-                  <component :is="item.icon" class="h-5 w-5 flex-shrink-0"
-                    :class="item.variant === 'destructive' ? 'text-red-400' : ''" />
-                  <span class="font-medium">{{ item.title }}</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
     </SidebarContent>
 
     <SidebarFooter class="p-4 border-t border-slate-700">

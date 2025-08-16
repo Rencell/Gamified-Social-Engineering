@@ -10,6 +10,7 @@ import index from '@/views/Learn/SessionContents.vue'
 import login from '@/views/Authentication/signup.vue'
 import InventoryView from '@/views/InventoryView.vue'
 import SuccessVerify from '@/views/Authentication/successVerify.vue'
+import LeaderboardView from '@/views/LeaderboardView.vue'
 import { requireAuthenticated, redirectLogout } from './guards'
 import { useLoadingPageStore } from '@/stores/pageLoading'
 import { set } from '@vueuse/core'
@@ -27,6 +28,12 @@ const router = createRouter({
       name: 'Home',
       beforeEnter: requireAuthenticated,
       component: HomeView,
+    },
+    {
+      path: '/leaderboard',
+      name: 'Leaderboard',
+      beforeEnter: requireAuthenticated,
+      component: LeaderboardView,
     },
     {
       path: '/badges',

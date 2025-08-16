@@ -1,11 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { CosmeticService } from '@/services'
-import type { UserCosmetic, CosmeticInventory } from '@/services/cosmeticService'
+import type { UserCosmetic, CosmeticInventory, Cosmetic } from '@/services/cosmeticService'
+import { useAuthStore } from '@/stores/auth'
 import { toast } from 'vue-sonner'
 export const useCosmeticStore = defineStore('cosmetic', () => {
   // State
+  const authStore = useAuthStore()
   const cosmetics = ref<UserCosmetic[]>([])
+  const inventory_items = ref<CosmeticInventory[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
 
@@ -14,14 +17,31 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
 
   // Actions
   const fetchCosmetics = async (): Promise<void> => {
-    loading.value = true
-    error.value = null
+    if(!cosmetics.value.length) {
+      updateService()
+    }
+  }
+
+  const updateService = async (): Promise<void> => {
     try {
       cosmetics.value = await CosmeticService.user_cosmetic()
     } catch (err: any) {
       error.value = err.message || 'Unknown error'
-    } finally {
-      loading.value = false
+    } 
+  }
+
+  const fetchInventory = async (): Promise<void> => {
+    if(!inventory_items.value.length) {
+      await updateInventory()
+      
+    }
+  }
+
+  const updateInventory = async (): Promise<void> => {
+    try {
+      inventory_items.value = await CosmeticService.get_inventory();
+    } catch (err: any) {
+      error.value = err.message || 'Failed to update inventory'
     }
   }
 
@@ -37,7 +57,7 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
   )
 
   const setCosmetic = async (backpackItem: CosmeticInventory): Promise<void> => {
-    console.log('Setting cosmetic:', backpackItem)
+    
 
     const type = backpackItem.item.type
     const equipAvatar = cosmetics.value.find(
@@ -62,24 +82,36 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
     } else {
       background = newId
     }
-
+    console.log('Setting avatar:', avatar)
     try {
       await CosmeticService.create_cosmetic({
-        user: 1,
+        user: authStore.User?.pk || 0,
         equipped_avatar_id: avatar,
         equipped_background_id: background,
       })
-      await fetchCosmetics()
-      toast_notification()
+      await updateService()
+      toast_notification('Inventory has been updated')
     } catch (err: any) {
       error.value = err.message || 'Failed to set cosmetic'
     } finally {
       loading.value = false
     }
   }
+  
+  const purchaseCosmetic = async (item: Cosmetic): Promise<void> => {
+    try{
+      await CosmeticService.create_backpack_item({
+        user: authStore.User?.pk || 0,
+        item_id: item.id,
+      })
+      toast_notification('You have purchased a cosmetic!')
+    }catch (error) {
+      console.error('Error purchasing cosmetic:', error)
+    }
+  }
 
-  const toast_notification = () => {
-    toast.success('Inventory has been updated', {
+  const toast_notification = (message: string) => {
+    toast.success(message, {
       action: {
         label: 'Close',
         onClick: () => console.log('Closed notification'),
@@ -92,13 +124,16 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
 
   return {
     cosmetics,
+    inventory_items,
     loading,
     error,
     cosmeticCount,
     fetchCosmetics,
+    fetchInventory,
     equipAvatar,
     equipBackground,
     setCosmetic,
     avatarRive,
+    purchaseCosmetic
   }
 })
