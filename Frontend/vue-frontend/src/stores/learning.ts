@@ -9,6 +9,8 @@ export const useLearningStore = defineStore('learning', () => {
   // State
   const authStore = useAuthStore()
   const lessons = ref<Lesson[]>(Object.values(dataLessons))
+  const latestLesson = ref<Lesson[] | null>([])
+  const latestPercentageLesson = ref(0)
   const modules = ref<Module[]>([])
   const currentModuleId = ref(0)
   const currentLessonId = ref<string | null>(null)
@@ -30,14 +32,35 @@ export const useLearningStore = defineStore('learning', () => {
   })
 
   const completionPercentage = computed(() => {
+    const total = modules.value.length
+    const completed = modules.value.filter((m) => m.interactive).length
 
-    const total = modules.value.length;
-    const completed = modules.value.filter(m => m.interactive).length;
+    return total > 0 ? Math.round((completed / total) * 100) : 0
+  })
   
-    return total > 0 ? Math.round((completed / total) * 100) : 0;
-  });
+  const latestModuleUnlockedCount = computed(() => {
+    if (!latestLesson.value || latestLesson.value.length === 0) return 0;
 
+    loadLessons(latestLesson?.value[0]?.id);
+    loadModules()
+    fetchModules();
+    return modules.value.filter((m) => m.interactive).length;
+  });
   // Actions
+
+  const fetchLatestLesson = async () => {
+    try {
+      const data = await LessonService.get_latest_lesson()
+      latestPercentageLesson.value = data.percentage
+      const foundLesson = lessons.value?.find((lesson) => lesson.lesson_order === data.lesson)
+      latestLesson.value = foundLesson ? [foundLesson] : null
+
+      console.log('Latest lesson fetched:', latestLesson.value)
+    } catch (error) {
+      console.error('Failed to fetch unlocked modules:', error)
+    }
+  }
+
   const loadModules = () => {
     const lesson = lessons.value?.find((lesson) => lesson.id === currentLessonId.value)
     currentModuleId.value = lesson ? (lesson.lesson_order ?? 0) : 0
@@ -58,7 +81,6 @@ export const useLearningStore = defineStore('learning', () => {
   }
 
   const fetchLessons = async () => {
-
     try {
       const unlockedIds = await LessonService.get_unlocked_lessons()
 
@@ -81,45 +103,63 @@ export const useLearningStore = defineStore('learning', () => {
     }
     currentLessonId.value = lessonId
 
-    if(selectedModule.value == undefined)
-      selectedModule.value = isLesson.modules[0] || null
+    if (selectedModule.value == undefined) selectedModule.value = isLesson.modules[0] || null
   }
 
   const setSelectedModule = (module: Module) => {
-
-    if (currentLesson()?.locked){
+    if (currentLesson()?.locked) {
       console.warn('Current lesson is locked. Please unlock it first.')
-      return;
+      return
     }
-    
+
     if (module.final && !isFinalQuizUnlocked.value) {
-      console.warn('Final Quiz is locked. Complete all modules first.');
-      return;
+      console.warn('Final Quiz is locked. Complete all modules first.')
+      return
     }
 
     selectedModule.value = module
   }
 
   const activateModuleInteraction = async () => {
-    try {
-      if (selectedModule.value) {
-        const lesson = lessons.value?.find(
-          (lesson) => lesson.lesson_order === selectedModule.value?.unlocksLessonId,
-        )
-        if (lesson) lesson.locked = false
-        if (selectedModule.value.interactive) return // Module is already interactive
 
-        selectedModule.value.interactive = true
-        await ModuleService.create_module({
-          user: authStore.User?.pk,
-          module: selectedModule.value.module_order ?? 1,
-        })
-      } else {
-        console.error('No module is currently selected.')
-      }
+    const mod = selectedModule.value
+    if (!mod) {
+      console.error('No module selected for interaction.')
+      return
+    }
+    if (mod.interactive) return
+
+    const lesson = lessons.value?.find(
+      (l) => l.lesson_order === mod.unlocksLessonId,
+    )
+    try {
+      await Promise.all([
+        mod.final && lesson?.id ? unlockNextLesson(lesson.id as string) : Promise.resolve(),
+        unlockNextModule(mod.module_order as number)
+      ])
+      
+        if (lesson) lesson.locked = false
+        mod.interactive = true
     } catch (error) {
       console.error('Failed to activate module interaction:', error)
     }
+  }
+
+  const unlockNextLesson = async (lessonId: string) => {
+    if (currentLessonId.value !== lessonId) {
+      await LessonService.create_lesson({
+        user: authStore.User?.pk,
+        lesson: selectedModule.value?.unlocksLessonId ?? 0,
+        percentage: 0, // Assuming initial percentage is 0
+      })
+    }
+  }
+
+  const unlockNextModule = async (moduleId: number) => {
+    await ModuleService.create_module({
+      user: authStore.User?.pk,
+      module: moduleId,
+    })
   }
 
   const nextModule = () => {
@@ -141,10 +181,14 @@ export const useLearningStore = defineStore('learning', () => {
   return {
     lessons,
     modules,
+    latestLesson,
+    latestPercentageLesson,
+    latestModuleUnlockedCount,
     currentLessonId,
     selectedModule,
     isFinalQuizUnlocked,
     completionPercentage,
+    fetchLatestLesson,
     fetchLessons,
     fetchModules,
     currentLesson,

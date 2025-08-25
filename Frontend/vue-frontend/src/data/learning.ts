@@ -7,7 +7,7 @@ import { LessonService } from '@/services'
 //IntroToSocEng
 import {
   WhatIsSocialEngineering,
-  PsychologicalPrinciplesUsed,
+  TheArtOfManipulation,
   CommonAttacks,
   InteractiveScenarioSpotTheAttack,
   HowToProtectYourself,
@@ -28,9 +28,9 @@ import { markRaw } from 'vue'
 export const lessons: Record<string, Lesson> = {
   introToSocialEngineering: {
     id: 'introToSocialEngineering',
-    title: 'Introduction to Social Engineering',
+    title: 'The Social Engineering',
     image: human,
-    bg: 'bg-[#4f1c51]',
+    bg: '#4f1c51',
     lesson_order: 1,
     locked: false,
     description:
@@ -46,8 +46,8 @@ export const lessons: Record<string, Lesson> = {
       },
       {
         id: 'psychologicalPrinciplesUsed',
-        title: 'Psychological Principles Used',
-        component: markRaw(PsychologicalPrinciplesUsed), // Wrapped with markRaw
+        title: 'The Art of Manipulation',
+        component: markRaw(TheArtOfManipulation), // Wrapped with markRaw
         module_order: 2,
         unlocksLessonId: 1,
         interactive: false,
@@ -91,7 +91,7 @@ export const lessons: Record<string, Lesson> = {
     id: 'phishing',
     title: 'Phishing',
     image: phishing,
-    bg: 'bg-[#2E236C]',
+    bg: '#2E236C',
     lesson_order: 2,
     locked: true,
     description:

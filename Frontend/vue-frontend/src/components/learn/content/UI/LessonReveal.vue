@@ -69,11 +69,12 @@ onMounted(() => {
 
 <template>
   <div>
-    <div v-for="(Comp, idx) in components" :key="Comp.id" class="reset-contents" v-show="idx <= currentVisibleIndex"
+    <div v-for="(Comp, idx) in components" :key="Comp.id" class="reset-contents relative"
       :ref="el => componentRefs[idx] = el">
       <!-- Component -->
-       
+      
       <component 
+       v-if="idx <= currentVisibleIndex"
         :is="Comp.component" 
         @showDown="toggleActive" 
         @completeModule="toggleMarkComplete" 
@@ -81,17 +82,19 @@ onMounted(() => {
     </div>
 
     <div class="flex justify-center items-center">
-      <div v-if="active" class="w-2xl flex my-10">
+      <div v-if="active" class="w-2xl flex my-10 animate-bounce">
         <Button v-if="currentVisibleIndex < components.length - 1" class="ml-auto" @click="showNextComponent">
           <MoveDown />
         </Button>
-        <div v-else class="ml-auto">
+        <div v-else class="ml-auto my-10">
           <Button v-if="!withQuiz" :disabled="markComplete" @click="showNextComponent">
             {{ markComplete ? 'Check as Completed' : 'Claim Reward' }}
             <img :src="moneyBag" class="h-full" alt="">
           </Button>
         </div>
       </div>
+
+      
     </div>
   </div>
 </template>

@@ -9,11 +9,11 @@ export const requireAuthenticated = async (
   next: NavigationGuardNext
 ) => {
 
+  
   const authStore = useAuthStore();
   const levelStore = useLevelStore();
-  // await authStore.init()
+  await authStore.init()
   await levelStore.loadLevel();
-  
   if (!authStore.isAuthenticated) {
     next({
       path: '/login'

@@ -2,17 +2,27 @@
 import { onMounted, ref, onBeforeUnmount } from 'vue';
 import { Rive, StateMachineInput } from '@rive-app/canvas';
 import { useCosmeticStore } from '@/stores/cosmetic';
+
+const props = defineProps({
+  celebrateState: {
+    type: Boolean,
+    default: true,
+  },
+});
+
 const cosmeticStore = useCosmeticStore();
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 let riveInstance: Rive | null = null;
 
-let numberInput = null;
-let blinkInput: StateMachineInput | null | undefined = null;
+let numberInput: StateMachineInput | null = null;
+let celebInput: StateMachineInput | null = null;
+let blinkInput: StateMachineInput | null = null;
 
 onMounted(() => {
-  if (!canvasRef.value) return; // ensure the canvas is mounted
+  if (!canvasRef.value) return; // Ensure the canvas is mounted
+
   riveInstance = new Rive({
-    src: '/Home/robot-idle-try.riv', // path to your Rive file
+    src: '/Home/robot-try-2.riv', // Path to your Rive file
     canvas: canvasRef.value,
     autoplay: true,
     stateMachines: ['State Machine 1'],
@@ -20,28 +30,46 @@ onMounted(() => {
       console.log('Rive animation loaded');
       if (riveInstance) {
         const inputs = riveInstance.stateMachineInputs('State Machine 1');
-        blinkInput = inputs.find(i => i.name === 'blink');
-        numberInput = inputs.find(i => i.name === 'numColor');
 
+        // Debug: Log all available inputs
+        console.log('Available inputs:', inputs);
+
+        // Find inputs and ensure they exist
+        blinkInput = inputs.find((i) => i.name === 'blink') || null;
+        numberInput = inputs.find((i) => i.name === 'numColor') || null;
+        celebInput = inputs.find((i) => i.name === 'celeb') || null;
+
+        // Set default values if inputs exist
         if (numberInput) {
           numberInput.value = cosmeticStore.avatarRive || 0;
+        } else {
+          console.warn("State machine input 'numColor' not found.");
+        }
+
+        if (celebInput) {
+          celebInput.value = props.celebrateState;
+        } else {
+          console.warn("State machine input 'celeb' not found.");
         }
       }
 
-      setInterval(() => {
-        if (!blinkInput)
-          return;
-        blinkInput.value = true; 
+      // Blink animation logic
+      if (blinkInput) {
+        setInterval(() => {
+          if (blinkInput) {
+            blinkInput.value = true;
 
-        setTimeout(() => {
-          if (!blinkInput)
-            return;
-          blinkInput.value = false;
-        }, 600); 
-
-      }, 6000); 
-
-    }
+            setTimeout(() => {
+              if (blinkInput) {
+                blinkInput.value = false;
+              }
+            }, 600); // Blink duration
+          }
+        }, 6000); // Blink interval
+      } else {
+        console.warn("State machine input 'blink' not found.");
+      }
+    },
   });
 });
 
@@ -53,7 +81,6 @@ onBeforeUnmount(() => {
 <template>
   <canvas ref="canvasRef" width="500" height="500" class="responsive-rive"></canvas>
 </template>
-
 
 <style scoped>
 .responsive-rive {

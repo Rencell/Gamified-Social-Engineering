@@ -1,9 +1,9 @@
 <template>
-    <div class="snap-start min-h-fit flex flex-col items-center justify-center">
-        <LearningImage :image="content1_assets" source="colcampus.com" />
-
+    <LearningContent>
+       
         <LearningSection>
             <LearningHeader>Hackers don't always hack</LearningHeader>
+            <LearningImage2 :image="conversation" />
             <LearningBody>
                 Ever thought about how hackers break into systems? While many imagine complex code and green and black
                 on
@@ -23,11 +23,11 @@
                 a reliable party like a <LearningSpan>bank</LearningSpan> or <LearningSpan>colleague from your work
                 </LearningSpan>.
             </LearningBody>
-            <LearningQuote variant="danger">
-                Social engineering is the art of manipulating people so they give up confidential information.
+            <LearningQuote variant="info">
+                In other words, social engineering is focused on “hacking” the users, not the systems.
             </LearningQuote>
         </LearningSection>
-    </div>
+    </LearningContent>
 </template>
 
 <script setup lang="ts">
@@ -37,8 +37,11 @@ import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
 import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue'
 import LearningQuote from '../../UI/Learning/Highlight/LearningQuote.vue'
 import content1_assets from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content1-asset.png?url';
+import conversation from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/conversation.webp';
 import { useModuleReward } from '@/composables/useModuleRewards'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
+import LearningImage2 from '../../UI/Learning/Image/LearningImage2.vue'
+import LearningContent from '../../UI/Learning/Core/LearningContent.vue'
 
 </script>
 

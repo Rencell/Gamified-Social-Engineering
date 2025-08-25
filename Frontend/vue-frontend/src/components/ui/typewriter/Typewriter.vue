@@ -7,6 +7,11 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  delay: {
+    type: Number,
+    required: false,
+    default: 10
+  }
 });
 
 const emit = defineEmits(['animationEnd']);
@@ -17,8 +22,9 @@ const initializeTypewriter = (element: HTMLDivElement | null, text: string) => {
   if (!element) return;
 
   const typewriter = new Typewriter(element, {
-    delay: 10,
+    delay: props.delay,
     loop: false,
+    cursor: '' // This removes the typewriter cursor
   });
 
   typewriter
@@ -45,3 +51,11 @@ watch(() => props.text, (newText) => {
 <template>
   <div ref="typewriterRef"></div>
 </template>
+
+<style scoped>
+
+.Typewriter__cursor {
+  opacity: 0;
+}
+
+</style>

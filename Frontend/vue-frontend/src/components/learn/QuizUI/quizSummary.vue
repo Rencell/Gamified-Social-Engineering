@@ -3,12 +3,11 @@ import { Button } from "@/components/ui/button";
 import asset from "/Home/image.png";
 import coins from "/Home/coin.svg";
 import my_xp from "/Home/exp.png";
-import { onMounted, ref, onActivated, watch } from "vue";
 import LearningImage from '../content/UI/Learning/Image/LearningImage.vue'
 import { Card, CardContent } from "@/components/ui/card";
 import LearningSpan from "../content/UI/Learning/Highlight/LearningSpan.vue";
-import { CountTo } from 'vue3-count-to';
-import NumberCountdown from './numberCountdown.vue'
+import RivePlayer from "@/components/RivePlayer.vue";
+import radial from "/radial.png";
 
 const props = defineProps({
   score: {
@@ -19,9 +18,12 @@ const props = defineProps({
     type: Number,
     default: 10,
   },
+  
 });
 
-const emit = defineEmits(['retryQuiz', 'nextLesson']);
+const emit = defineEmits(['retryQuiz', 'nextLesson', 'toggleCoins']);
+
+const toggleCoin = defineModel('toggleCoin', { type: Boolean, default: true });
 
 
 const nextLesson = () => {
@@ -30,6 +32,7 @@ const nextLesson = () => {
 const retryQuiz = () => {
   emit('retryQuiz');
 };
+
 
 </script>
 
@@ -49,13 +52,15 @@ const retryQuiz = () => {
         <h1 class="text-white text-2xl font-bold">Outstanding Performance</h1>
       </div>
 
-      <div class="flex justify-center">
-        <LearningImage :image="asset" />
+      <div class="flex justify-center items-center relative">
+        <div class="size-50 relative z-10"><RivePlayer :celebrate-state="false" /></div>
+        <img class="size-50 absolute opacity-30 animate-spin [animation-duration:15s]" :src="radial"/>
+        <!-- <LearningImage :image="asset" /> -->
       </div>
 
       <!-- Stats -->
 
-      <Card class="border-2 border-ternary py-4">
+      <Card class="border-2 border-ternary py-4" v-if="toggleCoin">
         <CardContent>
           <div class="flex justify-between items-center gap-2">
             <div class="text-sm font-bold">LESSON COINS</div>
@@ -73,7 +78,7 @@ const retryQuiz = () => {
         </CardContent>
       </Card>
 
-      <Card class="border-2 border-ternary py-4">
+      <Card class="border-2 border-ternary py-4" v-if="toggleCoin">
         <CardContent>
           <div class="flex justify-between items-center gap-2">
             <div class="text-sm font-bold">LESSON XP</div>

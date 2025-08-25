@@ -129,6 +129,7 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
     error,
     cosmeticCount,
     fetchCosmetics,
+    updateInventory,
     fetchInventory,
     equipAvatar,
     equipBackground,

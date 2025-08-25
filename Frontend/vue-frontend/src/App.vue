@@ -12,18 +12,18 @@ import { useAuthStore } from '@/stores/auth'
 import 'vue-sonner/style.css'
 
 const route = useRoute()
-
+const authStore = useAuthStore()
 const isFullscreen = computed(() => route.meta.layout === 'fullscreen')
 
-onMounted(() => {
-  useAuthStore().init()
+onMounted(async() => {
+  authStore.init()
 })
 </script>
 
 <template>
   <Toaster />
   <div v-if="useLoadingPageStore().isLoading">
-    sdfsdfsd
+   
     <div class="fixed inset-0 flex items-center justify-center bg-black/70 z-50 flex-col gap-4">
       
       <Spinner size="lg" variant="white">
@@ -32,12 +32,12 @@ onMounted(() => {
       <div>Loading ...</div>
     </div>
   </div>
+
   <div v-if="isFullscreen">
-    
     <RouterView />
   </div>
 
-
+  
   <div v-else>
     <SidebarProvider class="h-screen flex">
       <sidebar />

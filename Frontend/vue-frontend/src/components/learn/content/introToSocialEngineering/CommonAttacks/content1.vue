@@ -11,16 +11,19 @@ import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
 import type { Question } from '@/components/learn/QuizUI/MultipleChoice/type'
 import MultipleChoice from '@/components/learn/QuizUI/MultipleChoice/MultipleChoice.vue'
+import Phishing from './Phishing.vue'
+import Tailgating from './Tailgating.vue'
+import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue'
+import LearningList from '../../UI/Learning/Listing/LearningList.vue'
+import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue'
+import LearningContent from '../../UI/Learning/Core/LearningContent.vue'
 const isPretest = ref(false)
+const finishTest = ref(false)
 
-const emit = defineEmits(['showDown'])
 
-const toggleActive = () => {
-  emit('showDown', false)
-  isPretest.value = true
-}
 
-const pretest: Question[] =  [
+
+const pretest: Question[] = [
     {
         image: hacks,
         question: 'What attack that involves tricking a user into revealing sensitive information over the phone?',
@@ -32,6 +35,7 @@ const pretest: Question[] =  [
         ],
         correctAnswer: 'B',
         explanation: 'Vishing, or voice phishing, involves using phone calls to trick users into revealing sensitive information.',
+        moduleExplanation: Phishing
     },
     {
         image: desktopWarning,
@@ -44,12 +48,13 @@ const pretest: Question[] =  [
         ],
         correctAnswer: 'C',
         explanation: 'Tailgating is a physical security breach where an unauthorized person follows an authorized individual into a restricted area.',
+        moduleExplanation: Tailgating
     },
 ]
 </script>
 
 <template>
-    <div v-if="!isPretest" class="snap-start min-h-screen flex flex-col items-center justify-center">
+    <LearningContent>
 
         <LearningImage :image="hackMan" />
 
@@ -59,21 +64,38 @@ const pretest: Question[] =  [
             </LearningHeader>
             <LearningBody>
                 Understanding the different types of social engineering attacks is crucial for recognizing and defending
-                against them.
+                against them. While also mentioning some unusual or unexpected types of scams such as <LearningSpan>
+                    dumpster diving</LearningSpan>, which, while they
+                sound a bit silly, in reality, are very effective.
 
             </LearningBody>
+
             <LearningBody>
-                But before we dive into the types of attacks, let's take a Pre-test.
+                <LearningSpan>
+                    We will cover the following main topics
+                </LearningSpan>
             </LearningBody>
-            <Button variant="link" size="lg" @click="toggleActive">
-                <ChevronRight></ChevronRight>Take Pre-test
-            </Button>
+
+            <LearningBody>
+                <LearningList>
+                    <LearningListItem size="lg">
+                        Phishing
+                    </LearningListItem>
+                    <LearningListItem size="lg">
+                        Baiting
+                    </LearningListItem>
+                    <LearningListItem size="lg">
+                        Dumpster diving
+                    </LearningListItem>
+                    <LearningListItem size="lg">
+                        Tailgating
+                    </LearningListItem>
+                </LearningList>
+            </LearningBody>
         </LearningSection>
 
 
-    </div>
+    </LearningContent>
+        
 
-    <div v-else class="snap-start min-h-screen flex flex-col items-center justify-center">
-        <MultipleChoice :pretest="pretest" />
-    </div>
 </template>

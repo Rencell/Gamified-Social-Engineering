@@ -1,6 +1,6 @@
 <template>
   <div class="p-4 rounded-xl">
-    <ul :class="[animation ? 'animate-parent' : 'animate-default']" class="list-none p-0 m-0">
+    <ul :class="[animation ? 'animate-parent' : 'animate-default']" class="list-none p-0 m-0 space-y-2">
       <slot></slot>
     </ul>
   </div>

@@ -66,6 +66,7 @@ export const useAuthStore = defineStore('auth', () => {
     if (User.value.username !== 'testuser') {
       return
     }
+    
     if (!isAuthenticated.value) {
       return clearUser()
     }
@@ -74,7 +75,7 @@ export const useAuthStore = defineStore('auth', () => {
       const token = actionStates.token
       if (token) MUTATIONS.SET_TOKEN(token)
       await refreshUser()
-    } catch (error) {
+  } catch (error) {
       console.warn('Failed to fetch current user, using fallback:', error)
       MUTATIONS.REMOVE_TOKEN()
       clearUser()
@@ -117,7 +118,7 @@ export const useAuthStore = defineStore('auth', () => {
       const response = await AuthService.login(payload)
       MUTATIONS.SET_TOKEN(response.data['key'])
       MUTATIONS.LOGIN_SUCCESS(router, route)
-      init()
+      await init()
     } catch (error) {
       console.error('Login failed:', error)
       MUTATIONS.LOGIN_FAILURE()
@@ -140,7 +141,7 @@ export const useAuthStore = defineStore('auth', () => {
     LOGIN_SUCCESS: (router: Router, route: RouteLocationNormalizedLoaded) => {
       actionStates.authenticating = false
       actionStates.error = false
-      const redirectPath = route.query.redirect || '/home'
+      const redirectPath = route.query.redirect || '/home/'
       router.push(redirectPath as string)
     },
 

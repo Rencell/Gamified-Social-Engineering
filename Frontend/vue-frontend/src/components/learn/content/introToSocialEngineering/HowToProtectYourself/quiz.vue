@@ -11,6 +11,9 @@
 import DoDont from '@/components/learn/QuizUI/DoDont/DoDont.vue'
 import type { Question } from '@/components/learn/QuizUI/DoDont/type';
 import QuizFlowShell from '@/components/learn/QuizUI/quizFlowShell.vue'
+import { onMounted } from 'vue';
+
+const emit = defineEmits(['showDown']);
 
 const questions: Question[] = [
     {
@@ -55,6 +58,8 @@ const questions: Question[] = [
     // },
 ];
 
-
+onMounted(() => {
+    emit('showDown', false);
+});
 
 </script>

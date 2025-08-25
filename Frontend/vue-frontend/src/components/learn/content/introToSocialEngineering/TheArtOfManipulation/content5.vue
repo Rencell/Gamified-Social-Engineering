@@ -1,5 +1,6 @@
 <template>
-    <div class="snap-center min-h-screen flex flex-col items-center justify-center">
+
+    <LearningContent>
         <LearningImage :image="content1_asset" />
         <LearningSection>
 
@@ -14,20 +15,23 @@
             </LearningBody>
             <LearningList>
                 <LearningListItemNumbered :number="1">
-                    <LearningSpan>Does</LearningSpan> it <LearningSpan2>make sense</LearningSpan2> for this person to reach out to me?
+                    <LearningSpan>Does</LearningSpan> it <LearningSpan2>make sense</LearningSpan2> for this person to
+                    reach out to me?
                 </LearningListItemNumbered>
                 <LearningListItemNumbered :number="2">
-                    <LearningSpan>Does</LearningSpan> this person behave in a <LearningSpan2>trustworthy</LearningSpan2> manner?
+                    <LearningSpan>Does</LearningSpan> this person behave in a <LearningSpan2>trustworthy</LearningSpan2>
+                    manner?
                 </LearningListItemNumbered>
                 <LearningListItemNumbered :number="3">
                     <LearningSpan>Does</LearningSpan> this person have <LearningSpan2>authority</LearningSpan2>?
                 </LearningListItemNumbered>
                 <LearningListItemNumbered :number="4">
-                    <LearningSpan>Does</LearningSpan> this person have a <LearningSpan2>legitimate</LearningSpan2> reason to ask for this information?
+                    <LearningSpan>Does</LearningSpan> this person have a <LearningSpan2>legitimate</LearningSpan2>
+                    reason to ask for this information?
                 </LearningListItemNumbered>
             </LearningList>
         </LearningSection>
-    </div>
+    </LearningContent>
 </template>
 
 <script setup lang="ts">
@@ -42,4 +46,5 @@ import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
 
 import content1_asset from '/Learning/Content/introToSocialEngineering/PsychologySocialEngineering/content1-asset.svg?url'
 import LearningListItemNumbered from '../../UI/Learning/Listing/LearningListItemNumbered.vue'
+import LearningContent from '../../UI/Learning/Core/LearningContent.vue'
 </script>

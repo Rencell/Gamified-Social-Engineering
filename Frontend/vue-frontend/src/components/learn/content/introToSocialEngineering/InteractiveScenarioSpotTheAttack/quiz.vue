@@ -1,91 +1,79 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import DragPair from '../../../QuizUI/DragPair/DragPair.vue'
-import type { Question } from '@/components/learn/QuizUI/DragPair/type'
-import { useLearningStore } from '@/stores/learning';
+import ScenarioMCQ from '@/components/learn/QuizUI/ScenarioTraining/scenarioMCQ.vue'
+import type { Story, ScenarioStep } from '@/components/learn/QuizUI/ScenarioTraining/type';
+import ScenarioPlayer from '@/components/learn/QuizUI/ScenarioTraining/scenarioPlayer.vue'
 import QuizFlowShell from '@/components/learn/QuizUI/quizFlowShell.vue'
-const learningStore = useLearningStore();
 
-const sampleQuestions: Question[] = [
+import asset1 from '/Learning/Content/introToSocialEngineering/InteractiveScenario/asset_1.png'
+import asset2 from '/Learning/Content/introToSocialEngineering/InteractiveScenario/asset_2.png'
+import asset3 from '/Learning/Content/introToSocialEngineering/InteractiveScenario/asset_3.png'
+import asset4 from '/Learning/Content/introToSocialEngineering/InteractiveScenario/asset_4.png'
+import asset5 from '/Learning/Content/introToSocialEngineering/InteractiveScenario/asset_5.webp'
+const scenario: ScenarioStep[] = [
     {
-        id: 1,
-        question: "What is phishing?",
-        topAnswer: "A technique to steal sensitive information via email or fake websites.",
-        bottomAnswer: "A method of physical intrusion into secure areas.",
-        correctAnswer: "top",
-        feedback: "Phishing involves tricking individuals into revealing sensitive information through deceptive emails or websites."
+        type: 'story',
+        title: 'First Day at Work',
+        image: asset1,
+        description: [
+            "It was Daniel’s first day to work after graduating college. Excited but nervous, his position was in backoffice.",
+            "Your task is to help Daniel avoid social engineering attacks thoughout his day.",
+        ]
     },
     {
-        id: 2,
-        question: "What is vishing?",
-        topAnswer: "A voice-based phishing attack to extract sensitive information.",
-        bottomAnswer: "A method of stealing data through fake websites.",
-        correctAnswer: "top",
-        feedback: "Vishing uses phone calls or voice messages to deceive individuals into sharing confidential information."
+        type: 'mcq',
+        question: 'While Daniel is waiting in the lobby, he saw a USB device on the floor. What should he do?',
+        position: 'left',
+        image: asset2,
+        answer: 'B',
+        explanation: 'The only move is to report it to IT immediately. Plugging it into his computer could introduce malware or compromise sensitive information.',
+        options: [
+            { id: 'A', text: 'Pick it up and check it later into his computer.' },
+            { id: 'B', text: 'Report it to IT immediately.' },
+            { id: 'C', text: 'Ignore it and leave it there.' },
+            { id: 'D', text: 'Take it home to check later.' }
+        ]
     },
-    // {
-    //     id: 3,
-    //     question: "What is baiting?",
-    //     topAnswer: "A psychological attack using fear.",
-    //     bottomAnswer: "A technique involving luring victims with promises of rewards.",
-    //     correctAnswer: "bottom",
-    //     feedback: "Baiting involves enticing victims with something appealing, like free software, to compromise their security."
-    // },
-    // {
-    //     id: 4,
-    //     question: "What is impersonation in social engineering?",
-    //     topAnswer: "Pretending to be someone trustworthy to gain access or information.",
-    //     bottomAnswer: "Using fear to manipulate individuals.",
-    //     correctAnswer: "top",
-    //     feedback: "Impersonation involves pretending to be someone else, like an authority figure, to deceive the target."
-    // },
-    // {
-    //     id: 5,
-    //     question: "What is tailgating in social engineering?",
-    //     topAnswer: "Following someone into a secure area without proper authorization.",
-    //     bottomAnswer: "A phishing attack via email.",
-    //     correctAnswer: "top",
-    //     feedback: "Tailgating is a physical security breach where an attacker gains access by following an authorized person."
-    // },
-    // {
-    //     id: 6,
-    //     question: "What is social engineering?",
-    //     topAnswer: "A method of manipulating people to divulge confidential information.",
-    //     bottomAnswer: "A technique for encrypting sensitive data.",
-    //     correctAnswer: "top",
-    //     feedback: "Social engineering is the art of manipulating individuals to reveal confidential information or perform actions."
-    // },
-    // {
-    //     id: 7,
-    //     question: "In a scenario where urgency is used, what psychological attack is being employed?",
-    //     topAnswer: "Trust",
-    //     bottomAnswer: "Urgency",
-    //     correctAnswer: "bottom",
-    //     feedback: "Urgency is used to pressure individuals into making quick decisions without proper evaluation."
-    // },
-    // {
-    //     id: 8,
-    //     question: "In a scenario where fear is used, what psychological attack is being employed?",
-    //     topAnswer: "Fear",
-    //     bottomAnswer: "Trust",
-    //     correctAnswer: "top",
-    //     feedback: "Fear is used to intimidate or scare individuals into taking specific actions."
-    // },
-    // {
-    //     id: 9,
-    //     question: "In a scenario where trust is used, what psychological attack is being employed?",
-    //     topAnswer: "Trust",
-    //     bottomAnswer: "Urgency",
-    //     correctAnswer: "top",
-    //     feedback: "Trust is exploited to make individuals feel comfortable sharing sensitive information."
-    // },
+    {
+        type: 'story',
+        title: 'Colleague Assistance',
+        image: asset3,
+        description: [
+            "While working on his tasks, Daniel was approached by a colleague who mentioned receiving an email that looked urgent. And requires to verify his login credentials.",
+            "Would you recognize the social engineering attack here?"
+        ]
+    },
+    {
+        type: 'mcq',
+        question: 'So Email and taking you urgent? That sounds like a classic...',
+        position: 'left',
+        image: asset4,
+        explanation: 'Phishing is a common social engineering attack where it involes such Email, messages, or websites that appear to be from a trustworthy source.',
+        answer: 'C',
+        options: [
+            { id: 'A', text: 'Tailgating' },
+            { id: 'B', text: 'Dumpster Diving' },
+            { id: 'C', text: 'Phishing' },
+            { id: 'D', text: 'Baiting' }
+        ]
+    },
+    {
+        type: 'mcq',
+        question: 'Finally shift is done, maybe a little picture of my work post-shift would help me relax?',
+        position: 'right',
+        image: asset5,
+        explanation: 'Sharing work-related content on social media can inadvertently reveal sensitive information about your organization. Always be cautious about what you post online.',
+        answer: 'C',
+        options: [
+            { id: 'A', text: 'Be proud of yourself, and post this on Social media' },
+            { id: 'B', text: 'It’s harmless, everyone does it' },
+            { id: 'C', text: 'Maybe not, it might reveal more about work than I realize' },
+        ]
+    },
 ]
-
 
 </script>
 
 
 <template>
-    <!-- <DragPair :questions="sampleQuestions"  @update:score="handleScoreUpdate"></DragPair> -->
-    <QuizFlowShell :quiz-component="DragPair" :questions="sampleQuestions" />
+    <QuizFlowShell :quiz-component="ScenarioPlayer" :questions="scenario" />
 </template>

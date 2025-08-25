@@ -16,6 +16,7 @@ class ModuleViewSet(viewsets.ModelViewSet):
         unlocked_modules = UserModuleProgress.objects.filter(user=user).values_list('module__name', flat=True)
         unlocked_module_names = [name.lower() for name in unlocked_modules]
         return Response(list(unlocked_module_names))
+    
 class UserModuleProgressViewSet(viewsets.ModelViewSet):
 
     queryset = UserModuleProgress.objects.all()
@@ -35,3 +36,5 @@ class UserModuleProgressViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=201)
         else:
             return Response(serializer.data, status=202)
+
+    

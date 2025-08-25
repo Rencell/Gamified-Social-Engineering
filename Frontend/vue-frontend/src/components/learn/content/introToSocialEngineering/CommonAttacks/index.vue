@@ -5,22 +5,23 @@
   import Impersonation from './Impersonation.vue'
   import SocialMedia from './SocialMedia.vue'
   import Tailgating from './Tailgating.vue'
+  import DumpsterDiving from './DumpsterDiving.vue'
   import Others from './Others.vue'
   import LessonReveal from '../../UI/LessonReveal.vue'
-  import Question from './question.vue'
+  import Quiz from './quiz.vue'
   const components = [
+    { id: '8', component: Quiz },
     { id: '1', component: Content1 },
     { id: '2', component: Phishing },
     { id: '3', component: Baiting },
-    { id: '4', component: Impersonation },
+    { id: '4', component: DumpsterDiving },
     { id: '5', component: SocialMedia },
     { id: '6', component: Tailgating },
     { id: '7', component: Others },
-    { id: '8', component: Question }
   ];
 
 </script>
 
 <template>
-  <LessonReveal :components="components" />
+  <LessonReveal :components="components" :with-quiz="true" />
 </template>

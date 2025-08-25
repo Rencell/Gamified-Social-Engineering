@@ -27,7 +27,7 @@ watch(() => learningStore.selectedModule, () => {
                 <div class="h-1 w-11 bg-accent absolute bottom-0"></div>
                 <p class="text-3xl">{{ learningStore.selectedModule?.title }}</p>
             </div>
-            <hr class="border-background mb-10">
+            <hr class="border-background mb-10 ">
             <component :is="learningStore.selectedModule?.component" />
 
             

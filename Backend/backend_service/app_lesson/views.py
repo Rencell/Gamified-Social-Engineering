@@ -49,3 +49,28 @@ class UserLessonProgressViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=201)
         else:
             return Response(serializer.data, status=202)
+        
+    def calculate_lesson_progress(self, user, number):
+
+        lesson = Lesson.objects.get(id=number)
+
+        total_modules = lesson.modules.count()
+        completed_modules = lesson.modules.filter(users=user).count()
+
+        if total_modules == 0:
+            return 0.0
+        
+        return round((completed_modules / total_modules) * 100, 0)
+    
+    @action(detail=False, methods=['get'])
+    def current_lesson(self, request):
+        user = request.user
+
+
+        latest_lesson = UserLessonProgress.objects.filter(user=user).last()
+        percentage = self.calculate_lesson_progress(user, latest_lesson.lesson.id)
+        
+        serializer = self.get_serializer(latest_lesson)
+        data = serializer.data
+        data['percentage'] = percentage
+        return Response(data)

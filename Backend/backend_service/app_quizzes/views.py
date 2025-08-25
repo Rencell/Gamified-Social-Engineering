@@ -40,7 +40,7 @@ class QuizProgressViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='module')
     def quiz_progress(self, request):
-        user = request.query_params.get('user')
+        user = self.request.user.id
         module_id = request.query_params.get('module_id')
         if not user or not module_id:
             return Response({'detail': 'user and module_id are required.'}, status=status.HTTP_400_BAD_REQUEST)

@@ -44,5 +44,11 @@
 .animate-parent > *:nth-child(6) {
   animation-delay: 1.3s;
 }
+.animate-parent > *:nth-child(7) {
+  animation-delay: 1.5s;
+}
+.animate-parent > *:nth-child(8) {
+  animation-delay: 1.7s;
+}
 /* ...you can extend this further or use JS for dynamic staggering */
 </style>

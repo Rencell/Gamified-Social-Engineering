@@ -64,10 +64,11 @@ const purchaseItem = useRewardStore();
 const authStore = useAuthStore();
 const shop_list = ref<(Cosmetic & { purchased: boolean })[]>([]);
 
-const buyItem = (item: Cosmetic & { purchased: boolean }) => {
+const buyItem = async (item: Cosmetic & { purchased: boolean }) => {
     if (authStore.User.coin >= item.price) {
-        purchaseItem.purchaseCoinDeduct(item.price)
-        cosmeticStore.purchaseCosmetic(item);
+        await purchaseItem.purchaseCoinDeduct(item.price)
+        await cosmeticStore.purchaseCosmetic(item);
+        await cosmeticStore.updateInventory();
         authStore.User.coin -= item.price;
         item.purchased = true;
         console.log('Purchase successful');

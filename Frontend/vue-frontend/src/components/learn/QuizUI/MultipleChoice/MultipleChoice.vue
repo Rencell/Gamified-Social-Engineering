@@ -1,20 +1,26 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { Question } from './type';
+import type { MultipleChoice } from './type';
 import Typewriter from '@/components/ui/typewriter/Typewriter.vue';
 import { Card } from '@/components/ui/card/';
 import { Button } from '@/components/ui/button';
 import LearningImage from '../../content/UI/Learning/Image/LearningImage.vue';
+import Phishing from '../../content/introToSocialEngineering/CommonAttacks/Phishing.vue'
+import Progress from '@/components/ui/progress/Progress.vue'
+
+defineOptions({
+    name: 'MultipleChoice'
+});
 
 const props = defineProps<{
-    pretest: Question[];
+    questions: MultipleChoice[];
 }>();
 
 const testPosition = ref(0)
 const currentQuestion = computed(() => {
-
-    return props.pretest[testPosition.value]
+    return props.questions[testPosition.value]
 })
+
 
 const isCorrect = computed(() => {
     return selectedAnswer.value === currentQuestion.value.correctAnswer
@@ -41,20 +47,33 @@ const handleSubmit = () => {
 }
 
 const resetQuiz = () => {
-    if (testPosition.value >= props.pretest.length - 1) {
+    if (testPosition.value >= props.questions.length - 1) {
+        
         return
     }
+    triggerWhy.value = false
     testPosition.value += 1
     selectedAnswer.value = null
     showResult.value = false
     isAnimationFinished.value = false
 }
 
+const triggerWhy = ref(false)
+const revealWhy = () => {
+    triggerWhy.value = !triggerWhy.value
+}
+
+const percentage = computed(() => {
+    return (testPosition.value + 1 / props.questions.length) * 100
+})
+
 </script>
 
 
 <template>
     <div class="max-w-3xl w-full space-y-8" :key="testPosition">
+        
+        <Progress :modelValue="percentage" />
         <!-- Icon Section -->
         <div class="flex items-center justify-center space-x-4 mb-6 ">
             <LearningImage :image="currentQuestion.image" />
@@ -63,7 +82,7 @@ const resetQuiz = () => {
         <!-- Question -->
         <div class="text-center w-full h-20">
             <div class="text-2xl font-bold mb-2">
-                <Typewriter :text="currentQuestion.question" @animationEnd="onAnimationEnd" />
+                <Typewriter :text="currentQuestion.question" @animationEnd="onAnimationEnd" :delay="30" />
             </div>
         </div>
 
@@ -98,7 +117,7 @@ const resetQuiz = () => {
         </div>
 
         <!-- Result -->
-        <div v-if="showResult" class="space-y-4">
+        <div v-if="showResult" class="space-y-4 mb-5 ">
             <div>
                 <div class="mb-2">
                     <span class="font-bold" :class="isCorrect ? 'text-green-500' : 'text-red-500'">{{ isCorrect ?
@@ -108,9 +127,58 @@ const resetQuiz = () => {
                     <p>{{ currentQuestion.explanation }}</p>
                 </div>
             </div>
-            <Button @click="resetQuiz" class="w-full" :class="isCorrect ? 'bg-green-500' : 'bg-red-500'">
-                Continue
+
+            <div class="relative mb-10">
+                <transition name="slideup">
+                    <div v-if="triggerWhy" class="shadow-xl scroll-hidden w-full absolute bottom-0 bg-secondary h-[95dvh] overflow-y-scroll rounded-xl py-10">
+                        <Component :is="currentQuestion.moduleExplanation"/>
+                    </div>
+                </transition>
+            </div>
+
+            <Button class="w-full bg-secondary hover:bg-secondary/80" @click="revealWhy">
+                {{ !triggerWhy ? 'Why?' : 'Close Why' }}
+            </Button>
+            <Button @click="resetQuiz" class="w-full" :class="isCorrect ? 'bg-green-500 hover:bg-green-500/70' : 'bg-red-500 hover:bg-red-500/70'">
+                
+                {{ testPosition >= props.questions.length - 1 ? 'Finish questions' : 'Continue' }}
             </Button>
         </div>
     </div>
 </template>
+
+<style scoped>
+.slideup-enter-active{
+
+    transition: max-height 0.5s ease, opacity 0s ease;
+}
+.slideup-leave-active {
+  transition: max-height 0.2s ease-out, opacity 0s ease;
+}
+
+.slideup-enter-from,
+.slideup-leave-to {
+  max-height: 0;
+  opacity: 1;
+}
+
+.slideup-enter-to,
+.slideup-leave-from {
+  max-height: 95dvh;
+  opacity: 1;
+}
+
+
+
+
+.scroll-hidden::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-hidden {
+    -ms-overflow-style: none;
+    /* IE/Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
     <div class="snap-center min-h-screen flex flex-col items-center justify-center p-6 space-y-6">
-
         <div class="w-full max-w-3xl space-y-6">
+            <Timer @time-up="finish" />
             <!-- Question Card -->
             <Card :class="['border-t-4 border-t-blue-500', { 'vibrate': isWrong }]">
                 <CardContent class="p-8">
@@ -77,8 +77,13 @@ import { CircleCheck, CircleX, RotateCcw } from 'lucide-vue-next';
 import type { Question } from './type';
 import quizSummary from '../quizSummary.vue'
 import { useLearningStore } from '@/stores/learning';
+import Timer from '../timer.vue'
 const learningStore = useLearningStore();
 
+
+defineOptions({
+    name: "DoDont"
+})
 const props = defineProps<{
     questions: Question[];
 }>();
@@ -90,7 +95,7 @@ const nextLesson = () => {
 
 const emit = defineEmits(['finish'])
 const finish = () => {
-  emit('finish', score.value) // score, answers
+    emit('finish', score.value) // score, answers
 }
 
 const currentQuestionIndex = ref(0);
@@ -135,8 +140,8 @@ const nextQuestion = () => {
     tryCount.value = 0
     if (currentQuestionIndex.value < props.questions.length) {
         currentQuestionIndex.value++;
-    } 
-    
+    }
+
 
     if (currentQuestionIndex.value >= props.questions.length) {
         finish();

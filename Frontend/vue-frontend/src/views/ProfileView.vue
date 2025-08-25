@@ -12,6 +12,7 @@ import { useLevelStore } from '@/stores/level';
 import RivePlayer from '@/components/RivePlayer.vue'
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
+import { Progress } from '@/components/ui/progress';
 const authStore = useAuthStore();
 const levelStore = useLevelStore();
 
@@ -70,10 +71,7 @@ const xpToNext = nextLevelXP - currentXP
                         <!-- Progress Bar -->
                         <div class="flex-1 mx-10">
                             <div class="relative">
-                                <div class="w-full h-3 bg-ternary rounded-full overflow-hidden">
-                                    <div class="h-full bg-gradient-to-r from-yellow-400 to-yellow-700 rounded-full transition-all duration-500"
-                                        :style="{ width: `${progressPercentage}%` }" />
-                                </div>
+                                <Progress :model-value="20" bg="bg-purple-500" bg-background="bg-background"></Progress>
                             </div>
                             <p class="text-slate-400 text-center mt-6 text-xs font-semibold italic">
                                 Earn <span class="text-yellow-500">{{ xpToNext }}</span> xp to reach next level.</p>

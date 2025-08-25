@@ -2,6 +2,7 @@
     <div class="snap-start min-h-screen flex flex-col items-center justify-center">
         <LearningSection>
             <LearningHeader>You are being hacked!</LearningHeader>
+            <LearningImage2 :image="content2_assets" />
             <LearningBody>
                 <LearningSpan>Social engineers</LearningSpan> are extremely good at <LearningSpan>manipulating people
                 </LearningSpan>.
@@ -41,7 +42,6 @@ import Citation from '../../UI/Learning/Highlight/Citation.vue'
 import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
-import LearningContent from '../../UI/Learning/Core/LearningContent.vue'
 import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue'
 import LearningQuote from '../../UI/Learning/Highlight/LearningQuote.vue'
 import LearningList from '../../UI/Learning/Listing/LearningList.vue'
@@ -49,8 +49,11 @@ import LearningList from '../../UI/Learning/Listing/LearningList.vue'
 import list1_image from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/list1-icon.svg?url'
 import list2_image from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/list2-icon.svg?url'
 
-import content2_assets from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content2-asset.svg?url';
+import content2_assets from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content2.webp';
 import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue'
+import LearningImage2 from '../../UI/Learning/Image/LearningImage2.vue'
+import { onMounted } from 'vue'
+
 
 
 </script>

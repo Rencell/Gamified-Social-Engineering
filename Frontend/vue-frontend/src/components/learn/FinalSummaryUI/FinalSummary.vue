@@ -1,54 +1,3 @@
-<script setup lang="ts">
-import { Button } from "@/components/ui/button";
-import { CardContent,Card } from "@/components/ui/card";
-import { Shield } from "lucide-vue-next";
-import coins from "/Home/coin.svg";
-import star from "/Home/star.png";
-import my_xp from "/Home/exp.png";
-import { onMounted, ref } from "vue";
-
-const animatedCoins = ref(0);
-const animatedXp = ref(0);
-
-const finalCoins = 8;
-const finalXp = 16;
-
-const animationDuration = 2000; // in milliseconds
-
-// You can use setTimeout or setInterval, but requestAnimationFrame is preferred for smooth UI animations.
-// If you want to use setTimeout, here's how you could rewrite it:
-
-const animateValue = (
-  start: number,
-  end: number,
-  duration: number,
-  updater: (value: number) => void
-) => {
-  const frameRate = 60; // frames per second
-  const totalFrames = Math.round((duration / 1000) * frameRate);
-  let currentFrame = 0;
-
-  const step = () => {
-    currentFrame++;
-    const progress = Math.min(currentFrame / totalFrames, 1);
-    updater(Math.floor(progress * (end - start) + start));
-    if (progress < 1) {
-      setTimeout(step, 1000 / frameRate);
-    }
-  };
-  step();
-};
-
-onMounted(() => {
-  animateValue(0, finalCoins, animationDuration, (value) => {
-    animatedCoins.value = value;
-  });
-  animateValue(0, finalXp, animationDuration, (value) => {
-    animatedXp.value = value;
-  });
-});
-</script>
-
 <template>
   <div class="min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md mx-auto text-center space-y-8 animate-parent">
@@ -59,7 +8,7 @@ onMounted(() => {
 
       <!-- Score and Title -->
       <div class="space-y-2">
-        <p class="text-green-400 text-sm font-bold">You scored 80%</p>
+        <p class="text-green-400 text-sm font-bold">You scored {{percentage}}%</p>
         <h1 class="text-white text-2xl font-bold">Outstanding performance</h1>
       </div>
 
@@ -106,9 +55,7 @@ onMounted(() => {
                 <div class="text-slate-400 text-sm">League</div>
               </div>
             </div>
-            <div class="w-full bg-slate-600 rounded-full h-2">
-              <div class="bg-orange-500 h-2 rounded-full" :style="{ width: '75%' }"></div>
-            </div>
+            <Progress :model-value="animatedPercentage" bg="bg-green-500" bg-background="bg-background" class="h-5"></Progress>
           </div>
   
           <div class="space-y-2">
@@ -121,22 +68,102 @@ onMounted(() => {
                 <div class="text-slate-400 text-sm">Defence</div>
               </div>
             </div>
-            <div class="w-full bg-slate-600 rounded-full h-2">
-              <div class="bg-orange-500 h-2 rounded-full" :style="{ width: '45%' }"></div>
-            </div>
+            <Progress :model-value="animatedPercentage2" bg="bg-orange-500" bg-background="bg-background" class="h-5"></Progress>
           </div>
         </CardContent>
       </Card>
 
       <!-- Continue Button -->
-      <div>
-        <Button class="w-full font-medium">
-          Continue
+      <div class="space-y-3">
+        <Button class="w-full font-medium" @click="toggleNext">
+          Go to home
         </Button>
+        <Button variant="ghost" class="w-full" @click="emit('retryQuiz')">
+           Retry
+        </Button>
+
       </div>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { Button } from "@/components/ui/button";
+import { CardContent,Card } from "@/components/ui/card";
+import { Shield } from "lucide-vue-next";
+import coins from "/Home/coin.svg";
+import star from "/Home/star.png";
+import my_xp from "/Home/exp.png";
+import { onMounted, ref } from "vue";
+import { Progress } from "@/components/ui/progress";
+
+const animatedCoins = ref(0);
+const animatedXp = ref(0);
+const animatedPercentage = ref(0);
+const animatedPercentage2 = ref(0);
+const emit = defineEmits(['retryQuiz', 'nextLesson']);
+
+const animationDuration = 2000; // in milliseconds
+
+const props = defineProps({
+  score: {
+    type: Number,
+    default: 8,
+  },
+  length: {
+    type: Number,
+    default: 10,
+  },
+  
+});
+
+const animateValue = (
+  start: number,
+  end: number,
+  duration: number,
+  updater: (value: number) => void
+) => {
+  const frameRate = 60; // frames per second
+  const totalFrames = Math.round((duration / 1000) * frameRate);
+  let currentFrame = 0;
+
+  const step = () => {
+    currentFrame++;
+    const progress = Math.min(currentFrame / totalFrames, 1);
+    updater(Math.floor(progress * (end - start) + start));
+    if (progress < 1) {
+      setTimeout(step, 1000 / frameRate);
+    }
+  };
+  step();
+};
+
+const toggleNext = () => {
+  setTimeout(() => {
+
+    emit('nextLesson')
+  },1000)
+}
+
+onMounted(() => {
+  animateValue(0, props.score, animationDuration, (value) => {
+    animatedCoins.value = value;
+  });
+  animateValue(0, props.score * 2, animationDuration, (value) => {
+    animatedXp.value = value;
+  });
+  animateValue(0, 10 * 4, animationDuration, (value) => {
+    animatedPercentage.value = value;
+  });
+  animateValue(0, 10 * 8, animationDuration, (value) => {
+    animatedPercentage2.value = value;
+  });
+});
+
+const percentage = Math.floor((props.score / props.length) * 100);
+
+</script>
+
 
 
 <style scoped>

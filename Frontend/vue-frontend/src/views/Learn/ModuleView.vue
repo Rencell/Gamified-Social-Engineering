@@ -6,6 +6,7 @@ import Button from '@/components/ui/button/Button.vue';
 import ModuleCard from '@/components/learn/learnUI/ModuleCard.vue'
 import { useLearningStore } from '@/stores/learning'
 import { computed, onMounted, ref } from 'vue';
+import LessonDetailCard from '@/components/learn/learnUI/LessonDetailCard.vue';
 
 const learningStore = useLearningStore()
 const route = useRoute()
@@ -38,10 +39,17 @@ const isModuleLocked = computed(() => {
     </RouterLink>
 
 
-    <LessonCard :progress="learningStore.completionPercentage" :description="learningStore.currentLesson()?.description"
-        :title="learningStore.currentLesson()?.title" :image="learningStore.currentLesson()?.image"
-        :bg="learningStore.currentLesson()?.bg" :locked="learningStore.currentLesson()?.locked">
-    </LessonCard>
+    <LessonDetailCard 
+        :progress="learningStore.completionPercentage" 
+        :description="learningStore.currentLesson()?.description"
+        :title="learningStore.currentLesson()?.title" 
+        :image="learningStore.currentLesson()?.image"
+        :bg="learningStore.currentLesson()?.bg" 
+        :locked="learningStore.currentLesson()?.locked"
+        :module-count="learningStore.currentLesson()?.modules.length"
+        :isLatest="!!(learningStore.latestLesson && learningStore.latestLesson[0]?.id === learningStore.currentLesson()?.id)"
+        >
+    </LessonDetailCard>
 
     <div class="flex flex-col mt-2">
         <ModuleCard v-for="(module, key) in learningStore.modules" :lessonkey="key + 1" :key="module.title"

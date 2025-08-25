@@ -13,7 +13,7 @@ const forwarded = useForwardPropsEmits(props, emits)
 </script>
 
 <template>
-  <AccordionRoot data-slot="accordion" v-bind="forwarded">
+  <AccordionRoot class="rounded-xl space-y-4" data-slot="accordion" v-bind="forwarded">
     <slot />
   </AccordionRoot>
 </template>
