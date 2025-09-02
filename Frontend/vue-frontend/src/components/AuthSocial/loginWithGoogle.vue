@@ -13,7 +13,6 @@ const login = async () => {
   try {
     loadingPageStore.startLoading();
     const response = await googleTokenLogin();
-    loadingPageStore.stopLoading();
 
     if (!response.access_token) {
       throw new Error("No access_token received");
@@ -25,15 +24,16 @@ const login = async () => {
       },
     }).then(res => res.json());
 
+    console.log("Google User Info:", response);
     console.log("Google User Info:", userInfo.email);
 
     // Step 3: Check if email ends with .edu.ph
     if (!userInfo.email || !userInfo.email.endsWith("cvsu.edu.ph")) {
       toast_alert();
-      loadingPageStore.stopLoading();
       return;
     }
     await authStore.loginWithGoogle(response.access_token, router, route);
+    loadingPageStore.stopLoading();
   } catch (error) {
     console.error("Login failed", error);
     loadingPageStore.stopLoading();
