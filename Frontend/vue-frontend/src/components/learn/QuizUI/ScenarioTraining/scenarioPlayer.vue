@@ -48,8 +48,8 @@ const storyCount = computed(() =>
         @toggleNext="toggleNext" />
         
         <ScenarioMCQ v-else 
+        :key="currentIndex + 1"
         :mcq="currentScenario" 
-        :key="currentScenario"
         @togglePrev="togglePrev"
         @toggleNext="toggleNext"
         @addScore="score += 1"/>

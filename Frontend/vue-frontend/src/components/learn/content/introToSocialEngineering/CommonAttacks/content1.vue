@@ -9,7 +9,7 @@ import hacks from '/Learning/Content/introToSocialEngineering/CommonAttacks/Hack
 import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
-import type { Question } from '@/components/learn/QuizUI/MultipleChoice/type'
+import type { MultipleChoice as Question } from '@/components/learn/QuizUI/MultipleChoice/type'
 import MultipleChoice from '@/components/learn/QuizUI/MultipleChoice/MultipleChoice.vue'
 import Phishing from './Phishing.vue'
 import Tailgating from './Tailgating.vue'

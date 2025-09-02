@@ -17,6 +17,7 @@ import LearningSection from '../../UI/Learning/Core/LearningSection.vue';
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue';
 import type { DescriptionData } from '../../UI/Learning/Listing/type';
 import DescriptionList from '../../UI/Learning/Listing/description-list.vue'
+// @ts-ignore
 import { images } from '/public/Learning/Content/phishing/WhatIsPhishing/content3/index.ts'
 
 const descriptionData: DescriptionData[] = [
