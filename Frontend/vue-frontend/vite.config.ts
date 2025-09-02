@@ -20,7 +20,7 @@ export default defineConfig({
         name: 'Vue Frontend',
         short_name: 'Vue App',
         description: 'My Awesome Vue App',
-        display: "standalone",
+        display: "fullscreen",
         theme_color: '#ffffff',
         icons: [
           {
