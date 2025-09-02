@@ -82,14 +82,16 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const init = async () => {
+    console.log("init1")
     if (User.value.username !== 'testuser') {
       return
     }
     
+    console.log("init2")
     if (!isAuthenticated.value) {
       clearUser()
     }
-    
+    console.log("init3")
     try {
       const token = actionStates.token
       if (token) MUTATIONS.SET_TOKEN(token)
@@ -154,6 +156,7 @@ export const useAuthStore = defineStore('auth', () => {
     try{
       const res = await AuthService.loginFacebook({access_token: response})
       if(res.data.key){
+        
         MUTATIONS.SET_TOKEN(res.data.key)
         MUTATIONS.LOGIN_SUCCESS(router, route)
         await init()
@@ -171,10 +174,14 @@ export const useAuthStore = defineStore('auth', () => {
   ) => {
     try{
       const res = await AuthService.loginGoogle({access_token: response})
+      console.log("was here", res.data.key)
+      console.log("res", res)
       if(res.data.key){
+        console.log(res.data.key)
         MUTATIONS.SET_TOKEN(res.data.key)
         MUTATIONS.LOGIN_SUCCESS(router, route)
         await init()
+        console.log(res.data.key)
       }
     }catch(error){
       console.error('Login failed:', error)
@@ -212,6 +219,7 @@ export const useAuthStore = defineStore('auth', () => {
     },
 
     SET_TOKEN: (token: string) => {
+      console.log("SET TOKEN")
       localStorage.setItem(TOKEN_STORAGE, token)
       AuthService.setToken(token)
       actionStates.token = token
