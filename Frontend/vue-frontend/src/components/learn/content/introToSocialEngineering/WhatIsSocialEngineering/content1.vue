@@ -38,7 +38,6 @@ import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue'
 import LearningQuote from '../../UI/Learning/Highlight/LearningQuote.vue'
 import content1_assets from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/content1-asset.png?url';
 import conversation from '/Learning/Content/introToSocialEngineering/WhatIsSocialEngineering/conversation.webp';
-import { useModuleReward } from '@/composables/useModuleRewards'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningImage2 from '../../UI/Learning/Image/LearningImage2.vue'
 import LearningContent from '../../UI/Learning/Core/LearningContent.vue'
