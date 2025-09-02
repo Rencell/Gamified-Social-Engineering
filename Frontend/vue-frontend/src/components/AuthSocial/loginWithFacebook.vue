@@ -1,4 +1,4 @@
-
+<!-- 
 <script setup lang="ts">
 import FacebookLogin from "vue-facebook-login-component-next";
 import { useAuthStore } from "@/stores/auth";
@@ -23,4 +23,4 @@ function handleLogin(response: any) {
   <FacebookLogin
     app-id="4078247095767508"
     @login="handleLogin"></FacebookLogin>
-</template>
+</template> -->
