@@ -2,8 +2,11 @@
     <Intro v-if="quizIntro" @start-quiz="toggleStart" />
     
     <template v-else>
-
-        <component v-if="!quizCompleted" :is="quizComponent" :questions="shuffleQuestions" @finish="onFinish"
+        
+        <component v-if="!quizCompleted" 
+            :is="quizComponent" 
+            :questions="shuffleQuestions" 
+            @finish="onFinish"
             class="slide-next" />
         <template v-else>
             <FinalAchivements v-if="!quizSummary" @toggle-summary="quizSummary = true" />
@@ -86,12 +89,11 @@ const saveQuizResult = async () => {
 
     const reason = rewardStore.REASONS.quiz;
     const prevScore = max_score.value || 0;
-    const prevCoin = rewardStore.calculateScore(prevScore, total_questions.value);
-    const coin = rewardStore.calculateScore(score.value, total_questions.value);
-    const xp = 20;
+    const {coin: prevCoin, exp: prevExp} = rewardStore.calculateScore(prevScore, total_questions.value);
+    const {coin: newCoin, exp: newExp} = rewardStore.calculateScore(score.value, total_questions.value);
 
-    if (coin > prevCoin) {
-        rewardStore.increaseUserRewards(reason, (coin - prevCoin), xp);
+    if (newCoin > prevCoin) {
+        rewardStore.increaseUserRewards(reason, (newCoin - prevCoin), (newExp - prevExp));
     }
 }
 

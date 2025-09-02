@@ -1,5 +1,5 @@
 #!/bin/bash
 
 git add .
-git commit -m "Learning Changes"
+git commit -m "Mobile Responsive"
 git push origin main

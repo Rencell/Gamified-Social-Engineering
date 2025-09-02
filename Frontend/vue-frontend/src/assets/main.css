@@ -6,11 +6,16 @@
 
 body {
   font-family: var(--font-Quicksand);
+
 }
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+}
+
 @theme inline {
+  --font-display: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -73,8 +78,10 @@ body {
   --font-family: 'Baloo 2', cursive;
   --font-Nunito: "Nunito", sans-serif;
   --font-Quicksand: "Quicksand", sans-serif;
-  --font-sans: 'Poppins', sans-serif;
+  --font-sans: 'Poppins';
   --font-display: 'Oswald', sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -113,13 +120,14 @@ body {
 }
 
 .dark {
+  
   --background: #141721;
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: #1F2232;
   --popover-foreground: #FFB72C;
-  --primary: oklch(0.985 0 0);
+  --primary: #f6f6f6;
   --primary-foreground: oklch(0.205 0 0);
   --secondary: #1F2232;
   --secondary-foreground: oklch(0.985 0 0);
@@ -157,3 +165,5 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+

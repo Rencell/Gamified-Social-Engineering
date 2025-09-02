@@ -28,7 +28,7 @@ onMounted(async () => {
 
 <template>
 
-    <div class="p-5">
+    <div class="p-2 sm:p-5">
         <p class="font-bold text-3xl mb-4">Learning</p>
         
         <div class="flex flex-col sm:flex-row gap-10 ">

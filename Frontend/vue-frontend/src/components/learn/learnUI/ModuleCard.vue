@@ -40,13 +40,13 @@ const props = defineProps({
                 <img class="w-10 h-10" :src="learns" alt="">
             </div>
             
-            <div class="grow gap-3 space-y-3 flex justify-between items-center pr-5">
+            <div class="grow gap-3 space-y-3 flex flex-col sm:flex-row justify-between items-start sm:items-center pr-5 p-2">
                 <div class="font-semibold text-sm space-y-3">
                     <p class="uppercase text-xs font-bold text-slate-600">Lesson {{lessonkey}}</p>
                     <p>{{ title }}</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <Button v-if="!lockedIndex" asChild variant="ghost" size="lg" class="font-semibold border-1 border-ternary">
+                    <Button v-if="!lockedIndex" asChild variant="ghost" size="lg" class="w-full sm:w-auto font-semibold border-1 border-ternary">
                         <RouterLink :to="routerLink">
                             <Play :size="18" fill="white" ></Play>
                             <p class="font-bold">Learn</p> 
@@ -68,9 +68,11 @@ const props = defineProps({
                     </div>
                 </div>
             </div>
+            
 
 
         </div>
+        
     </div>
 
 

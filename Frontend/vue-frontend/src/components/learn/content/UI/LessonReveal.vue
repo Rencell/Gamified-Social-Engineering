@@ -82,8 +82,8 @@ onMounted(() => {
     </div>
 
     <div class="flex justify-center items-center">
-      <div v-if="active" class="w-2xl flex my-10 animate-bounce">
-        <Button v-if="currentVisibleIndex < components.length - 1" class="ml-auto" @click="showNextComponent">
+      <div v-if="active" class="w-2xl flex animate-bounce">
+        <Button v-if="currentVisibleIndex < components.length - 1" class="ml-auto my-10" @click="showNextComponent">
           <MoveDown />
         </Button>
         <div v-else class="ml-auto my-10">

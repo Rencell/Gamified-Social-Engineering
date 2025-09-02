@@ -58,16 +58,32 @@ export const useRewardStore = defineStore('reward', () => {
 
     }
 
-    const calculateScore = (score: number, length: number): number => {
-        if (score > length || length <= 0) return 0;
+    // ------------- REWARDING -------------
+    const calculateScore = (score: number, length: number): { coin: number, exp: number } => {
+        if (score > length || length <= 0) return { coin: 0, exp: 0 };
 
         let multiplier = 1;
         if (length <= 3) multiplier = 1.2;
         else if (length <= 5) multiplier = 1.5;
 
         const baseScore = Math.floor((score / length) * 10);
-        return Math.floor(baseScore * multiplier);
+        const adjustedScore = Math.floor(baseScore * multiplier);
+
+        return {
+            coin: adjustedScore * 2, // Example: coins are double the score
+            exp: adjustedScore * 4, // Example: experience is quadruple the score
+        };
     };
+
+    const rewardByModule = (moduleIndex: number) => {
+        const coins = moduleIndex * 2
+        const xp = moduleIndex * 4
+
+        increaseUserRewards(REASONS.content, coins, xp)
+        
+        authStore.User.exp += xp;
+        authStore.User.coin += coins;
+    }
 
     const REASONS = {
         content : 'content',
@@ -83,6 +99,7 @@ export const useRewardStore = defineStore('reward', () => {
         increaseUserRewards,
         decreaseUserRewards,
         calculateScore,
+        rewardByModule,
         REASONS,
         purchaseCoinDeduct,
     }

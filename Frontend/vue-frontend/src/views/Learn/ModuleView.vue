@@ -28,36 +28,42 @@ const isModuleLocked = computed(() => {
   }
 })
 
+onMounted(async() => {
+    await learningStore.fetchLessons();
+    await learningStore.fetchLatestLesson();
+})
 
 </script>
 
 <template>
-    <RouterLink :to="{ name: 'Learn' }">
-        <div class="flex gap-2 mb-5 text-sm items-center text-accent font-bold">
-            <ArrowLeft :size="15"></ArrowLeft> Back
+    <div class="p-2 sm:p-0">
+        <RouterLink :to="{ name: 'Learn' }">
+            <div class="flex gap-2 mb-5 text-sm items-center text-accent font-bold">
+                <ArrowLeft :size="15"></ArrowLeft> Back
+            </div>
+        </RouterLink>
+    
+    
+        <LessonDetailCard 
+            :progress="learningStore.completionPercentage" 
+            :description="learningStore.currentLesson()?.description"
+            :title="learningStore.currentLesson()?.title" 
+            :image="learningStore.currentLesson()?.image"
+            :bg="learningStore.currentLesson()?.bg" 
+            :locked="learningStore.currentLesson()?.locked"
+            :module-count="learningStore.currentLesson()?.modules.length"
+            :isLatest="!!(learningStore.latestLesson && learningStore.latestLesson[0]?.id === learningStore.currentLesson()?.id)"
+            >
+        </LessonDetailCard>
+    
+        <div class="flex flex-col mt-2 mb-20 sm:mb-10">
+            <ModuleCard v-for="(module, key) in learningStore.modules" :lessonkey="key + 1" :key="module.title"
+                :title="module.title" :router-link="`/learn/${lessonId}/session`" :interactive="module.interactive"
+                @click="learningStore.setSelectedModule(module)" :locked-index="isModuleLocked(module)" />
+    
         </div>
-    </RouterLink>
-
-
-    <LessonDetailCard 
-        :progress="learningStore.completionPercentage" 
-        :description="learningStore.currentLesson()?.description"
-        :title="learningStore.currentLesson()?.title" 
-        :image="learningStore.currentLesson()?.image"
-        :bg="learningStore.currentLesson()?.bg" 
-        :locked="learningStore.currentLesson()?.locked"
-        :module-count="learningStore.currentLesson()?.modules.length"
-        :isLatest="!!(learningStore.latestLesson && learningStore.latestLesson[0]?.id === learningStore.currentLesson()?.id)"
-        >
-    </LessonDetailCard>
-
-    <div class="flex flex-col mt-2">
-        <ModuleCard v-for="(module, key) in learningStore.modules" :lessonkey="key + 1" :key="module.title"
-            :title="module.title" :router-link="`/learn/${lessonId}/session`" :interactive="module.interactive"
-            @click="learningStore.setSelectedModule(module)" :locked-index="isModuleLocked(module)" />
-
+    
+    
+        <RouterView />
     </div>
-
-
-    <RouterView />
 </template>

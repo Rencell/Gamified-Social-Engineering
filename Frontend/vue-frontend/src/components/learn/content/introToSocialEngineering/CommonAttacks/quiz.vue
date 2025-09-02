@@ -22,6 +22,14 @@ const sampleQuestions: Question[] = [
         correctAnswer: "top",
         feedback: "Vishing uses phone calls or voice messages to deceive individuals into sharing confidential information."
     },
+    {
+        id: 3,
+        question: "A technique where an attacker pretends to be someone else to gain unauthorized access or information.",
+        topAnswer: "tailgating",
+        bottomAnswer: "Impersonation",
+        correctAnswer: "bottom",
+        feedback: "Impersonation involves an attacker assuming the identity of someone else to deceive and manipulate others into providing access or information."
+    },
 ]
 const emit = defineEmits(['showDown'])
 onMounted(() => {

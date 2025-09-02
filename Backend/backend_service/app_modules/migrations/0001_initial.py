@@ -16,6 +16,10 @@ def add_module_data(apps, schema_editor):
     Module.objects.create(name="interactiveScenarioSpotTheAttack", phase_order=4, lesson=get_lesson)
     Module.objects.create(name="howToProtectYourself", phase_order=5, lesson=get_lesson)
     Module.objects.create(name="finalQuiz", phase_order=6, lesson=get_lesson)
+    
+    get_phishing = Lesson.objects.get(name="phishing") 
+    
+    Module.objects.create(name="phishingIntro", phase_order=7, lesson=get_phishing)
 class Migration(migrations.Migration):
 
     

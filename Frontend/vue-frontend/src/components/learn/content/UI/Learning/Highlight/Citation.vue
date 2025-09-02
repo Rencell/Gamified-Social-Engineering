@@ -1,6 +1,6 @@
 <template>
   <span class="citation-container">
-    <a :href="citationLink" target="_blank" rel="noopener noreferrer" class="highlighted-word" @mouseover="showTooltip"
+    <a :href="citationLink" target="_blank" rel="noopener noreferrer" class="highlighted-word text-blue-400" @mouseover="showTooltip"
       @mouseleave="hideTooltip">
       {{ word }}
     </a>
@@ -47,7 +47,7 @@ const hideTooltip = () => {
 .highlighted-word {
   text-decoration: underline;
   cursor: pointer;
-  color: inherit;
+
 }
 
 .tooltip {

@@ -14,4 +14,6 @@ urlpatterns = [
     path('api/rewards/', include('app_reward.urls')),
     path('api/levels/', include('app_level.urls')),
     path('api/cosmetics/', include('app_cosmetic.urls')),
+    path('api/badges/', include('app_badge.urls')),
+    path("accounts/", include("allauth.urls")),
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

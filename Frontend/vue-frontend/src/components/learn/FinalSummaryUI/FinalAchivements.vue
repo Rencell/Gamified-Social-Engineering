@@ -63,8 +63,8 @@ const nextLesson = () => {
 
 const data = [
   {
-    image: email,
-    title: "New Badge Unlocked",
+    image: badge,
+    title: "New Badge",
     description: "You’ve earned a special badge for completing this course!",
   },
   {

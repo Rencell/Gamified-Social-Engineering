@@ -17,6 +17,8 @@ const END_POINT = '/auth0/'
 const authentication = {
   getUser: (): Promise<any> => session.get(END_POINT + 'user/'),
   login: (data: LoginPayload): Promise<any> => session.post(END_POINT + 'login/', data),
+  loginFacebook: ({ access_token }: { access_token: string }): Promise<any> => session.post(END_POINT + 'facebook/', { access_token }),
+  loginGoogle: ({ access_token }: { access_token: string }): Promise<any> => session.post(END_POINT + 'google/', { access_token }),
   logout: (): Promise<any> => session.post(END_POINT + 'logout/', {}),
   register: (data: Authentication): Promise<any> =>
     session.post(END_POINT + 'registration/', data),

@@ -10,6 +10,5 @@ import FinalSummary from '@/components/learn/FinalSummaryUI/FinalSummary.vue'
 
 const components = [
   { id: '1', component: Content1 },
-    { id: '1', component: FinalSummary },
   ];
 </script>

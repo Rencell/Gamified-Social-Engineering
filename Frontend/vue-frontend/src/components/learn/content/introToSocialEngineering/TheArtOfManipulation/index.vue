@@ -10,12 +10,12 @@ import Quiz from './quiz.vue'
 import LessonReveal from '../../UI/LessonReveal.vue';
 
 const components = [
-  { id: '6', component: Quiz, emits:true },
   { id: '1', component: Content1 },
   { id: '2', component: Content2 },
   { id: '3', component: Content3 },
   { id: '4', component: Content4 },
   { id: '5', component: Content6 },
+  { id: '6', component: Quiz, emits:true },
 ];
 
 </script>

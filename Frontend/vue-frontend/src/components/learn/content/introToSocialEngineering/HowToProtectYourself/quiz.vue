@@ -17,45 +17,33 @@ const emit = defineEmits(['showDown']);
 
 const questions: Question[] = [
     {
-        text: 'use the same password for several accounts',
+        text: 'Trust no one: Always verify before you trust, even your family or colleagues can be a weakest spot of security.',
         answer: 0
     },
     {
-        text: 'share your personal information on social media',
+        text: 'Beware of free: Offers that seem too good to be true, such as free gifts or prizes, are often used to trick you into giving away personal information.',
         answer: 0
     },
     {
-        text: 'click on suspicious email links',
+        text: "Don't overshare on Facebook: Or in any other social media because attackers can use your information for security questions that will trouble your accounts.",
         answer: 0
     },
-    // {
-    //     text: 'use public Wi-Fi for banking',
-    //     answer: 0
-    // },
-    // {
-    //     text: 'use two-factor authentication',
-    //     answer: 1
-    // },
-    // {
-    //     text: 'save passwords in your browser',
-    //     answer: 0
-    // },
-    // {
-    //     text: 'download software from unknown sources',
-    //     answer: 0
-    // },
-    // {
-    //     text: 'ignore software updates',
-    //     answer: 0
-    // },
-    // {
-    //     text: 'backup your important data regularly',
-    //     answer: 1
-    // },
-    // {
-    //     text: 'check privacy settings on apps',
-    //     answer: 1
-    // },
+    {
+        text: "Involves Money: Don't be easily fooled with quick-rich promises, this is just a classic psychological tactics that test your greed and urgency.",
+        answer: 0
+    },
+    {
+        text: 'Understand Social Engineering Tactics: By learning how social engineers operate, you can better recognize and avoid their schemes. Stay informed through reputable online resources or attend security awareness seminars.',
+        answer: 0
+    },
+    {
+        text: 'Change your passwords: At least change your passwords every 3 months, and use a password manager to generate and store complex passwords.',
+        answer: 0
+    },
+    {
+        text: 'Use temporary email addresses: When signing up for services, use temporary email addresses to avoid spam and protect your primary email from phishing attacks.',
+        answer: 0
+    },
 ];
 
 onMounted(() => {

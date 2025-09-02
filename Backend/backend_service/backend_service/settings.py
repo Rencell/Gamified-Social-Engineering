@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'app_quizzes',
     'app_reward',
     'app_level',
+    'app_badge',
     'app_cosmetic',
     'rest_framework',
     'rest_framework.authtoken',
@@ -50,7 +51,11 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'dj_rest_auth.registration',
-    'storages'
+    # bucket
+    'storages',
+    
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -159,12 +164,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
      'DEFAULT_AUTHENTICATION_CLASSES': (
-       'rest_framework.authentication.TokenAuthentication',
-       'rest_framework.authentication.SessionAuthentication',
+       'app_auth.authentication.CsrfExemptSessionAuthentication',
+    #    'rest_framework.authentication.TokenAuthentication',
    ),
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    # ]
 }
 
 EMAIL_HOST = 'smtp.gmail.com'
@@ -182,8 +184,11 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_CONFIRMATION_TEMPLATE = 'account/email/email_confirmation_message.txt'
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*']
-
+ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_LOGIN_METHOD = 'email'
+
+LOGIN_REDIRECT_URL = "http://localhost:5173/home"
+LOGOUT_REDIRECT_URL = "http://localhost:5173/"
 
 
 CORS_ALLOWED_ORIGINS = [  
@@ -192,9 +197,12 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
+CSRF_COOKIE_DOMAIN = ['127.0.0.1:8000', 'localhost:8000', 'dev.org']
+
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:5173',
-    'https://gamified-frontend-caps.onrender.com'
+    "http://localhost:5173",
+    "http://localhost:8000",
+    "https://gamified-frontend-caps.onrender.com",
 ]
 
 

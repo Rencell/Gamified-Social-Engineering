@@ -44,7 +44,7 @@ const isCorrect = computed(() => {
 
 <template>
     <div class="space-y-5">
-        <div v-if="!isAnswered" class="space-y-5">
+        <div v-if="!isAnswered" class="space-y-5 pb-20">
             <LearningImage2 v-if="props.image" :image="props.image" />
             <p class="font-bold text-lg">{{ mcq.question }}</p>
             <div class="space-y-3">

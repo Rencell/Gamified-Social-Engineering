@@ -6,7 +6,8 @@
                 answer="image2" correct-explanation="Correct this image shows a phishing attempt"
                 incorrect-explanation="Nice try, but this attack is a Baiting attack, and the image shows a USB drop attack."
                 @imageSelected="handleImageSelection"
-                @showDown="emit('showDown', true)">
+                @showDown="emit('showDown', true)"
+                >
                 <template #lesson>
                     <LearningSection>
                         <LearningHeader>

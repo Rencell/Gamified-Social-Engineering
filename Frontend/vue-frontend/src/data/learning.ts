@@ -1,9 +1,7 @@
 import type { Lesson } from '@/stores/types/learning'
 
 import phishing from '/Phishing.webp?url'
-import socialEngineering from '/SecurityAwarenessEssentials@3x.svg?url'
 import human from '/Human.webp?url'
-import { LessonService } from '@/services'
 //IntroToSocEng
 import {
   WhatIsSocialEngineering,
@@ -15,13 +13,11 @@ import {
 } from '@/components/learn/content/introToSocialEngineering'
 //Phishing
 import {
-  Introduction,
-  EmailPhishing,
-  WebsitePhishing,
-  SocialMediaPhishing,
-  VoicePhishing,
-  SmsPhishing,
+  RedFlags,
+  WhatIsPhishing,
+  RealWorldExamples,
   HowToProtect,
+  FinalQuizPhishing,
 } from '@/components/learn/content/phishing'
 import { markRaw } from 'vue'
 
@@ -99,57 +95,41 @@ export const lessons: Record<string, Lesson> = {
     modules: [
       {
         id: 'phishingIntro',
-        title: 'Phishing Introduction',
-        component: markRaw(Introduction), // Wrapped with markRaw
+        title: 'What is phishing',
+        component: markRaw(WhatIsPhishing),
         module_order: 7,
         unlocksLessonId: 2,
-        interactive: true,
+        interactive: false,
       },
       {
-        id: 'phishing2',
-        title: 'Email Phishing',
-        component: markRaw(EmailPhishing), // Wrapped with markRaw
+        id: 'redFlags',
+        title: 'Red Flags of Phishing',
+        component: markRaw(RedFlags), 
         module_order: 8,
         unlocksLessonId: 2,
         interactive: false,
       },
       {
-        id: 'websitePhishing',
-        title: 'Website Phishing',
-        component: markRaw(WebsitePhishing), // Wrapped with markRaw
+        id: 'realWorldExamples',
+        title: 'Real World Examples',
+        component: markRaw(RealWorldExamples), // Wrapped with markRaw
         module_order: 9,
         unlocksLessonId: 2,
         interactive: false,
       },
       {
-        id: 'socialMediaPhishing',
-        title: 'Social Media Phishing',
-        component: markRaw(SocialMediaPhishing), // Wrapped with markRaw
+        id: 'HowToProtect',
+        title: 'Protect from Phishing',
+        component: markRaw(HowToProtect), // Wrapped with markRaw
         module_order: 10,
         unlocksLessonId: 2,
         interactive: false,
       },
       {
-        id: 'voicePhishing',
-        title: 'Voice Phishing',
-        component: markRaw(VoicePhishing), // Wrapped with markRaw
+        id: 'FinalModulePhishing',
+        title: 'Final Quiz',
+        component: markRaw(FinalQuizPhishing), // Wrapped with markRaw
         module_order: 11,
-        unlocksLessonId: 2,
-        interactive: false,
-      },
-      {
-        id: 'smsPhishing',
-        title: 'SMS Phishing',
-        component: markRaw(SmsPhishing), // Wrapped with markRaw
-        module_order: 12,
-        unlocksLessonId: 2,
-        interactive: false,
-      },
-      {
-        id: 'howToProtectYourself',
-        title: 'How to Protect Yourself',
-        component: markRaw(HowToProtect), // Wrapped with markRaw
-        module_order: 13,
         unlocksLessonId: 2,
         interactive: false,
         final: true,

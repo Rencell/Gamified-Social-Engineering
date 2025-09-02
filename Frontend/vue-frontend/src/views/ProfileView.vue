@@ -1,18 +1,16 @@
 <script setup lang="ts">
 import { Card, CardContent } from '@/components/ui/card';
-import home from '/Home/avatar.svg';
-import robot from '/Home/robot.svg';
 import { ArrowLeft } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth';
-import badge from '/Home/badge.svg';
 import { Button } from '@/components/ui/button';
 import exp from '/Home/exp.png';
-import rank from '/Home/rank.webp';
 import { useLevelStore } from '@/stores/level';
 import RivePlayer from '@/components/RivePlayer.vue'
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Progress } from '@/components/ui/progress';
+import { useBadgesStore } from '@/stores/badges';
+const badgeStore = useBadgesStore();
 const authStore = useAuthStore();
 const levelStore = useLevelStore();
 
@@ -29,6 +27,9 @@ const nextLevelXP = levelStore.currentSelectedLevel?.xp_required || 0
 
 const progressPercentage = ((currentXP - currentLevelXP.value) / (nextLevelXP - currentLevelXP.value)) * 100
 const xpToNext = nextLevelXP - currentXP
+onMounted(() => {
+    badgeStore.fetchBadges();
+});
 
 </script>
 
@@ -39,7 +40,7 @@ const xpToNext = nextLevelXP - currentXP
             <p class="font-semibold w-fit">Back</p>
         </div>
     </RouterLink>
-    <div class="grid grid-cols-1 grid-rows-2 sm:grid-cols-3 sm:grid-rows-2 gap-4 min-h-[85dvh] p-5 sm:p-0">
+    <div class="grid grid-cols-1 grid-rows-2 sm:grid-cols-3 sm:grid-rows-2 gap-4 min-h-[85dvh] sm:p-0 mb-20 sm:mb-0">
         <div class="row-span-2 col-span-2 sm:row-span-2 sm:col-span-1 flex flex-1">
             <Card class="flex-1 h-full">
                 <CardContent class="flex justify-center items-center h-full flex-col">
@@ -71,7 +72,7 @@ const xpToNext = nextLevelXP - currentXP
                         <!-- Progress Bar -->
                         <div class="flex-1 mx-10">
                             <div class="relative">
-                                <Progress :model-value="20" bg="bg-purple-500" bg-background="bg-background"></Progress>
+                                <Progress :model-value="progressPercentage" bg="bg-purple-500" bg-background="bg-background"></Progress>
                             </div>
                             <p class="text-slate-400 text-center mt-6 text-xs font-semibold italic">
                                 Earn <span class="text-yellow-500">{{ xpToNext }}</span> xp to reach next level.</p>
@@ -105,11 +106,10 @@ const xpToNext = nextLevelXP - currentXP
 
                         </RouterLink>
                     </div>
-                    <div class="grid grid-cols-5 gap-2">
-                        <img :src="badge" class="w-20 h-20" alt="">
-                        <img :src="badge" class="w-20 h-20" alt="">
-                        <img :src="badge" class="w-20 h-20" alt="">
+                    <div class="grid grid-cols-5 gap-2" v-for="(badge, index) in badgeStore.badgesUnlocked" :key="index">
+                        <img :src="badgeStore.getBadgeSrc(badge.badge.name)" class="w-30 h-30">
                     </div>
+
                 </CardContent>
             </Card>
         </div>

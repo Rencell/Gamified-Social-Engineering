@@ -6,23 +6,25 @@
       <div>
         <p class="text-lg font-bold">{{ Question }}</p>
       </div>
-      <div @click="handleImageClick('image1')" :class="[
-        'relative w-lg bg-background rounded-xl cursor-pointer ',
-        selectedImage === 'image1' ? 'border-3 border-b-5 border-green-500' : 'border-2 border-transparent hover:border-gray-400',
-        selectedImage === 'image1' && selectedImage === answer ? 'border-green-500' : 'border-red-500',
-        selectedImage === 'image2' ? 'opacity-50' : ''
-      ]">
-        <img :src="image1" alt="Option 1" class="w-full rounded-lg animate-in" />
-      </div>
-
-      <!-- Second Image -->
-      <div @click="handleImageClick('image2')" :class="[
-        'relative w-lg bg-background rounded-xl cursor-pointer ',
-        selectedImage === 'image2' ? 'border-3 border-b-5' : 'border-2 border-transparent hover:border-gray-400 ',
-        selectedImage === 'image2' && selectedImage === answer ? 'border-green-500' : 'border-red-500',
-        selectedImage === 'image1' ? 'opacity-50' : ''
-      ]">
-        <img :src="image2" alt="Option 2" class="w-full rounded-lg animate-in" />
+      <div :class="[positionLeft ? 'flex-row w-2xl gap-4' : 'w-xl flex-col gap-4', 'flex']">
+        <div @click="handleImageClick('image1')" :class="[
+          'relative flex-1 bg-background rounded-xl cursor-pointer ',
+          selectedImage === 'image1' ? 'border-3 border-b-5 border-green-500' : 'border-2 border-transparent hover:border-gray-400',
+          selectedImage === 'image1' && selectedImage === answer ? 'border-green-500' : 'border-red-500',
+          selectedImage === 'image2' ? 'opacity-50' : ''
+        ]">
+          <img :src="image1" alt="Option 1" class="w-full rounded-lg animate-in" />
+        </div>
+  
+        <!-- Second Image -->
+        <div @click="handleImageClick('image2')" :class="[
+          'relative flex-1 bg-background rounded-xl cursor-pointer ',
+          selectedImage === 'image2' ? 'border-3 border-b-5' : 'border-2 border-transparent hover:border-gray-400 ',
+          selectedImage === 'image2' && selectedImage === answer ? 'border-green-500' : 'border-red-500',
+          selectedImage === 'image1' ? 'opacity-50' : ''
+        ]">
+          <img :src="image2" alt="Option 2" class="w-full rounded-lg animate-in" />
+        </div>
       </div>
 
       <div v-if="selectedImage" class="flex flex-col gap-4 animate-in fade-in">
@@ -36,8 +38,8 @@
           </div>
         </div>
   
-        <Button class="w-lg border-b-4 border-primary/50" v-if="selectedImage" @click="gotoLesson">
-          Continue
+        <Button :class="[positionLeft ? 'w-2xl gap-4' : 'w-xl']" class="border-b-4 border-primary/50" v-if="selectedImage" @click="gotoLesson">
+          Reveal Why?
         </Button>
       </div>
     </div>
@@ -61,6 +63,7 @@ const props = defineProps<{
   answer?: 'image1' | 'image2';
   correctExplanation?: string;
   incorrectExplanation?: string;
+  positionLeft?: boolean;
 }>();
 
 const toggle = ref(false);

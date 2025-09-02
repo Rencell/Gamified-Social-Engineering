@@ -12,7 +12,7 @@ const coins = computed(() => useAuthStore().User.coin || 0);
 </script>
 
 <template>
-    <div class="flex flex-col gap-5 p-3 sm:p-0">
+    <div class="flex flex-col gap-5 p-2">
         
         <div class="flex justify-between h-15">
             <router-link :to="{ name: 'Shop' }">
@@ -41,3 +41,4 @@ const coins = computed(() => useAuthStore().User.coin || 0);
 
     </div>
 </template>
+

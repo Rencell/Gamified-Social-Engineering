@@ -8,23 +8,53 @@ import { Card, CardContent } from "@/components/ui/card";
 import LearningSpan from "../content/UI/Learning/Highlight/LearningSpan.vue";
 import RivePlayer from "@/components/RivePlayer.vue";
 import radial from "/radial.png";
+import { useRewardStore } from '@/stores/reward';
+import { Crown, Info } from "lucide-vue-next";
 
 const props = defineProps({
   score: {
     type: Number,
-    default: 8,
+    default: 0,
   },
   length: {
     type: Number,
-    default: 10,
+    default: 0,
   },
-  
+  totalCoin: {
+    type: Number,
+    default: 0,
+  },
+  totalExp: {
+    type: Number,
+    default: 0,
+  },
+  rewardState: {
+    type: String,
+    default: 'reward',
+  }
+});
+
+import { computed } from 'vue';
+
+const performanceMessage = computed(() => {
+  const percentage = (props.score / props.length) * 100;
+
+  if (percentage < 10) {
+    return 'Nice try, buddy';
+  } else if (percentage < 50) {
+    return 'Good effort!';
+  } else if (percentage < 80) {
+    return 'Great job!';
+  } else if (percentage < 100) {
+    return 'Excellent work!';
+  } else {
+    return 'Outstanding Performance!';
+  }
 });
 
 const emit = defineEmits(['retryQuiz', 'nextLesson', 'toggleCoins']);
 
 const toggleCoin = defineModel('toggleCoin', { type: Boolean, default: true });
-
 
 const nextLesson = () => {
   emit('nextLesson');
@@ -39,8 +69,6 @@ const retryQuiz = () => {
 <template>
   <div class="min-h-screen flex items-center justify-center p-4 w-full">
     <div class="w-xl max-w-md mx-auto text-center space-y-4 animate-parent">
-
-
       <!-- Score and Title -->
       <div class="space-y-5">
         <!-- <p class="text-slate-600 text-XS font-bold">SCORE</p> -->
@@ -49,7 +77,7 @@ const retryQuiz = () => {
             <LearningSpan>{{score}}/{{length}}</LearningSpan>
           </h1>
         </div>
-        <h1 class="text-white text-2xl font-bold">Outstanding Performance</h1>
+        <h1 class="text-white text-2xl font-bold">{{performanceMessage}}</h1>
       </div>
 
       <div class="flex justify-center items-center relative">
@@ -58,9 +86,19 @@ const retryQuiz = () => {
         <!-- <LearningImage :image="asset" /> -->
       </div>
 
+      <!-- Alert -->
+       <div v-if="rewardState === 'no-reward'" class="flex gap-3 text-center justify-center items-center text-sm text-blue-400 border border-blue-600 rounded-lg p-3">
+        <Info/>
+        <p>Score more than your Max score to be rewarded</p>
+      </div>
+       <div v-if="rewardState === 'max-reward'" class="flex gap-3 text-center justify-center items-center text-sm text-yellow-400 border border-yellow-600 rounded-lg p-3">
+        <Crown />
+        <p>You've mastered this quiz! No more reward to gain.</p>
+      </div>
+
       <!-- Stats -->
 
-      <Card class="border-2 border-ternary py-4" v-if="toggleCoin">
+      <Card class="border-2 border-ternary py-4" v-if="!toggleCoin">
         <CardContent>
           <div class="flex justify-between items-center gap-2">
             <div class="text-sm font-bold">LESSON COINS</div>
@@ -70,7 +108,7 @@ const retryQuiz = () => {
               </div>
               <div class="text-left">
                 <div class="text-white text-xl font-bold counter">
-                  {{score}}
+                  {{totalCoin}}
                 </div>
               </div>
             </div>
@@ -78,7 +116,7 @@ const retryQuiz = () => {
         </CardContent>
       </Card>
 
-      <Card class="border-2 border-ternary py-4" v-if="toggleCoin">
+      <Card class="border-2 border-ternary py-4" v-if="!toggleCoin">
         <CardContent>
           <div class="flex justify-between items-center gap-2">
             <div class="text-sm font-bold">LESSON XP</div>
@@ -89,7 +127,7 @@ const retryQuiz = () => {
               </div>
               <div class="text-left">
                 <div class="text-white text-xl font-bold counter">
-                  8
+                  {{totalExp}}
                 </div>
               </div>
             </div>

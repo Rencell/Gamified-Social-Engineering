@@ -30,9 +30,11 @@
     "typewriter-effect": "^2.22.0",
     "vee-validate": "^4.15.1",
     "vue": "^3.5.18",
+    "vue-facebook-login-component-next": "^1.0.4",
     "vue-router": "^4.5.1",
     "vue-sonner": "^2.0.2",
     "vue3-count-to": "^1.1.2",
+    "vue3-google-login": "^2.0.34",
     "zod": "^3.25.76"
   },
   "devDependencies": {

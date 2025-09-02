@@ -5,7 +5,7 @@
     v-for="(value, index) in props.data" :key="index">
     <div @click="showExample[index] = showExample[index]" class="flex items-center justify-between p-5 py-8">
       <div class="flex gap-4">
-        <div class="box-content w-10 rounded-full bg-ternary/40 p-2">
+        <div class="box-content w-10 rounded-full bg-accent/50 p-2">
           <img class="w-fit" :src="value.image" alt="" />
         </div>
         <div class="flex flex-col gap-2">

@@ -45,7 +45,7 @@ const bgDefined = () => {
 
             <div v-if="!locked" class="p-3">
                 
-                <LearnProgress class="w-85" v-if="isLatest" 
+                <LearnProgress class="w-50 sm:w-85" v-if="isLatest" 
                     :tongue-color="props.bg" 
                     :module-count="moduleCount"
                     position="right"
@@ -65,8 +65,12 @@ const bgDefined = () => {
         <!-- images -->
         <div class="flex justify-center py-3 lg:py-6 grow-0 shrink-0 relative">
             <div class="aspect-video md:aspect-h-5 w-full max-w-sm h-full flex items-center justify-center">
-                <img :class="['object-scale-down mx-auto w-72', locked ? 'grayscale-100' : '']"
-                    :src="image ? image : '/SecurityAwarenessEssentials@3x.svg'" alt="">
+                <img :class="['object-scale-down mx-auto w-50 sm:w-75 relative z-20', locked ? 'grayscale-100' : '']"
+                    :src="image ? image : '/Human.webp'" alt="">
+
+                <div class="size-50 bg-white absolute rounded-full blur-2xl opacity-30">
+
+                </div>
             </div>
         </div>
 

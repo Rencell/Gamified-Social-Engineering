@@ -17,6 +17,8 @@ onMounted(() => {
   learningStore.loadLessons(lessonId);
   learningStore.loadModules();
   learningStore.fetchModules();
+  learningStore.fetchLessons();
+  learningStore.fetchLatestLesson();
 });
 
 const isFinalQuizUnlocked = computed(() => {
@@ -30,16 +32,18 @@ const start = ref(false);
     <div class="mt-4"></div>
     <!-- <ModuleStartScreen v-if="!start" @start="start = true" /> -->
     
-    <div class="flex justify-center items-center flex-col">
-        <div class="flex w-7xl mb-4 text-sm">
+    <div class="flex justify-center items-center flex-col p-2">
+        <div class="flex w-full sm:w-7xl mb-4 text-sm flex-wrap">
           <div>Learn</div> 
           <ChevronRight></ChevronRight>
-          <div>{{ route.params.lessonId }}</div>
+          <RouterLink :to="{ name: 'Learn-Phishing', params: { lessonId: route.params.lessonId }}">
+            {{ route.params.lessonId }}
+            </RouterLink>
           <ChevronRight></ChevronRight>
-          <div>{{ learningStore.selectedModule?.title }}</div>
+          <div> {{ learningStore.selectedModule ? learningStore.selectedModule.title : '' }}</div>
         </div>
         <ModuleLayout >
-            <ModuleSidebar>
+            <ModuleSidebar class="hidden md:block">
                 <ModuleSidebarItem 
                     v-for="module in learningStore.modules" 
                     :key="module.title" 

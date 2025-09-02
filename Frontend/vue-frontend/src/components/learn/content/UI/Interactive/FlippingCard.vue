@@ -33,7 +33,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="flex gap-5 max-w-sm mx-auto mt-4 ">
             <div @click="togglePrevious" class="cursor-pointer">
                 <div :class="{ 'bg-accent/30' : currentIndex <= 1}" class="w-10 h-10 bg-accent rounded-full flex">

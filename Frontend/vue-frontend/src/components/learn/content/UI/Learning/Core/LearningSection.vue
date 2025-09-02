@@ -1,5 +1,5 @@
 <template>
-    <div class="animate-parent flex flex-col w-2xl my-2 text-gray-200">
+    <div class="animate-parent flex flex-col w-full sm:w-2xl my-2 text-gray-200 p-2 sm:p-0">
         <slot></slot>
     </div>
     

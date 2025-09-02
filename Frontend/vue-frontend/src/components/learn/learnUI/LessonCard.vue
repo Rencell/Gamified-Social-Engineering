@@ -73,7 +73,7 @@ const bgDefined = () => {
                 </div>
                 <Button v-if="!locked"
                     class="text-background text-sm rounded-xl h-13 font-sans font-bold border-b-4 border-x-1 border-ternary/50"
-                    :class="[isLatest ? 'bg-primary' : 'bg-[#dc9e3a]', `text-[${props.bg}]`]"
+                    :class="[isLatest ? 'bg-primary hover:border-b-1' : 'bg-[#dc9e3a] hover:bg-[#dc9e3a]/70 hover:border-b-1', `text-[${props.bg}]`]"
                     :style="{ color: isLatest ? props.bg : 'white' }">
                     {{ isLatest ? 'CONTINUE' : 'REVIEW' }}
                 </Button>
@@ -85,7 +85,7 @@ const bgDefined = () => {
 
             <div class="flex grow h-50">
                 <img :class="['object-scale-down mx-auto w-50', locked ? 'grayscale-100' : '']"
-                    :src="image ? image : '/SecurityAwarenessEssentials@3x.svg'" alt="">
+                    :src="image ? image : '/Human.webp'" alt="">
             </div>
         </div>
     </div>

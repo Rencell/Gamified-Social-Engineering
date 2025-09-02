@@ -4,6 +4,7 @@ import type { Module, Lesson } from '@/stores/types/learning'
 import { lessons as dataLessons } from '@/data/learning'
 import { LessonService, ModuleService } from '@/services'
 import { useAuthStore } from './auth'
+import { BadgeService } from '@/services'
 
 export const useLearningStore = defineStore('learning', () => {
   // State
@@ -48,39 +49,8 @@ export const useLearningStore = defineStore('learning', () => {
   });
   // Actions
 
-  const fetchLatestLesson = async () => {
-    try {
-      const data = await LessonService.get_latest_lesson()
-      latestPercentageLesson.value = data.percentage
-      const foundLesson = lessons.value?.find((lesson) => lesson.lesson_order === data.lesson)
-      latestLesson.value = foundLesson ? [foundLesson] : null
-
-      console.log('Latest lesson fetched:', latestLesson.value)
-    } catch (error) {
-      console.error('Failed to fetch unlocked modules:', error)
-    }
-  }
-
-  const loadModules = () => {
-    const lesson = lessons.value?.find((lesson) => lesson.id === currentLessonId.value)
-    currentModuleId.value = lesson ? (lesson.lesson_order ?? 0) : 0
-    modules.value = lesson ? lesson.modules : []
-  }
-
-  const fetchModules = async () => {
-    try {
-      const unlockedModules = await LessonService.get_unlocked_modules_from_lessons(
-        currentModuleId.value,
-      )
-      modules.value.forEach((module) => {
-        module.interactive = unlockedModules.includes(module.id.toLowerCase())
-      })
-    } catch (error) {
-      console.error('Failed to fetch unlocked modules:', error)
-    }
-  }
-
-  const fetchLessons = async () => {
+  //  ------------- LESSONS -------------
+  const updateLessons = async() => {
     try {
       const unlockedIds = await LessonService.get_unlocked_lessons()
 
@@ -92,6 +62,15 @@ export const useLearningStore = defineStore('learning', () => {
     } catch (error) {
       console.error('Failed to load unlocked lessons:', error)
     }
+  }
+  
+  const fetchLessons = async () => {
+    if (lessons.value.every((lesson) => !lesson.locked)) {
+      console.log('All lessons are already unlocked. Skipping fetch.')
+      return
+    }
+
+    await updateLessons()
   }
 
   const loadLessons = (lessonId: string) => {
@@ -106,47 +85,92 @@ export const useLearningStore = defineStore('learning', () => {
     if (selectedModule.value == undefined) selectedModule.value = isLesson.modules[0] || null
   }
 
+  const fetchLatestLesson = async () => {
+    if (latestLesson.value && latestLesson.value.length > 0) {
+      console.log('Latest lesson already fetched:', latestLesson.value)
+      return
+    }
+
+    try {
+      const data = await LessonService.get_latest_lesson()
+      latestPercentageLesson.value = data.percentage
+      const foundLesson = lessons.value?.find((lesson) => lesson.lesson_order === data.lesson)
+      latestLesson.value = foundLesson ? [foundLesson] : null
+
+      console.log('Latest lesson fetched:', latestLesson.value)
+    } catch (error) {
+      console.error('Failed to fetch unlocked modules:', error)
+    }
+  }
+
+  //  ------------- MODULES -------------
+  const fetchModules = async () => {
+    try {
+      const unlockedModules = await LessonService.get_unlocked_modules_from_lessons(
+        currentModuleId.value,
+      )
+      modules.value.forEach((module) => {
+        module.interactive = unlockedModules.includes(module.id.toLowerCase())
+      })
+    } catch (error) {
+      console.error('Failed to fetch unlocked modules:', error)
+    }
+  }
+
+  const loadModules = () => {
+    if(lessons.value.length === 0) return
+
+    const lesson = lessons.value.find((lesson) => lesson.id === currentLessonId.value)
+    currentModuleId.value = lesson ? (lesson.lesson_order ?? 0) : 0
+    modules.value = lesson ? lesson.modules : []
+  }
+
+
+   //  ------------- TRIGGER -------------
   const setSelectedModule = (module: Module) => {
     if (currentLesson()?.locked) {
       console.warn('Current lesson is locked. Please unlock it first.')
       return
     }
-
+    
     if (module.final && !isFinalQuizUnlocked.value) {
       console.warn('Final Quiz is locked. Complete all modules first.')
       return
     }
-
     selectedModule.value = module
+    
   }
 
   const activateModuleInteraction = async () => {
-
+    
     const mod = selectedModule.value
     if (!mod) {
       console.error('No module selected for interaction.')
       return
     }
+    
     if (mod.interactive) return
-
     const lesson = lessons.value?.find(
       (l) => l.lesson_order === mod.unlocksLessonId,
     )
     try {
-      await Promise.all([
-        mod.final && lesson?.id ? unlockNextLesson(lesson.id as string) : Promise.resolve(),
-        unlockNextModule(mod.module_order as number)
-      ])
-      
-        if (lesson) lesson.locked = false
-        mod.interactive = true
+      if (mod.final && lesson?.id) {
+        await unlockNextLesson(lesson.id as string)
+      }
+      await unlockNextModule(mod.module_order as number)
+      await updateLessons()
+      if (lesson) lesson.locked = false
+      mod.interactive = true
     } catch (error) {
+      
       console.error('Failed to activate module interaction:', error)
     }
   }
 
   const unlockNextLesson = async (lessonId: string) => {
     if (currentLessonId.value !== lessonId) {
+      await BadgeService.create(currentLesson()?.lesson_order ?? 0)
+
       await LessonService.create_lesson({
         user: authStore.User?.pk,
         lesson: selectedModule.value?.unlocksLessonId ?? 0,
@@ -166,7 +190,7 @@ export const useLearningStore = defineStore('learning', () => {
     if (!selectedModule.value || !modules.value.length) return
     const currentIndex = modules.value.findIndex((m) => m.title === selectedModule.value?.title)
     if (currentIndex < modules.value.length - 1) {
-      selectedModule.value = modules.value[currentIndex + 1]
+      setSelectedModule(modules.value[currentIndex + 1])
     }
   }
 

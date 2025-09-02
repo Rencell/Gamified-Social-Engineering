@@ -11,6 +11,9 @@ import login from '@/views/Authentication/signup.vue'
 import InventoryView from '@/views/InventoryView.vue'
 import SuccessVerify from '@/views/Authentication/successVerify.vue'
 import LeaderboardView from '@/views/LeaderboardView.vue'
+import MiniGameView from '@/views/MiniGameView.vue'
+import MiniGameViewDetailed from '@/views/MiniGame/MiniGameDetailed.vue'
+import settingsView from '@/views/settingsView.vue'
 import { requireAuthenticated, redirectLogout } from './guards'
 import { useLoadingPageStore } from '@/stores/pageLoading'
 import { set } from '@vueuse/core'
@@ -38,6 +41,7 @@ const router = createRouter({
     {
       path: '/badges',
       name: 'Badges',
+      beforeEnter: requireAuthenticated,
       component: BadgeView,
     },
     {
@@ -63,6 +67,24 @@ const router = createRouter({
       name: 'Profile',
       beforeEnter: requireAuthenticated,
       component: ProfileView,
+    },
+    {
+      path: '/minigames',
+      name: 'MiniGames',
+      beforeEnter: requireAuthenticated,
+      component: MiniGameView,
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      beforeEnter: requireAuthenticated,
+      component: settingsView,
+    },
+    {
+      path: '/minigames/:gameId',
+      name: 'MiniGamesDetail',
+      beforeEnter: requireAuthenticated,
+      component: MiniGameViewDetailed,
     },
     {
       path: '/learn/:lessonId',

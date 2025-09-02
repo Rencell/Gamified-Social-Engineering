@@ -4,6 +4,7 @@ import { computed, reactive, ref, watch } from 'vue'
 import { type RouteLocationNormalizedLoaded, type Router, useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import { useLevelStore } from './level'
+import session from '@/services/api'
 
 export interface Register {
   username: string
@@ -21,6 +22,7 @@ interface LoginPayload {
 export const useAuthStore = defineStore('auth', () => {
   const TOKEN_STORAGE = 'auth_token'
 
+  //User
   const User = ref<any>({
     pk: 1,
     username: 'testuser',
@@ -28,7 +30,7 @@ export const useAuthStore = defineStore('auth', () => {
     exp: 0,
     coin: 0,
     level: 1,
-  }) //User
+  }) 
 
   watch(
     () => User.value.exp,
@@ -58,8 +60,25 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = computed(() => !!actionStates.token)
 
+
+  const isAuthenticatedCheck = async (): Promise<boolean> => {
+    try {
+      const response = await AuthService.getUser()
+      return !!response.data
+    } catch (err: unknown) {
+      return false
+    }
+  }
+
   const clearUser = () => {
-    User.value = null
+    User.value = {
+      pk: 1,
+      username: 'testuser',
+      email: '',
+      exp: 0,
+      coin: 0,
+      level: 1,
+    }
   }
 
   const init = async () => {
@@ -68,14 +87,14 @@ export const useAuthStore = defineStore('auth', () => {
     }
     
     if (!isAuthenticated.value) {
-      return clearUser()
+      clearUser()
     }
-
+    
     try {
       const token = actionStates.token
       if (token) MUTATIONS.SET_TOKEN(token)
-      await refreshUser()
-  } catch (error) {
+        await refreshUser()
+    } catch (error) {
       console.warn('Failed to fetch current user, using fallback:', error)
       MUTATIONS.REMOVE_TOKEN()
       clearUser()
@@ -125,6 +144,44 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+
+
+  const loginWithFacebook = async (
+    response: any, 
+    router: Router,
+    route: RouteLocationNormalizedLoaded,
+  ) => {
+    try{
+      const res = await AuthService.loginFacebook({access_token: response})
+      if(res.data.key){
+        MUTATIONS.SET_TOKEN(res.data.key)
+        MUTATIONS.LOGIN_SUCCESS(router, route)
+        await init()
+      }
+    }catch(error){
+      console.error('Login failed:', error)
+      MUTATIONS.LOGIN_FAILURE()
+    }
+  }
+
+  const loginWithGoogle = async (
+    response: any, 
+    router: Router,
+    route: RouteLocationNormalizedLoaded,
+  ) => {
+    try{
+      const res = await AuthService.loginGoogle({access_token: response})
+      if(res.data.key){
+        MUTATIONS.SET_TOKEN(res.data.key)
+        MUTATIONS.LOGIN_SUCCESS(router, route)
+        await init()
+      }
+    }catch(error){
+      console.error('Login failed:', error)
+      MUTATIONS.LOGIN_FAILURE()
+    }
+  }
+
   const logout = async () => {
     await AuthService.logout().catch(() => {})
     MUTATIONS.REMOVE_TOKEN()
@@ -165,14 +222,19 @@ export const useAuthStore = defineStore('auth', () => {
       actionStates.token = null
     },
   }
+
+  
   return {
     init,
     User,
     login,
+    loginWithGoogle,
+    loginWithFacebook,
     registration,
     refreshUser,
     logout,
     isAuthenticated,
+    isAuthenticatedCheck,
     actionStates,
   }
 })

@@ -97,6 +97,7 @@ import my_xp from "/Home/exp.png";
 import { onMounted, ref } from "vue";
 import { Progress } from "@/components/ui/progress";
 
+
 const animatedCoins = ref(0);
 const animatedXp = ref(0);
 const animatedPercentage = ref(0);

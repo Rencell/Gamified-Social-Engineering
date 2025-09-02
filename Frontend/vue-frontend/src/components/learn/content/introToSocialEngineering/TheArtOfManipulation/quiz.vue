@@ -12,11 +12,11 @@ const emit = defineEmits(['showDown']);
 
 
 const wordPairs: WordPair[] = [
-  { match_A: "excitement", match_B: "emoción" },
-  { match_A: "mushroom", match_B: "hongo" },
-  { match_A: "cookbook", match_B: "recetario" },
-  { match_A: "octopus", match_B: "pulpo" },
-  { match_A: "make someone mad", match_B: "hacer enojar" },
+  { match_A: "Complimenting", match_B: "Building connection through praise" },
+  { match_A: "Trust", match_B: "Exploiting confidence with fake identity" },
+  { match_A: "Fear and Urgency", match_B: "Forcing quick decisions with threats" },
+  { match_A: "Curiosity", match_B: "Triggering interest to uncover hidden info" },
+  { match_A: "Impersonation", match_B: "Pretending to be someone you know" },
 ];
   
 onMounted(() => {

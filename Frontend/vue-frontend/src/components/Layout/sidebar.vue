@@ -8,6 +8,7 @@ import learn from '/Icons/Learn.svg?url'
 import learns from '/Icons/Learns.svg?url'
 import trophy from '/Icons/Trophy.svg?url'
 import game from '/Icons/Game.svg?url'
+import profile from '/Icons/profile.svg?url'
 
 import logout from '/sidebar/door.svg'
 
@@ -50,7 +51,7 @@ const navigationData = {
     },
     {
       title: 'Mini Games',
-      url: '#',
+      url: '/minigames',
       Image: game
     },
   ],
@@ -152,4 +153,31 @@ onBeforeUnmount(() => {
 
 
   </Sidebar>
+
+  <div class="bg-secondary/50 backdrop-blur-lg absolute bottom-0 w-full p-4 z-20 text-white text-center md:hidden flex justify-between">
+    <div v-for="item in navigationData.learning" :key="item.title">
+      <RouterLink 
+        :to="Array.isArray(item.url) ? item.url[0] : item.url" 
+        class="flex items-center"
+        :class="{
+          'opacity-100': Array.isArray(item.url) ? item.url.some(path => route.path.startsWith(path)) : route.path.startsWith(item.url),
+          'opacity-50': !(Array.isArray(item.url) ? item.url.some(path => route.path.startsWith(path)) : route.path.startsWith(item.url))
+        }"
+      >
+        <img :src="item.Image" alt="" class="h-8 w-8 flex-shrink-0" />
+      </RouterLink>
+    </div>
+    <div>
+      <RouterLink 
+        :to="'/settings'" 
+        class="flex items-center"
+        :class="{
+          'opacity-100': route.path.startsWith('/settings'),
+          'opacity-50': !route.path.startsWith('/settings')
+        }"
+      >
+        <img :src="profile" alt="" class="h-8 w-8 flex-shrink-0" />
+      </RouterLink>
+    </div>
+  </div>
 </template>

@@ -12,9 +12,13 @@
 
     <QuizSummary v-else 
       :score="score" 
-      :length="total_questions" 
+      :length="total_questions"
+      :totalExp="totalExp"
+      :totalCoin="totalCoin"
+      :reward-state="rewardState"
       @retryQuiz="resetQuiz" 
       @nextLesson="nextLesson"
+      v-model:toggleCoin="showReward"
        />
   </template>
 </template>
@@ -33,6 +37,8 @@ import matching from '/Learning/QuizType/MatchingType.webp'
 import ScenarioTraining from '/Learning/QuizType/ScenarioTraining.png'
 import DragPair from '/Learning/QuizType/DragPair.png'
 import DoDont from '/Learning/QuizType/DoDont.png'
+import GuessTactics from '/Learning/QuizType/GuessTactics.svg'
+import TwoImage from '/Learning/QuizType/TwoImage.png'
 import { shuffle } from '@/composables/shuffleData';
 
 interface QuizProps {
@@ -51,18 +57,18 @@ const authStore = useAuthStore();
 
 
 // Refs
-const checkAnswers = ref(false);
 const quizIntro = ref(true);
 const score = ref(0)
 const quizCompleted = ref(false)
+const showReward = ref(false)
+const totalExp = ref(0)
+const totalCoin = ref(0)
+const rewardState = ref('reward')
 
 //  Cached Values
 const total_questions = ref(props.questions.length)
 const shuffleQuestions = ref(props.questions)
 const max_score = ref(0)
-
-
-
 
 const introMeta = computed(() => {
   const map: Record<string, { title: string; description: string, image: string }> = {
@@ -91,6 +97,16 @@ const introMeta = computed(() => {
       description: 'Let us see how well you can identify the social engineering attacks in this scenario.',
       image: matching
     },
+    PhishingTactics: { 
+      title: 'Guess the Tactic', 
+      description: 'You have to identify the used Phishing tactics on the given Email or Smishing.',
+      image: GuessTactics
+    },
+    TwoImage: { 
+      title: '2 Pics Quiz', 
+      description: 'You have to identify the used Phishing tactics on the given Email or Smishing.',
+      image: TwoImage
+    },
   }
   return map[props.quizComponent.name] ?? map.MatchingQuiz
 })
@@ -100,15 +116,23 @@ const introMeta = computed(() => {
 async function onFinish(finalScore: number) {
   score.value         = finalScore
   quizCompleted.value = true
+  showReward.value    = false
   emit('completeModule', false)
 
   // Only award when the user improved their score
-  if (finalScore > (await previousScore())) {
-    checkAnswers.value = true
-    await saveQuizResult()
+  
+  const prevScore = await previousScore();
+  if (finalScore > prevScore) {
+    await saveQuizResult();
+    rewardState.value = 'reward';
+  } else {
+    rewardState.value = finalScore === prevScore ? 'no-reward' : rewardState.value;
+  }
+
+  if(await previousScore() === total_questions.value){
+    rewardState.value = 'max-reward'
   }
 }
-
 const resetQuiz = () => {
   quizCompleted.value = false
   max_score.value = score.value
@@ -156,12 +180,13 @@ const saveQuizResult = async () => {
 
   const reason = rewardStore.REASONS.quiz;
   const prevScore = max_score.value || 0;
-  const prevCoin = rewardStore.calculateScore(prevScore, total_questions.value);
-  const coin = rewardStore.calculateScore(score.value, total_questions.value);
-  const xp = 20;
+  const {coin: prevCoin, exp: prevExp} = rewardStore.calculateScore(prevScore, total_questions.value);
+  const {coin: newCoin, exp: newExp} = rewardStore.calculateScore(score.value, total_questions.value);
 
-  if (coin > prevCoin) {
-    rewardStore.increaseUserRewards(reason, (coin - prevCoin), xp);
+  totalCoin.value  = (newCoin - prevCoin)
+  totalExp.value = (newExp - prevExp)
+  if (newCoin > prevCoin) {
+      rewardStore.increaseUserRewards(reason, totalCoin.value, totalExp.value);
   }
 }
 
@@ -182,6 +207,7 @@ onMounted(async () => {
   try {
     score.value         = await previousScore()
     quizCompleted.value = cachedPreviousScore !== 0
+    showReward.value    = true
   } catch (error) {
     console.error('Error during quiz initialization:', error);
   }

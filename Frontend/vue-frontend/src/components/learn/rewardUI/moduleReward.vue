@@ -23,17 +23,12 @@ const props = defineProps<{
 
 const coinAnimate = ref(false);
 const totalModule = computed(() => props.totalLength - 1);
-const toggleReward = () => {
+const toggleReward = async() => {
 
   if (!isRewardClaimed.value) {
-    learningStore.activateModuleInteraction();
-    const coins = totalModule.value * 2
-    const xp = totalModule.value * 4
-
-    rewardStore.increaseUserRewards(rewardStore.REASONS.content, coins, xp)
+    await learningStore.activateModuleInteraction();
+    rewardStore.rewardByModule(totalModule.value)
     coinAnimate.value = true;
-    useAuthStore().User.exp += xp;
-    useAuthStore().User.coin += coins;
   } else {
     learningStore.nextModule();
   }
@@ -48,8 +43,8 @@ const toggleReward = () => {
     <div class="flex flex-col items-center justify-center">
       <LearningImage :image="moneyBag" class=" throb" />
       <LearningSection class="text-center">
-        <LearningHeader class="text-xl font-bold">You have completed the module!</LearningHeader>
-        <LearningHeader class="text-lg text-ternary">Claim your rewards below!</LearningHeader>
+        <LearningHeader class="text-lg sm:text-xl font-bold">You have completed the module!</LearningHeader>
+        <LearningHeader class="text-sm sm:text-lg text-ternary">Claim your rewards below!</LearningHeader>
       </LearningSection>
     </div>
 
@@ -84,7 +79,7 @@ const toggleReward = () => {
 
       </div>
       <Button @click="toggleReward" size="lg"
-        class="w-sm font-bold border-b-4 border-primary/30 transition-all duration-200">
+        class="w-full sm:w-sm font-bold border-b-4 border-primary/30 transition-all duration-200">
         {{ isRewardClaimed ? 'Next Module' : 'Claim Reward' }}
       </Button>
     </div>
