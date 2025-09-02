@@ -34,6 +34,30 @@ export default defineConfig({
             type: 'image/png'
           }
         ]
+      },
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/gamified-social-engineering\.onrender\.com\/.*/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-cache',
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          },
+          {
+            urlPattern: /^http:\/\/localhost:8000\/.*/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-cache-local',
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          }
+        ]
       }
     })
   ],
