@@ -10,7 +10,7 @@ def create_predefined_items(apps, schema_editor):
     Item.objects.create(
         name="Christmas Background",
         type="background",
-        price=500,
+        price=100,
         image="items/christmasBackground@3x.webp"
     )
     Item.objects.create(
