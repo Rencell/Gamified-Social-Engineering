@@ -8,6 +8,14 @@ export interface Reward {
     user: number | null;
 }
 
+export interface UserStats {
+  exp: number | null;
+  coins: number | null;
+  user_name: string | null;
+  level: number | null;
+}
+
+
 const END_POINT = "/api/rewards/";
 
 const rewardService = {
@@ -15,6 +23,8 @@ const rewardService = {
     session.post(END_POINT + 'rewardlog/', reward).then(res => res.data),
   user_stats: (user_id: number): Promise<any> =>
     session.get(END_POINT + 'userstats/by_user/', { params: { user_id } }).then(res => res.data),
+  get_stats: (): Promise<UserStats[]> =>
+    session.get(END_POINT + 'userstats/').then(res => res.data),
   
 };
 

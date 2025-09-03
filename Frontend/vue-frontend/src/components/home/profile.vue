@@ -7,6 +7,8 @@ import { useCosmeticStore } from '@/stores/cosmetic';
 import RivePlayer from '@/components/RivePlayer.vue';
 import Spinner from '@/components/ui/spinner/spinner.vue'
 import { Progress } from '../ui/progress';
+import { useStreakStore } from '@/stores/pageStreak';
+import fire from '/Learning/fire.svg';
 const levelStore = useLevelStore();
 const cosmeticStore = useCosmeticStore();
 
@@ -39,6 +41,9 @@ watch(
     },
     { immediate: true }
 )
+
+const streakStore = useStreakStore();
+streakStore.cacheStreak();
 </script>
 
 
@@ -71,8 +76,13 @@ watch(
                     </div>
 
                 </div>
-                <div class="rounded-full h-6 w-30 hidden sm:block">
-
+                <div class="rounded-full h-6 w-fit hidden sm:flex items-center gap-2">
+                    <img :src="fire" class="size-13" alt="">
+                    <div class="flex flex-col">
+                        <p class="text-3xl font-bold font-display">{{streakStore.streakData?.current_streak || 0}} </p>
+                        <div class="text-sm font-semibold text-ternary brightness-125">Day Streak</div>
+                    </div>
+                    
                 </div>
 
             </div>

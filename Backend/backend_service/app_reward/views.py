@@ -9,6 +9,9 @@ class UserStatsViewSet(viewsets.ModelViewSet):
     queryset = UserStats.objects.all()
     serializer_class = UserStatsSerializer
     
+    def get_queryset(self):
+        return UserStats.objects.filter(user__is_superuser=False)
+    
     @action(detail=False, methods=['get'])
     def by_user(self, request):
         user_id = request.query_params.get('user_id')

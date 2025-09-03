@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'app_level',
     'app_badge',
     'app_cosmetic',
+    'app_daily',
     'rest_framework',
     'rest_framework.authtoken',
     
@@ -245,3 +246,22 @@ AWS_S3_REGION_NAME = 'ap-southeast-2'
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL =  None
 AWS_S3_VERIFY = True
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
+
+SOCIALACCOUNT_PROVIDERS['google']['APP'] = {
+    'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+    'secret': os.getenv('GOOGLE_CLIENT_SECRET'),
+    'key': ''
+}

@@ -30,6 +30,7 @@ const login = async () => {
     // Step 3: Check if email ends with .edu.ph
     if (!userInfo.email || !userInfo.email.endsWith("cvsu.edu.ph")) {
       toast_alert();
+      loadingPageStore.stopLoading();
       return;
     }
     await authStore.loginWithGoogle(response.access_token, router, route);
@@ -40,7 +41,7 @@ const login = async () => {
   }
 };
 
-const toast_alert = () =>{
+const toast_alert = () => {
   toast.warning(`Please use your school email (.edu.ph) to log in.`, {
     action: {
       label: 'Close',
@@ -63,3 +64,4 @@ const toast_alert = () =>{
     Login with CVSU account
   </button>
 </template>
+

@@ -6,5 +6,6 @@ export {default as RewardService } from './rewardService.ts';
 export {default as LevelService } from './levelService.ts';
 export {default as CosmeticService } from './cosmeticService.ts';
 export {default as BadgeService } from './badgeService.ts';
+export {default as StreakService } from './streakService.ts';
 
 

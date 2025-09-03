@@ -6,18 +6,41 @@ import ModuleSidebar from '@/components/learn/learnUI/ModuleSidebar.vue';
 import ModuleContent from '@/components/learn/learnUI/ModuleContent.vue';
 import ModuleSidebarItem from '@/components/learn/learnUI/ModuleSidebarItem.vue';
 import { useLearningStore } from '@/stores/learning'; 
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ChevronRight } from 'lucide-vue-next';
+import { toast } from 'vue-sonner';
 const learningStore = useLearningStore();
 
 const route = useRoute();
+const router = useRouter();
+
+
+const toast_alert = () => {
+  toast.warning('Unlock first the previous lessons to unlock this.', {
+    action: {
+      label: 'Close',
+      onClick: () => console.log('Closed notification'),
+    },
+    position: 'top-center',
+    duration: 5000,
+    style: {
+      color: '#ee5253',
+    },
+  })
+}
 
 onMounted(() => {
+
   const lessonId = route.params.lessonId as string;
   learningStore.loadLessons(lessonId);
+  // if(learningStore.currentLesson()?.locked) {
+  //   router.push({ name: 'Learn-Phishing', params: { lessonId: lessonId } });
+  //   toast_alert();
+  //   return;
+  // }
+  learningStore.fetchLessons();
   learningStore.loadModules();
   learningStore.fetchModules();
-  learningStore.fetchLessons();
   learningStore.fetchLatestLesson();
 });
 

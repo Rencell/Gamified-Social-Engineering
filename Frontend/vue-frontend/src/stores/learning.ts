@@ -5,9 +5,10 @@ import { lessons as dataLessons } from '@/data/learning'
 import { LessonService, ModuleService } from '@/services'
 import { useAuthStore } from './auth'
 import { BadgeService } from '@/services'
-
+import { useStreakStore } from './pageStreak'
 export const useLearningStore = defineStore('learning', () => {
   // State
+  const streakStore = useStreakStore();
   const authStore = useAuthStore()
   const lessons = ref<Lesson[]>(Object.values(dataLessons))
   const latestLesson = ref<Lesson[] | null>([])
@@ -75,6 +76,7 @@ export const useLearningStore = defineStore('learning', () => {
 
   const loadLessons = (lessonId: string) => {
     const isLesson = lessons.value.find((lesson) => lesson.id === lessonId)
+    
 
     if (!isLesson) {
       console.error(`Lesson with id ${lessonId} not found`)
@@ -128,6 +130,7 @@ export const useLearningStore = defineStore('learning', () => {
 
    //  ------------- TRIGGER -------------
   const setSelectedModule = (module: Module) => {
+    selectedModule.value = module
     if (currentLesson()?.locked) {
       console.warn('Current lesson is locked. Please unlock it first.')
       return
@@ -137,7 +140,6 @@ export const useLearningStore = defineStore('learning', () => {
       console.warn('Final Quiz is locked. Complete all modules first.')
       return
     }
-    selectedModule.value = module
     
   }
 
@@ -160,6 +162,7 @@ export const useLearningStore = defineStore('learning', () => {
       await unlockNextModule(mod.module_order as number)
       await updateLessons()
       if (lesson) lesson.locked = false
+      streakStore.postStreak();
       mod.interactive = true
     } catch (error) {
       

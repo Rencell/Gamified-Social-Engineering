@@ -4,16 +4,20 @@ import sidebar from './components/Layout/sidebar.vue';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 
 import { useRoute } from 'vue-router'
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { Toaster } from '@/components/ui/sonner'
 import { useLoadingPageStore } from './stores/pageLoading';
 import { Spinner } from './components/ui/spinner';
 import { useAuthStore } from '@/stores/auth'
+import { useStreakStore } from '@/stores/pageStreak';
 import 'vue-sonner/style.css'
+import DayStreak from './views/DayStreak/DayStreak.vue'
 
+const streakStore = useStreakStore()
 const route = useRoute()
 const authStore = useAuthStore()
 const isFullscreen = computed(() => route.meta.layout === 'fullscreen')
+
 
 onMounted(async() => {
   authStore.init()
@@ -22,8 +26,10 @@ onMounted(async() => {
 
 <template>
   <Toaster />
+
+  <DayStreak :is-open="streakStore.openStreakModal" :onClose="streakStore.closeStreakModal"/>
   <div v-if="useLoadingPageStore().isLoading">
-    <div class="fixed inset-0 flex items-center justify-center bg-black/70 z-50 flex-col gap-4">
+    <div class="fixed inset-0 flex items-center justify-center bg-black/70 z-99 flex-col gap-4">
       
       <Spinner size="lg" variant="white">
 
@@ -46,7 +52,7 @@ onMounted(async() => {
 
 
 
-          <div class="md:p-10 p-2 pt-9 mb-20">
+          <div class="md:p-10 p-2 pt-9 mb-20 sm:mb-0">
             <RouterView />
           </div>
         </SidebarInset>

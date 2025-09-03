@@ -14,6 +14,7 @@ import Card from '@/components/ui/card/Card.vue';
 import { CardContent } from '@/components/ui/card';
 import fire from '/Learning/fire.svg'
 import fire_greyed from '/Learning/fire-greyed.svg'
+import DayStreak from '@/components/learn/dayStreak/DayStreak.vue'
 const learningStore = useLearningStore();
 const route = useRoute();
 
@@ -55,26 +56,7 @@ onMounted(async () => {
                 </RouterLink>
             </div>
     
-            <div class="flex-1">
-
-                <div class="h-fit bg-secondary rounded-xl p-7 space-y-5 border-b-4 border-1 border-ternary">
-                    <p class="text-xl font-bold">1 Day Streak</p>
-                    <p class="text-sm font-semibold text-primary/50">Do a lesson or quiz to keep the streak going</p>
-                    <div>
-                        <Card class="bg-background/70 border-ternary border-2">
-                            <CardContent  class="grid grid-cols-7 gap-3">
-                                <div class="flex flex-col items-center gap-2" v-for="(value,index) in ['S', 'M', 'T', 'W', 'T', 'F', 'S']" :key="value">
-                                    <div class="text-sm font-bold">{{value}}</div>
-                                    <img v-if="[0, 1,2].includes(index)" :src="fire" class="w-10" alt="">
-                                    <img v-else :src="fire_greyed" class="w-10" alt="">
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                </div>
-
-
-            </div>
+            <DayStreak />
         </div>
 
        

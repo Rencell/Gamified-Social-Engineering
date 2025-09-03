@@ -17,10 +17,10 @@
         <div class="grid grid-cols-2 md:grid-cols-4 sm:grid-cols-3 gap-3 md:gap-6">
             <div v-for="(value, index) in shop_list" :key="index" class="p-2 space-y-4 bg-secondary rounded-lg">
                 <div>
-                    <img :src="value.image" class="rounded-lg h-45 w-full object-top object-cover" alt="">
+                    <img :src="value.image" class="rounded-lg h-35 md:h-45 w-full object-top object-cover" alt="">
                 </div>
                 <div
-                    class="bg-linear-to-r from-transparent via-blue-500/40 to-transparent py-1 md:py-2 px-20 mb-3 text-center text-xs uppercase font-semibold text-blue-500 mx-auto">
+                    class="bg-linear-to-r from-transparent via-blue-500/40 to-transparent py-1 md:py-2 mb-3 text-center text-xs uppercase font-semibold text-blue-500 mx-auto">
                     <span>Common</span>
                 </div>
 
