@@ -11,6 +11,9 @@ def add_lesson_data(apps, schema_editor):
     # Create initial lessons
     Lesson.objects.create(name="introToSocialEngineering")
     Lesson.objects.create(name="phishing")
+    Lesson.objects.create(name="website")
+    Lesson.objects.create(name="socialmedia")
+    Lesson.objects.create(name="vishing")
     
     
     

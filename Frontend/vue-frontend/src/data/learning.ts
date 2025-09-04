@@ -2,6 +2,9 @@ import type { Lesson } from '@/stores/types/learning'
 
 import phishing from '/Phishing.webp?url'
 import human from '/Human.webp?url'
+import website from '/Website.png?url'
+import social_media from '/social_media.png?url'
+import vishing from '/vishing.png?url'
 //IntroToSocEng
 import {
   WhatIsSocialEngineering,
@@ -136,4 +139,43 @@ export const lessons: Record<string, Lesson> = {
       },
     ],
   },
+  website:{
+    id: 'website',
+    title: 'Website Phishing',
+    image: website,
+    bg: '#2E236C',
+    lesson_order: 3,
+    locked: true,
+    description:
+      'Learn about website attacks, how to recognize them, and how to protect yourself.',
+    modules: [
+      // To be added
+    ],
+  },
+  socialmedia:{
+    id: 'socialmedia',
+    title: 'Social Media Fraud',
+    image: social_media,
+    bg: '#2E236C',
+    lesson_order: 4,
+    locked: true,
+    description:
+      'Learn about social media attacks, how to recognize them, and how to protect yourself.',
+    modules: [
+      // To be added
+    ],
+  },
+  vishing:{
+    id: 'vishing',
+    title: 'Vishing Attack',
+    image: vishing,
+    bg: '#2E236C',
+    lesson_order: 5,
+    locked: true,
+    description:
+      'Learn about social media attacks, how to recognize them, and how to protect yourself.',
+    modules: [
+      // To be added
+    ],
+  }
 };

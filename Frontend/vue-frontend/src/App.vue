@@ -37,7 +37,6 @@ onMounted(async() => {
       <div>Loading ...</div>
     </div>
   </div>
-
   <div v-if="isFullscreen">
     <RouterView />
   </div>
@@ -47,13 +46,10 @@ onMounted(async() => {
     <SidebarProvider class="h-screen flex">
       <sidebar />
       <main class="flex-1 overflow-y-auto scroll-hidden">
-
         <SidebarInset>
-
-
-
           <div class="md:p-10 p-2 pt-9 mb-20 sm:mb-0">
             <RouterView />
+
           </div>
         </SidebarInset>
       </main>

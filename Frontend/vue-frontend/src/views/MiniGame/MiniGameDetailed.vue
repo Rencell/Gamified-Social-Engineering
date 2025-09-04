@@ -12,6 +12,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import RocketGame from '@/components/MiniGames/Rocket/rocketGame.vue';
 import GuessWord from '@/components/MiniGames/GuessWord/guessWord.vue';
+import Whack from '@/components/MiniGames/WhackaMole/game.vue';
 import Error from '@/components/MiniGames/errorPage.vue'
 import { ArrowLeft } from 'lucide-vue-next';
 
@@ -23,6 +24,9 @@ const game  = computed(() => {
         return RocketGame
     }else if (gameId === 'guessWord') {
         return GuessWord
+    }
+    else if (gameId === 'whack') {
+        return Whack
     }
     return Error
 })

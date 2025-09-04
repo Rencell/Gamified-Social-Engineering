@@ -12,7 +12,7 @@
                     </div>
 
                     <div class=" h-full flex items-center justify-center">
-                        <img :src="game.image" class="h-full" :alt="`${game.name} Thumbnail`">
+                        <img :src="game.image" class="h-full size-40" :alt="`${game.name} Thumbnail`">
                     </div>
                     <div class="h-10 w-30 rounded-full bg-accent absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white font-bold shadow-lg hover:bg-accent-dark cursor-pointer"
                         :class="game.locked ? 'bg-secondary cursor-not-allowed' : ''">
@@ -32,13 +32,14 @@
                     </div>
                     <div
                         class="h-10 w-30 rounded-full bg-ternary absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white font-bold shadow-lg cursor-not-allowed">
-                        <Lock class= "size-4 me-2"></Lock>
+                        <Lock class="size-4 me-2"></Lock>
                         Locked
                     </div>
                 </div>
             </template>
         </div>
-        </div>
+    </div>
+
 </template>
 
 <script setup lang="ts">
@@ -46,6 +47,12 @@ import rocket from '/MiniGames/Rocket.svg';
 import guessWord from '/MiniGames/GuessWord.svg';
 import { Lock, Play } from 'lucide-vue-next';
 import { RouterLink } from 'vue-router';
+import Whack from '@/components/MiniGames/WhackaMole/whack.vue'
+import { ref } from 'vue';
+import { Button } from '@/components/ui/button';
+import Game from '@/components/MiniGames/WhackaMole/game.vue'
+import faceImage from '/MiniGames/mole.svg';
+
 
 const games = [
     {
@@ -60,6 +67,13 @@ const games = [
         name: 'Guess Word',
         image: guessWord,
         cardClass: 'bg-[#75bd3d]',
+        locked: false,
+    },
+    {
+        id: 'whack',
+        name: 'Whack a Mole',
+        image: faceImage,
+        cardClass: 'bg-[#f6c298]',
         locked: false,
     },
     {
