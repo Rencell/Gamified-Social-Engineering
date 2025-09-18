@@ -6,7 +6,7 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENVIRONMENT = "PROD"
+ENVIRONMENT = "LOCAL"
 
 if ENVIRONMENT == "LOCAL":
     load_dotenv()
@@ -98,20 +98,20 @@ WSGI_APPLICATION = 'backend_service.wsgi.application'
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 
-DATABASES = {
-        'default': dj_database_url.config(default=DATABASE_URL)
-    }
-# if ENVIRONMENT == "PROD":
-#     DATABASES = {
+# DATABASES = {
 #         'default': dj_database_url.config(default=DATABASE_URL)
 #     }
-# else:
-#     DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+if ENVIRONMENT == "PROD":
+    DATABASES = {
+        'default': dj_database_url.config(default=DATABASE_URL)
+    }
+else:
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # Password validation
