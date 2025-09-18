@@ -1,7 +1,7 @@
 <template>
     <div v-if="isOpen" class=" fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
         <div class="motion-preset-pop bg-secondary rounded-2xl p-8 max-w-md w-full relative">
-            <Button size="sm" variant="secondary" @click="onClose" class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors">
+            <Button size="sm" variant="secondary" @click="onClose()" class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors">
                 <X/>
             </Button>
 
@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            <Button @click="onClose"
+            <Button @click="onClose()"
                 class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg">
                 Challenge Accepted!
             </Button>

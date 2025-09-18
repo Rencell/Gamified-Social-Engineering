@@ -12,6 +12,7 @@
             alt=""
           />
           <p class="font-semibold">{{ formattedTime }}</p>
+          
         </div>
       </div>
     </div>
@@ -27,12 +28,13 @@ const props = defineProps<{
     score: number;
 }>();
 
+
 const emit = defineEmits(['finish'])
 
 const currentIndex = computed(() => props.currentIndex);
 
 // Timer variables
-const totalTime = 120; 
+const totalTime = (60*15); 
 const timeLeft = ref(totalTime);
 let timer: number | null = null;
 
@@ -55,7 +57,7 @@ const startTimer = () => {
       timeLeft.value--;
     } else {
       clearInterval(timer!);
-      emit('finish'); 
+      emit('finish', timeLeft.value); // Emit finish event when time is up
     }
   }, 1000);
 };
@@ -69,6 +71,11 @@ onBeforeUnmount(() => {
   if (timer) {
     clearInterval(timer); 
   }
+});
+
+
+defineExpose({
+  timeLeft,
 });
 
 </script>

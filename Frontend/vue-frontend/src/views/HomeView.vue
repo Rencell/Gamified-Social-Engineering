@@ -3,7 +3,7 @@ import shop from '/Home/shop.svg';
 import bag from '/Home/bag.svg';
 import coin from '/Home/coin.svg';
 import Profile from '@/components/home/profile.vue'
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 import { useAuthStore } from '@/stores/auth';
 import CurrentLearning from '@/components/home/currentLearning.vue'
@@ -13,6 +13,7 @@ const coins = computed(() => useAuthStore().User.coin || 0);
 </script>
 
 <template>
+   
     <div class="flex flex-col gap-5 p-2">
         <div class="flex justify-between h-15">
             <router-link :to="{ name: 'Shop' }">

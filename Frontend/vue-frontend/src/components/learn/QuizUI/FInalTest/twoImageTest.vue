@@ -14,7 +14,7 @@
         selectedImage === 'image2' ? 'opacity-50' : '',
         onAnimationEnd ? 'animate-in fade-in duration-500' : 'opacity-0'
       ]">
-        <img :src="Question.image1" alt="Option 1" class="w-full rounded-lg animate-in" />
+        <img :src="useImageUrl(Question.image1)!" alt="Option 1" class="w-full rounded-lg animate-in" />
       </div>
 
       <!-- Second Image -->
@@ -25,7 +25,7 @@
         selectedImage === 'image1' ? 'opacity-50' : '',
         onAnimationEnd ? 'animate-in fade-in duration-500' : 'opacity-0'
       ]">
-        <img :src="Question.image2" alt="Option 2" class="w-full rounded-lg animate-in" />
+        <img :src="useImageUrl(Question.image2)!" alt="Option 2" class="w-full rounded-lg animate-in" />
       </div>
 
     </div>
@@ -38,6 +38,7 @@ import { Button } from '@/components/ui/button';
 import { ref } from 'vue';
 import type { TwoImage } from './type';
 import { Typewriter } from '@/components/ui/typewriter';
+import { useImageUrl } from '@/composables/useImageUrl';
 // Props for the two images
 const props = defineProps<{
   Question: TwoImage;

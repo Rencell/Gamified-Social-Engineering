@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isAnswered" class="sticky z-50 ms-3 flex flex-col gap-6 animate-in fade-in bg-background border-t-2 border-ternary w-4xl bottom-0 p-5 rounded-xl">
+    <div v-if="isAnswered" class="sticky bottom-0 z-50 ms-3 flex flex-col gap-6 animate-in fade-in bg-background border-t-2 border-ternary w-4xl p-5 rounded-xl">
         <div>
             <div class="mb-2">
                 <span class="font-bold text-xl" :class="isCorrect ? 'text-green-500' : 'text-red-500'">

@@ -21,8 +21,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '',
-      name: 'Home',
+      path: '/',
       beforeEnter: requireAuthenticated,
       component: HomeView,
     },
@@ -93,7 +92,7 @@ const router = createRouter({
       component: modules
     },
     {
-      path: '/learn/:lessonId/session',
+      path: '/learn/:lessonId/:sectionId/session',
       name: 'phishing1',
       beforeEnter: requireAuthenticated,
       component: index,

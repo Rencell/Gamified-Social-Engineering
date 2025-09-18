@@ -1,11 +1,11 @@
 <template>
     
     <div class="snap-center min-h-screen flex flex-col items-center justify-center">
-        <Transition name="fade">
-            <LearningImage v-if="visibleItemCount < 4" :image="man_with_shield" />
-        </Transition>
-
+        
         <LearningSection>
+            <Transition name="fade">
+                <LearningImage v-if="visibleItemCount < 4" :image="man_with_shield" />
+            </Transition>
 
             <LearningHeader>
                 <LearningSpan>Defend</LearningSpan> : Learn to be safe

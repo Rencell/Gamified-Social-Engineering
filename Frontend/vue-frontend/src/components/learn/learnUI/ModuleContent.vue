@@ -3,17 +3,17 @@ import Button from '@/components/ui/button/Button.vue';
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { useLearningStore } from '@/stores/learning';
 import { onMounted, ref, watch } from 'vue';
-import LessonCard from './LessonCard.vue';
-import lessonService from '@/services/lessonService';
+import Content from '../content/content.vue'
+import { useModuleStore } from '@/stores/module';
 
 const learningStore = useLearningStore();
+const moduleStore = useModuleStore();
 const moduleContent = ref<HTMLElement | null>(null);
-const isHidden = ref(false); // State to track if the header should be hidden
+const isHidden = ref(false); 
 
-// Watch the scroll position of the parent container
 const handleScroll = () => {
   if (moduleContent.value) {
-    isHidden.value = moduleContent.value.scrollTop > 50; // Hide when scrolled more than 50px
+    isHidden.value = moduleContent.value.scrollTop > 50; 
   }
 };
 
@@ -23,10 +23,10 @@ onMounted(() => {
   }
 });
 
-watch(() => learningStore.selectedModule, () => {
+watch(() => moduleStore.selectedModule, () => {
   if (moduleContent.value) {
     moduleContent.value.scrollTop = 0;
-    isHidden.value = false; // Reset the hidden state when the module changes
+    isHidden.value = false; 
   }
 });
 </script>
@@ -38,7 +38,7 @@ watch(() => learningStore.selectedModule, () => {
       <div class="flex gap-5 sticky -top-2 bg-[#181c28] self-start z-20 font-bold mb-3 p-5 sm:p-11 pb-2 sm:relative transition-all duration-300">
         <div :class="{ hidden: isHidden }" >
           <p class="text-xl sm:text-3xl ">
-            {{ learningStore.selectedModule?.title }}
+            {{ moduleStore.selectedModule?.title }}
           </p>
           <div class="h-1 w-11 bg-accent mt-4 "></div>
         </div>
@@ -53,8 +53,9 @@ watch(() => learningStore.selectedModule, () => {
         </div>
       </div>
       <hr class="border-background mb-10 ">
-
-      <component :is="learningStore.selectedModule?.component" class="p-3" />
+      
+      <!-- <component :is="learningStore.selectedModule?.component" class="p-3" /> -->
+      <Content />
     </div>
   </div>
 </template>

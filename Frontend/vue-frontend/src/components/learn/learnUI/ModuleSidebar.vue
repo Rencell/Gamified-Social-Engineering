@@ -14,7 +14,7 @@ const hideSideBar = ref(false);
 
 <template>
     <div class="sticky top-0 self-start">
-        <div class="bg-secondary rounded-lg">
+        <div class="bg-secondary rounded-lg " :class="{ 'w-70': !hideSideBar }">
 
             <div class="flex items-center justify-between">
                 <Transition name="hideLeft" mode="out-in">
@@ -30,11 +30,11 @@ const hideSideBar = ref(false);
                     <PanelLeftClose v-else />
                 </div>
             </div>
-
+            
             <Transition name="hideLeft" mode="out-in">
                 <div v-show="!hideSideBar" class="p-4 ">
                     <div class="flex justify-between">
-
+                        
                         <p class="font-semibold text-xl">All lessons</p>
 
                         <div class="gap-2 flex">

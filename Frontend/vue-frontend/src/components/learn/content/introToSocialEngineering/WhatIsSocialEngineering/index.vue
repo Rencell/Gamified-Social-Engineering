@@ -14,6 +14,5 @@ const components = [
 
 <template>
   <LessonReveal :components="components" :with-quiz="true"/>
-  
 
 </template>

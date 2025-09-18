@@ -6,33 +6,81 @@ import { Card } from '@/components/ui/card';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import LearningSpan from '../content/UI/Learning/Highlight/LearningSpan.vue';
 import { useLearningStore } from '@/stores/learning';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRewardStore } from '@/stores/reward';
 import LearningSection from '../content/UI/Learning/Core/LearningSection.vue';
 import LearningHeader from '../content/UI/Learning/Core/LearningHeader.vue';
+import { useModuleStore } from '@/stores/module';
+import { useContentStore } from '@/stores/content';
+import { QuizService } from '@/services';
 import { useAuthStore } from '@/stores/auth';
+import { useStreakStore } from '@/stores/pageStreak';
 const rewardStore = useRewardStore();
-const learningStore = useLearningStore();
+const moduleStore = useModuleStore();
+const contentStore = useContentStore();
+const authStore = useAuthStore();
 
-const isRewardClaimed = computed(() => learningStore.selectedModule?.interactive);
+// const isRewardClaimed = computed(() => moduleStore.selectedModule?.locked);
 
-
-const props = defineProps<{
-  totalLength: number
-}>()
 
 const coinAnimate = ref(false);
-const totalModule = computed(() => props.totalLength - 1);
-const toggleReward = async() => {
+const totalModule = computed(() => contentStore.components.length);
+const rewardState = ref(true)
 
-  if (!isRewardClaimed.value) {
-    await learningStore.activateModuleInteraction();
-    rewardStore.rewardByModule(totalModule.value)
-    coinAnimate.value = true;
+const toggleReward = async () => {
+
+  if(!moduleStore.selectedModule) return
+  await isRewardClaimed(moduleStore.selectedModule.id || 0)
+
+  if(!moduleStore.selectedModule?.locked) {
+    moduleStore.nextModule();
   } else {
-    learningStore.nextModule();
+    moduleStore.completeModule()
+    if(!rewardState.value){
+      await saveQuizResult();
+      rewardStore.rewardByModule(totalModule.value)
+      coinAnimate.value = true;
+    }
   }
+
+  
 };
+
+const isRewardClaimed = async (moduleId: number) => {
+  try {
+    if (moduleStore.selectedModule?.id === moduleId) {
+      const response = await QuizService.get_by_user_and_module(
+        authStore.User.pk,
+        moduleId
+      );
+      if (response)
+        rewardState.value = true;
+    }
+  } catch (error) {
+    console.error('Error checking reward status:', error);
+    rewardState.value = false;
+  }
+}
+
+
+const saveQuizResult = async () => {
+  try {
+    await QuizService.create_quiz({
+      score: 1,
+      user: authStore.User.pk,
+      module: moduleStore.selectedModule?.id ?? 0,
+      total_questions: 1,
+      attempt_number: 1,
+      time_spent: 0,
+      id: 0,
+      accuracy: 100,
+    });
+  } catch (error) {
+    console.error('Failed to create quiz:', error);
+  }
+
+}
+
 
 
 </script>
@@ -56,7 +104,7 @@ const toggleReward = async() => {
           <div class="flex-2 border-r-2 border-primary/30 pr-4 space-y-1">
             <div class="flex justify-between">
               <p class="text-sm font-semibold">Total Modules</p>
-              <p>{{totalModule}}</p>
+              <p>{{ totalModule }}</p>
             </div>
             <div class="flex justify-between">
               <p class="text-sm font-semibold">Level 1 Multiplier</p>
@@ -80,7 +128,7 @@ const toggleReward = async() => {
       </div>
       <Button @click="toggleReward" size="lg"
         class="w-full sm:w-sm font-bold border-b-4 border-primary/30 transition-all duration-200">
-        {{ isRewardClaimed ? 'Next Module' : 'Claim Reward' }}
+        {{ moduleStore.selectedModule?.locked ? 'Claim Reward' : 'Next Module ' }}
       </Button>
     </div>
   </div>

@@ -7,7 +7,7 @@ export interface Option {
 export interface MCQ {
     question: string;
     options: Option[];
-    correctAnswer: string;
+    answer: string;
 }
 
 export interface FlippingCardData {

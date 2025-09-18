@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen text-white p-4">
+  <div class="min-h-screen text-white p-4 w-xl">
     <!-- Header -->
-    <Timer @time-up="toggleFinish" />
+    <Timer ref="timerRef" @time-up="toggleFinish($event)" />
 
     <div class="text-center mb-4">
       <div v-if="!loading" class="text-xl font-bold">
@@ -45,11 +45,11 @@
         </button>
       </div>
     </div>
-
+    
     <!-- Continue Button -->
     <div class="flex justify-center max-w-xl mx-auto">
-      <Button size="lg" class="w-full border-b-4 border-primary/40" :disabled="!gameCompleted" @click="toggleFinish()">
-        Continue
+      <Button size="lg" class="w-full border-b-4 border-primary/40" :disabled="!gameCompleted" @click="toggleFinish(timerRef?.timeLeft || 0)">
+        Continue 
       </Button>
     </div>
 
@@ -87,20 +87,20 @@ const props = defineProps<{
 
 const emit = defineEmits(['finish']);
 
+const timerRef = ref<InstanceType<typeof Timer> | null>(null);
 const wordPairs: WordPair[] = props.questions;
-
 const selectedCardA = ref<string | null>(null);
 const selectedCardB = ref<string | null>(null);
 const error = ref(false);
 const gameCompleted = ref(false);
 const loading = ref(false);
+const matchedPairs = ref<string[]>([]);
+const shuffledWords = ref<WordPair[]>([]);
+const score = ref(0);
 
 const hasSelected = computed(
   () => selectedCardA.value !== null && selectedCardB.value !== null
 );
-const matchedPairs = ref<string[]>([]);
-const score = ref(0);
-const shuffledWords = ref<WordPair[]>([]);
 
 function shuffle<T>(array: T[]): T[] {
   let currentIndex = array.length,
@@ -114,13 +114,12 @@ function shuffle<T>(array: T[]): T[] {
   return arr;
 }
 
-const toggleFinish = () => {
-
+const toggleFinish = (time: number) => {
   gameCompleted.value = true;
   loading.value = true;
   setTimeout(() => {
     loading.value = false;
-    emit('finish', score.value);
+    emit('finish', score.value, time);
   }, 5000);
 };
 
@@ -186,7 +185,7 @@ const handleCardClick = (word: string, type: 'a' | 'b') => {
         loading.value = true;
         setTimeout(() => {
           loading.value = false;
-          emit('finish', score.value);
+          emit('finish', score.value, timerRef.value?.timeLeft);
         }, 5000);
       }
     } else {

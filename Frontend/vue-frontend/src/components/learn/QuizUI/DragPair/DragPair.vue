@@ -1,6 +1,6 @@
 <template>
     <div class="min-h-screen py-10">
-        <Timer @time-up="finish" />
+        <Timer ref="timerRef" @time-up="finish($event)" />
         <div class="w-2xl rounded-lg relative min-h-[90dvh] bg-secondary border-t-4 border-t-blue-500 flex flex-col">
     
             <div v-if="answered" class="px-4 py-2">
@@ -88,8 +88,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['finish'])
-const finish = () => {
-    emit('finish', score.value)
+const finish = (time: number) => {
+    emit('finish', score.value, time)
 }
 
 const isAnimationFinished = ref(false)
@@ -98,7 +98,7 @@ const onAnimationEnd = () => {
     isAnimationFinished.value = true
 }
 
-
+const timerRef = ref<InstanceType<typeof Timer> | null>(null);
 const loading = ref(false)
 const currentQuestionIndex = ref(0)
 const selectedAnswer = ref<"top" | "bottom" | null>(null)
@@ -146,7 +146,7 @@ const nextQuestion = () => {
         answered.value = false
         isAnimating.value = false
     } else {
-        finish();
+        finish(timerRef.value?.timeLeft || 0);
         isAnimationFinished.value = false
         currentQuestionIndex.value = 0
         score.value = 0

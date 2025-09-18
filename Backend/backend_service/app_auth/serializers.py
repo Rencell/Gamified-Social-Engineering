@@ -1,4 +1,4 @@
-from dj_rest_auth.serializers import LoginSerializer
+from dj_rest_auth.serializers import LoginSerializer, UserDetailsSerializer
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 
@@ -21,3 +21,9 @@ class CustomLoginSerializer(LoginSerializer):
 
         attrs['user'] = user
         return attrs
+    
+class CustomUserDetailsSerializer(UserDetailsSerializer):
+    is_admin = serializers.BooleanField(source='is_staff', read_only=True)
+    
+    class Meta(UserDetailsSerializer.Meta):
+        fields = UserDetailsSerializer.Meta.fields + ('is_admin',)

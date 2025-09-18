@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md mx-auto text-center space-y-8 animate-parent">
+    <div class="w-md max-w-xl mx-auto text-center space-y-8 animate-parent">
       <!-- Stars -->
       <div class="flex justify-center animate-in fade-in zoom-in duration-300">
         <img :src="star" alt="">
@@ -8,16 +8,24 @@
 
       <!-- Score and Title -->
       <div class="space-y-2">
-        <p class="text-green-400 text-sm font-bold">You scored {{percentage}}%</p>
-        <h1 class="text-white text-2xl font-bold">Outstanding performance</h1>
+        <p :class="isPassed ? 'text-green-400' : 'text-red-400' " class="text-sm font-bold">
+          You scored {{ percentage }}%
+        </p>
+        <h1 v-if="isPassed" class="text-2xl font-bold text-white">You succeeded</h1>
+        <h1 v-if="!isPassed" class="text-2xl font-bold text-destructive">You have failed</h1>
+      </div>
+      <div
+        v-if="!isPassed"
+        class="flex gap-3 text-center justify-center items-center text-sm text-red-400 border border-red-600 rounded-lg p-3">
+        <Crown />
+        <p>Score more than 75% to pass the final test!</p>
       </div>
 
-
       <!-- Stats -->
-      <Card>
+      <Card v-if="isPassed">
         <CardContent>
           <div class="grid grid-cols-2 gap-4">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 justify-center">
               <div class="w-12 h-12 rounded-full flex items-center justify-center">
                 <img :src="coins" class="w-full h-full text-white" />
               </div>
@@ -27,7 +35,7 @@
               </div>
             </div>
 
-            <div class="flex items-center gap-2">
+            <div class="flex items-center justify-center gap-2">
               <div class="w-10 h-10 rounded-full flex items-center justify-center">
                 <img :src="my_xp" class="w-full h-full text-white" />
               </div>
@@ -40,8 +48,40 @@
         </CardContent>
       </Card>
 
+
+      <div class="grid grid-cols-3 gap-4 w-full ">
+        <Card>
+          <CardContent class="flex flex-col items-center gap-2">
+            <img class="size-12" src="https://cdn-icons-png.freepik.com/256/12635/12635783.png?semt=ais_white_label" alt="">
+            <div class="flex-1">
+              <p class="text-center font-bold text-2xl">{{ percentage.toFixed(0) }}%</p>
+              <p class="font-semibold text-xs">Accuracy</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent class="flex flex-col items-center gap-2">
+            <img class=" size-12" src="https://media.lordicon.com/icons/wired/flat/46-timer-stopwatch.svg" alt="">
+            <div class="flex-2">
+              <p class="text-center font-bold text-2xl">{{ Math.floor(timeSpent / 60) || 0 }}:{{ String(timeSpent % 60 || 0).padStart(2, '0') }}</p>
+             
+              <p class="font-semibold text-xs">Time Spent </p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent class="flex flex-col items-center gap-2">
+            <img class="size-10" src="https://cdn-icons-png.flaticon.com/512/13951/13951389.png" alt="">
+            <div class="flex-1">
+              <p class="text-center font-bold text-2xl">{{attempts}}</p>
+              <p class="font-semibold text-xs">Attempts</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       <!-- Progress Bars -->
-      <Card>
+      <!-- <Card>
         <CardContent class="space-y-4">
           <div class="space-y-2">
             <div class="flex items-center gap-3">
@@ -71,7 +111,9 @@
             <Progress :model-value="animatedPercentage2" bg="bg-orange-500" bg-background="bg-background" class="h-5"></Progress>
           </div>
         </CardContent>
-      </Card>
+      </Card> -->
+
+      
 
       <!-- Continue Button -->
       <div class="space-y-3">
@@ -94,7 +136,7 @@ import { Shield } from "lucide-vue-next";
 import coins from "/Home/coin.svg";
 import star from "/Home/star.png";
 import my_xp from "/Home/exp.png";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { Progress } from "@/components/ui/progress";
 
 
@@ -115,7 +157,14 @@ const props = defineProps({
     type: Number,
     default: 10,
   },
-  
+  timeSpent: {
+    type: Number,
+    default: 0,
+  },
+  attempts: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const animateValue = (
@@ -161,8 +210,10 @@ onMounted(() => {
   });
 });
 
-const percentage = Math.floor((props.score / props.length) * 100);
 
+
+const percentage = Math.floor((props.score / props.length) * 100);
+const isPassed = computed(() => percentage >= 75);
 </script>
 
 

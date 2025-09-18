@@ -1,0 +1,94 @@
+
+import { defineAsyncComponent, type Component } from "vue";
+
+// Type Definition for Learning Components
+export type LearningType =
+  | "LearningSection"
+  | "LearningHeader"
+  | "LearningBody"
+  | "LearningList"
+  | "LearningListItem"
+  | "LearningListItemNumbered"
+  | "LearningQuote"
+  | "InteractiveMCQ"
+  | "LearningImage2"
+  | "FlippingCard"
+  | "DescriptionList"
+;
+// Component Map
+export const componentMap: Record<LearningType, Component> = {
+  LearningSection: defineAsyncComponent(() => import('../UI/Learning/Core/LearningSection.vue')),
+  LearningHeader: defineAsyncComponent(() => import('../UI/Learning/Core/LearningHeader.vue')),
+  LearningBody: defineAsyncComponent(() => import('../UI/Learning/Core/LearningBody.vue')),
+  LearningList: defineAsyncComponent(() => import('../UI/Learning/Listing/LearningList.vue')),
+  LearningListItem: defineAsyncComponent(() => import('../UI/Learning/Listing/LearningListItem.vue')),
+  LearningListItemNumbered: defineAsyncComponent(() => import('../UI/Learning/Listing/LearningListItemNumbered.vue')),
+  LearningQuote: defineAsyncComponent(() => import('../UI/Learning/Highlight/LearningQuote.vue')),
+  LearningImage2: defineAsyncComponent(() => import('../UI/Learning/Image/LearningImage2.vue')),
+  // Interactive
+  InteractiveMCQ: defineAsyncComponent(() => import('../UI/Interactive/InteractiveMCQ.vue')),
+  FlippingCard: defineAsyncComponent(() => import('../UI/Interactive/FlippingCard.vue')),
+  DescriptionList: defineAsyncComponent(() => import('../UI/Learning/Listing/description-list.vue')),
+};
+export interface MCQOption {
+  id: string
+  text: string
+}
+
+export type DefaultProps = {
+  LearningSection: unknown;
+  LearningHeader: { text: string };
+  LearningBody: { text: string };
+  LearningList: unknown;
+  LearningListItem: { text: string };
+  LearningListItemNumbered: { image: string, text: string, number: number };
+  LearningQuote: { variant: string; text: string };
+  InteractiveMCQ: { question: string; options: MCQOption[]; answer: string };
+  LearningImage2: { image: string };
+  FlippingCard: { data: [{ front: string; back: string }] };
+  DescriptionList: {data: [{
+    heading: string;
+    subheading: string;
+    image: string;
+    description: string;
+    examples: {
+      example: string;
+      image: string;
+    }[];
+    signs: string[];
+  }]};
+};
+
+// Default Props Map
+export const defaultPropsMap: DefaultProps = { 
+  LearningSection: {},
+  LearningHeader: { text: "New Header" },
+  LearningBody: { text: "New Body" },
+  LearningList: {},
+  LearningListItem: { text: "New List Item" },
+  LearningListItemNumbered: { image: '', text: 'string', number: 0 },
+  LearningQuote: { variant: "default", text: "New Quote" },
+  InteractiveMCQ: { question: "New Question", options: [{ id: "A", text: "Option 1" }, { id: "B", text: "Option 2" }], answer: "A" },
+  LearningImage2: { image: "/media/content_images/WIN_20250827_21_25_06_Pro.jpg" },
+  FlippingCard: { data: [{ front: "Front Side", back: "Back Side" }] },
+  DescriptionList: { data: [{
+    heading: "New Heading",
+    subheading: "New Subheading",
+    image: "New Image",
+    description: "New Description",
+    examples: [
+      { example: "Example 1", image: "ExampleImage1.jpg" },
+      { example: "Example 2", image: "ExampleImage2.jpg" }
+    ],
+    signs: ["Sign 1", "Sign 2"]
+  }] },
+};
+
+export const PropsMultiSelector: Record<string, Record<string, any>> = {
+  LearningQuote: {
+    variant: {
+      options: ['default', 'info', 'danger'],
+      default: "default",
+    }
+  },
+};

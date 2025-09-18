@@ -1,6 +1,6 @@
 <template>
     <div :class="{ 'flex-row-reverse': mcq.position == 'right' }" class="flex items-center gap-10">
-        <LearningImage class="h-60" :image="mcq.image" />
+        <LearningImage class="h-60" :image="useImageUrl(mcq.image)!" />
         <div>
             <div class="w-sm flex flex-col gap-2">
                 <Typewriter :text="mcq.question" @animation-end="animationEnd = true" class="font-bold text-lg" />
@@ -53,6 +53,7 @@ import LearningImage from '../../content/UI/Learning/Image/LearningImage.vue';
 import { Button } from '@/components/ui/button';
 import { ref } from 'vue';
 import { Typewriter } from '@/components/ui/typewriter';
+import { useImageUrl } from '@/composables/useImageUrl';
 const emit = defineEmits(['togglePrev', 'toggleNext', 'addScore']);
 const animationEnd = ref(false);
 const selectedAnswer = ref<string | null>(null);
