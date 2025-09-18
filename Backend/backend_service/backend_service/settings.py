@@ -6,7 +6,7 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENVIRONMENT = "PROD"
+ENVIRONMENT = "LOCAL"
 
 if ENVIRONMENT == "LOCAL":
     load_dotenv()
@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'app_badge',
     'app_cosmetic',
     'app_daily',
+    'app_contents',
+    'app_section',
     'rest_framework',
     'rest_framework.authtoken',
     
@@ -133,14 +135,16 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",  # ✅ This is needed
     "allauth.account.auth_backends.AuthenticationBackend",
+    "django.contrib.auth.backends.ModelBackend",  # ✅ This is needed
 ]
 
 REST_AUTH = {
+    'USER_DETAILS_SERIALIZER': 'app_auth.serializers.CustomUserDetailsSerializer',
     "REGISTER_SERIALIZER": "dj_rest_auth.registration.serializers.RegisterSerializer",
     "USE_JWT": False, 
 }
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -169,8 +173,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
      'DEFAULT_AUTHENTICATION_CLASSES': (
-       'rest_framework.authentication.TokenAuthentication',
        'app_auth.authentication.CsrfExemptSessionAuthentication',
+       'rest_framework.authentication.TokenAuthentication',
    ),
 }
 
@@ -207,9 +211,13 @@ CSRF_COOKIE_DOMAIN = ['127.0.0.1:8000', 'localhost:8000', 'dev.org']
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:8000",
+    "http://127.0.0.1:8000",
     "https://gamified-frontend-caps.onrender.com",
 ]
-
+CSRF_COOKIE_DOMAIN = None
+CSRF_COOKIE_SECURE = False  # Set to True in production if using HTTPS
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'Lax'  # Use 'Strict' or 'None' based on your requirements
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

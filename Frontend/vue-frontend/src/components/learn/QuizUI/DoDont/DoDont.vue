@@ -1,7 +1,7 @@
 <template>
     <div class="snap-center min-h-screen flex flex-col items-center justify-center p-6 space-y-6">
-        <div class="w-full max-w-3xl space-y-6">
-            <Timer @time-up="finish" />
+        <div class="w-2xl max-w-3xl space-y-6">
+            <Timer @time-up="finish" ref="timerRef" />
             <!-- Question Card -->
             <Card :class="['border-t-4 border-t-blue-500', { 'vibrate': isWrong }]">
                 <CardContent class="p-8">
@@ -79,7 +79,7 @@ import quizSummary from '../quizSummary.vue'
 import { useLearningStore } from '@/stores/learning';
 import Timer from '../timer.vue'
 const learningStore = useLearningStore();
-
+const timerRef = ref<InstanceType<typeof Timer> | null>(null);
 
 defineOptions({
     name: "DoDont"
@@ -95,7 +95,7 @@ const nextLesson = () => {
 
 const emit = defineEmits(['finish'])
 const finish = () => {
-    emit('finish', score.value) // score, answers
+    emit('finish', score.value, timerRef.value?.timeLeft) // score, answers
 }
 
 const currentQuestionIndex = ref(0);

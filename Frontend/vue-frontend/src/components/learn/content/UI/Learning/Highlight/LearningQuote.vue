@@ -1,5 +1,5 @@
 <template>
-  <div :class="quoteVariants({ variant })">
+  <div v-if="!editable" :class="quoteVariants({ variant })" class="my-3">
     <div class="flex items-center gap-5">
       <div :class="iconContainerVariants({ variant })">
         <Info v-if="variant === 'default'" :class="cn(iconVariants({ variant }))" />
@@ -11,8 +11,23 @@
     </div>
     <div class="w-full ps-15 font-medium">
       <slot></slot>
+      {{ my_text.text }}
     </div>
   </div>
+  
+  <template v-else>
+    <EditableText 
+      :text="my_text.text"
+      :props="my_text"
+      :item="item"
+      :siblings="siblings"
+      type="LearningQuote" 
+      @updateProps="updateProps($event)" 
+      @deleteText="deleteComponent"
+      @reorder="reorderComponent($event)" />
+
+  </template>
+
 </template>
 
 <script setup lang="ts">
@@ -20,13 +35,26 @@ import { computed } from 'vue';
 import { Info, Lightbulb, AlertTriangle } from 'lucide-vue-next';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { useEditableText } from '@/composables/useEditableText';
+import EditableText from '../EditableText.vue';
+import type { Content } from '@/services/contentService';
 
 const props = withDefaults(defineProps<{
   variant?: 'default' | 'info' | 'danger';
+  text?: string; 
+  item?: Content;
+  siblings?: Content[];
 }>(), {
   variant: 'default',
+  text: '',
 });
 
+
+const emit = defineEmits(['giveProps', 'signalDelete' ]);
+const { editable, my_text, updateProps, deleteComponent, reorderComponent } 
+= useEditableText({ text: props.text || null, variant: props.variant || 'default' }, emit)
+
+const variant = computed(() => my_text.value?.variant || props.variant);
 
 const title = computed(() => {
   switch (props.variant) {

@@ -6,6 +6,8 @@ import LearningImage from '../../content/UI/Learning/Image/LearningImage.vue';
 import LearningBody from '../../content/UI/Learning/Core/LearningBody.vue';
 import LearningSection from '../../content/UI/Learning/Core/LearningSection.vue';
 import type { Story } from './type';
+import { useImageUrl } from '@/composables/useImageUrl';
+import LearningBold from '../../content/UI/Learning/Highlight/LearningBold.vue';
 const props = defineProps<{
     data: Story
 }>();
@@ -18,10 +20,10 @@ const emit = defineEmits(['toggleNext'])
         <LearningHeader>
             {{data.title}}
         </LearningHeader>
-        <LearningImage :image="data.image" />
+        <LearningImage :image="useImageUrl(data.image)!" />
 
         <LearningBody v-for="(value, index) in data.description" :key="index" class="text-center">
-            {{value}}
+            <LearningBold :text="value"></LearningBold>
         </LearningBody>
 
 

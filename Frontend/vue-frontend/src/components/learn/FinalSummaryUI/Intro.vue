@@ -1,44 +1,47 @@
 <template>
-    
+
     <LearningContent>
-        <div class="w-full max-w-2xl space-y-6">
+        <div class="w-full space-y-6">
             <Card :class="['border-t-4 border-t-accent']">
                 <CardContent class="p-8">
-                    <LearningSection class="w-full">
-                        <LearningHeader>
-                            <LearningSpan>Final test</LearningSpan>: Let's test your knowledge!
+                        <LearningHeader class="text-center">
+                            <LearningSpan>Final test</LearningSpan>: {{ sectionStore.selectedSection?.name }}
                         </LearningHeader>
-                        <LearningBody>
+                        <LearningBody class="text-center">
 
-                            Let's see how much you've learned! You have to get at least 80% to pass the test and unlock
-                            the next course.
+                            Ready for a challenge? Test your growing knowledge and skills.
 
                         </LearningBody>
                         <LearningBody>
-                            <LearningSpan>This will unlock:</LearningSpan>
-                            <LearningList>
-                                <Card class="bg-background border-2 border-ternary">
-                                    <CardContent class="flex items-center gap-5">
-                                        <div class="h-20 w-20 rounded-full  flex justify-center items-center">
-                                            <div class="absolute w-20 h-20 rounded-full bg-accent/30 blur-lg"></div>
-                                            <img class="relative size-20 object-contain" :src="image2" alt="">
-                                        </div>
-                                        <p>Get 80% or higher on the final test to unlock the Phishing course.</p>
-                                    </CardContent>
-                                </Card>
-                                <Card class="bg-background border-2 border-ternary">
-                                    <CardContent class="flex items-center gap-5">
-                                        <div class="h-20 w-20 rounded-full  flex justify-center items-center">
-                                            <div class="absolute w-20 h-20 rounded-full bg-accent/30 blur-lg"></div>
-                                            <img class="relative size-20 object-contain" :src="image" alt="">
-                                        </div>
-                                        <p>You will unlock Social Engineering Badge</p>
-                                    </CardContent>
-                                </Card>
+                            
+                            <Card class="bg-background/50 border-2 border-ternary w-full sm:w-xl">
+                                <CardContent class="flex flex-col gap-5">
+                                    <p class="flex gap-2 items-center">
+                                        <Zap class="size-5 text-accent"></Zap>Level Requirements
+                                    </p>
 
-                            </LearningList>
+                                    <div class="text-sm space-y-4 font-bold">
+                                        <div class="flex justify-between">
+                                            <p>Time:</p>
+                                            <p>15:00 mins</p>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <p>Passing Score:</p>
+                                            <p class="text-accent">75%</p>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <p>Questions:</p>
+                                            <p>{{useContentStore().contentItems.quiz_limit}} Questions</p>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <p>Advanced to:</p>
+                                            <p class="text-accent">Phishing</p>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
                         </LearningBody>
-                    </LearningSection>
 
                     <div class="flex w-full ">
                         <Button class="w-full" @click="toggleStart">Start Test <ChevronRight>
@@ -50,10 +53,11 @@
 
 
     </LearningContent>
+
 </template>
 
 <script setup lang="ts">
-import { ChevronRight } from 'lucide-vue-next';
+import { ChevronRight, Zap } from 'lucide-vue-next';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import image from '/Human.webp'
@@ -66,6 +70,8 @@ import LearningBody from '../content/UI/Learning/Core/LearningBody.vue';
 import LearningList from '../content/UI/Learning/Listing/LearningList.vue';
 import { Button } from '@/components/ui/button';
 import { onMounted, ref } from 'vue';
+import { useSectionStore } from '@/stores/sections';
+import { useContentStore } from '@/stores/content';
 
 
 const emit = defineEmits(['startQuiz']);
@@ -79,5 +85,6 @@ const toggleStart = () => {
         emit('startQuiz');
     }, 1000);
 }
+const sectionStore= useSectionStore();
 
 </script>

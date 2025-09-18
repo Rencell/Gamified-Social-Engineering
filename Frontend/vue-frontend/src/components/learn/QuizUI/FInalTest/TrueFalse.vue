@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-center gap-15">
     <!-- Question Image -->
-    <LearningImage :image="Question.image" />
+    <LearningImage :image="useImageUrl(Question.image) as string" />
 
     <!-- Question and Choices -->
     <div>
@@ -58,6 +58,7 @@ import { ref, computed } from 'vue';
 import { Card } from '@/components/ui/card';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import { Button } from '@/components/ui/button';
+import { useImageUrl } from '@/composables/useImageUrl';
 
 // Props
 const props = defineProps<{

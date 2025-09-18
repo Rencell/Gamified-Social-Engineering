@@ -48,6 +48,7 @@ streakStore.cacheStreak();
 
 
 <template>
+    
     <RouterLink :to="{ name: 'Profile' }" class="cursor-pointer">
         <div class="w-full h-50 md:h-70 bg-secondary rounded-lg flex flex-col">
             <div class="w-full bg-secondary h-2/3 bg-contain bg-repeat rounded-t-lg"

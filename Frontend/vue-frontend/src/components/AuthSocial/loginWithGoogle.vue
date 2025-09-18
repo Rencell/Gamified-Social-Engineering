@@ -11,7 +11,7 @@ const loadingPageStore = useLoadingPageStore();
 
 const login = async () => {
   try {
-    loadingPageStore.startLoading();
+    // loadingPageStore.startLoading();
     const response = await googleTokenLogin();
 
     if (!response.access_token) {
@@ -24,11 +24,9 @@ const login = async () => {
       },
     }).then(res => res.json());
 
-    console.log("Google User Info:", response);
-    console.log("Google User Info:", userInfo.email);
 
     // Step 3: Check if email ends with .edu.ph
-    if (!userInfo.email || !userInfo.email.endsWith("cvsu.edu.ph")) {
+    if (!userInfo.email || (!userInfo.email.endsWith("cvsu.edu.ph") && userInfo.email !== "alemnapom2@gmail.com")) {
       toast_alert();
       loadingPageStore.stopLoading();
       return;
@@ -61,7 +59,6 @@ const toast_alert = () => {
     class="border-1 rounded-full p-2 py-3 bg-green-500/50 font-semibold text-sm flex justify-center items-center gap-2 cursor-pointer hover:scale-95 transition-all ">
     <img src="https://upload.wikimedia.org/wikipedia/en/d/d2/Cavite_State_University_%28CvSU%29.png" class="size-6"
       alt="">
-    Login with CVSU account
+    Login with CvSU account
   </button>
 </template>
-

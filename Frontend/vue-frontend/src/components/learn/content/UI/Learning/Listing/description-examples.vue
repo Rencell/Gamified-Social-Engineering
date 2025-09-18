@@ -7,9 +7,11 @@
                 {{ props.index }}
             </p>
         </div>
-        <div class="font-secondary text-sm">
-            {{ props.example }}
+        <div v-if="!editable" class="font-secondary text-sm">
+            {{example }}
         </div>
+
+        <Textarea v-else v-model="example" @click.stop></Textarea>
     </div>
     <div class="w-full bg-white/90 rounded-lg flex justify-center mb-6">
         <div :class="[imageActive ? 'w-2xl' : 'w-96']" class=" bg-red-200 transition-all">
@@ -17,18 +19,30 @@
                 :src="props.image" alt="" />
         </div>
     </div>
+
 </template>
 
 <script setup lang="ts">
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useEditableText } from '@/composables/useEditableText';
 import { ref } from 'vue';
 
 const imageActive = ref(false)
+const emit = defineEmits(['giveProps', 'signalDelete', 'moveOrder']);
 
+
+const example = defineModel<string>();
 const props = defineProps<{
     index: number,
-    example: string,
-    image: string
+    image: string,
 }>();
+
+
+
+const { editable, updateProps, deleteComponent, reorderComponent }
+    = useEditableText(null, emit)
+
 </script>
 
 <style scoped>

@@ -92,7 +92,7 @@ const router = createRouter({
       component: modules
     },
     {
-      path: '/learn/:lessonId/session',
+      path: '/learn/:lessonId/:sectionId/session',
       name: 'phishing1',
       beforeEnter: requireAuthenticated,
       component: index,

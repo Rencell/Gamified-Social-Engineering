@@ -4,7 +4,7 @@ import { ref } from 'vue'
 export const useLoadingPageStore = defineStore('pageLoading', () => {
   // State
   const isLoading = ref(false)
-
+  const count = ref(0)
   // Actions
 
   const startLoading = () => {
@@ -19,5 +19,6 @@ export const useLoadingPageStore = defineStore('pageLoading', () => {
     isLoading,
     startLoading,
     stopLoading,
+    count
   }
 })

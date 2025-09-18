@@ -30,6 +30,7 @@ export const useAuthStore = defineStore('auth', () => {
     exp: 0,
     coin: 0,
     level: 1,
+    is_admin: false,
   }) 
 
   watch(
@@ -82,38 +83,36 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const init = async () => {
-    console.log("init1")
     if (User.value.username !== 'testuser') {
       return
     }
     
-    console.log("init2")
-    if (!isAuthenticated.value) {
+    if (!isAuthenticatedCheck()) {
       clearUser()
     }
-    console.log("init3")
     try {
       const token = actionStates.token
       if (token) MUTATIONS.SET_TOKEN(token)
       await refreshUser()
-      console.log("init4")
     } catch (error) {
       console.warn('Failed to fetch current user, using fallback:', error)
       MUTATIONS.REMOVE_TOKEN()
-      clearUser()
+      // clearUser()
     }
   }
 
   const refreshUser = async () => {
     const userRes = await AuthService.getUser()
     const rewardRes = await RewardService.user_stats(userRes.data.pk)
-
+    
     User.value = {
       ...userRes.data,
       exp: rewardRes.exp,
       coin: rewardRes.coins,
       level: rewardRes.level,
+      // role: 'admin',
     }
+     
   }
 
   const registration = async (payload: Register) => {
@@ -175,15 +174,13 @@ export const useAuthStore = defineStore('auth', () => {
   ) => {
     try{
       const res = await AuthService.loginGoogle({access_token: response})
-      console.log("was here", res.data.key)
-      console.log("res", res)
+      
       if(res.data.key){
         console.log(res.data.key)
         MUTATIONS.SET_TOKEN(res.data.key)
         MUTATIONS.LOGIN_SUCCESS(router, route)
         console.log(await AuthService.getUser())
         await init()
-        console.log(res.data.key)
       }
     }catch(error){
       console.error('Login failed:', error)

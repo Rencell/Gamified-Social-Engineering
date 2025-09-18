@@ -1,5 +1,4 @@
 <template>
-
   <QuizIntro v-if="quizIntro"
    @start-quiz="toggleStart" 
    :QuizIntro="introMeta" />
@@ -16,10 +15,13 @@
       :totalExp="totalExp"
       :totalCoin="totalCoin"
       :reward-state="rewardState"
+      :timeSpent="timeSpent "
+      :attempts="totalAttempts"
       @retryQuiz="resetQuiz" 
       @nextLesson="nextLesson"
       v-model:toggleCoin="showReward"
        />
+
   </template>
 </template>
 
@@ -37,13 +39,17 @@ import matching from '/Learning/QuizType/MatchingType.webp'
 import ScenarioTraining from '/Learning/QuizType/ScenarioTraining.png'
 import DragPair from '/Learning/QuizType/DragPair.png'
 import DoDont from '/Learning/QuizType/DoDont.png'
+import MultipleChoice from '/Learning/QuizType/MultipleChoice.png'
 import GuessTactics from '/Learning/QuizType/GuessTactics.svg'
 import TwoImage from '/Learning/QuizType/TwoImage.png'
 import { shuffle } from '@/composables/shuffleData';
+import { useModuleStore } from '@/stores/module';
+import { useContentStore } from '@/stores/content';
 
 interface QuizProps {
   quizComponent: any;
   questions: any[];
+  quizLimit?: number;
 }
 const props = defineProps<QuizProps>();
 
@@ -51,6 +57,7 @@ const props = defineProps<QuizProps>();
 const emit = defineEmits(['completeModule', 'showDown']);
 
 // Stores
+const moduleStore = useModuleStore();
 const learningStore = useLearningStore();
 const rewardStore = useRewardStore();
 const authStore = useAuthStore();
@@ -64,10 +71,13 @@ const showReward = ref(false)
 const totalExp = ref(0)
 const totalCoin = ref(0)
 const rewardState = ref('reward')
-
+const timeSpent = ref(0)
+const totalAttempts = ref(0)
+const currentQuizId = ref<number | null>(null)
 //  Cached Values
-const total_questions = ref(props.questions.length)
-const shuffleQuestions = ref(props.questions)
+const natural_questions = ref(props.questions)
+const shuffleQuestions = ref(shuffle(natural_questions.value).slice(0, props.quizLimit))
+const total_questions = ref(shuffleQuestions.value.length)
 const max_score = ref(0)
 
 const introMeta = computed(() => {
@@ -89,13 +99,13 @@ const introMeta = computed(() => {
     },
     ScenarioTraining: { 
       title: 'Scenario Training Quiz', 
-      description: 'Let us see how well you can identify the social engineering attacks in this scenario.',
+      description: 'Let us see how well you can identify these scenarios.',
       image: ScenarioTraining 
     },
     MultipleChoice: { 
-      title: 'Final Test', 
-      description: 'Let us see how well you can identify the social engineering attacks in this scenario.',
-      image: matching
+      title: 'Multiple Choice', 
+      description: 'Select the correct answer from the options provided.',
+      image: MultipleChoice
     },
     PhishingTactics: { 
       title: 'Guess the Tactic', 
@@ -113,20 +123,30 @@ const introMeta = computed(() => {
 
 
 /* ---------------------------------------------------------- core handlers */
-async function onFinish(finalScore: number) {
+async function onFinish(finalScore: number, time_spent?: number) {
+
   score.value         = finalScore
   quizCompleted.value = true
   showReward.value    = false
-  emit('completeModule', false)
+  timeSpent.value     = (60 * 10) - (time_spent ?? 0)
+
+  if(useContentStore().contentItems.pass_rate! > (score.value / total_questions.value * 100)) {
+    alert(1)
+    alert('You did not pass the quiz. Please try again.')
+    quizCompleted.value = true
+    rewardState.value = 'no-reward'
+    return;
+  }
 
   // Only award when the user improved their score
-  
   const prevScore = await previousScore();
   if (finalScore > prevScore) {
     await saveQuizResult();
     rewardState.value = 'reward';
   } else {
-    rewardState.value = finalScore === prevScore ? 'no-reward' : rewardState.value;
+    await updateAttempts();
+    // rewardState.value = finalScore === prevScore ? 'no-reward' : rewardState.value;
+    rewardState.value = 'no-reward'
   }
 
   if(await previousScore() === total_questions.value){
@@ -138,9 +158,10 @@ const resetQuiz = () => {
   max_score.value = score.value
   score.value = 0
 }
-const nextLesson = () => {
-  learningStore.activateModuleInteraction();
-  learningStore.nextModule();
+const nextLesson = async() => {
+  await moduleStore.completeModule();
+  moduleStore.nextModule();
+  
 }
 
 const toggleStart = () => {
@@ -152,28 +173,47 @@ let cachedPreviousScore: number | undefined
 async function previousScore() {
   if (cachedPreviousScore !== undefined) return cachedPreviousScore
   const { pk: userId } = authStore.User.pk
-  const moduleOrder    = learningStore.selectedModule?.module_order ?? 0
+  const moduleOrder    = moduleStore.selectedModule?.id ?? 0
 
   try {
     const res = await QuizService.get_by_user_and_module(userId, moduleOrder)
     if(res){ 
       quizIntro.value = false;
     }
+    timeSpent.value = res?.time_spent
+    totalAttempts.value = res?.attempt_number
     cachedPreviousScore = res?.score ?? 0
+    currentQuizId.value = res?.id ?? null
   } catch {
     cachedPreviousScore = 0
   }
   return cachedPreviousScore
 }
 
+const updateAttempts = async () => {
+  try {
+    await QuizService.patch(currentQuizId.value!, {
+      attempt_number: totalAttempts.value + 1
+    });
+    totalAttempts.value += 1
+  } catch (error) {
+    console.error('Failed to update attempts:', error);
+  }
+}
+
 const saveQuizResult = async () => {
   try {
     await QuizService.create_quiz({
+      id:0,
       score:            score.value,
       user:             authStore.User.pk,
-      module:           learningStore.selectedModule?.module_order ?? 0,
+      module:           moduleStore.selectedModule?.id ?? 0,
       total_questions:  total_questions.value,
+      time_spent:       timeSpent.value, // Calculate time spent  
+      attempt_number:   (totalAttempts.value === 0 ? 1 : totalAttempts.value + 1),
+      accuracy:         (score.value / total_questions.value) * 100,
     });
+    totalAttempts.value += 1
   } catch (error) {
     console.error('Failed to create quiz:', error);
   }
@@ -195,10 +235,8 @@ onMounted(async () => {
   // If this is a “final” module, skip intro immediately
 
   if (props.quizComponent.name === 'ScenarioTraining') {
-    shuffleQuestions.value = props.questions; // Do not shuffle
-  } else {
-    shuffleQuestions.value = shuffle(props.questions); // Shuffle for other quiz types
-  }
+    shuffleQuestions.value = natural_questions.value; // Do not shuffle
+  } else 
 
   if (learningStore.selectedModule?.final) {
     quizIntro.value = false;

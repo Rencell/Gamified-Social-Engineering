@@ -4,6 +4,7 @@ import type { ScenarioStep } from '@/components/learn/QuizUI/ScenarioTraining/ty
 import Story from './story.vue'
 import { computed, ref } from 'vue';
 import ScenarioMCQ from './scenarioMCQ.vue'
+import Timer from '../timer.vue'
 
 defineOptions({
   name: "ScenarioTraining"
@@ -15,6 +16,7 @@ const props = defineProps<{
     questions: ScenarioStep[];
 }>();
 
+const timerRef = ref<InstanceType<typeof Timer> | null>(null);
 const currentIndex = ref(0);
 const currentScenario = computed(() =>props.questions[currentIndex.value]);
 
@@ -22,7 +24,7 @@ const toggleNext = () => {
     if (currentIndex.value < props.questions.length - 1) {
         currentIndex.value++;
     } else {
-        finish();
+        finish(timerRef.value?.timeLeft || 0);
     }
 }
 const togglePrev = () => {
@@ -31,8 +33,8 @@ const togglePrev = () => {
     }
 }
 const score = ref(0);
-const finish = () => {
-    emit('finish', score.value + storyCount.value);
+const finish = ($event: number) => {
+    emit('finish', score.value + storyCount.value, $event);
 }
 
 const storyCount = computed(() =>
@@ -42,6 +44,7 @@ const storyCount = computed(() =>
 </script>
 <template>
     <LearningContent>
+        <Timer class="w-xl" ref="timerRef" @time-up="finish($event)"/>
         <Story v-if="currentScenario.type == 'story'" 
         :key="currentIndex"
         :data="currentScenario"

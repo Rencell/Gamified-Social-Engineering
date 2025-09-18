@@ -5,7 +5,7 @@ import Typewriter from '@/components/ui/typewriter/Typewriter.vue';
 import { Card } from '@/components/ui/card/';
 import { Button } from '@/components/ui/button';
 import LearningImage from '../../content/UI/Learning/Image/LearningImage.vue';
-
+import { useImageUrl } from '@/composables/useImageUrl';
 
 const props = defineProps<{
     Question: MultipleChoice;
@@ -79,18 +79,19 @@ const getCircleClass = (id: string) => {
 
 
 <template>
-    <div class="max-w-3xl w-full space-y-8">
+    <div class="max-w-3xl w-full mt-auto space-y-8">
 
         <!-- Icon Section -->
+        
         <div class="flex items-center justify-center space-x-4 mb-6 ">
-            <LearningImage :image="currentQuestion.image" />
+            <LearningImage :image="useImageUrl(currentQuestion.image) as string" />
         </div>
 
-        <!-- Question -->
         <div class="w-full h-10">
             <div class="text-2xl font-semibold mb-2 font-sans">
                 <Typewriter :text="currentQuestion.question" @animationEnd="onAnimationEnd" :delay="30" />
             </div>
+            
         </div>
 
         <!-- Options -->

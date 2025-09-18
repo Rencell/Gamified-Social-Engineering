@@ -16,19 +16,24 @@ class QuizProgressViewSet(viewsets.ModelViewSet):
         module = request.data.get('module')
         score = request.data.get('score')
         total_questions = request.data.get('total_questions')
-
+        time_spent = request.data.get('time_spent')
+        attempt_number = request.data.get('attempt_number')
+        accuracy = request.data.get('accuracy')
+        
         obj = QuizProgress.objects.filter(user_id=user, module_id=module).first()
         if obj:
             if int(score) > obj.score:
                 obj.score = score
                 obj.total_questions = total_questions
+                obj.time_spent = time_spent
+                obj.attempt_number = attempt_number
+                obj.accuracy = accuracy
                 obj.save()
                 created = False
             else:
                 created = False
         else:
-            obj = QuizProgress.objects.create(user_id=user, module_id=module, score=score, total_questions=total_questions)
-            created = True
+            obj, created = QuizProgress.objects.get_or_create(user_id=user, module_id=module, defaults={'score': score, 'total_questions': total_questions, 'time_spent': time_spent, 'attempt_number': attempt_number, 'accuracy': accuracy})
 
         serializer = self.get_serializer(obj)
 
@@ -49,3 +54,28 @@ class QuizProgressViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(obj)
             return Response(serializer.data)
         return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND) 
+    
+    
+    @action(detail=False, methods=['post'], url_path='process-ids')
+    def process_ids(self, request):
+        user = request.user
+        ids = request.data.get('ids')
+        if not isinstance(ids, list) or not all(isinstance(i, int) for i in ids):
+            return Response(
+                {'detail': 'A list of integer IDs must be provided.'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Example processing: filter objects by these ids
+        objs = QuizProgress.objects.filter(user=user, module__in=ids)
+        
+       
+        # Calculate percentage for each object
+        data = []
+        for obj in objs:
+            percentage = (obj.score / obj.total_questions) * 100 if obj.total_questions > 0 else 0
+            serialized_obj = QuizProgressSerializer(obj).data
+            serialized_obj['percentage'] = percentage
+            data.append(serialized_obj)
+        
+        return Response(data, status=status.HTTP_200_OK)

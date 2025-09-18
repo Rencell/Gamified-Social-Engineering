@@ -15,10 +15,11 @@
       <!-- Progress circle -->
       <svg class="absolute top-0 left-0 w-full h-full" viewBox="0 0 36 36">
         <circle
-          class="stroke-current text-blue-500 dark:text-white transition-all duration-300"
+          class="stroke-current transition-all duration-300"
+          :class="progress === 100 ? 'text-accent' : 'text-white'"
           stroke-width="4"
           :stroke-dasharray="circumference"
-          :stroke-dashoffset="dashOffset"
+          :stroke-dashoffset="dashOffset + 1"
           stroke-linecap="round"
           fill="none"
           cx="18"
@@ -29,8 +30,9 @@
       </svg>
   
       <!-- Center Text -->
-      <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center text-xs font-medium text-slate-800 dark:text-white">
-        {{ progress }}%
+      <div class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center text-xs font-medium text-slate-800 dark:text-white">
+          <p v-text="props.text" class="text-xl font-bold"></p>
+          <p v-if="props.text">Score</p>
       </div>
     </div>
   </template>
@@ -40,9 +42,9 @@
   
   interface Props {
     progress: number // percent (0–100)
-    size?: 'sm' | 'md' | 'lg'
+    size?: 'sm' | 'md' | 'lg' | 'xl'  // default is 'md'
+    text?: string // text to display in the center
   }
-  
   const props = defineProps<Props>()
   
   const radius = 16
@@ -58,6 +60,8 @@
         return 'w-6 h-6'
       case 'lg':
         return 'w-12 h-12'
+      case 'xl':
+        return 'w-30 h-30'
       default:
         return 'w-8 h-8'
     }

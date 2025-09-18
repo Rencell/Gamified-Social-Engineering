@@ -1,8 +1,8 @@
 <template>
 
     <LearningContent>
-        <LearningImage :image="content1_asset" />
         <LearningSection>
+            <LearningImage :image="content1_asset" />
 
             <LearningHeader>
                 <LearningSpan>Tips</LearningSpan> : Ask yourself these questions

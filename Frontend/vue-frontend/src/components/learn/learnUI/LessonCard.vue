@@ -52,15 +52,15 @@ const showLocked = ref(false);
                     <p class="font-extrabold text-xl">Section {{ index }}: {{ title }}</p>
                    
                     <div v-if="!locked">
-                        <LearnProgress v-if="isLatest" :model-value="20" :tongue-color="props.bg"
+                        <LearnProgress :model-value="progress" :tongue-color="props.bg"
                             :module-count="moduleCount" :isLatest="isLatest" position="left">
                         </LearnProgress>
 
-                        <div v-else class="flex items-center gap-3 ">
+                        <!-- <div v-else class="flex items-center gap-3 ">
 
                             <CircleCheck class="text-green-400 fill-slate-500" />
                             <p class="font-bold text-primary opacity-70">COMPLETED!</p>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div v-else>
@@ -78,7 +78,7 @@ const showLocked = ref(false);
                     class="text-background text-sm rounded-xl h-13 font-sans font-bold border-b-4 border-x-1 border-ternary/50"
                     :class="[isLatest ? 'bg-primary hover:border-b-1' : 'bg-[#dc9e3a] hover:bg-[#dc9e3a]/70 hover:border-b-1', `text-[${props.bg}]`]"
                     :style="{ color: isLatest ? props.bg : 'white' }">
-                    {{ isLatest ? 'CONTINUE' : 'REVIEW' }}
+                    CONTINUE
                 </Button>
                 <Button v-else
                     class="bg-ternary text-background text-sm rounded-xl h-13 font-sans font-bold border-b-4 border-x-1 border-secondary">

@@ -3,7 +3,7 @@
       <div class="flex-1 max-w-xl mx-auto">
         <Progress class="h-5" bg="bg-yellow-500" :model-value="(timeLeft / totalTime) * 100"></Progress>
         <p class="text-center text-sm mt-3">
-          Time Left: {{ timeLeft }}s
+            Time Left: {{ Math.floor(timeLeft / 60) }}:{{ String(timeLeft % 60).padStart(2, '0') }}
         </p>
       </div>
     </div>
@@ -13,7 +13,7 @@
 import { Progress } from '@/components/ui/progress';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-const totalTime = 60; 
+const totalTime = 60 * 10; 
 const timeLeft = ref(totalTime);
 let timer:  number | null = null;
 
@@ -31,12 +31,16 @@ onMounted(() => {
 
 const toggleFinish = () => {
     clearInterval(timer!);
-    emit('timeUp');
+    emit('timeUp', timeLeft.value);
 }
 
 onBeforeUnmount(() => {
   if (timer) {
     clearInterval(timer); // Clear the timer when the component is unmounted
   }
+});
+
+defineExpose({
+  timeLeft,
 });
 </script>

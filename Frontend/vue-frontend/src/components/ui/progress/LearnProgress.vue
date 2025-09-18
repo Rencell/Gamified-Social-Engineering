@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 import { Trophy } from 'lucide-vue-next';
 
 import book from '/Learning/book.png'
-import { useLearningStore } from '@/stores/learning';
+import { useLessonStore } from '@/stores/lesson';
 
 const props = withDefaults(
   defineProps<ProgressRootProps & {
@@ -27,9 +27,8 @@ const props = withDefaults(
     position: ''
   },
 )
-const learningStore = useLearningStore();
 const delegatedProps = reactiveOmit(props, 'class')
-const UnlockedModules = computed(() => learningStore.latestModuleUnlockedCount);
+const UnlockedModules = computed(() => props.modelValue || 0);
 
 const bg = 'bg-violet-500'
 </script>

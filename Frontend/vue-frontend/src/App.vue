@@ -25,6 +25,7 @@ onMounted(async() => {
 </script>
 
 <template>
+  
   <Toaster />
 
   <DayStreak :is-open="streakStore.openStreakModal" :onClose="streakStore.closeStreakModal"/>
