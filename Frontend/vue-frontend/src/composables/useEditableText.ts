@@ -14,7 +14,6 @@ export function useEditableText(
   const updateProps = ($event: any) => {
     my_text.value = $event // Merge the updated properties
     console.log('Updated text:', $event)
-    alert(1)
     emit('giveProps', $event) // Emit the updated text to the parent
   }
 

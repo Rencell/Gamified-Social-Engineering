@@ -14,6 +14,7 @@ import CreateSectionDialog from '@/components/learn/dialog/Lesson/Section/create
 import type { Section } from '@/services/sectionService';
 import SectionDivider from '@/components/learn/learnUI/SectionDivider.vue'
 import moduleService from '@/services/moduleService';
+import { useAuthStore } from '@/stores/auth';
 
 
 const moduleStore   = useModuleStore();
@@ -75,6 +76,7 @@ onMounted(async () => {
 
 
 const isFinalLocked = (section: Section) => {
+   
     const nonFinal = section.modules.filter(m => !m.final)
     const anyUnlocked = nonFinal.every(m => m.locked === false)
 
@@ -129,7 +131,7 @@ get_all_modules();
                             :module="module" :title="module.title"
                             :router-link="`/learn/${lessonId}/${section.id}/session`" :interactive="!module.locked"
                             @click="moduleStore.setSelectedModule(module)"
-                            :locked-index="module.final ? !isFinalLocked(section) : false"
+                            :locked-index="!lessonStore.currentLesson?.locked ? (module.final ? !isFinalLocked(section) : false) : !useAuthStore().User.is_admin"
                             :quiz-status="quizzes_progress?.find(q => q.module === module.id)"
                             :quiz-progress="module.accuracy" />
                     </div>

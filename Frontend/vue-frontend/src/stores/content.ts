@@ -47,7 +47,6 @@ export const useContentStore = defineStore('Content', () => {
       await ContentService.update_quiz(contentItems.value.id, contentItems.value)
       alert('Quiz updated successfully!')
     } catch (error) {
-      alert(1)
       console.error('Error updating quiz content:', error)
     }
   }

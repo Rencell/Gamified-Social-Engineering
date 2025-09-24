@@ -33,6 +33,12 @@ function addOption() {
     const nextId = String.fromCharCode(97 + currentQuestion.value.options.length); // Generate 'a', 'b', 'c', etc.
     currentQuestion.value.options.push({ id: nextId, text: '' });
 }
+
+function removeOption(id: string) {
+    if (currentQuestion.value.options.length > 2) {
+        currentQuestion.value.options = currentQuestion.value.options.filter((option: { id: string; }) => option.id !== id);
+    }
+}
 </script>
 
 <template>
@@ -130,7 +136,7 @@ function addOption() {
                             </template>
                         </Button>
 
-                        <Button v-if="currentQuestion.options.length > 2" variant="outline" size="sm"
+                        <Button v-if="currentQuestion.options.length > 2" @click="removeOption(option.id)" variant="outline" size="sm"
                              class="text-destructive hover:text-destructive">
                             <Trash2 class="h-4 w-4" />
                         </Button>
@@ -167,7 +173,6 @@ function addOption() {
                 
             </Card>
 
-            {{ currentQuestion }}
         </div>
 
 </template>

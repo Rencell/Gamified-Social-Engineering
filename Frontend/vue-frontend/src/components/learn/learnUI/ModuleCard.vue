@@ -12,6 +12,7 @@ import ModuleViewDialog from '../dialog/Lesson/Section/Module/moduleViewDialog.v
 import { useLoadingPageStore } from '@/stores/pageLoading';
 import Badge from '@/components/ui/badge/Badge.vue';
 import type { Quiz } from '@/services/quizService';
+import { useAuthStore } from '@/stores/auth';
 
 
 const props = defineProps({
@@ -76,7 +77,7 @@ const formatTime = (time: number | undefined): string => {
         <div class="grow my-2 p-2 flex items-center rounded-xl bg-secondary gap-6">
 
             <div class="flex items-center justify-center pl-5 space-x-3">
-                <div class="p-1 px-2 rounded-full flex items-center "
+                <div v-if="useAuthStore().User.is_admin" class="p-1 px-2 rounded-full flex items-center "
                     :class="!showSettings ? 'bg-ternary' : 'bg-secondary'">
                     <Button @click="showSettings = !showSettings" size="sm" variant="ghost">
                         <SquarePen class="size-4" />

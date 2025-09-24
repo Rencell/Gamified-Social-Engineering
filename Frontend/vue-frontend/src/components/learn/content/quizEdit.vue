@@ -40,7 +40,6 @@ function changeQuizType(newType: QuizType) {
 </script>
 
 <template>
-    
     <component v-if="!editable && quizType === 'ModuleReward'" :is="quizComponent" />
     
     <FinalQuizFlowShell v-else-if="!editable && quizType === 'FinalTest'" :quiz-component="quizComponent" :questions="questions" />

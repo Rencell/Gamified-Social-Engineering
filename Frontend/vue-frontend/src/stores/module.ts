@@ -137,6 +137,7 @@ export const useModuleStore = defineStore('Module', () => {
     if (!mod) return
     const lesson = lessonStore.lessons?.find((l) => l.id === mod.unlocks_lesson)
     try {
+      streakStore.postStreak()
       mod.locked = false
       console.log('Completing module:', mod)
       await unlockModule()

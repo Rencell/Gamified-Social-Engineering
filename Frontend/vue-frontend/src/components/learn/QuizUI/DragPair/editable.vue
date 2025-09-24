@@ -87,6 +87,25 @@ function setCorrectAnswer(id: string) {
                     </div>
                 </CardContent>
             </Card>
+
+            <Card class="bg-background">
+                <CardHeader>
+                    <CardTitle class="flex items-center gap-2">
+                       Feedbaack
+                        <Badge variant="secondary" class="text-xs">
+                            Required
+                        </Badge>
+                    </CardTitle>
+                </CardHeader>
+                <CardContent class="space-y-4">
+                   <div>
+                        <label class="text-sm font-medium text-foreground mb-2 block">Explanation</label>
+                        <Textarea placeholder="Enter your question here..." v-model="quizData.feedback"
+                            class="min-h-[100px] resize-none" />
+                    </div>
+                </CardContent>
+            </Card>
+
         </div>
 
         <!-- Sidebar -->

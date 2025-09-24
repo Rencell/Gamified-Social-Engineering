@@ -56,9 +56,9 @@ function addFinalQuestion(finalQuizType: keyof FinalTestProps)   {
 } 
 
 function changeQuestionType(newType: QuizType) {
-    if (newType === 'Scenario'){ 
+    if (newType === 'ScenarioTraining'){ 
         Question.value.type = newType;
-        Question.value.props = [defaultPropsMap['Scenario'].Story as any];
+        Question.value.props = [defaultPropsMap['ScenarioTraining'].Story as any];
     }
     else{
         Question.value.type = newType;
