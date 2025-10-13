@@ -37,13 +37,11 @@ defineEmits(['toggleOnCreateQuestion', 'toggleOnDeleteQuestion', 'toggleOnCreate
 
         <!-- Sidebar -->
         <SidebarEdittable
+            :propsMap="null"
             :questions="props.questions"
             :currentIndex="currentIndex"
             :isFinal="true"
             @update:currentIndex="currentIndex = $event"
-            @toggleOnCreateQuestion="$emit('toggleOnCreateQuestion')"
-            @toggleOnCreateFinalQuestion="$emit('toggleOnCreateFinalQuestion', $event)"
-            @toggleOnDeleteQuestion="$emit('toggleOnDeleteQuestion', $event)"
         />
     </div>
 </template>

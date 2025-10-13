@@ -29,22 +29,36 @@ function deleteQuestion(index: number) {
         alert("You must have at least one question.");
         return;
     }
+
+    if (props.currentIndex === index) {
+        emit('update:currentIndex', Math.max(0, index - 1));
+    } else if (props.currentIndex > index) {
+        emit('update:currentIndex', 0);
+    }
+
     editQuestion.value.splice(index, 1);
 }
 
 const addStory = () => {
     editQuestion.value.push(defaultScenarioProps.Story)
+    if(props.questions.length <= 10) {
+        contentStore.contentItems.quiz_limit = props.questions.length;
+    }
 }
 
 const addMCQ = () => {
     editQuestion.value.push(defaultScenarioProps.MCQ)
+    if(props.questions.length <= 10) {
+        contentStore.contentItems.quiz_limit = props.questions.length;
+    }
 }
 const checkbox = ref(true);
+
 const isQuizLimitInvalid = computed(() => {
     return (contentStore.contentItems.quiz_limit ?? 0) > props.questions.length;
 });
-</script>
 
+</script>
 
 <template>
     <div>

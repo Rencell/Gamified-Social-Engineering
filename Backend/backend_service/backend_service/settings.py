@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'app_daily',
     'app_contents',
     'app_section',
+    'gophish',
     'rest_framework',
     'rest_framework.authtoken',
     

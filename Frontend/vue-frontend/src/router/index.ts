@@ -14,6 +14,8 @@ import LeaderboardView from '@/views/LeaderboardView.vue'
 import MiniGameView from '@/views/MiniGameView.vue'
 import MiniGameViewDetailed from '@/views/MiniGame/MiniGameDetailed.vue'
 import settingsView from '@/views/settingsView.vue'
+import EmailSimulationView from '@/views/Simulation/EmailSimulationView.vue'
+
 import { requireAuthenticated, redirectLogout } from './guards'
 import { useLoadingPageStore } from '@/stores/pageLoading'
 import { set } from '@vueuse/core'
@@ -123,6 +125,12 @@ const router = createRouter({
       component: SuccessVerify,
       meta: { layout: 'fullscreen' }
     },
+    {
+      path: '/simulation',
+      name: 'simulation',
+      beforeEnter: requireAuthenticated,
+      component: EmailSimulationView,
+    }
   ],
 })
 

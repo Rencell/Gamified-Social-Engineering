@@ -7,19 +7,8 @@ import { inject } from 'vue';
 import EditableCard from '../EditableCard.vue'
 import { useEditableText } from '@/composables/useEditableText';
 import type { Content } from '@/services/contentService';
+import type { LearningType } from '../../learningRegistry';
 
-type LearningType =
-  "LearningSection"
-  | "LearningHeader"
-  | "LearningBody"
-  | "LearningList"
-  | "LearningListItem"
-  | "LearningQuote"
-  | "InteractiveMCQ"
-  | "LearningImage2"
-  | "FlippingCard"
-  | "DescriptionList"
-  ;
 
 const emit = defineEmits(['signalDelete', "addComponent"]);
 
@@ -40,6 +29,7 @@ const componentOptions: { type: LearningType; label: string }[] = [
   { type: 'InteractiveMCQ', label: 'Interactive' },
   { type: 'LearningImage2', label: 'Image' },
   { type: 'FlippingCard', label: 'Flipping Card' },
+  { type: 'TwoImage', label: 'Two Image' },
   { type: 'DescriptionList', label: 'Description List' },
 ];
 

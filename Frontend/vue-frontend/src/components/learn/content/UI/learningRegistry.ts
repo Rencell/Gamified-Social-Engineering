@@ -14,6 +14,7 @@ export type LearningType =
   | "LearningImage2"
   | "FlippingCard"
   | "DescriptionList"
+  | "TwoImage"
 ;
 // Component Map
 export const componentMap: Record<LearningType, Component> = {
@@ -28,6 +29,8 @@ export const componentMap: Record<LearningType, Component> = {
   // Interactive
   InteractiveMCQ: defineAsyncComponent(() => import('../UI/Interactive/InteractiveMCQ.vue')),
   FlippingCard: defineAsyncComponent(() => import('../UI/Interactive/FlippingCard.vue')),
+  TwoImage: defineAsyncComponent(() => import('../UI/Interactive/TwoImage.vue')),
+  // Listing
   DescriptionList: defineAsyncComponent(() => import('../UI/Learning/Listing/description-list.vue')),
 };
 export interface MCQOption {
@@ -46,6 +49,14 @@ export type DefaultProps = {
   InteractiveMCQ: { question: string; options: MCQOption[]; answer: string };
   LearningImage2: { image: string };
   FlippingCard: { data: [{ front: string; back: string }] };
+  TwoImage: { data: { Question: string;
+    image1: string;
+    image2: string;
+    answer?: 'image1' | 'image2';
+    explanation?: string;
+    positionLeft?: boolean; } 
+  };
+  
   DescriptionList: {data: [{
     heading: string;
     subheading: string;
@@ -71,6 +82,7 @@ export const defaultPropsMap: DefaultProps = {
   InteractiveMCQ: { question: "New Question", options: [{ id: "A", text: "Option 1" }, { id: "B", text: "Option 2" }], answer: "A" },
   LearningImage2: { image: "/media/content_images/WIN_20250827_21_25_06_Pro.jpg" },
   FlippingCard: { data: [{ front: "Front Side", back: "Back Side" }] },
+  TwoImage: { data: { Question: "New Question", image1: "Image1.jpg", image2: "Image2.jpg", answer: 'image1', explanation: 'explain', positionLeft: true } },
   DescriptionList: { data: [{
     heading: "New Heading",
     subheading: "New Subheading",

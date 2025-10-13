@@ -1,22 +1,26 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, computed } from 'vue';
+import { defineProps, defineEmits, ref, computed, watch, onMounted } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trash2, Plus } from 'lucide-vue-next';
 import { useContentStore } from '@/stores/content';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { defaultFinalTestProps, type FinalTestProps, defaultPropsMap } from './QuizRegistry';
 
 const contentStore = useContentStore();
 // Props to receive the questions and current index
 const props = defineProps<{
     questions: any[];
+    propsMap: any;
     currentIndex: number;
     isFinal?: boolean;
 }>();
 
+const editQuestion = computed(() => props.questions);
+
 // Emits to handle events
-const emit = defineEmits(['update:currentIndex', 'toggleOnCreateQuestion', 'toggleOnDeleteQuestion', 'toggleOnCreateFinalQuestion']);
+const emit = defineEmits(['update:currentIndex']);
 
 // Function to handle question selection
 function selectQuestion(index: number) {
@@ -29,11 +33,39 @@ function deleteQuestion(index: number) {
         alert("You must have at least one question.");
         return;
     }
-    emit('toggleOnDeleteQuestion', index);
+
+    if (props.currentIndex === index) {
+        emit('update:currentIndex', Math.max(0, index - 1));
+    } else if (props.currentIndex > index) {
+        emit('update:currentIndex', 0);
+    }
+
+    editQuestion.value.splice(index, 1);
 }
+
+function addQuestion() {
+    const newDragPair = JSON.parse(JSON.stringify(props.propsMap));
+    editQuestion.value.push(newDragPair);
+    if(props.questions.length <= 10) {
+        contentStore.contentItems.quiz_limit = props.questions.length;
+    }
+}
+
+function finalAddQuestion(type: keyof typeof defaultFinalTestProps) {
+    const newFinalQuestion = JSON.parse(JSON.stringify(defaultFinalTestProps[type]));
+    editQuestion.value.push(newFinalQuestion);
+}
+
 const checkbox = ref(true);
+
 const isQuizLimitInvalid = computed(() => {
     return (contentStore.contentItems.quiz_limit ?? 0) > props.questions.length;
+});
+
+onMounted(() => {
+    if(props.questions.length <= 10) {
+        contentStore.contentItems.quiz_limit = props.questions.length;
+    }
 });
 </script>
 
@@ -64,34 +96,37 @@ const isQuizLimitInvalid = computed(() => {
                         :class="{ 'border-red-500 focus-visible:ring-red-500': (contentStore.contentItems.pass_rate || 1) > 100 }" />
                     %
                 </div>
-                <p v-show="(contentStore.contentItems.pass_rate || 1) > 100" class="text-xs text-red-500">The ideal limit is 0-100%
+                <p v-show="(contentStore.contentItems.pass_rate || 1) > 100" class="text-xs text-red-500">The ideal
+                    limit is 0-100%
                 </p>
-                <div v-for="(value, index) in questions" :key="index" class="space-y-2">
+                <div v-for="(value, index) in editQuestion" :key="index" class="space-y-2">
                     <div class="flex justify-between text-sm hover:bg-ternary/10 rounded-lg cursor-pointer p-1"
                         :class="index === currentIndex ? 'bg-accent/50 font-medium p-2' : ''"
                         @click="selectQuestion(index)">
                         <span class="text-sidebar-foreground">Question #{{ index + 1 }}</span>
                         <Trash2 class="h-4 w-4 text-destructive hover:text-destructive hover:opacity-100"
-                            @click.stop="deleteQuestion(index)" />
+                            @click="deleteQuestion(index)" />
                     </div>
+
                 </div>
-                <Button v-if="!isFinal" variant="outline" size="sm" @click="$emit('toggleOnCreateQuestion')"
+
+                <Button v-if="!isFinal" variant="outline" size="sm" @click="addQuestion"
                     class="gap-2 bg-transparent">
                     <Plus class="h-4 w-4" />
                     Add Question
                 </Button>
                 <div v-else class="flex flex-col gap-2">
-                    <Button variant="outline" size="sm" @click="$emit('toggleOnCreateFinalQuestion', 'MultipleChoice')"
+                    <Button variant="outline" size="sm" @click="finalAddQuestion('MultipleChoice')"
                         class="gap-2 bg-transparent w-full">
                         <Plus class="h-4 w-4" />
                         Add Multiple Choice
                     </Button>
-                    <Button variant="outline" size="sm" @click="$emit('toggleOnCreateFinalQuestion', 'TwoImage')"
+                    <Button variant="outline" size="sm" @click="finalAddQuestion('TwoImage')"
                         class="gap-2 bg-transparent w-full">
                         <Plus class="h-4 w-4" />
                         Add Two Image
                     </Button>
-                    <Button variant="outline" size="sm" @click="$emit('toggleOnCreateFinalQuestion', 'TrueFalse')"
+                    <Button variant="outline" size="sm" @click="finalAddQuestion('TrueFalse')"
                         class="gap-2 bg-transparent w-full">
                         <Plus class="h-4 w-4" />
                         Add True or False

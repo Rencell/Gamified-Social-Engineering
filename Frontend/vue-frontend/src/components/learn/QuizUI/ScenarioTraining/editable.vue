@@ -21,7 +21,7 @@ const currentQuestion = computed(() => props.questions[index.value] || null);
 const changeIndex = (newIndex: number) => {
     index.value = newIndex;
 }
-const emit = defineEmits(['update:questions']);
+// const emit = defineEmits(['update:questions']);
 </script>
 
 <template>
@@ -30,6 +30,9 @@ const emit = defineEmits(['update:questions']);
     <story v-if="currentQuestion.type === 'story'" :question="currentQuestion" :index-number="index" />
     <mcq v-else :question="currentQuestion" />
     <!-- Sidebar -->
-    <SidebarEdittable :questions="props.questions" :current-index="index" @update:current-index="changeIndex" />
+    <SidebarEdittable 
+        :questions="props.questions" 
+        :current-index="index" 
+        @update:current-index="changeIndex" />
 </div>
 </template>

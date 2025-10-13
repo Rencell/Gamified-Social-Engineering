@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import SidebarEdittable from '../SidebarEdittable.vue';
+import { defaultPropsMap } from '../QuizRegistry';
 
 const props = defineProps<{
     questions: any[];
@@ -51,9 +52,8 @@ defineEmits(['toggleOnCreateQuestion', 'toggleOnDeleteQuestion']);
         <SidebarEdittable
             :questions="props.questions"
             :currentIndex="currentIndex"
+            :propsMap="defaultPropsMap.MatchingType"
             @update:currentIndex="currentIndex = $event"
-            @toggleOnCreateQuestion="$emit('toggleOnCreateQuestion')"
-            @toggleOnDeleteQuestion="$emit('toggleOnDeleteQuestion', $event)"
         />
     </div>
 </template>

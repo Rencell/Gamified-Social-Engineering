@@ -18,5 +18,6 @@ urlpatterns = [
     path('api/streak/', include('app_daily.urls')),
     path('api/contents/', include('app_contents.urls')),
     path('api/sections/', include('app_section.urls')),
+    path('api/gophish/', include('gophish.urls')),
     path("accounts/", include("allauth.urls")),
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

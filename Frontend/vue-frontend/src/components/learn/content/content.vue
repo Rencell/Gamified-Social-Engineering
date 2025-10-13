@@ -6,6 +6,7 @@ import { useRoute } from 'vue-router';
 import { useModuleStore } from '@/stores/module';
 import { useLessonStore } from '@/stores/lesson';
 import Quiz from './quiz.vue';
+
 const route = useRoute();
 const moduleStore = useModuleStore();
 const lessonStore = useLessonStore();
@@ -45,6 +46,11 @@ const final = ref({
   id: 9,
   component: Quiz,
 });
+
+// const test = ref({
+//   id: 10,
+//   component: Final,
+// });
 
 const finalpush = computed(() => [...contentStore.components, final.value]);
 </script>

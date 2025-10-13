@@ -36,6 +36,7 @@ class ContentItem(models.Model):
         ('LearningImage2', 'Learning Image2'),
         ('FlippingCard', 'Flipping Card'),
         ('DescriptionList', 'Description List'),
+        ('TwoImage', 'Two Image'),
     ]
 
     type = models.CharField(max_length=50, choices=TYPE_CHOICES)
@@ -58,6 +59,7 @@ class ContentQuiz(models.Model):
         ('MultipleChoice', 'Multiple Choice'),
         ('MatchingType', 'Matching Type'),
         ('DragPair', 'Drag Pair'),
+        ('PhishingTactics', 'Phishing Tactics'),
         ('ModuleReward', 'Module Reward'),
         ('ScenarioTraining', 'Scenario Training'),
         ('FinalTest', 'Final Test'),

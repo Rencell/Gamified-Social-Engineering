@@ -7,15 +7,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { GripVertical, ImageIcon, Plus, Check, Trash2 } from 'lucide-vue-next';
 import { Badge } from '@/components/ui/badge';
 import SidebarEdittable from '../SidebarEdittable.vue';
+import { defaultPropsMap } from '../QuizRegistry';
 
 const props = defineProps<{
     questions: any[];
 }>();
 
 const currentIndex = ref(0);
-const quizData = computed(() => props.questions[currentIndex.value] || null);
+const editQuestion = computed(() => props.questions);
+const quizData = computed(() => editQuestion.value[currentIndex.value] || null);
 
-defineEmits(['toggleOnCreateQuestion', 'toggleOnDeleteQuestion']);
+defineEmits(['toggleOnDeleteQuestion']);
 
 function setCorrectAnswer(id: string) {
     quizData.value.correctAnswer = id;
@@ -107,14 +109,12 @@ function setCorrectAnswer(id: string) {
             </Card>
 
         </div>
-
         <!-- Sidebar -->
         <SidebarEdittable
             :questions="props.questions"
+            :propsMap="defaultPropsMap.DragPair"
             :currentIndex="currentIndex"
             @update:currentIndex="currentIndex = $event"
-            @toggleOnCreateQuestion="$emit('toggleOnCreateQuestion')"
-            @toggleOnDeleteQuestion="$emit('toggleOnDeleteQuestion', $event)"
         />
     </div>
 </template>

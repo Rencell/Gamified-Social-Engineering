@@ -26,7 +26,7 @@ const login = async () => {
 
 
     // Step 3: Check if email ends with .edu.ph
-    if (!userInfo.email || (!userInfo.email.endsWith("cvsu.edu.ph") && userInfo.email !== "alemnapom2@gmail.com")) {
+    if (!userInfo.email || (!userInfo.email.endsWith("cvsu.edu.ph"))) {
       toast_alert();
       loadingPageStore.stopLoading();
       return;
