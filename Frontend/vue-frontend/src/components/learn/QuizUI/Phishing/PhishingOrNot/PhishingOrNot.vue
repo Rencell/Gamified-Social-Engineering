@@ -43,9 +43,9 @@
 <script setup lang="ts">
 import type {PhishingEmailQuestion} from './type';
 import { computed, ref } from 'vue';
-import Phone from './component/phone.vue';
-import Email from './component/email.vue'
-import Options from './common/options.vue'
+import Phone from '../../FInalTest/phone.vue';
+import Email from '../../FInalTest/email.vue'
+import Options from '../../FInalTest/common/options.vue'
 import ResultFooter from './common/resultFooter.vue'
 import ProgressHeader from './common/ProgressHeader.vue'
 

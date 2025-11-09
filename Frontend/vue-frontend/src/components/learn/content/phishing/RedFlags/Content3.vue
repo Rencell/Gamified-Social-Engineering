@@ -79,7 +79,7 @@ import InteractiveMCQ from '../../UI/Interactive/InteractiveMCQ.vue';
 import type { MCQ } from '../../UI/Interactive/types';
 import { computed, onMounted, ref } from 'vue';
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue';
-import ToolTip from '../../UI/Interactive/phishing/ToolTip.vue'
+import ToolTip from '../../UI/Interactive/ToolTipImage.vue'
 import type {TooltipData} from '../../UI/Interactive/phishing/type'
 
 

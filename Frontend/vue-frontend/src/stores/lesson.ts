@@ -2,13 +2,14 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { LessonService } from '@/services'
 import type { Lesson_test } from '@/services/lessonService'
+import lessonService from '@/services/lessonService'
 
 export const useLessonStore = defineStore('Lesson', () => {
   const lessons = ref<Lesson_test[]>([])
   const currentLesson = ref<Lesson_test | null>(null)
   const latestLesson = ref<Lesson_test | null>(null)
   const latestPercentageLesson = ref(0)
-  
+
   interface LatestLessonStatus {
     user: number
     lesson_test: number
@@ -18,9 +19,6 @@ export const useLessonStore = defineStore('Lesson', () => {
   }
 
   const latestLessonStatus = ref<LatestLessonStatus | null>(null)
-
-
-
 
   const fetchLessons = async () => {
     try {
@@ -50,7 +48,6 @@ export const useLessonStore = defineStore('Lesson', () => {
       latestLessonStatus.value = data
       const foundLesson = lessons.value?.find((lesson) => lesson.id === data.lesson_test)
       latestLesson.value = foundLesson || null
-      
     } catch (error) {
       console.error('Failed to fetch unlocked modules:', error)
     }
@@ -62,9 +59,9 @@ export const useLessonStore = defineStore('Lesson', () => {
       await LessonService.unlock_lesson_test(lessonId)
     } catch (error) {
       console.error('Failed to unlock lesson:', error)
-    } 
+    }
   }
-  
+
   const createLesson = async (lessonData: Lesson_test) => {
     try {
       const formData = new FormData()
@@ -89,7 +86,7 @@ export const useLessonStore = defineStore('Lesson', () => {
     }
   }
 
-  const updateLesson = async ( lessonId: number,lessonData: Lesson_test) => {
+  const updateLesson = async (lessonId: number, lessonData: Lesson_test) => {
     try {
       const formData = new FormData()
       formData.append('title', lessonData.title)
@@ -101,9 +98,9 @@ export const useLessonStore = defineStore('Lesson', () => {
       }
 
       if (lessonData.image instanceof File) {
-        formData.append("image", lessonData.image);
+        formData.append('image', lessonData.image)
       }
-      
+
       console.log('Updating lesson with data:', lessonData)
       const updatedLesson = await LessonService.update_lesson_test(lessonId, formData)
       const index = lessons.value.findIndex((l) => l.slug === updatedLesson.slug)
@@ -116,7 +113,7 @@ export const useLessonStore = defineStore('Lesson', () => {
     }
   }
 
-  const deleteLesson = async ( lessonId: number) => {
+  const deleteLesson = async (lessonId: number) => {
     try {
       await LessonService.delete_lesson_test(lessonId)
       lessons.value = lessons.value.filter((lesson) => lesson.id !== lessonId)
@@ -132,6 +129,17 @@ export const useLessonStore = defineStore('Lesson', () => {
     currentLesson.value = lessons.value.find((lesson) => lesson.slug === lessonId) || null
   }
 
+  const addObjective = async (newObjective: string[]) => {
+    if (!currentLesson.value) return
+    currentLesson.value.objective = newObjective
+    try {
+      await lessonService.update_lesson_partial_test(currentLesson.value.id || 0, {
+        objective: newObjective,
+      })
+    } catch (error) {
+      console.error('Error adding objective:', error)
+    }
+  }
   return {
     fetchLessons,
     fetchLatestLesson,
@@ -145,5 +153,6 @@ export const useLessonStore = defineStore('Lesson', () => {
     deleteLesson,
     currentLesson,
     unlockLesson,
+    addObjective,
   }
 })

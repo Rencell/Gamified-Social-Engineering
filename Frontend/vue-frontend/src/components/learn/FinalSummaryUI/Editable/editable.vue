@@ -10,6 +10,8 @@ import SidebarEdittable from '../../QuizUI/SidebarEdittable.vue';
 import MultipleChoice from './MultipleChoice.vue'
 import TwoImage from './TwoImage.vue'
 import TrueFalse from './TrueFalse.vue'
+import Email from './email.vue'
+import Sms from './sms.vue'
 
 
 const props = defineProps<{
@@ -32,7 +34,9 @@ defineEmits(['toggleOnCreateQuestion', 'toggleOnDeleteQuestion', 'toggleOnCreate
         <div class="lg:col-span-2 space-y-6">
             <MultipleChoice v-if="quizData.type === 'multiple-choice'" :question="quizData"/>
             <TwoImage v-else-if="quizData.type === 'two-image'" :question="quizData" />
-            <TrueFalse v-else :question="quizData" />
+            <TrueFalse v-else-if="quizData.type === 'true-false'" :question="quizData" />
+            <Email v-else-if="quizData.type === 'email'" :question="quizData" />
+            <Sms v-else :question="quizData" />
         </div>
 
         <!-- Sidebar -->

@@ -11,6 +11,8 @@ class ItemViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         user = self.request.user
+        if user.is_staff:  # Check if the user is an admin
+            return Item.objects.all()  # Return all items for admin users
         owned_item_ids = BackpackItem.objects.filter(user=user).values_list('item_id', flat=True)
         return Item.objects.exclude(id__in=owned_item_ids)
     

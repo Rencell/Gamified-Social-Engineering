@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'app_daily',
     'app_contents',
     'app_section',
+    'app_assessment',
     'gophish',
     'rest_framework',
     'rest_framework.authtoken',
@@ -215,6 +216,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "https://gamified-frontend-caps.onrender.com",
 ]
+
 CSRF_COOKIE_DOMAIN = None
 CSRF_COOKIE_SECURE = False  # Set to True in production if using HTTPS
 CSRF_COOKIE_HTTPONLY = False
@@ -274,3 +276,7 @@ SOCIALACCOUNT_PROVIDERS['google']['APP'] = {
     'secret': os.getenv('GOOGLE_CLIENT_SECRET'),
     'key': ''
 }
+
+GOPHISH_URL = os.getenv("GOPHISH_URL", "https://127.0.0.1:3333")
+GOPHISH_API_KEY = os.getenv("GOPHISH_API_KEY", "")
+GOPHISH_VERIFY_SSL = os.getenv("GOPHISH_VERIFY_SSL", "true").lower() in ("1","true","yes")

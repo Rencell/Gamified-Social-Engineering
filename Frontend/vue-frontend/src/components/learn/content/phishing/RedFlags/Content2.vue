@@ -2,8 +2,6 @@
     <LearningContent class="justify-start">
         <LearningSection>
 
-
-
             <LearningHeader class="mt-20">
                 <LearningSpan>Look for These Red Flags</LearningSpan>
 
@@ -14,11 +12,9 @@
                 that give the scam away.
             </LearningBody>
 
-            <div class="relative">
-                <img :src="image" class="w-full rounded-lg" alt="Phishing Email" />
-
-                <ToolTip :areas="areas" />
-            </div>
+        
+            <ToolTip :areas="areas" :image="image" />
+            
         </LearningSection>
     </LearningContent>
 </template>
@@ -31,10 +27,13 @@ import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue';
 import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue';
 
 import image from '/Learning/Content/phishing/RedFlags/TextScam.webp'
-import ToolTip from '../../UI/Interactive/phishing/ToolTip.vue'
+import ToolTip from '../../UI/Interactive/ToolTipImage.vue'
 import type { TooltipData } from '../../UI/Interactive/phishing/type'
+import { ref } from 'vue';
 
-const areas: TooltipData[] = [
+
+
+const areas = ref<TooltipData[]>([
     {
         id: "header",
         title: "Sent by a number",
@@ -49,6 +48,7 @@ const areas: TooltipData[] = [
         description: "A usual tactic to fear their victim into acting quickly without thinking.",
         x: 180,
         y: 200,
+        position: 'bottomleft'
     },
     {
         id: "footer",
@@ -66,5 +66,6 @@ const areas: TooltipData[] = [
         y: 310,
         position: 'topleft'
     },
-]
+])
+
 </script>

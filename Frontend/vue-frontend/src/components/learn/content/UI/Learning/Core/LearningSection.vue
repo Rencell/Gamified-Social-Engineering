@@ -30,7 +30,9 @@ const componentOptions: { type: LearningType; label: string }[] = [
   { type: 'LearningImage2', label: 'Image' },
   { type: 'FlippingCard', label: 'Flipping Card' },
   { type: 'TwoImage', label: 'Two Image' },
+  { type: 'ToolTipImage', label: 'Tool Tip Image' },
   { type: 'DescriptionList', label: 'Description List' },
+  { type: 'NextCard', label: 'Next Card' },
 ];
 
 interface Props {

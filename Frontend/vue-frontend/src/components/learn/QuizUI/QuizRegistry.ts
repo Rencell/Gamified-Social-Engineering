@@ -140,6 +140,33 @@ export type FinalTestProps = {
     answer: "image1" | "image2"
     explanation: string
   }
+  Email: {
+    type: 'email'
+    question: string
+    options: { id: string; text: string }[]
+    answer: string
+    explanation: string
+    email: {
+      from: string
+      subject: string
+      date: string
+      link: string
+      body: string[]
+      footer: string
+    }
+  },
+  Sms: {
+    type: 'sms'
+    question: string
+    options: { id: string; text: string }[]
+    answer: string
+    explanation: string
+    sms: {
+      number: string
+      date: string
+      message: string
+    }
+  }
 }
 
 export const defaultFinalTestProps: FinalTestProps = {
@@ -169,6 +196,42 @@ export const defaultFinalTestProps: FinalTestProps = {
     answer: "image1",
     explanation: '',
   },
+  Email: {
+    type: 'email',
+    question: 'Your question here',
+    options: [
+      { id: 'a', text: 'Option A' },
+      { id: 'b', text: 'Option B' },
+    ],
+    answer: 'a',
+    explanation: '',
+    email: {
+      from: 'example@gmail.com',
+      subject: 'Covid Scam',
+      date: 'September 30, 2023, 10:45 AM',
+      link: 'https://example.com',
+      body: ['New Content', '#Use hash symbol at first character to make a link', 'Click here to win a prize!'],
+      footer: 'Amazon'
+    },
+  },
+
+  Sms: {
+    type: 'sms',
+    question: 'Your question here',
+    options: [
+      { id: 'a', text: '' },
+      { id: 'b', text: '' },
+    ],
+    answer: 'a',
+    explanation: '',
+    sms: {
+      number: '09xxxxxxx',
+      date: 'September 30, 2023, 10:45 AM',
+      message: 'This is a sample SMS message.',
+    },
+    
+  },
+  
 }
 
 

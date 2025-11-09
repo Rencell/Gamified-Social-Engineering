@@ -64,20 +64,24 @@ const handleContentUpdate = async(id: number, $event: string) => {
 }
 
 const handleDeleteComponent = async (id: number) => {
-  const deleteItemAndChildren = (itemId: number): number[] => {
-    const children = contentItems.value.filter((item) => item.parent === itemId)
-    const childIds = children.flatMap((child) => deleteItemAndChildren(child.id))
-    return [itemId, ...childIds]
+  if (!confirm("Are you sure you want to delete this component and all its children? This action cannot be undone.")) {
+    return;
   }
 
-  const idsToDelete = deleteItemAndChildren(id)
+  const deleteItemAndChildren = (itemId: number): number[] => {
+    const children = contentItems.value.filter((item) => item.parent === itemId);
+    const childIds = children.flatMap((child) => deleteItemAndChildren(child.id));
+    return [itemId, ...childIds];
+  };
+
+  const idsToDelete = deleteItemAndChildren(id);
   try {
     await ContentService.deleteMultiple(idsToDelete);
     contentItems.value = contentItems.value.filter(item => !idsToDelete.includes(item.id));
   } catch (error) {
     console.error("Failed to delete items from database:", error);
   }
-}
+};
 
 const handleAddComponent = async (type: LearningType, parentId?: number) => {
 

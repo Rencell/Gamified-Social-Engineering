@@ -35,6 +35,10 @@ const quiz: QuizMode[] = [
     { label: "Scenario Story", id: "ScenarioTraining" },
 ]
 
+// const quiz: QuizMode[] = [
+//     { label: "Phishing Email", id: "PhishingTactics" },
+// ]
+
 function changeQuizType(newType: QuizType) {
     emit('onChangeQuestionType', newType);
 }

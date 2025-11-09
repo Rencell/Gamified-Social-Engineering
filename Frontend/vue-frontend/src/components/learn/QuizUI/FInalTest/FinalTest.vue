@@ -36,6 +36,45 @@
           @addScore="score += 1"
         />
         
+        <div v-if="currentTest.type == 'email' || currentTest.type == 'sms'">
+          <div :class="{'flex gap-4' : currentTest.type === 'sms'}" >
+            <div >
+                <div v-if="currentTest.type === 'email'" class="w-2xl">
+                  <Email 
+                      :from="currentTest.email.from"
+                      :subject="currentTest.email.subject"
+                      :link="currentTest.email.link"
+                      :date="currentTest.email.date"
+                      :body="currentTest.email.body"
+                      :footer="currentTest.email.footer"
+                      
+                  >
+                </Email>
+                </div>
+                <Phone v-else
+                    :number="currentTest.sms.number"
+                    :date="currentTest.sms.date"
+                    :message="currentTest.sms.message"
+                >
+                </Phone>
+            </div>
+        
+       
+              <Options 
+                  :key="currentIndex"
+                  :question="currentTest.question"
+                  :options="currentTest.options"
+                  :answer="currentTest.answer"
+                  :single-grid="currentTest.type === 'sms'"
+                  @is-correct="isCorrect = true"
+                  @is-answered="isAnswered = true"
+                  class="pt-10"
+              />
+              
+          </div>
+
+        </div>
+
         <ResultFooter 
           :isAnswered="isAnswered" 
           :isCorrect="isCorrect" 
@@ -57,6 +96,9 @@ import TrueFalse from './TrueFalse.vue';
 import { Progress } from '@/components/ui/progress';
 import ProgressHeader from './common/ProgressHeader.vue'
 import ResultFooter from './common/resultFooter.vue'
+import Email from './email.vue';
+import Phone from './phone.vue';
+import Options from './common/options.vue';
 const timerRef = ref<InstanceType<typeof ProgressHeader> | null>(null);
 
 const props = defineProps<{

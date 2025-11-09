@@ -1,21 +1,21 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/auth';
+
 
 defineProps<{
     from: string;
     subject: string;
-    link: {
-        text: string;
-        url: string;
-    };
+    link: string;
     date: string;
     body: string[];
-    
+    footer: string;
 }>();
 
+const auth = useAuthStore();
 
 </script>
 <template>
-    <div class="w-2xl rounded-2xl mx-auto">
+    <div class="w-full rounded-2xl mx-auto">
         <div class="space-y-2 bg-green-600/50 p-6 rounded-tr-sm rounded-tl-sm border-b border-gray-300 font-display">
             <div class="grid grid-cols-[60px_1fr] gap-2">
                 <span class="font-bold">From:</span>
@@ -27,7 +27,7 @@ defineProps<{
             <div class="grid grid-cols-[60px_1fr] gap-2">
                 <span class="font-bold">To:</span>
                 <span class="rounded px-1">
-                    valued.customer@gmail.com
+                    {{auth.User?.email}}
                 </span>
             </div>
 
@@ -41,7 +41,7 @@ defineProps<{
             <div class="grid grid-cols-[60px_1fr] gap-2">
                 <span class="font-bold">Date:</span>
                 <span class="rounded px-1">
-                    April 8, 2025, 14:34 {{date}}
+                    {{date}}
                 </span>
             </div>
         </div>
@@ -52,8 +52,8 @@ defineProps<{
                 
                 <div class="space-y-3">
                     <template v-for="value in body" :key="value">
-                        <a v-if="value === 'link' && link.text" :href="link.url" class="text-blue-800 underline inline-block">
-                            {{ link.text }}
+                        <a v-if="value.charAt(0) === '#'" :href="link" class="text-blue-800 underline inline-block" @click.prevent>
+                            {{ value.trim().substring(1) }}
                         </a>
                         <p v-else>{{ value }}</p>
                     </template>
@@ -63,7 +63,7 @@ defineProps<{
             </div>
             <hr class="border-t border-gray-300" />
 
-            <p class=" text-gray-700">Amazon</p>
+            <p class=" text-gray-700">{{footer}}</p>
         </div>
     </div>
 </template>

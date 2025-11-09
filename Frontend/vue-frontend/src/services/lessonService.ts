@@ -15,6 +15,7 @@ export interface Lesson_test {
   bg: string
   lesson_order: number | null
   description: string
+  objective: string[]
   locked?: boolean
   completed_modules?: number
   total_modules?: number
@@ -47,6 +48,8 @@ const lessonService = {
     session.post(END_POINT + 'lesson-test/', module).then((res) => res.data),
   update_lesson_test: (lessonId: number, module: FormData): Promise<Lesson_test> =>
     session.put(END_POINT + 'lesson-test/' + lessonId + '/', module).then((res) => res.data),
+  update_lesson_partial_test: (lessonId: number, module: Partial<Lesson_test>): Promise<Lesson_test> =>
+    session.patch(END_POINT + 'lesson-test/' + lessonId + '/', module).then((res) => res.data),
   delete_lesson_test: (lessonId: number): Promise<void> =>
     session.delete(END_POINT + `lesson-test/${lessonId}/`).then(() => {}),
   unlock_lesson_test: (lesson_test: number): Promise<void> =>

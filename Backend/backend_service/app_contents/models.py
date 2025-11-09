@@ -37,6 +37,8 @@ class ContentItem(models.Model):
         ('FlippingCard', 'Flipping Card'),
         ('DescriptionList', 'Description List'),
         ('TwoImage', 'Two Image'),
+        ('ToolTipImage', 'Tool Tip Image'),
+        ('NextCard', 'Next Card'),
     ]
 
     type = models.CharField(max_length=50, choices=TYPE_CHOICES)

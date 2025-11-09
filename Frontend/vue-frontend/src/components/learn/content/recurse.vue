@@ -15,7 +15,6 @@
         :component-map="componentMap"
         @giveProps="handleTextUpdate(child.id, $event)"
         @moveOrder="handleReorderComponent(child.id, $event)"
-        @signalDelete="handleDeleteComponent(child.id)"
         @onUpdate="handleTextUpdate"
         @onDelete="handleDeleteComponent"
         @onCreate="handleAddComponent"

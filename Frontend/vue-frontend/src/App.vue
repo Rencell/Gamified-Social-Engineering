@@ -10,24 +10,29 @@ import { useLoadingPageStore } from './stores/pageLoading';
 import { Spinner } from './components/ui/spinner';
 import { useAuthStore } from '@/stores/auth'
 import { useStreakStore } from '@/stores/pageStreak';
+import { useCourseUnlockStore } from './stores/pageCourseUnlock';
 import 'vue-sonner/style.css'
-import DayStreak from './views/DayStreak/DayStreak.vue'
+import DayStreak from './components/achievement/DayStreak.vue'
+import CourseUnlock from './components/achievement/CourseUnlock.vue'
 
 const streakStore = useStreakStore()
 const route = useRoute()
 const authStore = useAuthStore()
+const courseUnlockStore = useCourseUnlockStore()
 const isFullscreen = computed(() => route.meta.layout === 'fullscreen')
 
 
 onMounted(async() => {
   authStore.init()
 })
+
+const sht = ref(false)
 </script>
 
 <template>
   
   <Toaster />
-
+<CourseUnlock :is-open="courseUnlockStore.openCourseModal" :onClose="courseUnlockStore.closeStreakModal" />
   <DayStreak :is-open="streakStore.openStreakModal" :onClose="streakStore.closeStreakModal"/>
   <div v-if="useLoadingPageStore().isLoading">
     <div class="fixed inset-0 flex items-center justify-center bg-black/70 z-99 flex-col gap-4">

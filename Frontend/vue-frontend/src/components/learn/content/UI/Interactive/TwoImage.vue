@@ -2,11 +2,11 @@
   <div v-if="!editable">
     <!-- Quiz Images -->
     <div v-if="!toggle" class="flex flex-col gap-4 justify-center items-center">
-      <!-- First Image -->
       <div>
         <p class="text-lg font-bold">{{ data?.Question }}</p>
       </div>
       <div :class="[data?.positionLeft ? 'flex-row w-2xl gap-4' : 'w-xl flex-col gap-4', 'flex']">
+        <!-- First Image -->
         <div @click="handleImageClick('image1')" :class="[
           'relative flex-1 bg-background rounded-xl cursor-pointer ',
           selectedImage === 'image1' ? 'border-3 border-b-5 border-green-500' : 'border-2 border-transparent hover:border-gray-400',
@@ -63,7 +63,7 @@
       </Button>
     </div>
     <div v-else class="space-y-2">
-      <div class="space-y-2">
+      <div v-if="obj" class="space-y-2">
         <label class="block text-sm font-medium text-gray-700 capitalize">Question</label>
 
         <Textarea class="min-h-[60px] resize-none" v-model="obj.Question" />
@@ -71,8 +71,8 @@
         <label class="block text-sm font-medium text-gray-700 capitalize">Explanation</label>
         <Textarea class="min-h-[60px] resize-none" v-model="obj.explanation" />
 
-        <div class="flex gap-2">
-          <Button size="sm" class="h-8" @click="updateProps({ data: obj })">
+        <div class="flex gap-2 items-center">
+          <Button size="sm" class="h-8" @click="saveHandlerNoImage">
             <Check class="w-3 h-3 mr-1" />
             Save
           </Button>
@@ -80,6 +80,7 @@
             <X class="w-3 h-3 mr-1" />
             Cancel
           </Button>
+          <p v-show="successMessage2" class="text-xs text-green-500" >  Save success! </p>
         </div>
 
         <div class="flex items-center justify-between">
@@ -111,13 +112,13 @@
             </p>
           </div>
         </div>
-        <div class="flex justify-end mt-4"><Button @click="saveHandler"
-            :disabled="!image1.changeUpdate.value && !image2.changeUpdate.value">Save Image</Button></div>
 
+        <div class="flex justify-end items-center gap-6 mt-4">
+          <p v-show="successMessage" class="text-xs text-green-500" >  Save success! </p>
+          <Button @click="saveHandler" :disabled="!image1.changeUpdate.value && !image2.changeUpdate.value">Save Image</Button>
+        </div>
 
       </div>
-
-
 
     </div>
     <slot></slot>
@@ -154,14 +155,7 @@ const props = defineProps<{
 }>();
 
 const obj = computed(() =>
-  props.data ? { ...props.data } : {
-    Question: 'New Question',
-    image1: 'Image1.jpg',
-    image2: 'Image2.jpg',
-    answer: 'image1',
-    explanation: 'explain',
-    positionLeft: true
-  }
+  props.data
 );
 
 const image1 = useUploadContent();
@@ -182,7 +176,6 @@ const isCorrect = ref(false);
 const explanation = ref(obj.value?.explanation || 'Incorrect. Please try again.');
 // Handles image selection
 const handleImageClick = (image: string) => {
-
   if (selectedImage.value !== null) {
     return;
   }
@@ -236,10 +229,26 @@ async function handleUploadImage2() {
   );
 }
 
+const successMessage = ref(false);
+const successMessage2 = ref(false);
+const saveHandlerNoImage = async () => {
+  
+  updateProps({ data: obj.value });
+  
+  successMessage2.value = true;
+  setTimeout(() => {
+    successMessage2.value = false;
+  }, 2000);
+}
 const saveHandler = async () => {
   await handleUploadImage1();
   await handleUploadImage2();
   updateProps({ data: obj.value });
+  
+  successMessage.value = true;
+  setTimeout(() => {
+    successMessage.value = false;
+  }, 2000);
 }
 
 

@@ -9,6 +9,8 @@ import trophy from '/Icons/Trophy.svg?url'
 import game from '/Icons/Game.svg?url'
 import profile from '/Icons/profile.svg?url'
 import hook from '/Icons/hook.svg?url'
+import sms from '/Icons/SMS.svg?url'
+import assessment from '/Icons/assess.svg?url'
 
 
 import logout from '/sidebar/door.svg'
@@ -54,9 +56,19 @@ const navigationData = {
       Image: game
     },
     {
+      title: 'Assessments',
+      url: '/assessments',
+      Image: assessment
+    },
+    {
       title: 'Phishing Simulation',
       url: '/simulation',
       Image: hook
+    },
+    {
+      title: 'Smishing Simulation',
+      url: '/sms-simulation',
+      Image: sms
     },
   ],
 }
@@ -118,7 +130,7 @@ onBeforeUnmount(() => {
 
                 </SidebarMenuButton>
               </RouterLink>
-              <p v-if="item.title === 'Mini Games'" class="text-xs font-medium text-slate-400 uppercase tracking-wider mt-3">Simulation</p>
+              <p v-if="item.title === 'Assessments'" class="text-xs font-medium text-slate-400 uppercase tracking-wider mt-3">Simulation</p>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroupContent>

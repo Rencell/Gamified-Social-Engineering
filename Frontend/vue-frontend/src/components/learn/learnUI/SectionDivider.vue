@@ -4,9 +4,11 @@ import DeleteSectionAlert from '../dialog/Lesson/Section/deleteSectionAlert.vue'
 import UpdateSectionDialog from '../dialog/Lesson/Section/updateSectionDialog.vue';
 import SectionProgress from '@/components/ui/progress/SectionProgress.vue';
 import { ChevronUp } from 'lucide-vue-next';
+import { computed } from 'vue';
+import Badge from '@/components/ui/badge/Badge.vue';
 
 
-defineProps<{
+const props = defineProps<{
     index: number,
     section: Section,
     sectionProgress: number,
@@ -17,6 +19,12 @@ defineProps<{
 const emit = defineEmits<{
     (e: 'toggle'): void
 }>()
+
+
+const isSectionComplete = computed(() => {
+    const fk = props.section.modules.filter(mod => mod.locked === false);
+    return props.section.modules.length === fk.length;
+});
 </script>
 
 <template>
@@ -26,6 +34,7 @@ const emit = defineEmits<{
                 <div class="size-7 rounded-full bg-accent/50 flex justify-center items-center ">{{ index + 1
                 }}</div>
                 <p class="text-xl">{{ section.name }}</p>
+                <Badge v-if="isSectionComplete" variant="success">Completed</Badge>
             </div>
 
             <div class="flex gap-2 items-center">

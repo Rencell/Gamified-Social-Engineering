@@ -5,6 +5,7 @@ import { Typewriter } from '@/components/ui/typewriter';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
+    question: string;
     options: { id: string; text: string }[];
     answer: string;
     singleGrid?: boolean;
@@ -71,7 +72,7 @@ const getButtonClass = () => {
 
 <template>
     <div :class="{'w-sm' : singleGrid}" class="mx-auto space-y-5">
-        <Typewriter :class="{'w-sm' : singleGrid}" class="font-display text-xl font-semibold" text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias, veniam!" :delay="30" @animation-end="showOptions = true" />
+        <Typewriter :class="{'w-sm' : singleGrid}" class="font-display text-xl font-semibold" :text="question" :delay="30" @animation-end="showOptions = true" />
         <div v-if="showOptions" class="motion-preset-fade motion-duration-700">
             <p class="text-slate-400 mb-2 font-bold text-xs">Choices</p>
             <div class="grid grid-cols-1 gap-4" :class="singleGrid ? 'md:grid-cols-1' : ' md:grid-cols-2'">

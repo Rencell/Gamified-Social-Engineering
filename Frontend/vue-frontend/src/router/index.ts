@@ -15,10 +15,14 @@ import MiniGameView from '@/views/MiniGameView.vue'
 import MiniGameViewDetailed from '@/views/MiniGame/MiniGameDetailed.vue'
 import settingsView from '@/views/settingsView.vue'
 import EmailSimulationView from '@/views/Simulation/EmailSimulationView.vue'
+import SmsSimulation from '@/views/Simulation/SmsSimulation.vue'
+import AssessmentView from '@/views/AssessmentView.vue'
+import shibalDetail from '@/components/Assessment/shibalDetail.vue'
 
 import { requireAuthenticated, redirectLogout } from './guards'
 import { useLoadingPageStore } from '@/stores/pageLoading'
 import { set } from '@vueuse/core'
+import AssessmentSession from '@/views/Assessment/assessmentSession.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -76,6 +80,25 @@ const router = createRouter({
       component: MiniGameView,
     },
     {
+      path: '/assessments',
+      name: 'Assessments',
+      beforeEnter: requireAuthenticated,
+      component: AssessmentView,
+    },
+    {
+      path: '/assessments/:id',
+      name: 'AssessmentDetail',
+      beforeEnter: requireAuthenticated,
+      component: shibalDetail,
+    },
+    {
+      path: '/assessment/session/:id/start',
+      name: 'AssessmentSession',
+      beforeEnter: requireAuthenticated,
+      component: AssessmentSession,
+      meta: { layout: 'fullscreen' }
+    },
+    {
       path: '/settings',
       name: 'Settings',
       beforeEnter: requireAuthenticated,
@@ -130,6 +153,12 @@ const router = createRouter({
       name: 'simulation',
       beforeEnter: requireAuthenticated,
       component: EmailSimulationView,
+    },
+    {
+      path: '/sms-simulation',
+      name: 'sms-simulation',
+      beforeEnter: requireAuthenticated,
+      component: SmsSimulation,
     }
   ],
 })

@@ -13,6 +13,7 @@ import {
 import { Card, CardContent } from '../ui/card';
 import { Checkbox } from '../ui/checkbox';
 import { AlertTriangle } from 'lucide-vue-next';
+import { Input } from '../ui/input';
 
 const isOpen = ref(false);
 const isChecked = ref(false);
@@ -130,6 +131,12 @@ const emit = defineEmits(['sendEmit']);
                             training and authorize the use of my email address for this educational purpose.
                         </label>
                     </div>
+                    <div v-if="isChecked" class="flex flex-col items-start gap-3 p-4 bg-[#1a1d2e] rounded-lg border border-[#2a2d3e]">
+                        <label for="" class="text-xs">Phone Number:</label>
+                        <Input placeholder="Enter your phone number"></Input>
+                    </div>
+
+
                 </div>
             </DialogHeader>
             <DialogFooter>

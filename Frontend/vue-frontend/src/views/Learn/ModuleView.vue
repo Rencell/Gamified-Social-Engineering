@@ -96,6 +96,10 @@ const get_all_modules = async () => {
 
 get_all_modules();
 
+// helper function that returns the first locked module of a section
+const getFirstLockedModule = (section) => {
+  return section.modules.find(m => m.locked === true)
+}
 </script>
 
 <template>
@@ -127,13 +131,20 @@ get_all_modules();
                     <div v-show="sectionRefs[section.id]">
                         <CreateModuleDialog :section-id="section.id" />
 
-                        <ModuleCard v-for="(module, key) in section.modules" :lessonkey="key + 1" :key="module.title"
-                            :module="module" :title="module.title"
-                            :router-link="`/learn/${lessonId}/${section.id}/session`" :interactive="!module.locked"
+                        <ModuleCard v-for="(module, key) in section.modules" 
+                            :lessonkey="key + 1" 
+                            :key="module.title"
+                            :module="module" 
+                            :title="module.title"
+                            :router-link="`/learn/${lessonId}/${section.id}/session`" 
+                            :interactive="!module.locked"
                             @click="moduleStore.setSelectedModule(module)"
                             :locked-index="!lessonStore.currentLesson?.locked ? (module.final ? !isFinalLocked(section) : false) : !useAuthStore().User.is_admin"
                             :quiz-status="quizzes_progress?.find(q => q.module === module.id)"
-                            :quiz-progress="module.accuracy" />
+                            :quiz-progress="module.accuracy" 
+                            :highlight="module.id === getFirstLockedModule(section)?.id" />
+
+                        
                     </div>
                 </SectionDivider>
             </div>

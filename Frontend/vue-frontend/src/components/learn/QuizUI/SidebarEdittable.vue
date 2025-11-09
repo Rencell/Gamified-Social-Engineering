@@ -131,6 +131,16 @@ onMounted(() => {
                         <Plus class="h-4 w-4" />
                         Add True or False
                     </Button>
+                    <Button variant="outline" size="sm" @click="finalAddQuestion('Email')"
+                        class="gap-2 bg-transparent w-full">
+                        <Plus class="h-4 w-4" />
+                        Add Email Question
+                    </Button>
+                    <Button variant="outline" size="sm" @click="finalAddQuestion('Sms')"
+                        class="gap-2 bg-transparent w-full">
+                        <Plus class="h-4 w-4" />
+                        Add SMS Question
+                    </Button>
                 </div>
             </CardContent>
         </Card>
