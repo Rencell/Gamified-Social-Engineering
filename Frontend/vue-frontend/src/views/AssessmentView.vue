@@ -18,7 +18,7 @@ onMounted(async () => {
         <div v-for="(value, index) in assessmentsStore.assessments" :key="index">
         
             <RouterLink :to="{ name: 'AssessmentDetail', params: { id: value.slug } }">
-
+                
                 <AssessmentCard 
                     :id="value.id"
                     :image="value.image ?? 'image not set'" 

@@ -27,7 +27,6 @@ const props = defineProps<Props>()
             <div class="flex items-center gap-2">
                 
                 <UpdateAssessment :data="props"/>
-                <ProgressCircle :progress="progress" size="lg"></ProgressCircle>
             </div>
             <div class="px-6 py-4 flex items-center justify-between">
                 <div class="flex items-center gap-6 text-sm font-bold">

@@ -124,7 +124,8 @@ onBeforeUnmount(() => {
                   data-[active=true]:text-white
                   data-[active=true]:shadow-sm
                 ">
-                  <img :src="item.Image" alt="" class="h-6 w-6 flex-shrink-0 me-3" />
+                  
+                <img :src="item.Image" alt="" class="h-6 w-6 flex-shrink-0 me-3" />
                   <!-- <component :is="item.icon" class="h-5 w-5 flex-shrink-0" /> -->
                   <span class="font-bold ">{{ item.title }} </span>
 

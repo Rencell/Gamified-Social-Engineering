@@ -153,7 +153,7 @@ REST_AUTH = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "Asia/Manila"
 
 USE_I18N = True
 
@@ -277,6 +277,6 @@ SOCIALACCOUNT_PROVIDERS['google']['APP'] = {
     'key': ''
 }
 
-GOPHISH_URL = os.getenv("GOPHISH_URL", "https://127.0.0.1:3333")
+GOPHISH_URL = os.getenv("GOPHISH_URL", "http://127.0.0.1:3333")
 GOPHISH_API_KEY = os.getenv("GOPHISH_API_KEY", "")
 GOPHISH_VERIFY_SSL = os.getenv("GOPHISH_VERIFY_SSL", "true").lower() in ("1","true","yes")

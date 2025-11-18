@@ -113,11 +113,10 @@ function toggleShowHistory() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(email, index) in eventsData" :key="email.id" :class="`border-b border-slate-800 hover:bg-slate-800/50 transition-colors ${index === eventsData.length - 1 ? 'border-b-0' : ''
+                            <tr v-for="(email, index) in [...eventsData].reverse()" :key="email.id" :class="`border-b border-slate-800 hover:bg-slate-800/50 transition-colors ${index === eventsData.length - 1 ? 'border-b-0' : ''
                                 }`">
                                 <td class="px-6 py-4 text-sm text-white flex items-center gap-3">
                                     <Mail class="w-4 h-4 text-slate-500 flex-shrink-0" />
-                                    <!-- {{ email.message }} -->
                                     <div v-if="email.message.toLowerCase().includes('email sent')"
                                         class="text-green-400">
                                         {{ email.message }}
@@ -125,19 +124,15 @@ function toggleShowHistory() {
                                     <div v-else-if="email.message.toLowerCase().includes('clicked')"
                                         class="text-orange-400">
                                         {{ email.message }}
-
                                     </div>
                                     <div v-else class="text-red-400">
                                         {{ email.message }}
-
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-slate-300 ">
-
                                     {{ new Date(email.received_at).toLocaleDateString('en-US', {
                                         year: 'numeric', month:
                                     'long', day: 'numeric' }) }}
-
                                 </td>
                                 <td class="px-6 py-4 text-sm text-slate-300 ">
                                     <div class="flex gap-5">
@@ -147,22 +142,6 @@ function toggleShowHistory() {
                                         minute: '2-digit' }) }}
                                     </div>
                                 </td>
-
-                                <!-- <td class="px-6 py-4 text-sm">
-                                    <div class="flex items-center gap-2">
-                                        <template v-if="email.clicked">
-                                            <CheckCircle2 class="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                                            <Badge class="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-                                                Clicked
-                                            </Badge>
-                                        </template>
-<template v-else>
-                                            <XCircle class="w-4 h-4 text-slate-600 flex-shrink-0" />
-                                            <Badge class="bg-slate-800 text-slate-400 border-slate-700">Not Clicked
-                                            </Badge>
-                                        </template>
-</div>
-</td> -->
                             </tr>
                         </tbody>
                     </table>

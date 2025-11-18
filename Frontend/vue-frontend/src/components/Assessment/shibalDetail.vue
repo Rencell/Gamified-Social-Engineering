@@ -7,6 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { useRoute, useRouter } from 'vue-router';
 import { useAssessmentStore } from '@/stores/assessment';
 import type { Assessment, AssessmentSession } from '@/services/assessmentService';
+import { useAuthStore } from '@/stores/auth';
+import AssessmentStartDialog from './AssessmentStartDialog.vue'
 
 const props = defineProps<{
     id?: string;
@@ -19,12 +21,18 @@ const router = useRouter();
 const isEditing = ref(false);
 const editableAssessment = ref<Assessment | null>(null);
 
+const auth = useAuthStore();
 const assessmentStore = useAssessmentStore();
 const assessment = ref<Assessment | null>(null);
+const session = ref<AssessmentSession | null>(null);
+const resume_session = ref<AssessmentSession | null>(null);
 
 onMounted(async () => {
     await assessmentStore.detail(route.params.id as string);
     assessment.value = assessmentStore.currentAssessment;
+    session.value = await assessmentStore.has_completed_assessment(assessment.value!.id);
+    resume_session.value = await assessmentStore.resume_assessment(assessment.value!.id);
+    
     // Create a copy for editing with deep copy of instructions
     editableAssessment.value = assessment.value ? {
         ...assessment.value,
@@ -37,10 +45,19 @@ const goBack = () => {
     router.push('/assessments');
 };
 
-const startAssessment = async (title: string) => {
-    const result = await assessmentStore.initialize_assessment(assessment.value!.id);
-    router.push({ name: 'AssessmentSession', params: { id: result.session_id } });
+const startAssessment = async () => {
+    const initial_session = await assessmentStore.initialize_assessment(assessment.value!.id);
+    router.push({ name: 'AssessmentSession', params: { id: initial_session.session_id } });
     // Add your navigation logic here
+};
+const editAssessment = async () => {
+    // const initial_session = await assessmentStore.initialize_assessment(assessment.value!.id);
+    router.push({ name: 'AssessmentEdittable', params: { id: assessment.value?.slug } });
+    // Add your navigation logic here
+};
+
+const viewReport = () => {
+    router.push({ name: 'AssessmentReport', params: { id: session.value?.session_id } });
 };
 
 // Edit functions
@@ -112,6 +129,10 @@ const saveChanges = async () => {
     }
 };
 
+const showModal = ref(false)
+const toggleShowModal = () => {
+    showModal.value = !showModal.value;
+}
 </script>
 
 <template>
@@ -138,7 +159,7 @@ const saveChanges = async () => {
                             <div class="flex justify-between items-center">
                                 <!-- Editable Title -->
                                 <div class="flex-1 mr-4">
-                                    <h1 v-if="!isEditing" class="text-4xl font-bold text-foreground mb-4">
+                                    <h1 v-if="!isEditing" class="text-4xl font-bold text-foreground mb-4 font-display">
                                         {{ assessment.name }}
                                     </h1>
                                     <Input v-else v-model="editableAssessment!.name"
@@ -209,20 +230,37 @@ const saveChanges = async () => {
 
                         <!-- CTA Button -->
                         <div class="flex items-center gap-4">
-                            <Button size="lg" class="bg-accent hover:bg-accent/50 text-white"
-                                @click="startAssessment(assessment.name)" :disabled="isEditing">
-                                Start assessment
+                            <Button v-if="auth.User.is_admin" size="lg" class="bg-accent hover:bg-accent/50 text-white"
+                                @click="editAssessment()" :disabled="isEditing">
+                                Edit Questions
                             </Button>
-
-                            <div class="flex items-center gap-1 text-ternary">
-                                <CircleCheck class="size-5" />
-                                <p class="text-sm">Incomplete</p>
+                            <div v-else>
+                                <Button  size="lg" class="bg-accent hover:bg-accent/50 text-white"
+                                    @click="toggleShowModal" :disabled="isEditing">
+                                    {{ resume_session ? 'Resume assessment' : (!session ? 'Start assessment' : 'Retake assessment') }}
+                                </Button>
+    
+                                <AssessmentStartDialog v-if="showModal" @toggle="toggleShowModal" @start-assessment="startAssessment" />
+    
+                                <Button v-if="session" size="lg" variant="outline" 
+                                    @click="viewReport" :disabled="isEditing">
+                                    View Report
+                                </Button>
+                                <div v-if="!session" class="flex items-center gap-1 text-ternary">
+                                    <CircleCheck class="size-5" />
+                                    <p class="text-sm">Incomplete</p>
+                                </div>
+                                
+                               <div v-else class="flex items-center gap-1">
+                                    <CircleCheck class="size-5 text-green-500" />
+                                    <p class="text-xs font-semibold">Last Completed {{ session?.completed_at ? new Date(session.completed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }) : 'N/A' }}</p>
+                               </div>
                             </div>
                         </div>
 
                         <!-- About Section -->
                         <div class="space-y-4">
-                            <h2 class="text-2xl font-bold text-foreground">
+                            <h2 class="text-2xl font-bold text-foreground font-display">
                                 About the {{ isEditing ? editableAssessment?.name : assessment.name }} assessment
                             </h2>
 
@@ -238,7 +276,7 @@ const saveChanges = async () => {
 
                             <div class="pt-2">
                                 <p class="text-sm text-muted-foreground">
-                                    <strong>Skill Level:</strong>
+                                    <strong>Skill Level: </strong>
                                     <template v-if="!isEditing">
                                         {{ assessment.difficulty_level }}
                                     </template>
@@ -258,7 +296,7 @@ const saveChanges = async () => {
                         <!-- Instructions Section -->
                         <div class="space-y-4">
                             <div class="flex justify-between items-center">
-                                <h2 class="text-2xl font-bold text-foreground">Instructions</h2>
+                                <h2 class="text-2xl font-bold text-foreground font-display">Instructions</h2>
                                 <template v-if="isEditing">
                                     <Button @click="addInstruction" size="sm" variant="outline" class="text-sm">
                                         <Plus class="size-4 mr-1" />
@@ -325,8 +363,9 @@ const saveChanges = async () => {
 
                             <!-- Start Button -->
                             <Button size="lg" class="w-full bg-accent hover:bg-accent/50 text-white"
-                                @click="startAssessment(assessment.name)" :disabled="isEditing">
-                                Start assessment
+                                @click="toggleShowModal" :disabled="isEditing">
+                                
+                                {{ resume_session ? 'Resume assessment' : (!session ? 'Start assessment' : 'Retake assessment') }}
                             </Button>
 
                             <!-- Points Badge -->

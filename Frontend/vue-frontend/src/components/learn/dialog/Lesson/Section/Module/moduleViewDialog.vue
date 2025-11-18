@@ -50,7 +50,7 @@ const emit = defineEmits<{
 
                     </RouterLink>
 
-                    <RouterLink v-show="content_quiz !== 'ModuleReward'" :to="routerLink + '?openQuiz=true'" class="w-full">
+                    <RouterLink v-show="String(content_quiz) !== 'ModuleReward'" :to="routerLink + '?openQuiz=true'" class="w-full">
                         <Button variant="ghost" class=" font-bold bg-background w-full">
                             Quiz
                         </Button>

@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils.text import slugify
 # Create your models here.
 class Assessment(models.Model):
     
@@ -22,10 +22,15 @@ class Assessment(models.Model):
         return self.name
     
     def save(self, *args, **kwargs):
-        if self._state.adding and not self.slug:
-            self.slug = self.name.lower().replace(' ', '-')
-            
+        if not self.slug or self.name_changed():
+            self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    def name_changed(self):
+        if not self.pk:
+            return True
+        old_name = Assessment.objects.get(pk=self.pk).name
+        return old_name != self.name
 
 class Question(models.Model):
     
@@ -70,13 +75,15 @@ class AssessmentSession(models.Model):
     STATUS = [
         ('not_started', 'Not Started'),
         ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),]
+        ('completed', 'Completed'),
+        ('timeout', 'Timeout'),
+    ]
     
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     session_id = models.CharField(max_length=12, unique=True, default=generate_session_id)
     status = models.CharField(max_length=20, choices=STATUS, default='not_started')
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    started_at = models.DateTimeField(null=True, blank=True)
+    started_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
     score = models.FloatField(default=0.0)
     

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import assessmentService from '@/services/assessmentService'
-import type { Assessment, Question, AssessmentSession } from '@/services/assessmentService'
+import type { Assessment, Question, AssessmentSession, Option } from '@/services/assessmentService'
 export const useAssessmentStore = defineStore('assessment', () => {
   // State
   const assessments = ref<Assessment[]>([])
@@ -74,37 +74,150 @@ export const useAssessmentStore = defineStore('assessment', () => {
     }
   }
 
+  const has_completed_assessment = async (assessment_id: number) => {
+    try {
+      const session = await assessmentService.fetch_completed_assessment(assessment_id)
+
+      return session
+    } catch (error) {
+      console.error('Error initializing assessment:', error)
+      throw error
+    }
+  }
+
   const initialize_assessment = async (assessment_id: number) => {
     try {
-      const session = await assessmentService.initialize_assessment(assessment_id);
-      
-      return session;
-    } catch (error) {
-      console.error('Error initializing assessment:', error);
-      throw error;
-    }
-  };
+      const session = await assessmentService.initialize_assessment(assessment_id)
 
-  const initialize_questions = async (assessment_id: number) => {
-    try {
-      currentQuestion.value = await assessmentService.get_questions(assessment_id);
-      
+      return session
+    } catch (error) {
+      console.error('Error initializing assessment:', error)
+      throw error
     }
-    catch (error) {
-      console.error('Error fetching questions:', error);
-      throw error;
+  }
+
+  const resume_assessment = async (assessment_id: number) => {
+    try {
+      const session = await assessmentService.resume_assessment(assessment_id)
+
+      return session
+    } catch (error) {
+      console.error('Error resuming assessment:', error)
+      throw error
+    }
+  }
+
+  const timeout_assessment = async (session_id: string) => {
+    try {
+      const session = await assessmentService.timeout_assessment(session_id)
+
+      return session
+    } catch (error) {
+      console.error('Error timing out assessment:', error)
+      throw error
+    }
+  }
+
+  const initialize_questions = async (assessment_id: number | string) => {
+    try {
+      currentQuestion.value = await assessmentService.get_questions(assessment_id)
+    } catch (error) {
+      console.error('Error fetching questions:', error)
+      throw error
+    }
+  }
+
+  const save_question_answer = async (data: { session_id: string; question_id: number; option_id: number | null; }) => {
+    try {
+      await assessmentService.save_answer(data);
+
+      return
+    } catch (error) {
+      console.error('Error saving questions:', error)
     }
   }
 
   const existing_session = async (session_id: string) => {
     try {
-      const session = await assessmentService.current_session(session_id);
-      currentAssessment.value = session.assessment;
-      currentSession.value = session;
+      const session = await assessmentService.current_session(session_id)
+      currentAssessment.value = session.assessment
+      currentSession.value = session
     } catch (error) {
-      console.error('Error fetching existing session:', error);
+      console.error('Error fetching existing session:', error)
     }
   }
+
+  const updateQuestions = async (data: Partial<Question>) => {
+    try {
+      const formData = new FormData()
+      if (data.question_type) formData.append('question_type', data.question_type)
+      if (data.text) formData.append('text', data.text)
+      if (data.image instanceof File) {
+        formData.append('image', data.image)
+      }
+
+      await assessmentService.patchQuestion(data.id as number, formData)
+
+    } catch (error) {
+      console.error('Error updating question:', error)
+    }
+  }
+
+  const addQuestion = async (data: Question) => {
+    try { 
+      const response = await assessmentService.createQuestion(data as unknown as any);
+      currentQuestion.value.push(response);
+    } catch (error) {
+      console.error('Error adding question:', error)
+    }
+  }
+
+  const updateOption = async (data: Partial<Option>) => {
+    try {
+      const formData = new FormData()
+      if (data.text) formData.append('text', data.text)
+      if (data.is_correct !== undefined) formData.append('is_correct', data.is_correct.toString())
+      if (data.image instanceof File) {
+        formData.append('image', data.image)
+      }
+      const response = await assessmentService.patchOption(data.id as number, formData)
+      currentQuestion.value.forEach((question) => {
+        if (question.id === response.question) {
+          const optionIndex = question.options.findIndex((option) => option.id === response.id);
+          if (optionIndex !== -1) {
+            console.log('Updating option at index:', response);
+            question.options[optionIndex] = response;
+          }
+        }
+      });
+
+    } catch (error) {
+      console.error('Error updating option:', error)
+    }
+  }
+
+  const addOption = async (data: Option) => {
+
+    try { 
+      const formData = new FormData()
+      if (data.text) formData.append('text', data.text)
+      if (data.question) formData.append('question', data.question.toString())
+      if (data.is_correct) formData.append('is_correct', data.is_correct.toString())
+      if (data.image instanceof File) {
+        formData.append('image', data.image)
+      }
+      const response = await assessmentService.createOption(formData);
+      currentQuestion.value.forEach((question) => {
+        if (question.id === response.question) {
+          question.options.push(response);
+        }
+      });
+    } catch (error) {
+      console.error('Error adding option:', error)
+    }
+  }
+
+ 
 
   return {
     courseName,
@@ -116,8 +229,16 @@ export const useAssessmentStore = defineStore('assessment', () => {
     create,
     update,
     detail,
+    has_completed_assessment,
+    resume_assessment,
+    timeout_assessment,
     initialize_assessment,
     initialize_questions,
+    save_question_answer,
     existing_session,
+    updateQuestions,
+    addOption,
+    addQuestion,
+    updateOption
   }
 })

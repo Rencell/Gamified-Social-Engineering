@@ -15,6 +15,8 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class AssessmentSerializer(serializers.ModelSerializer):
+    
+    question_count = serializers.IntegerField(source='questions.count', read_only=True)
     class Meta:
         model = Assessment
         fields = '__all__'
@@ -27,6 +29,10 @@ class AssessmentSessionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AssessmentAnswerSerializer(serializers.ModelSerializer):
+    
+    question = QuestionSerializer(read_only=True)
+    selected_option = OptionSerializer(read_only=True)
+    
     class Meta:
         model = AssessmentAnswer
         fields = '__all__'
