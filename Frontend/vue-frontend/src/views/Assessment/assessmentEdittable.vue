@@ -27,18 +27,26 @@ const addQuestion =  async(type: string) => {
         text: 'New Question',
         options: [],
         order: assessmentStore.currentQuestion.length + 1,
-        assessment: assessmentStore.currentAssessment?.id as number,
+        assessment: assessmentStore.currentQuestion[0].assessment as number,
         image: null,
     };
     await assessmentStore.addQuestion(newQuestion);
     currentIndex.value = assessmentStore.currentQuestion.length - 1; 
 };
 
+const deleteQuestion = async(index: number) => {
+    if (confirm('Are you sure you want to delete question #' + (index + 1) + '? This action cannot be undone.')) {
+        await assessmentStore.deleteQuestion(index);
+        if (currentIndex.value >= assessmentStore.currentQuestion.length) {
+            currentIndex.value = assessmentStore.currentQuestion.length - 1;
+        }
+    }
+};
+
 </script>
 
 
 <template>
-
     <div class="p-10">
         <RouterLink :to="{ name: 'AssessmentDetail', params: { id: assessmentStore.currentAssessment?.id } }">
             <div class="flex gap-2 mb-5 text-sm items-center text-accent font-bold">
@@ -57,7 +65,8 @@ const addQuestion =  async(type: string) => {
                 :questions="assessmentStore.currentQuestion" 
                 :currentIndex="currentIndex" 
                 @update:addQuestion="addQuestion($event)"
-                @update:currentIndex="currentIndex = $event" />
+                @update:currentIndex="currentIndex = $event"
+                @update:deleteQuestion="deleteQuestion($event)" />
         </div>
     </div>
 </template>

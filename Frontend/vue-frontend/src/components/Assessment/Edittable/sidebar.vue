@@ -12,7 +12,7 @@ const props = defineProps<{
     questions: Question[];
     currentIndex: number;
 }>();
-const emit = defineEmits(['update:currentIndex', 'update:addQuestion']);
+const emit = defineEmits(['update:currentIndex', 'update:addQuestion','update:deleteQuestion']);
 
 function selectQuestion(index: number) {
     emit('update:currentIndex', index);
@@ -22,6 +22,11 @@ function addQuestion(type: string) {
     emit('update:addQuestion', type);
 }
 
+
+const deleteQuestion = (index: number) => {
+    emit('update:deleteQuestion', index);
+    
+};
 </script>
 
 <template>
@@ -38,7 +43,7 @@ function addQuestion(type: string) {
                         @click="selectQuestion(index)">
                         <span class="text-sidebar-foreground">Question #{{ index + 1 }}</span>
                         <Trash2 class="h-4 w-4 text-destructive hover:text-destructive hover:opacity-100"
-                            @click="null" />
+                            @click.prevent="deleteQuestion(index)" />
                     </div>
 
                 </div>

@@ -44,7 +44,7 @@ class GoPhishWebhookViewSet(viewsets.ViewSet):
         user_score, _ = GophishUserScore.objects.get_or_create(user=user)
 
         # Increment based on the event type
-        if message == "Email Sent":
+        if message == "Email/SMS Sent":
             user_score.emails_sent += 1
             user_score.security_score = min(user_score.security_score + 20, 100)
         elif message == "Clicked Link":

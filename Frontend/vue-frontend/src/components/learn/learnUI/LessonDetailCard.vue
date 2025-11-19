@@ -11,6 +11,8 @@ import DeleteAlert from '../dialog/Lesson/deleteAlert.vue'
 import LessonProgress from './LessonProgress.vue'
 import { computed, ref } from 'vue';
 import { Input } from '@/components/ui/input';
+import LearningBold from '../content/UI/Learning/Highlight/LearningBold.vue';
+import { useAuthStore } from '@/stores/auth';
 
 interface Props {
     title?: string | 'title not set'
@@ -112,12 +114,12 @@ const save_objectives = async () => {
         <div class="border-t border-ternary pt-4">
             <button @click="expandedObjectives = !expandedObjectives"
                 class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-background/50 transition-colors text-left cursor-pointer">
-                <span class="font-semibold">Course Objectives</span>
+                <span class="font-semibold">Module Objectives</span>
                 <ChevronDown :size="20" :class="`transition-transform ${expandedObjectives ? 'rotate-180' : ''}`" />
             </button>
 
             <div v-if="expandedObjectives" class="mt-3 space-y-2 pl-3 border-l-2 border-purple-500">
-                <Button @click="toggleEditObjective" size="sm" class="mb-2">
+                <Button v-if="useAuthStore().User.is_admin" @click="toggleEditObjective" size="sm" class="mb-2">
                     <Edit2 v-if="!editObjective"></Edit2>
                     <ChevronLeft v-else></ChevronLeft>
                     {{ editObjective ? 'Save' : 'Edit' }}
@@ -129,7 +131,7 @@ const save_objectives = async () => {
                     <div v-for="(objective, index) in course.objectives" :key="index"
                         class="flex gap-3 text-sm text-purple-100">
                         <span class="text-purple-400 font-bold min-w-fit">{{ index + 1 }}.</span>
-                        <span>{{ objective }}</span>
+                        <LearningBold :text="objective" />
                     </div>
                 </div>
                 <div v-else class="space-y-2">

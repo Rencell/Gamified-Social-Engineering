@@ -4,7 +4,7 @@ import sidebar from './components/Layout/sidebar.vue';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 
 import { useRoute } from 'vue-router'
-import { computed, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { Toaster } from '@/components/ui/sonner'
 import { useLoadingPageStore } from './stores/pageLoading';
 import { Spinner } from './components/ui/spinner';
@@ -14,6 +14,7 @@ import { useCourseUnlockStore } from './stores/pageCourseUnlock';
 import 'vue-sonner/style.css'
 import DayStreak from './components/achievement/DayStreak.vue'
 import CourseUnlock from './components/achievement/CourseUnlock.vue'
+import { useLessonStore } from './stores/lesson';
 
 const streakStore = useStreakStore()
 const route = useRoute()
@@ -21,12 +22,15 @@ const authStore = useAuthStore()
 const courseUnlockStore = useCourseUnlockStore()
 const isFullscreen = computed(() => route.meta.layout === 'fullscreen')
 
-
+const initialized = ref(false);
 onMounted(async() => {
   authStore.init()
+  initialized.value = true; 
 })
 
 const sht = ref(false)
+
+
 </script>
 
 <template>
@@ -53,7 +57,7 @@ const sht = ref(false)
       <sidebar />
       <main class="flex-1 overflow-y-auto scroll-hidden">
         <SidebarInset>
-          <div class="md:p-10 p-2 pt-9 mb-20 sm:mb-0">
+          <div class="md:p-10 p-2 pt-9 mb-20 sm:mb-0" >
             <RouterView />
 
           </div>
@@ -61,10 +65,6 @@ const sht = ref(false)
       </main>
     </SidebarProvider>
   </div>
-
-
-
-
 </template>
 
 <style scoped>

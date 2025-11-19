@@ -2,13 +2,17 @@
 import Header from '@/components/Assessment/playing/header.vue'
 import Footer from '@/components/Assessment/playing/footer.vue'
 import MultipleChoice from '@/components/Assessment/QuizType/MultipleChoice.vue'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, onUnmounted } from 'vue'
 import { useAssessmentStore } from '@/stores/assessment'
 import type { Option } from '@/services/assessmentService'
 import ImageChoice from '@/components/Assessment/QuizType/ImageChoice.vue'
-import Stepper from '@/components/Assessment/playing/stepper.vue'
+import { useRouter } from 'vue-router'
+
+// Ensure multi-word component name for linting
+defineOptions({ name: 'AssessmentPlayingView' })
 
 const assessmentStore = useAssessmentStore()
+const router = useRouter()
 onMounted(async () => {
     await assessmentStore.initialize_questions(assessmentStore.currentAssessment?.id as number)
 })
@@ -38,6 +42,10 @@ const progressPercentage = computed(() => {
     return totalQuestions > 0 ? (completedQuestions / totalQuestions) * 100 : 0;
 });
 
+// New: finishing state and timeout cleanup
+const isFinishing = ref(false)
+let finishTimeout: number | undefined
+
 const handleQuestionAnswered = async () => {
     await assessmentStore.save_question_answer({
         session_id: currentSession.value?.session_id as string,
@@ -45,9 +53,25 @@ const handleQuestionAnswered = async () => {
         option_id: selectedOption.value ? selectedOption.value.id : null,
     });
 
-    currentIndex.value += 1;
-    
+    // Move to next question or go to report if finished (after 3s pulse)
+    const totalQuestions = assessmentStore.currentQuestion.length;
+    const nextIndex = currentIndex.value + 1;
+    if (nextIndex >= totalQuestions) {
+        isFinishing.value = true;
+        finishTimeout = window.setTimeout(() => {
+            router.push({ name: 'AssessmentReport', params: { id: currentSession.value?.session_id } });
+        }, 3000);
+        return;
+    }
+
+    currentIndex.value = nextIndex;
 }
+
+onUnmounted(() => {
+    if (finishTimeout) {
+        clearTimeout(finishTimeout)
+    }
+})
 </script>
 <template>
     <div class="h-screen flex flex-col items-center px-50 pb-20"> <!-- Add padding-bottom to prevent content overlap -->
@@ -62,8 +86,16 @@ const handleQuestionAnswered = async () => {
         </main>
 
         <!-- Fixed footer -->
-        <div class="fixed bottom-0 left-0 right-0">
+        <div class="fixed bottom-0 left-0 right-0" v-if="!isFinishing">
             <Footer @handle="handleQuestionAnswered" />
+        </div>
+
+        <!-- Finishing overlay with pulse -->
+        <div v-if="isFinishing" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div class="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg px-8 py-6 shadow-xl animate-pulse">
+                <p class="text-xl font-semibold">Preparing your report...</p>
+                <p class="text-sm opacity-80 mt-2">Redirecting shortly</p>
+            </div>
         </div>
     </div>
 

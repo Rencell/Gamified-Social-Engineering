@@ -1,6 +1,7 @@
 <template>
   <LearningContent :content-id="content_order">
     <RecursiveContent v-for="item in sortedContentItems" 
+      
       :key="item.id" 
       :item="item"
       :siblings="item.children || []"
@@ -14,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, nextTick } from 'vue';
 import RecursiveContent from './recurse.vue';
 import { ContentService } from '@/services/index.ts';
 import type { Content } from '@/services/contentService.ts';
@@ -39,6 +40,7 @@ const props = defineProps<{
 
 const contentItems = ref<Content[]>([]);
 
+
 onMounted(async () => {
   
   await ContentService.get_contentitems_by_parent(props.content_order).then((response) => {
@@ -50,6 +52,7 @@ onMounted(async () => {
 
 
 const handleContentUpdate = async(id: number, $event: string) => {
+  
   try {
     const propsObj = typeof $event === "string" ? JSON.parse($event) : $event;
     await ContentService.patch(id, { props: propsObj }); // partial update
@@ -103,6 +106,21 @@ const handleAddComponent = async (type: LearningType, parentId?: number) => {
   try {
     const response = await ContentService.create(newItem as Content)
     contentItems.value.push(response)
+
+    // Wait for DOM update, then scroll to the newly added element and highlight it
+    await nextTick()
+    const el = document.getElementById(`content-item-${response.id}`)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+      el.classList.remove('newly-created')
+      
+      void (el as HTMLElement).offsetWidth
+      el.classList.add('newly-created')
+      el.addEventListener('animationend', () => {
+        el.classList.remove('newly-created')
+      }, { once: true })
+    }
   } catch (error) {
     console.error("Error creating content item:", error);
     return;
@@ -191,3 +209,16 @@ function buildTree(items: Content[]): Content[] {
 
 const sortedContentItems = computed(() => buildTree(contentItems.value));
 </script>
+
+<style>
+@keyframes newItemHighlight {
+  0% { background-color: rebeccapurple; }
+  100% { background-color: transparent; }
+}
+
+/* global so it applies to the element in child component */
+.newly-created {
+  
+  animation: newItemHighlight 2s ease-out forwards;
+}
+</style>

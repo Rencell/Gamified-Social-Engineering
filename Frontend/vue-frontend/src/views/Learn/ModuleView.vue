@@ -139,11 +139,10 @@ const getFirstLockedModule = (section) => {
                             :router-link="`/learn/${lessonId}/${section.id}/session`" 
                             :interactive="!module.locked"
                             @click="moduleStore.setSelectedModule(module)"
-                            :locked-index="!lessonStore.currentLesson?.locked ? (module.final ? !isFinalLocked(section) : false) : !useAuthStore().User.is_admin"
+                            :locked-index="!useAuthStore().User.is_admin ? (!lessonStore.currentLesson?.locked ? (module.final ? !isFinalLocked(section) : false) : !useAuthStore().User.is_admin) : false"
                             :quiz-status="quizzes_progress?.find(q => q.module === module.id)"
                             :quiz-progress="module.accuracy" 
                             :highlight="module.id === getFirstLockedModule(section)?.id" />
-
                         
                     </div>
                 </SectionDivider>

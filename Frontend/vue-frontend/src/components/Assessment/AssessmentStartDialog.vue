@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Clock, FileText, X } from 'lucide-vue-next';
 import { ref } from 'vue';
 import { Spinner } from '../ui/spinner';
-
+import type { Assessment } from '@/services/assessmentService';
 const emit = defineEmits<{
     (e: 'toggle'): void;
 
@@ -12,6 +12,9 @@ const emit = defineEmits<{
 
 const loading = ref(false);
 
+defineProps<{
+    data: Assessment;
+}>();
 
 const startAssessment = () => {
     loading.value = true;
@@ -20,6 +23,7 @@ const startAssessment = () => {
         emit('startAssessment');
     }, 2000);
 };
+
 
 </script>
 
@@ -37,23 +41,23 @@ const startAssessment = () => {
                 <X />
             </Button>
             <div class="flex flex-col gap-6 pt-10">
-                <p class="text-center font-bold text-2xl font-display">A very good example</p>
+                <p class="text-center font-bold text-2xl font-display">{{data.name}}</p>
 
                 <!-- Description -->
                 <p class="text-slate-400 text-sm leading-relaxed max-w-md text-center">
-                    Build your skill graph, get personalized learning recommendations, and benchmark your abilities.
+                    {{ data.description }}
                 </p>
                 <div class="flex justify-center gap-3 text-sm font-semibold text-white/80">
                     <!-- Metadata -->
                     <div class="flex items-center justify-center gap-6 text-slate-400 text-sm">
                         <div class="flex items-center gap-2">
                             <Clock :size="18" />
-                            <span>25 mins</span>
+                            <span>{{ data.duration }} mins</span>
                         </div>
                         <div class="w-px h-4 bg-slate-700" />
                         <div class="flex items-center gap-2">
                             <FileText :size="18" />
-                            <span>25 questions</span>
+                            <span>{{ data.question_count }} questions</span>
                         </div>
                     </div>
                 </div>

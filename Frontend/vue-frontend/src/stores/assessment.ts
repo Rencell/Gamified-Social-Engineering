@@ -172,6 +172,17 @@ export const useAssessmentStore = defineStore('assessment', () => {
     }
   }
 
+  const deleteQuestion = async (index: number) => {
+    try {
+      const questionToDelete = currentQuestion.value[index];
+      await assessmentService.deleteQuestion(questionToDelete.id);
+      currentQuestion.value.splice(index, 1);
+    }
+    catch (error) {
+      console.error('Error deleting question:', error)
+    }
+  }
+
   const updateOption = async (data: Partial<Option>) => {
     try {
       const formData = new FormData()
@@ -217,7 +228,13 @@ export const useAssessmentStore = defineStore('assessment', () => {
     }
   }
 
- 
+  const deleteOption = async (option_id: number) => {
+    try { 
+      await assessmentService.deleteOption(option_id);
+    } catch (error) {
+      console.error('Error deleting option:', error);
+    }
+  }
 
   return {
     courseName,
@@ -239,6 +256,8 @@ export const useAssessmentStore = defineStore('assessment', () => {
     updateQuestions,
     addOption,
     addQuestion,
-    updateOption
+    deleteQuestion,
+    updateOption,
+    deleteOption
   }
 })

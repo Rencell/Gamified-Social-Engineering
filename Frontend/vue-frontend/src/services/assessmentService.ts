@@ -63,18 +63,21 @@ const assessmentService = {
     detail: (slug: string): Promise<Assessment> => session.get(`${END_POINT}assessments/${slug}/`).then((res) => res.data),
     create: (data: FormData): Promise<Assessment> => session.post(END_POINT + 'assessments/', data).then((res) => res.data),
     patch: (id: number, data: FormData): Promise<Assessment> => session.patch(`${END_POINT}assessments/${id}/`, data).then((res) => res.data),
+    
     fetch_completed_assessment: (assessment_id: number): Promise<AssessmentSession> => session.post(`${END_POINT}session/has_completed/`, { assessment_id }).then((res) => res.data),
     resume_assessment: (assessment_id: number): Promise<AssessmentSession> => session.post(`${END_POINT}session/continute_session/`, { assessment_id }).then((res) => res.data),
     initialize_assessment: (assessment_id: number): Promise<AssessmentSession> => session.post(`${END_POINT}session/start_session/`, { assessment_id }).then((res) => res.data),
     timeout_assessment: (session_id: string): Promise<AssessmentSession> => session.post(`${END_POINT}session/timeout_session/`, { session_id }).then((res) => res.data),
     current_session: (session_id: string): Promise<AssessmentSession> => session.get(`${END_POINT}session/get_session/`, {params: { session_id }}).then((res) => res.data),
-    get_questions: (assessment_id: number | string): Promise<Question[]> => session.get(`${END_POINT}question/`, { params: { assessment: assessment_id }}).then((res) => res.data),
     save_answer: (data: { session_id: string; question_id: number;  option_id: number | null; }): Promise<any> => session.post(`${END_POINT}session-answer/`, data).then((res) => res.data),
-    patchQuestion: (id: number, data: FormData): Promise<Question> => session.patch(`${END_POINT}question/${id}/`, data).then((res) => res.data),
     patchOption: (id: number, data: FormData): Promise<Option> => session.patch(`${END_POINT}option/${id}/`, data).then((res) => res.data),
     createOption: (data: FormData): Promise<Option> => session.post(`${END_POINT}option/`, data).then((res) => res.data),
-    createQuestion: (data: Question): Promise<Question> => session.post(`${END_POINT}question/`, data).then((res) => res.data),
+    deleteOption: (id: number): Promise<void> => session.delete(`${END_POINT}option/${id}/`).then(() => {}),
 
+    patchQuestion: (id: number, data: FormData): Promise<Question> => session.patch(`${END_POINT}question/${id}/`, data).then((res) => res.data),
+    get_questions: (assessment_id: number | string): Promise<Question[]> => session.get(`${END_POINT}question/`, { params: { assessment: assessment_id }}).then((res) => res.data),
+    createQuestion: (data: Question): Promise<Question> => session.post(`${END_POINT}question/`, data).then((res) => res.data),
+    deleteQuestion: (id: number): Promise<void> => session.delete(`${END_POINT}question/${id}/`).then(() => {}),
     
     fetch_assessment_results: (session_id: string): Promise<AssessmentAnswer[]> => session.get(`${END_POINT}session-answer/get_answers_for_session/`, { params: { session_id }}).then((res) => res.data),
 }

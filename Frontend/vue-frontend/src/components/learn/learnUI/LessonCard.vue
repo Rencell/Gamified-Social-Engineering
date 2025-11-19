@@ -49,7 +49,7 @@ const showLocked = ref(false);
         <div class="p-4 flex flex-col-reverse sm:flex-row">
             <div class="flex flex-col flex-4 justify-between gap-5">
                 <div class="flex flex-col gap-6">
-                    <p class="font-extrabold text-xl">Section {{ index }}: {{ title }}</p>
+                    <p class="font-extrabold text-xl">Module {{ index }}: {{ title }}</p>
                    
                     <div v-if="!locked">
                         <LearnProgress :model-value="progress" :tongue-color="props.bg"

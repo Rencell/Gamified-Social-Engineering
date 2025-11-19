@@ -22,9 +22,11 @@ const emit = defineEmits<{
 
 
 const isSectionComplete = computed(() => {
+    if(props.section.modules.length === 0) return false;
     const fk = props.section.modules.filter(mod => mod.locked === false);
     return props.section.modules.length === fk.length;
 });
+
 </script>
 
 <template>

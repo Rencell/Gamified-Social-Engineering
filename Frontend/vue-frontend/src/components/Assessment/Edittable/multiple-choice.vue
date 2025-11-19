@@ -51,9 +51,10 @@ const updateOption = async (option: Option) => {
     
 }
 
-function removeOption(id: number) {
+async function removeOption(id: number) {
     if (quizData.value.options.length > 2) {
         quizData.value.options = quizData.value.options.filter((option: { id: number }) => option.id !== id);
+        await assessmentStore.deleteOption(id);
     }
 }
 

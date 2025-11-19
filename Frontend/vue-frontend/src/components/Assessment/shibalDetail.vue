@@ -168,7 +168,7 @@ const toggleShowModal = () => {
                                 </div>
 
                                 <!-- Edit Controls -->
-                                <div class="flex items-center gap-2">
+                                <div v-if="useAuthStore().User.is_admin" class="flex items-center gap-2">
                                     <template v-if="!isEditing">
                                         <Button @click="toggleEdit" size="sm" variant="ghost">
                                             <Wrench class="text-yellow-500 size-5" />
@@ -234,13 +234,16 @@ const toggleShowModal = () => {
                                 @click="editAssessment()" :disabled="isEditing">
                                 Edit Questions
                             </Button>
-                            <div v-else>
+                            <div v-else class="flex items-center gap-4">
                                 <Button  size="lg" class="bg-accent hover:bg-accent/50 text-white"
                                     @click="toggleShowModal" :disabled="isEditing">
                                     {{ resume_session ? 'Resume assessment' : (!session ? 'Start assessment' : 'Retake assessment') }}
                                 </Button>
     
-                                <AssessmentStartDialog v-if="showModal" @toggle="toggleShowModal" @start-assessment="startAssessment" />
+                                <AssessmentStartDialog v-if="showModal"
+                                    :data="assessment"
+                                    @toggle="toggleShowModal" 
+                                     @start-assessment="startAssessment" />
     
                                 <Button v-if="session" size="lg" variant="outline" 
                                     @click="viewReport" :disabled="isEditing">

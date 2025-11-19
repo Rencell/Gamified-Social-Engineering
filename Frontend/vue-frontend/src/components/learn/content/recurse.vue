@@ -1,31 +1,31 @@
 <template>
-  <component
-    :is="componentMap[item.type]"
-    v-bind="item.type === 'InteractiveMCQ' ? { mcq: item.props } : item.props"
-    :item="item"
-    :siblings="siblings"
-    @signalDelete="handleDeleteComponent(item.id)"
-    @addComponent="handleAddComponent($event, item.id)"
-  >
-    <template v-if="item.children && item.children.length">
-      <template v-for="child in item.children" :key="child.id">
-      <recurse
-        :item="child"
-        :siblings="item.children"
-        :component-map="componentMap"
-        @giveProps="handleTextUpdate(child.id, $event)"
-        @moveOrder="handleReorderComponent(child.id, $event)"
-        @onUpdate="handleTextUpdate"
-        @onDelete="handleDeleteComponent"
-        @onCreate="handleAddComponent"
-        @onReorder="handleReorderComponent"
-      />
-
-    </template>
-      
-    </template>
-  </component>
-
+    <component
+      :is="componentMap[item.type]"
+      :id="`content-item-${item.id}`"
+      v-bind="item.type === 'InteractiveMCQ' ? { mcq: item.props } : item.props"
+      :item="item"
+      :siblings="siblings"
+      @signalDelete="handleDeleteComponent(item.id)"
+      @addComponent="handleAddComponent($event, item.id)"
+    >
+      <template v-if="item.children && item.children.length">
+        <template v-for="child in item.children" :key="child.id">
+        <recurse
+          :item="child"
+          :siblings="item.children"
+          :component-map="componentMap"
+          @giveProps="handleTextUpdate(child.id, $event)"
+          @moveOrder="handleReorderComponent(child.id, $event)"
+          @onUpdate="handleTextUpdate"
+          @onDelete="handleDeleteComponent"
+          @onCreate="handleAddComponent"
+          @onReorder="handleReorderComponent"
+        />
+  
+      </template>
+        
+      </template>
+    </component>
 </template>
 
 <script setup lang="ts">
@@ -36,6 +36,7 @@ const emit = defineEmits(['onUpdate', 'onDelete', 'onCreate', 'onReorder']);
 
 
 const handleTextUpdate = (id: number, $event: string) => {
+  
   emit('onUpdate', id, $event); 
 };
 

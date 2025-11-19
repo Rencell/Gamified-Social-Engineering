@@ -32,6 +32,7 @@ import { useModuleStore } from '@/stores/module';
 import { useLessonStore } from '@/stores/lesson';
 import { useSectionStore } from '@/stores/sections';
 import type { ModuleTest } from '@/services/moduleService';
+import { useAuthStore } from '@/stores/auth';
 const moduleStore = useModuleStore();
 const lessonStore = useLessonStore();
 const sectionStore = useSectionStore();
@@ -111,7 +112,7 @@ const sectionModules = computed(() => {
         
         <ModuleSidebarItem v-for="module in sectionModules" :key="module.title"
           :active="module.title === moduleStore.selectedModule?.title" :completed="!module.locked"
-          :locked-index="module.final ? !isFinalQuizUnlocked(sectionModules) : false" @click="moduleStore.setSelectedModule(module)">
+          :locked-index="useAuthStore().User.is_admin ? false : (module.final ? !isFinalQuizUnlocked(sectionModules) : false)" @click="moduleStore.setSelectedModule(module)">
           {{ module.title }}
         </ModuleSidebarItem>
       </ModuleSidebar>

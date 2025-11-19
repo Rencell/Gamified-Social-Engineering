@@ -47,7 +47,7 @@ const saveSection = () => {
     <Dialog>
         <DialogTrigger>
             <Button>
-                <Plus /> Section
+                <Plus /> Create Section
             </Button>
         </DialogTrigger>
         <DialogContent>
