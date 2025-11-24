@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -17,17 +17,38 @@ import { Input } from '../ui/input';
 
 const isOpen = ref(false);
 const isChecked = ref(false);
+const phone = ref('');
+// New: normalized phone and validation helpers
+const normalizedPhone = computed(() => {
+    const raw = phone.value.replace(/[^0-9]/g, '');
+    if (/^09\d{9}$/.test(raw)) return '63' + raw.slice(1); // convert 09xxxxxxxxx -> 639xxxxxxxxx
+    if (/^63\d{10}$/.test(raw)) return raw; // already normalized
+    return raw; // fallback (not valid yet)
+});
+const isPhoneValid = computed(() => /^63\d{10}$/.test(normalizedPhone.value));
+const phoneHelper = computed(() => {
+    if (!phone.value) return 'Enter phone starting with 09XXXXXXXXX or 63XXXXXXXXXX';
+    if (isPhoneValid.value) return 'Normalized: ' + normalizedPhone.value;
+    return 'Invalid format. Expect 09XXXXXXXXX or 63XXXXXXXXXX';
+});
 function toggleDialog() {
     isOpen.value = !isOpen.value;
-    emit('sendEmit');
+    if (props.isSms && isChecked.value) {
+        if (!isPhoneValid.value) return; // guard
+        emit('sendEmit', normalizedPhone.value);
+    } else {
+        emit('sendEmit');
+    }
 }
-
-function handleCheckboxChange() {
-    isChecked.value = !isChecked.value;
-}
-
+// Sanitize input live
+watch(phone, (val) => {
+    phone.value = val.replace(/[^0-9]/g, '');
+});
 const emit = defineEmits(['sendEmit']);
 
+const props = defineProps<{
+    isSms: boolean;
+}>();
 </script>
 
 <template>
@@ -123,7 +144,7 @@ const emit = defineEmits(['sendEmit']);
                     </div>
 
                     <div class="flex items-start gap-3 p-4 bg-[#1a1d2e] rounded-lg border border-[#2a2d3e]">
-                        <Checkbox v-model="isChecked" @change="handleCheckboxChange"  />
+                        <Checkbox v-model="isChecked"  />
 
                         <label htmlFor="consent" class="text-sm text-gray-300 leading-relaxed cursor-pointer">
                             I have read and understood the above information. I consent to participate in phishing
@@ -131,9 +152,10 @@ const emit = defineEmits(['sendEmit']);
                             training and authorize the use of my email address for this educational purpose.
                         </label>
                     </div>
-                    <div v-if="isChecked" class="flex flex-col items-start gap-3 p-4 bg-[#1a1d2e] rounded-lg border border-[#2a2d3e]">
+                    <div v-if="isSms && isChecked" class="flex flex-col items-start gap-3 p-4 bg-[#1a1d2e] rounded-lg border border-[#2a2d3e]">
                         <label for="" class="text-xs">Phone Number:</label>
-                        <Input placeholder="Enter your phone number"></Input>
+                        <Input v-model="phone" placeholder="09XXXXXXXXX or 63XXXXXXXXXX" />
+                        <p class="text-xs mt-1" :class="isPhoneValid ? 'text-green-400' : 'text-red-400'">{{ phoneHelper }}</p>
                     </div>
 
 
@@ -141,7 +163,7 @@ const emit = defineEmits(['sendEmit']);
             </DialogHeader>
             <DialogFooter>
                 <Button variant="outline" >Decline</Button>
-                <Button :disabled="!isChecked" @click="toggleDialog">Accept & Continue</Button>
+                <Button :disabled="!isChecked || (isSms && !isPhoneValid)" @click="toggleDialog">Accept & Continue</Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>

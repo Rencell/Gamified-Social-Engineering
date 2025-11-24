@@ -277,6 +277,10 @@ SOCIALACCOUNT_PROVIDERS['google']['APP'] = {
     'key': ''
 }
 
-GOPHISH_URL = os.getenv("GOPHISH_URL", "http://127.0.0.1:3333")
+GOPHISH_URL = os.getenv("GOPHISH_URL", "https://127.0.0.1:3333")
 GOPHISH_API_KEY = os.getenv("GOPHISH_API_KEY", "")
 GOPHISH_VERIFY_SSL = os.getenv("GOPHISH_VERIFY_SSL", "true").lower() in ("1","true","yes")
+
+
+IPROG_SMS_API_TOKEN = os.getenv("IPROG_SMS_API_TOKEN", "1231asd1")
+IPROG_SMS_BASE_URL = os.getenv("IPROG_SMS_BASE_URL", "https://www.iprogsms.com/api/v1/sms_messages")

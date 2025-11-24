@@ -27,7 +27,7 @@ const riskConfig = {
     color: 'bg-[#ef4444]',
     barColor: 'bg-[#ef4444]',
     textColor: 'text-[#ef4444]',
-    range: [71, 100], // Add range for dynamic conditions
+    range: [0, 30], // Add range for dynamic conditions
   },
   medium: {
     label: 'MEDIUM RISK',
@@ -41,7 +41,7 @@ const riskConfig = {
   color: 'bg-[#10b981]',
   barColor: 'bg-[#10b981]',
     textColor: 'text-[#10b981]',
-    range: [0, 30], // Add range for dynamic conditions
+    range: [71, 100], // Add range for dynamic conditions
   },
 };
 

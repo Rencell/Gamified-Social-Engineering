@@ -37,7 +37,10 @@ type Config struct {
     ContactAddress     string      `json:"contact_address"`
     Logging            *log.Config `json:"logging"`
     FeedEnabled		   bool        `json:"feed_enabled"`
+    DjangoAPI          string      `json:"django_api"`
 }
+
+var DjangoAPI string
 
 // Version contains the current gophish version
 var Version = ""
@@ -64,5 +67,9 @@ func LoadConfig(filepath string) (*Config, error) {
     config.MigrationsPath = config.MigrationsPath + config.DBName
     // Explicitly set the TestFlag to false to prevent config.json overrides
     config.TestFlag = false
+
+    // 🔥 Add this line
+    DjangoAPI = config.DjangoAPI
+
     return config, nil
 }

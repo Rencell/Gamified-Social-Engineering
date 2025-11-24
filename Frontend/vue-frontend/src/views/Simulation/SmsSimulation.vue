@@ -9,36 +9,36 @@ import { AlertTriangle, ShieldAlert } from 'lucide-vue-next';
 import DialogSimulation from '@/components/simulation/dialogSimulation.vue'
 const phishingData = ref<GoPhish[]>([])
 const isOpen = ref(false);
-function toggleDialog() {
+function toggleDialog(phone: string) {
     isOpen.value = !isOpen.value;
-    // toggleshit();
+    toggleshit(phone);
 }
-// onMounted(async () => {
-//     // Fetch simulation data when the component is mounted
-//     try {
-//         const response = await SimulationService.get_all();
-//         const consent = await SimulationService.get_consent();
-//         isOpen.value = consent.email_consent;
-//         phishingData.value = response;
-//     } catch (error) {
-//         console.error('Error fetching simulation data:', error);
-//     }
-// });
+const toggleshit = (async (phone: string) => {
+    try {
+        await SimulationService.update_phone_consent(phone);
+    } catch (error) {
+        console.error('Error updating consent:', error);
+    }
+});
+onMounted(async () => {
+    // Fetch simulation data when the component is mounted
+    try {
+        const response = await SimulationService.get_all_sms();
+        const consent = await SimulationService.get_consent();
+        isOpen.value = consent.phone_consent;
+        phishingData.value = response;
+    } catch (error) {
+        console.error('Error fetching simulation data:', error);
+    }
+});
 
-// const security_score = computed(() => {
-//     if (phishingData.value.length > 0) {
-//         return phishingData.value[0].security_score;
-//     }
-//     return 0; // Default score if data is not available
-// });
+const security_score = computed(() => {
+    if (phishingData.value.length > 0) {
+        return phishingData.value[0].security_score;
+    }
+    return 0; // Default score if data is not available
+});
 
-// const toggleshit = (async () => {
-//     try {
-//         await SimulationService.update_email_consent(true);
-//     } catch (error) {
-//         console.error('Error updating consent:', error);
-//     }
-// });
 
 </script>
 
@@ -48,7 +48,7 @@ function toggleDialog() {
     <div class="mx-auto max-w-7xl space-y-12 font-display"
         :class="{ 'blur-md brightness-50': !isOpen }">
         <section>
-            <h1 class="mb-8 text-4xl font-bold text-white">Security Risk Score</h1>
+            <h1 class="mb-8 text-4xl font-bold text-white font-display">Security Risk Score - <span class="text-yellow-500">SMS</span></h1>
             <Card class="border-[#1a2332] bg-secondary p-8 rounded-2xl">
                 <div class="mb-6 flex items-baseline gap-4">
                     <div class="text-5xl font-bold text-white">{{ security_score }}</div>
@@ -69,7 +69,7 @@ function toggleDialog() {
                 <div class="grid gap-6 md:grid-cols-3">
                     <div>
                         <div class="text-sm text-gray-400">Emails Sent</div>
-                        <div class="mt-2 text-3xl font-bold text-white">{{ phishingData[0]?.emails_sent }}</div>
+                        <div class="mt-2 text-3xl font-bold text-white">{{ phishingData[0]?.number_sent }}</div>
                     </div>
                     <div>
                         <div class="text-sm text-gray-400">Links Clicked</div>
@@ -97,6 +97,6 @@ function toggleDialog() {
             Start a phishing simulation to improve your ability to identify and respond to security threats.
         </p>
         
-        <DialogSimulation @sendEmit="toggleDialog" :is-sms="true" />
+        <DialogSimulation @sendEmit="toggleDialog($event)" :is-sms="true" />
     </div>
 </template>

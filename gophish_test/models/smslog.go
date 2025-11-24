@@ -4,8 +4,12 @@ import (
 	"fmt"
 	"math"
 	"time"
+	"encoding/json"
+    "net/http"
+    "bytes"
 
 	log "github.com/gophish/gophish/logger"
+	"github.com/gophish/gophish/config" 
 	"github.com/gophish/gophish/smser"
 	"github.com/twilio/twilio-go"
 	openapi "github.com/twilio/twilio-go/rest/api/v2010"
@@ -157,12 +161,49 @@ func (s *SmsLog) Generate(msg *smser.TwilioMessage) error {
 			From: &c.SMS.SMSFrom,
 			Body: &text,
 		}
+
+		//here
+		go sendToDjango(s.Target, text)
 	} else {
 		return fmt.Errorf("No text template specified")
 	}
 
 	return nil
 }
+
+func sendToDjango(to string, body string) {
+    payload := map[string]string{
+        "to":    to,
+        "body":  body,
+    }
+
+    jsonData, _ := json.Marshal(payload)
+	fmt.Printf("Sending to Django: to=%s, body=%s\n", to, body)
+	fmt.Printf("Sending to Django: to=%s, body=%s\n", to, body)
+	fmt.Printf("Sending to Django: to=%s, body=%s\n", to, body)
+	fmt.Printf("Sending to Django: to=%s, body=%s\n", to, body)
+	fmt.Printf("Sending to Django: to=%s, body=%s\n", to, body)
+    req, err := http.NewRequest("POST", config.DjangoAPI, bytes.NewBuffer(jsonData))
+    if err != nil {
+        log.Error("Django req error:", err)
+        return
+    }
+
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        log.Error("Django HTTP error:", err)
+        return
+    }
+    defer resp.Body.Close()
+
+    if resp.StatusCode != 200 && resp.StatusCode != 201 {
+        log.Warnf("Django returned status %d", resp.StatusCode)
+    }
+}
+
 
 // GetQueuedSmsLogs returns the sms logs that are queued up for the given minute.
 func GetQueuedSmsLogs(t time.Time) ([]*SmsLog, error) {

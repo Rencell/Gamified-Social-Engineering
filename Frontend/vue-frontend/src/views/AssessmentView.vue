@@ -14,7 +14,7 @@ onMounted(async () => {
 <template>
     <p class="font-bold text-3xl mb-4">Assessment</p>
     <AddItems />
-    <div class="grid grid-cols-2 gap-4 p-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
         <div v-for="(value, index) in assessmentsStore.assessments" :key="index">
         
             <RouterLink :to="{ name: 'AssessmentDetail', params: { id: value.slug } }">

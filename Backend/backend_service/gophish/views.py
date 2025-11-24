@@ -2,23 +2,42 @@
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .serializers import GophishEventSerializer, GophishUserScoreSerializer, GophishConsentSerializer
-from .models import GophishEvent, GophishUserScore, GophishConsent
+from .serializers import GophishEventSerializer, GophishUserScoreSerializer, GophishConsentSerializer, UserPhoneNumberSerializer, GophishUserScoreSmsSerializer
+from .models import GophishEvent, GophishUserScore, GophishUserScoreSms, GophishConsent, UserPhoneNumber
 from django.contrib.auth.models import User
 from rest_framework import status
 from django.conf import settings
+from .utils import send_sms
+from rest_framework.decorators import api_view
 import requests
 import json
+from django.db.models import Sum, Max
+
 class GoPhishWebhookViewSet(viewsets.ViewSet):
     # POST /api/gophish/
     def create(self, request):
         data = request.data
-        email = data.get('email')
+        raw_identifier = data.get('email')
         message = data.get('message')
         details = data.get('details', {})
         gophish_time = data.get('time')
         
-        print(data)
+        body = data.get('body')
+        to = data.get('to')
+        if body and to:
+            phone_number = UserPhoneNumber.objects.filter(dummy_number=to).first()
+            if phone_number:
+                send_sms(phone_number.phone, body)
+            
+        if not raw_identifier:
+            return Response(
+                {"status": "error", "message": "Missing identifier (email/phone)."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Decide channel
+        is_email = '@' in raw_identifier
+        channel = 'email' if is_email else 'phone'
         
         if message == 'Campaign Created' or message == '':
             return Response(
@@ -26,7 +45,12 @@ class GoPhishWebhookViewSet(viewsets.ViewSet):
                 status=status.HTTP_204_NO_CONTENT
             )
         
-        user = User.objects.filter(email=email).first()
+        if channel == 'email':
+            user = User.objects.filter(email=raw_identifier).first()
+        else:
+            phone_entry = UserPhoneNumber.objects.filter(dummy_number=raw_identifier).first()
+            user = phone_entry.user if phone_entry else None
+            
         if not user:
             return Response(
                 {"status": "error", "message": "User with the provided email does not exist."},
@@ -41,11 +65,16 @@ class GoPhishWebhookViewSet(viewsets.ViewSet):
             user=user
         )
 
-        user_score, _ = GophishUserScore.objects.get_or_create(user=user)
-
+        if channel == 'email':
+            user_score, _ = GophishUserScore.objects.get_or_create(user=user)
+        else:
+            user_score, _ = GophishUserScoreSms.objects.get_or_create(user=user)
         # Increment based on the event type
         if message == "Email/SMS Sent":
-            user_score.emails_sent += 1
+            if channel == 'email':
+                user_score.emails_sent += 1
+            else:
+                user_score.number_sent += 1
             user_score.security_score = min(user_score.security_score + 20, 100)
         elif message == "Clicked Link":
             user_score.links_clicked += 1
@@ -90,6 +119,49 @@ class GophishUserScoreViewSet(viewsets.ModelViewSet):
             return GophishUserScore.objects.all()
         # students see only their own
         return GophishUserScore.objects.filter(user=user)
+    
+    @action(detail=False, methods=['get'])
+    def total_score(self, request):
+        agg = GophishUserScore.objects.aggregate(
+            total_emails_sent=Sum('emails_sent'),
+            total_links_clicked=Sum('links_clicked'),
+            total_data_submitted=Sum('data_submitted'),
+            max_emails_sent=Max('emails_sent'),
+            max_links_clicked=Max('links_clicked'),
+            max_data_submitted=Max('data_submitted'),
+        )
+        emails_sent = agg['total_emails_sent'] or 0
+        links_clicked = agg['total_links_clicked'] or 0
+        data_submitted = agg['total_data_submitted'] or 0
+
+        avg_click_rate = round((links_clicked / emails_sent) * 100, 2) if emails_sent else 0
+        avg_submission_rate = round((data_submitted / emails_sent) * 100, 2) if emails_sent else 0
+
+        return Response({
+            "total_emails_sent": emails_sent,
+            "total_links_clicked": links_clicked,
+            "total_data_submitted": data_submitted,
+            "avg_click_rate": avg_click_rate,
+            "avg_submission_rate": avg_submission_rate,
+            "max_emails_sent": agg['max_emails_sent'] or 0,
+            "max_links_clicked": agg['max_links_clicked'] or 0,
+            "max_data_submitted": agg['max_data_submitted'] or 0,
+        })    
+    
+class GophishUserScoreSmsViewSet(viewsets.ModelViewSet):
+
+    queryset = GophishUserScoreSms.objects.all()
+    serializer_class = GophishUserScoreSmsSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        # staff can see all
+        if user.is_staff:
+            return GophishUserScoreSms.objects.all()
+        # students see only their own
+        return GophishUserScoreSms.objects.filter(user=user)
+
 
 class GophishConsentViewSet(viewsets.ModelViewSet):
 
@@ -105,11 +177,11 @@ class GophishConsentViewSet(viewsets.ModelViewSet):
         # students see only their own
         return GophishConsent.objects.filter(user=user)
     
-    def _add_target_to_gophish(self, user, group_id=1):
+    def _add_target_to_gophish(self, user, email, group_id=1):
         try:
             # Prepare target data
             target_data = {
-                "email": user.email,
+                "email": email,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
                 "position": "student"  # You might want to get this from user profile
@@ -164,7 +236,7 @@ class GophishConsentViewSet(viewsets.ModelViewSet):
             # If user is consenting (email_consent is True), add them to GoPhish
             if email_consent:
                 group_id = getattr(settings, 'GOPHISH_DEFAULT_GROUP_ID', 1)
-                success = self._add_target_to_gophish(user, group_id)
+                success = self._add_target_to_gophish(user, user.email, group_id)
                 
                 if not success:
                     print(f"Warning: Failed to add {user.email} to GoPhish, but consent was still saved")
@@ -178,3 +250,48 @@ class GophishConsentViewSet(viewsets.ModelViewSet):
             }, status=status.HTTP_200_OK)
             
         return Response({"error": "Missing email_consent field."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=False, methods=['post'])
+    def phone(self, request):
+        user = request.user
+        consent, created = GophishConsent.objects.get_or_create(user=user)
+        
+        phone_number = request.data.get('phone_number')
+        
+        if phone_number is not None:
+            user_phone, created = UserPhoneNumber.objects.update_or_create(user=user, phone=phone_number)
+            consent.phone_consent = True
+            
+            if consent.phone_consent:
+                group_id = getattr(settings, 'GOPHISH_DEFAULT_GROUP_ID', 2)
+                success = self._add_target_to_gophish(user, user_phone.dummy_number, group_id)
+                
+                if not success:
+                    print(f"Warning: Failed to add {user.email} to GoPhish, but consent was still saved")
+                    
+            consent.save()
+            
+            return Response({
+                "message": "Phone number updated successfully."
+            }, status=status.HTTP_200_OK)
+            
+        return Response({"error": "Missing phone_number field."}, status=status.HTTP_400_BAD_REQUEST)
+    
+class UserPhoneNumberViewSet(viewsets.ModelViewSet):
+
+    queryset = UserPhoneNumber.objects.all()
+    serializer_class = UserPhoneNumberSerializer
+
+
+
+@api_view(['GET'])
+def gophish_campaigns(request):
+    url = f"{settings.GOPHISH_URL}/api/campaigns"
+    headers = {
+        "Authorization": settings.GOPHISH_API_KEY
+    }
+    res = requests.get(url, headers=headers, verify=settings.GOPHISH_VERIFY_SSL, timeout=10)
+    return Response(res.json())
+
+
+# api/groups/1
