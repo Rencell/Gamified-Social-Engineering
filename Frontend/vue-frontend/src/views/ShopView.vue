@@ -15,9 +15,13 @@
             <div class="h-6 bg-[#9EACDA] w-full"></div>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 sm:grid-cols-3 gap-3 md:gap-6">
-            <div v-for="(value, index) in shop_list" :key="index" class="p-2 space-y-4 bg-secondary rounded-lg">
+            <div v-for="(value, index) in shop_list" :key="index" class="p-2 space-y-4 bg-secondary rounded-lg ">
+                <div class="flex mb-2 gap-2 justify-center">
+                    <DeleteItems :cosmetic-id="value.id" />
+                    <UpdateItems :data="value" />
+                </div>
                 <div>
-                    <img :src="value.image" class="rounded-lg h-35 md:h-45 w-full object-top object-cover" alt="">
+                    <img :src="String(value.image)" class="rounded-lg h-35 md:h-45 w-full object-top object-cover" alt="">
                 </div>
                 <div
                     class="bg-linear-to-r from-transparent via-blue-500/40 to-transparent py-1 md:py-2 mb-3 text-center text-xs uppercase font-semibold text-blue-500 mx-auto">
@@ -43,8 +47,12 @@
                             <p class="font-bold text-sm -ms-1">{{ value.price }}</p>
                         </template>
                     </Button>
+
                 </div>
+
             </div>
+
+            <AddItems />
         </div>
     </div>
 </template>
@@ -53,16 +61,19 @@
 import { ArrowLeft } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import coin from '/Home/coin.svg';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { CosmeticService } from '@/services';
 import type { Cosmetic } from '@/services/cosmeticService';
 import { useAuthStore } from '@/stores/auth';
 import { useRewardStore } from '@/stores/reward';
 import { useCosmeticStore } from '@/stores/cosmetic';
+import AddItems from '@/components/home/shop/addItems.vue'
+import UpdateItems from '@/components/home/shop/updateItems.vue'
+import DeleteItems from '@/components/home/shop/deleteItems.vue'
 const cosmeticStore = useCosmeticStore();
 const purchaseItem = useRewardStore();
 const authStore = useAuthStore();
-const shop_list = ref<(Cosmetic & { purchased: boolean })[]>([]);
+// const shop_list = ref<(Cosmetic & { purchased: boolean })[]>([]);
 
 const buyItem = async (item: Cosmetic & { purchased: boolean }) => {
     if (authStore.User.coin >= item.price) {
@@ -75,13 +86,17 @@ const buyItem = async (item: Cosmetic & { purchased: boolean }) => {
     };
 }
 
+// Replace ref with computed
+const shop_list = computed(() => 
+    cosmeticStore.item_cosmetics.map(item => ({
+        ...item,
+        purchased: false // You might want to check actual purchase status here
+    }))
+);
+
 onMounted(async () => {
     try {
-        shop_list.value = (await CosmeticService.get_all()).map(item => ({
-            ...item,
-            purchased: false
-        }));
-
+        await cosmeticStore.fetchCosmeticItems()
     } catch (error) {
         console.error('Error fetching cosmetics:', error);
     }

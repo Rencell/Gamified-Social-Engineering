@@ -30,9 +30,14 @@ const quiz: QuizMode[] = [
     { label: "Multiple Choice", id: "MultipleChoice" },
     { label: "Matching Type", id: "MatchingType" },
     { label: "Drag Pair", id: "DragPair" },
+    { label: "Phishing Tactics", id: "PhishingTactics" },
     { label: "Module Reward", id: "ModuleReward" },
     { label: "Scenario Story", id: "ScenarioTraining" },
 ]
+
+// const quiz: QuizMode[] = [
+//     { label: "Phishing Email", id: "PhishingTactics" },
+// ]
 
 function changeQuizType(newType: QuizType) {
     emit('onChangeQuestionType', newType);
@@ -40,7 +45,6 @@ function changeQuizType(newType: QuizType) {
 </script>
 
 <template>
-    
     <component v-if="!editable && quizType === 'ModuleReward'" :is="quizComponent" />
     
     <FinalQuizFlowShell v-else-if="!editable && quizType === 'FinalTest'" :quiz-component="quizComponent" :questions="questions" />
@@ -58,7 +62,7 @@ function changeQuizType(newType: QuizType) {
                         </Badge>
                     </CardTitle>
                 </CardHeader>
-                <CardContent class="space-y-4 flex gap-2">
+                <CardContent class="space-y-4 flex flex-wrap gap-2">
                     <Button v-for="value in quiz" :key="value.id"
                         :variant="value.id === quizType ? 'default' : 'outline'" size="sm" class="gap-2"
                         @click="changeQuizType(value.id)">
@@ -75,11 +79,7 @@ function changeQuizType(newType: QuizType) {
 
         <div class="container mx-auto px-6 py-8">
             
-            <component :is="editableComponent" :questions="questions" 
-                 
-                @toggleOnCreateQuestion="emit('onCreateQuestion')"
-                @toggleOnDeleteQuestion="emit('onDeleteQuestion', $event)"
-                @toggleOnCreateFinalQuestion="emit('onCreateFinalQuestion', $event)" />
+            <component :is="editableComponent" :questions="questions" />
         </div>
     </template>
 

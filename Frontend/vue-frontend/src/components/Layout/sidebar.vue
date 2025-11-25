@@ -5,14 +5,17 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import home from '/Icons/Home.svg?url'
 import learn from '/Icons/Learn.svg?url'
-import learns from '/Icons/Learns.svg?url'
 import trophy from '/Icons/Trophy.svg?url'
 import game from '/Icons/Game.svg?url'
 import profile from '/Icons/profile.svg?url'
+import hook from '/Icons/hook.svg?url'
+import sms from '/Icons/SMS.svg?url'
+import assessment from '/Icons/assess.svg?url'
+
 
 import logout from '/sidebar/door.svg'
 
-import { Home, BookOpen, Trophy, AlertTriangle, User, Flag, ChevronDown, LogOut } from 'lucide-vue-next'
+import { User, ChevronDown } from 'lucide-vue-next'
 import {
   Sidebar,
   SidebarContent,
@@ -24,8 +27,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
-  SidebarTrigger,
 } from '@/components/ui/sidebar'
 import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore();
@@ -53,6 +54,21 @@ const navigationData = {
       title: 'Mini Games',
       url: '/minigames',
       Image: game
+    },
+    {
+      title: 'Assessments',
+      url: '/assessments',
+      Image: assessment
+    },
+    {
+      title: 'Phishing Simulation',
+      url: '/simulation',
+      Image: hook
+    },
+    {
+      title: 'Smishing Simulation',
+      url: '/sms-simulation',
+      Image: sms
     },
   ],
 }
@@ -91,6 +107,9 @@ onBeforeUnmount(() => {
         <SidebarGroupContent>
           <SidebarMenu class="space-y-3">
             <SidebarMenuItem v-for="item in navigationData.learning" :key="item.title">
+
+              
+
               <RouterLink :to="Array.isArray(item.url) ? item.url[0] : item.url" class="flex items-center gap-3 ">
                 <SidebarMenuButton
                   :data-active="Array.isArray(item.url) ? item.url.some(path => route.path.startsWith(path)) : route.path.startsWith(item.url)"
@@ -105,12 +124,14 @@ onBeforeUnmount(() => {
                   data-[active=true]:text-white
                   data-[active=true]:shadow-sm
                 ">
-                  <img :src="item.Image" alt="" class="h-6 w-6 flex-shrink-0 me-3" />
+                  
+                <img :src="item.Image" alt="" class="h-6 w-6 flex-shrink-0 me-3" />
                   <!-- <component :is="item.icon" class="h-5 w-5 flex-shrink-0" /> -->
                   <span class="font-bold ">{{ item.title }} </span>
 
                 </SidebarMenuButton>
               </RouterLink>
+              <p v-if="item.title === 'Assessments'" class="text-xs font-medium text-slate-400 uppercase tracking-wider mt-3">Simulation</p>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroupContent>

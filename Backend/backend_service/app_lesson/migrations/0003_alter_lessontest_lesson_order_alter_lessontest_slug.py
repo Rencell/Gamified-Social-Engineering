@@ -2,7 +2,10 @@
 
 from django.db import migrations, models
 
-
+def add_lesson_data(apps, schema_editor):
+    Lesson = apps.get_model('app_lesson', 'lessontest')
+    
+    Lesson.objects.create(title='Introduction to Social Engineering', bg='#FF5733', description='Learn the basics of social engineering, its techniques, and how to protect against it.')
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -20,4 +23,6 @@ class Migration(migrations.Migration):
             name='slug',
             field=models.SlugField(blank=True, null=True, unique=True),
         ),
+        
+        migrations.RunPython(add_lesson_data),
     ]

@@ -4,10 +4,12 @@ import { CosmeticService } from '@/services'
 import type { UserCosmetic, CosmeticInventory, Cosmetic } from '@/services/cosmeticService'
 import { useAuthStore } from '@/stores/auth'
 import { toast } from 'vue-sonner'
+import cosmeticService from '@/services/cosmeticService'
 export const useCosmeticStore = defineStore('cosmetic', () => {
   // State
   const authStore = useAuthStore()
   const cosmetics = ref<UserCosmetic[]>([])
+  const item_cosmetics = ref<Cosmetic[]>([])
   const inventory_items = ref<CosmeticInventory[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -22,6 +24,76 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
     }
   }
 
+  const fetchCosmeticItems = async (): Promise<void> => {
+    if(!item_cosmetics.value.length) {
+      try {
+        item_cosmetics.value = await CosmeticService.get_all();
+      } catch (err: any) {
+        error.value = err.message || 'Failed to fetch cosmetic items'
+      }
+    }
+  }
+  const createCosmetic = async (cosmetic: Partial<Cosmetic>) => {
+
+
+    try {
+      const formData = new FormData()
+      formData.append('name', cosmetic.name!)
+      formData.append('type', cosmetic.type!)
+      formData.append('price', cosmetic.price!.toString())
+      formData.append('rive_code', cosmetic.rive_code!.toString())
+      if (cosmetic.image) {
+        formData.append('image', cosmetic.image) // actual File object
+      }
+      const newCosmetics = await cosmeticService.create_item(formData as Partial<Cosmetic>)
+      item_cosmetics.value.push(newCosmetics)
+    } catch (err: any) {
+      error.value = err.message || 'Unknown error'
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  const updateCosmetic = async (cosmetic: Cosmetic) => {
+
+
+    try {
+      const formData = new FormData()
+      formData.append('name', cosmetic.name)
+      formData.append('type', cosmetic.type)
+      formData.append('price', cosmetic.price.toString())
+      formData.append('rive_code', cosmetic.rive_code.toString())
+
+      if (cosmetic.image instanceof File) {
+        formData.append("image", cosmetic.image);
+      }
+
+      const updateCosmetic = await cosmeticService.update_item(cosmetic.id, formData)
+      item_cosmetics.value = item_cosmetics.value.map((item) =>
+        item.id === updateCosmetic.id ? updateCosmetic : item
+      )
+      toast_notification('Cosmetic updated successfully')
+    } catch (err: any) {
+      error.value = err.message || 'Unknown error'
+    }
+    finally {
+      loading.value = false
+    }
+  }
+  
+  const deleteCosmetic = async (cosmeticId: number) => {
+    try {
+      await cosmeticService.delete_item(cosmeticId)
+      item_cosmetics.value = item_cosmetics.value.filter((item) => item.id !== cosmeticId)
+      toast_notification('Cosmetic deleted successfully')
+    }
+    catch (err: any) {
+      error.value = err.message || 'Unknown error'
+    }
+    finally {
+      loading.value = false
+    }
+  }
   const updateService = async (): Promise<void> => {
     try {
       cosmetics.value = await CosmeticService.user_cosmetic()
@@ -125,10 +197,15 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
   return {
     cosmetics,
     inventory_items,
+    item_cosmetics,
     loading,
     error,
     cosmeticCount,
     fetchCosmetics,
+    fetchCosmeticItems,
+    createCosmetic,
+    updateCosmetic,
+    deleteCosmetic,
     updateInventory,
     fetchInventory,
     equipAvatar,

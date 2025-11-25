@@ -18,8 +18,8 @@ defineProps<{
   lessonId: number | undefined
 }>()
 
-const deleteLesson = (lessonId: number) => {
-  lessonStore.deleteLesson(lessonId);
+const deleteLesson = async(lessonId: number) => {
+  await lessonStore.deleteLesson(lessonId);
 }
 
 </script>

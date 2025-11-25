@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'app_daily',
     'app_contents',
     'app_section',
+    'app_assessment',
+    'gophish',
     'rest_framework',
     'rest_framework.authtoken',
     
@@ -151,7 +153,7 @@ REST_AUTH = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "Asia/Manila"
 
 USE_I18N = True
 
@@ -203,6 +205,7 @@ LOGOUT_REDIRECT_URL = "http://localhost:5173/"
 CORS_ALLOWED_ORIGINS = [  
     'https://gamified-frontend-caps.onrender.com',
     'http://localhost:5173',  
+    'https://gamified-social-engineering-git-gh-page-rencells-projects.vercel.app',
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -213,7 +216,10 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "https://gamified-frontend-caps.onrender.com",
+    "https://gamified-social-engineering-git-gh-page-rencells-projects.vercel.app",
+    
 ]
+
 CSRF_COOKIE_DOMAIN = None
 CSRF_COOKIE_SECURE = False  # Set to True in production if using HTTPS
 CSRF_COOKIE_HTTPONLY = False
@@ -273,3 +279,11 @@ SOCIALACCOUNT_PROVIDERS['google']['APP'] = {
     'secret': os.getenv('GOOGLE_CLIENT_SECRET'),
     'key': ''
 }
+
+GOPHISH_URL = os.getenv("GOPHISH_URL", "https://127.0.0.1:3333")
+GOPHISH_API_KEY = os.getenv("GOPHISH_API_KEY", "")
+GOPHISH_VERIFY_SSL = os.getenv("GOPHISH_VERIFY_SSL", "true").lower() in ("1","true","yes")
+
+
+IPROG_SMS_API_TOKEN = os.getenv("IPROG_SMS_API_TOKEN", "1231asd1")
+IPROG_SMS_BASE_URL = os.getenv("IPROG_SMS_BASE_URL", "https://www.iprogsms.com/api/v1/sms_messages")

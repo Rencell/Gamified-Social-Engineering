@@ -6,6 +6,8 @@ import { useRoute } from 'vue-router';
 import { useModuleStore } from '@/stores/module';
 import { useLessonStore } from '@/stores/lesson';
 import Quiz from './quiz.vue';
+import Content1 from './phishing/ProtectFromPhishing/Content1.vue'
+
 const route = useRoute();
 const moduleStore = useModuleStore();
 const lessonStore = useLessonStore();
@@ -46,9 +48,17 @@ const final = ref({
   component: Quiz,
 });
 
+const test = ref({
+  id: 10,
+  component: Content1,
+});
+
+// import index from './phishing/WhatIsPhishing/index.vue';
 const finalpush = computed(() => [...contentStore.components, final.value]);
+
 </script>
 
 <template>
+  
   <LessonReveal :components="finalpush" :with-quiz="true" :key="moduleStore.selectedModule?.id!" />
 </template>

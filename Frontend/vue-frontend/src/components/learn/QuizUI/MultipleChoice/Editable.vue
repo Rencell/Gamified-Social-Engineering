@@ -10,6 +10,7 @@ import SidebarEdittable from '../SidebarEdittable.vue';
 import { useUploadContentQuiz } from '@/composables/useUploadContentQuiz';
 import { useContentStore } from '@/stores/content';
 import { useImageUrl } from '@/composables/useImageUrl';
+import { defaultPropsMap } from '../QuizRegistry';
 
 const props = defineProps<{
     questions: any[];
@@ -164,8 +165,10 @@ async function handleUpload() {
         </div>
 
         <!-- Sidebar -->
-        <SidebarEdittable :questions="props.questions" :currentIndex="currentIndex"
-            @update:currentIndex="currentIndex = $event" @toggleOnCreateQuestion="$emit('toggleOnCreateQuestion')"
-            @toggleOnDeleteQuestion="$emit('toggleOnDeleteQuestion', $event)" />
+        <SidebarEdittable 
+            :questions="props.questions" 
+            :currentIndex="currentIndex"
+            @update:currentIndex="currentIndex = $event" 
+            :propsMap="defaultPropsMap.MultipleChoice" />
     </div>
 </template>

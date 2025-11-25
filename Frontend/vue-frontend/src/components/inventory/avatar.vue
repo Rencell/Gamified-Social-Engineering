@@ -35,7 +35,7 @@ const isBackgroundEquipped = (item: string) => {
                 <div v-for="(value, index) in inventory_items" :key="index" class="p-2 space-y-4 bg-secondary rounded-lg">
 
                     <div>
-                        <img :src="value.item.image" class="rounded-lg h-45 w-full object-cover object-top" alt="">
+                        <img :src="String(value.item.image)" class="rounded-lg h-45 w-full object-cover object-top" alt="">
                     </div>
                     <div
                         class="bg-linear-to-r from-transparent via-blue-500/40 to-transparent py-1 md:py2 px-20 mb-3 text-center text-xs uppercase font-semibold text-blue-500 mx-auto">

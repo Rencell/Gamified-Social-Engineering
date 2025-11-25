@@ -5,8 +5,8 @@
         <component v-if="!quizCompleted" :is="quizComponent" :questions="shuffleQuestions" @finish="onFinish"
             class="slide-next" />
         <template v-else>
-            <FinalAchivements v-if="!quizSummary" @toggle-summary="quizSummary = true" />
-            <FinalSummary v-else :score="score" :length="total_questions" @retryQuiz="resetQuiz"
+            <!-- <FinalAchivements v-if="quizSummary" @toggle-summary="quizSummary = true" /> -->
+            <FinalSummary :score="score" :length="total_questions" @retryQuiz="resetQuiz"
                 @nextLesson="nextLesson" :timeSpent="timeSpent" :attempts="attempts + 1" />
         </template>
     </template>
@@ -92,9 +92,6 @@ const onFinish = async (finalScore: number, timer: number) => {
         if (finalScore > prevScore) {
             console.log('Final score is greater than previous score. Saving quiz result...');
             await saveQuizResult();
-            console.log('Quiz result saved successfully.');
-
-            console.log('Completing module...');
             console.log('Module completed successfully.');
         } else {
             console.log('Final score is not greater than previous score. Skipping save and module completion.');

@@ -6,13 +6,14 @@ import { computed, ref } from 'vue'
 import { useAuthStore } from './auth'
 import { useSectionStore } from './sections'
 import { useStreakStore } from './pageStreak'
+import { useCourseUnlockStore } from './pageCourseUnlock'
 export const useModuleStore = defineStore('Module', () => {
   const lessonStore = useLessonStore()
   const modules = ref<ModuleTest[]>([])
   const selectedModule = ref<ModuleTest | null>(null)
   const sectionStore = useSectionStore()
   const streakStore = useStreakStore()
-
+  const pageCourseUnlockStore = useCourseUnlockStore()
   const fetchModules = async (lessonId: string) => {
     try {
       modules.value = await ModuleService.get_all_test(lessonId)
@@ -84,9 +85,23 @@ export const useModuleStore = defineStore('Module', () => {
   }
 
   const unlockModule = async () => {
-
     try {
       const moduleId = selectedModule.value?.id as number
+      selectedModule.value!.locked = false
+
+      const section = sectionStore.selectedSection
+      if (section) {
+        const moduleIndex = section.modules.findIndex((m) => m.id === moduleId)
+        if (moduleIndex !== -1) {
+          section.modules[moduleIndex].locked = false
+        }
+      }
+
+      // ALSO update in the main modules array if it exists
+      const mainModuleIndex = modules.value.findIndex((m) => m.id === moduleId)
+      if (mainModuleIndex !== -1) {
+        modules.value[mainModuleIndex].locked = false
+      }
       await ModuleService.unlock_module({ module_test: moduleId })
     } catch (error) {
       console.error('Error unlocking module:', error)
@@ -137,14 +152,34 @@ export const useModuleStore = defineStore('Module', () => {
     if (!mod) return
     const lesson = lessonStore.lessons?.find((l) => l.id === mod.unlocks_lesson)
     try {
-      mod.locked = false
-      console.log('Completing module:', mod)
+      streakStore.postStreak()
       await unlockModule()
-      console.log('Module unlocked:', mod)
-      if (mod.final && lesson?.id) {
-        await lessonStore.unlockLesson(lesson.id as number)
-        lesson.locked = false
-        streakStore.postStreak()
+
+      console.log('lesson unlocked:', lessonStore.currentLesson)
+
+      let currentLesson
+      
+      if (lessonStore.currentLesson ) {
+        currentLesson = lessonStore.currentLesson 
+        currentLesson.completed_modules = (currentLesson.completed_modules || 0) + 1
+      }
+
+      const isFinalModule = currentLesson &&
+        (currentLesson.completed_modules ?? 0) >= (currentLesson.total_modules ?? 0)
+
+      if (isFinalModule) {
+        if (lesson) {
+          pageCourseUnlockStore.setCourseDetails(
+            lesson.title || '',
+            lesson.description || '',
+            lesson.image ? lesson.image.toString() : '/Human.webp',
+          )
+          pageCourseUnlockStore.openCourseModal = true
+
+          await lessonStore.unlockLesson(lesson?.id as number)
+          lesson.locked = false
+          streakStore.postStreak()
+        }
       }
 
       // await updateLessons()

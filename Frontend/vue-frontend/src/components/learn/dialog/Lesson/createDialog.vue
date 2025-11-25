@@ -24,7 +24,11 @@ interface LessonForm {
     lesson_order: number | null
     description: string
     locked?: boolean
+    objective: string[]
 }
+// control dialog open state
+const open = ref(false);
+
 // Reactive object to hold the form data
 const formData = ref<LessonForm>({
     title: '',
@@ -33,6 +37,7 @@ const formData = ref<LessonForm>({
     bg: '',
     lesson_order: null,
     description: '',
+    objective: [],
 });
 
 // Array of field configurations
@@ -45,8 +50,9 @@ const fields: Array<{ key: keyof LessonForm; label: string; type: string; placeh
 
 // Function to handle saving the form data
 const lessonStore = useLessonStore();
-const saveLesson = () => {
-    lessonStore.createLesson(formData.value);
+const saveLesson = async () => {
+    await lessonStore.createLesson(formData.value);
+    open.value = false;
 };
 
 
@@ -64,10 +70,10 @@ function onFileChange(event: Event) {
 </script>
 
 <template>
-    <Dialog>
+    <Dialog v-model:open="open">
         <DialogTrigger>
             <Button>
-                <Plus /> Create New Lesson
+                <Plus /> Create New Module
             </Button>
         </DialogTrigger>
         <DialogContent>

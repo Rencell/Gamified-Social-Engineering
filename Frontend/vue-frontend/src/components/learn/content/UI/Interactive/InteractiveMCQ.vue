@@ -8,6 +8,7 @@ import { useEditableText } from '@/composables/useEditableText';
 import EditableText from '../Learning/EditableText.vue'
 import EditableInteractive from '../Learning/EditableInteractive.vue'
 import type { Content } from '@/services/contentService';
+import LearningBold from '../Learning/Highlight/LearningBold.vue';
 
 
 
@@ -59,7 +60,8 @@ const { editable, my_text, updateProps, deleteComponent, addComponent, reorderCo
   <div v-if="!editable" class="space-y-5">
     <div v-if="!isAnswered" class="space-y-5 pb-20">
       <LearningImage2 v-if="props.image" :image="props.image" />
-      <p class="font-bold text-lg">{{ mcq.question }}</p>
+      <p class="font-bold text-lg"><LearningBold :text="mcq.question"></LearningBold></p>
+      
 
       <div class="space-y-3">
         <Card v-for="option in mcq.options" :key="option.id" @click="handleAnswerSelect(option.id)" :class="[

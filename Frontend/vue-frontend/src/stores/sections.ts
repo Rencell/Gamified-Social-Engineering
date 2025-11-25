@@ -45,7 +45,7 @@ export const useSectionStore = defineStore('pageSection', () => {
 
   const deleteSection = async (sectionId: number) => { 
     try {
-      // await ServiceService.delete_section(sectionId)
+      await ServiceService.delete_section(sectionId)
       sections.value = sections.value.filter(section => section.id !== sectionId)
       console.log('Section deleted:', sectionId)
     }

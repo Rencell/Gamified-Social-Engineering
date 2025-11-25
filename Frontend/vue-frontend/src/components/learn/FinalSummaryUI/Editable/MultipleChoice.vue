@@ -77,7 +77,7 @@ async function handleUpload() {
                     
                 </div>
                 <div class="mt-3 p-3 border rounded-lg bg-muted/50">
-                    <img :src="previewUrl || useImageUrl(quizData.image) || '/placeholder.svg'" alt="Question preview"
+                    <img :src="previewUrl || useImageUrl(quizData.image) || '/Website.png'" alt="Question preview"
                         class="max-w-full h-auto max-h-48 rounded mx-auto" @error="hideImage" />
 
                 </div>

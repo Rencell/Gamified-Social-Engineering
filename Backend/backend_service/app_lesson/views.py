@@ -147,6 +147,8 @@ class UserLessonTestProgressViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(latest_lesson)
         data = serializer.data
         data['percentage'] = percentage
+        image = latest_lesson.lesson_test.image
+        data['image'] = image.url if image and hasattr(image, 'url') else None
         data['module_count'] = latest_lesson.lesson_test.module_tests.count()
         data['completed_module_count'] = latest_lesson.lesson_test.module_tests.filter(users=user).count()
         return Response(data)

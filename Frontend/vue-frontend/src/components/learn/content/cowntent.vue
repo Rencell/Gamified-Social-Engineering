@@ -1,6 +1,7 @@
 <template>
   <LearningContent :content-id="content_order">
     <RecursiveContent v-for="item in sortedContentItems" 
+      
       :key="item.id" 
       :item="item"
       :siblings="item.children || []"
@@ -14,12 +15,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, nextTick } from 'vue';
 import RecursiveContent from './recurse.vue';
 import { ContentService } from '@/services/index.ts';
 import type { Content } from '@/services/contentService.ts';
-import type { LearningType } from './type.ts';
-import { defaultPropsMap } from './UI/learningRegistry.ts';
+import { defaultPropsMap, type LearningType } from './UI/learningRegistry.ts';
 import { componentMap } from './UI/learningRegistry.ts';
 import LearningContent from './UI/Learning/Core/LearningContent.vue';
 
@@ -39,6 +39,7 @@ const props = defineProps<{
 
 const contentItems = ref<Content[]>([]);
 
+
 onMounted(async () => {
   
   await ContentService.get_contentitems_by_parent(props.content_order).then((response) => {
@@ -50,6 +51,7 @@ onMounted(async () => {
 
 
 const handleContentUpdate = async(id: number, $event: string) => {
+  
   try {
     const propsObj = typeof $event === "string" ? JSON.parse($event) : $event;
     await ContentService.patch(id, { props: propsObj }); // partial update
@@ -64,20 +66,24 @@ const handleContentUpdate = async(id: number, $event: string) => {
 }
 
 const handleDeleteComponent = async (id: number) => {
-  const deleteItemAndChildren = (itemId: number): number[] => {
-    const children = contentItems.value.filter((item) => item.parent === itemId)
-    const childIds = children.flatMap((child) => deleteItemAndChildren(child.id))
-    return [itemId, ...childIds]
+  if (!confirm("Are you sure you want to delete this component and all its children? This action cannot be undone.")) {
+    return;
   }
 
-  const idsToDelete = deleteItemAndChildren(id)
+  const deleteItemAndChildren = (itemId: number): number[] => {
+    const children = contentItems.value.filter((item) => item.parent === itemId);
+    const childIds = children.flatMap((child) => deleteItemAndChildren(child.id));
+    return [itemId, ...childIds];
+  };
+
+  const idsToDelete = deleteItemAndChildren(id);
   try {
     await ContentService.deleteMultiple(idsToDelete);
     contentItems.value = contentItems.value.filter(item => !idsToDelete.includes(item.id));
   } catch (error) {
     console.error("Failed to delete items from database:", error);
   }
-}
+};
 
 const handleAddComponent = async (type: LearningType, parentId?: number) => {
 
@@ -99,6 +105,21 @@ const handleAddComponent = async (type: LearningType, parentId?: number) => {
   try {
     const response = await ContentService.create(newItem as Content)
     contentItems.value.push(response)
+
+    // Wait for DOM update, then scroll to the newly added element and highlight it
+    await nextTick()
+    const el = document.getElementById(`content-item-${response.id}`)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+      el.classList.remove('newly-created')
+      
+      void (el as HTMLElement).offsetWidth
+      el.classList.add('newly-created')
+      el.addEventListener('animationend', () => {
+        el.classList.remove('newly-created')
+      }, { once: true })
+    }
   } catch (error) {
     console.error("Error creating content item:", error);
     return;
@@ -187,3 +208,16 @@ function buildTree(items: Content[]): Content[] {
 
 const sortedContentItems = computed(() => buildTree(contentItems.value));
 </script>
+
+<style>
+@keyframes newItemHighlight {
+  0% { background-color: rebeccapurple; }
+  100% { background-color: transparent; }
+}
+
+/* global so it applies to the element in child component */
+.newly-created {
+  
+  animation: newItemHighlight 2s ease-out forwards;
+}
+</style>

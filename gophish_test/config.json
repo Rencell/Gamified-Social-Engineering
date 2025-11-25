@@ -1,0 +1,30 @@
+{
+    "admin_server": {
+        "listen_url": "0.0.0.0:3333",
+        "use_tls": true,
+        "cert_path": "gophish_admin.crt",
+        "key_path": "gophish_admin.key",
+        "trusted_origins": [
+			"https://tectonically-unsailed-jacquline.ngrok-free.dev",
+			"http://tectonically-unsailed-jacquline.ngrok-free.dev",
+			"http://localhost",
+       		"https://gophish.example.com",
+            "http://localhost:5173"
+		]
+    },
+    "phish_server": {
+        "listen_url": "0.0.0.0:80",
+        "use_tls": true,
+        "cert_path": "gophish_template.crt",
+        "key_path": "gophish_template.key"
+    },
+    "django_api": "http://localhost:8000/api/gophish/gophish_webhook/",
+    "db_name": "sqlite3",
+    "db_path": "gophish.db",
+    "migrations_prefix": "db/db_",
+    "contact_address": "",
+    "logging": {
+        "filename": "",
+        "level": ""
+    }
+}

@@ -26,16 +26,17 @@ watch(
         loading.value = true
 
         const img = new Image()
-        img.src = newImage
+        img.src = String(newImage)
 
         // Wait for S3 image to fully load
         img.onload = () => {
-            loadedImage.value = newImage
+            loadedImage.value = String(newImage)
             loading.value = false
         }
 
         img.onerror = () => {
             // fallback if S3 fails
+            loadedImage.value = ''
             loading.value = false
         }
     },

@@ -33,13 +33,13 @@ const emit = defineEmits<{
                 <p class="text-center font-bold text-2xl font-display">{{title}}</p>
 
                 <div class="flex justify-center gap-3 text-sm font-semibold text-white/80">
-                    <div class="flex gap-1 items-center">
+                    <div v-if="total_contents != 0" class="flex gap-1 items-center">
                         <Book class="size-4 "></Book>
                         {{ total_contents }} Contents</div>
                     <div class="flex gap-1 items-center">
 
                         <MagnetIcon class="size-4 "></MagnetIcon>
-                        {{ content_quiz ? content_quiz.replace(/([A-Z])/g, ' $1').trim() : '' }}</div>
+                        {{ content_quiz ? String(content_quiz).replace(/([A-Z])/g, ' $1').trim() : '' }}</div>
                 </div>
                 <hr class="border-white/10" />
                 <div class="flex flex-col gap-4 font-bold">
@@ -50,7 +50,7 @@ const emit = defineEmits<{
 
                     </RouterLink>
 
-                    <RouterLink v-show="content_quiz !== 'ModuleReward'" :to="routerLink + '?openQuiz=true'" class="w-full">
+                    <RouterLink v-show="String(content_quiz) !== 'ModuleReward'" :to="routerLink + '?openQuiz=true'" class="w-full">
                         <Button variant="ghost" class=" font-bold bg-background w-full">
                             Quiz
                         </Button>

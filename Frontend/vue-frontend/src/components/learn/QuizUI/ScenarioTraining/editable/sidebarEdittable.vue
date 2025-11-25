@@ -29,16 +29,35 @@ function deleteQuestion(index: number) {
         alert("You must have at least one question.");
         return;
     }
+
+    if (props.currentIndex === index) {
+        emit('update:currentIndex', Math.max(0, index - 1));
+    } else if (props.currentIndex > index) {
+        emit('update:currentIndex', 0);
+    }
+
     editQuestion.value.splice(index, 1);
 }
 
 const addStory = () => {
     editQuestion.value.push(defaultScenarioProps.Story)
+    if(props.questions.length <= 10) {
+        contentStore.contentItems.quiz_limit = props.questions.length;
+    }
 }
 
 const addMCQ = () => {
     editQuestion.value.push(defaultScenarioProps.MCQ)
+    if(props.questions.length <= 10) {
+        contentStore.contentItems.quiz_limit = props.questions.length;
+    }
 }
+const checkbox = ref(true);
+
+const isQuizLimitInvalid = computed(() => {
+    return (contentStore.contentItems.quiz_limit ?? 0) > props.questions.length;
+});
+
 </script>
 
 <template>
@@ -48,7 +67,17 @@ const addMCQ = () => {
                 <CardTitle class="text-sidebar-foreground">Question Status</CardTitle>
             </CardHeader>
             <CardContent class="space-y-4">
-                
+                <div class="gap-2 flex items-center justify-end text-sm">
+                    Edit Default <Checkbox v-model="checkbox"></Checkbox>
+                </div>
+                <div class="flex items-center gap-2">
+                    <p class="text-xs w-25">Quiz Limit:</p>
+
+                    <Input :disabled="checkbox" type="number" v-model="contentStore.contentItems.quiz_limit"
+                        placeholder="Enter quiz limit"
+                        :class="{ 'border-red-500 focus-visible:ring-red-500': isQuizLimitInvalid }" />
+                </div>
+
                 <div v-for="(value, index) in questions" :key="index" class="space-y-2">
                     <div class="flex justify-between text-sm hover:bg-ternary/10 rounded-lg cursor-pointer p-1"
                         :class="index === currentIndex ? 'bg-accent/50 font-medium p-2' : ''"

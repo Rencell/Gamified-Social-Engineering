@@ -8,7 +8,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/',
+  base: './',
   plugins: [
     vue(),
     vueDevTools(),
@@ -65,5 +65,13 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
+  },
+  
+  server: {
+    allowedHosts: [
+      'localhost',
+      '127.0.0.1',
+      'tectonically-unsailed-jacquline.ngrok-free.dev'
+    ]
   },
 })

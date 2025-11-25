@@ -69,7 +69,7 @@ const finishQuiz = () => {
 }
 
 const resetQuiz = () => {
-    
+
     triggerWhy.value = false
     testPosition.value += 1
     selectedAnswer.value = null
@@ -103,8 +103,15 @@ const triggerWhy = ref(false)
                 </div>
 
                 <div class="p-5  bg-white rounded-lg border-1 border-black/40 shadow-xl motion-preset-fade">
-                    <div class="py-4 text-black text-sm" v-html="currentQuestion.content">
+                    <div class="py-4 text-black text-sm flex flex-col gap-3">
+                        <template v-for="value in currentQuestion.content" :key="value">
+                            <a v-if="value.charAt(0) === '#'" href="#"
+                                 class="bg-yellow-400 text-black px-4 py-2 w-fit  rounded">
+                                {{ value.trim().substring(1) }}
+                            </a>
 
+                            <p v-else>{{ value }}</p>
+                        </template>
 
                     </div>
 
@@ -171,7 +178,7 @@ const triggerWhy = ref(false)
                     <p>adsd</p>
                 </div>
             </div>
-    
+
             <!-- Continue Button -->
             <Button :disabled="loading" v-if="isAnswered" class="mt-4 border-primary/50"
                 :class="isCorrect ? 'bg-green-500' : 'bg-red-500'" @click="toggleNext">

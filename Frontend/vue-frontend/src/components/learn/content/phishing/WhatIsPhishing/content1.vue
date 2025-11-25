@@ -62,7 +62,7 @@ const mcq: MCQ = {
         { id: 'B', text: 'legitimate banks will never ask customers to provide sensitive information' },
         { id: 'C', text: 'Contact the sender using the reply function in the same email to confirm their identity' }
     ],
-    correctAnswer: 'B'
+    answer: 'B'
 };
 
 const emit = defineEmits(['showDown']);

@@ -40,4 +40,5 @@ class Migration(migrations.Migration):
                 'db_table': 'user_lesson_test_progress',
             },
         ),
+      
     ]

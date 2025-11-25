@@ -14,6 +14,7 @@ import CreateSectionDialog from '@/components/learn/dialog/Lesson/Section/create
 import type { Section } from '@/services/sectionService';
 import SectionDivider from '@/components/learn/learnUI/SectionDivider.vue'
 import moduleService from '@/services/moduleService';
+import { useAuthStore } from '@/stores/auth';
 
 
 const moduleStore   = useModuleStore();
@@ -75,6 +76,7 @@ onMounted(async () => {
 
 
 const isFinalLocked = (section: Section) => {
+   
     const nonFinal = section.modules.filter(m => !m.final)
     const anyUnlocked = nonFinal.every(m => m.locked === false)
 
@@ -94,6 +96,10 @@ const get_all_modules = async () => {
 
 get_all_modules();
 
+// helper function that returns the first locked module of a section
+const getFirstLockedModule = (section: { modules: any[]; }) => {
+  return section.modules.find(m => m.locked === true)
+}
 </script>
 
 <template>
@@ -125,13 +131,19 @@ get_all_modules();
                     <div v-show="sectionRefs[section.id]">
                         <CreateModuleDialog :section-id="section.id" />
 
-                        <ModuleCard v-for="(module, key) in section.modules" :lessonkey="key + 1" :key="module.title"
-                            :module="module" :title="module.title"
-                            :router-link="`/learn/${lessonId}/${section.id}/session`" :interactive="!module.locked"
+                        <ModuleCard v-for="(module, key) in section.modules" 
+                            :lessonkey="key + 1" 
+                            :key="module.title"
+                            :module="module" 
+                            :title="module.title"
+                            :router-link="`/learn/${lessonId}/${section.id}/session`" 
+                            :interactive="!module.locked"
                             @click="moduleStore.setSelectedModule(module)"
-                            :locked-index="module.final ? !isFinalLocked(section) : false"
+                            :locked-index="!useAuthStore().User.is_admin ? (!lessonStore.currentLesson?.locked ? (module.final ? !isFinalLocked(section) : false) : !useAuthStore().User.is_admin) : false"
                             :quiz-status="quizzes_progress?.find(q => q.module === module.id)"
-                            :quiz-progress="module.accuracy" />
+                            :quiz-progress="module.accuracy" 
+                            :highlight="module.id === getFirstLockedModule(section)?.id" />
+                        
                     </div>
                 </SectionDivider>
             </div>

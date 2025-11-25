@@ -9,6 +9,7 @@ from app_cosmetic.models import UserCosmetics, BackpackItem, Item
 def handle_new_user_registration(sender, instance, created, **kwargs):
     if created:
         
+        
         lesson = LessonTest.objects.first()
         
         user_lesson_progress = UserLessonTestProgress.objects.create(user=instance, lesson_test=lesson)
