@@ -205,6 +205,7 @@ LOGOUT_REDIRECT_URL = "http://localhost:5173/"
 CORS_ALLOWED_ORIGINS = [  
     'https://gamified-frontend-caps.onrender.com',
     'http://localhost:5173',  
+    'https://gamified-social-engineering-git-gh-page-rencells-projects.vercel.app',
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -215,6 +216,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "https://gamified-frontend-caps.onrender.com",
+    "https://gamified-social-engineering-git-gh-page-rencells-projects.vercel.app",
+    
 ]
 
 CSRF_COOKIE_DOMAIN = None
