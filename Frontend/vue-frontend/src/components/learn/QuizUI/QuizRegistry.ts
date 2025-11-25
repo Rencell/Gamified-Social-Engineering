@@ -1,26 +1,20 @@
-import MultipleChoice from './MultipleChoice/MultipleChoice.vue'
-import MatchingType from './MatchingType/matchingType.vue'
-import DragPair from './DragPair/DragPair.vue'
-import DoDont from './DoDont/DoDont.vue'
-import ModuleReward from '../rewardUI/moduleReward.vue'
-import FinalTest from './FInalTest/FinalTest.vue'
-import ScenarioTraining from './ScenarioTraining/scenarioPlayer.vue'
-import PhishingTactics from './Phishing/GuessTactics/PhishingTactics.vue'
+
 import { defineAsyncComponent, type Component } from 'vue'
 
 // Type Definition for Learning Components
 export type QuizType = 'MultipleChoice' | 'MatchingType' | 'DragPair' | 'DoDont' | 'PhishingTactics' | 'ModuleReward' | 'ScenarioTraining' | 'FinalTest'
 // Component Map
 export const componentMap: Record<QuizType, Component> = {
-  MultipleChoice,
-  MatchingType,
-  DragPair,
-  DoDont,
-  PhishingTactics,
-  ModuleReward,
-  FinalTest,
-  ScenarioTraining
+  MultipleChoice: defineAsyncComponent(() => import('./MultipleChoice/MultipleChoice.vue')),
+  MatchingType: defineAsyncComponent(() => import('./MatchingType/matchingType.vue')),
+  DragPair: defineAsyncComponent(() => import('./DragPair/DragPair.vue')),
+  DoDont: defineAsyncComponent(() => import('./DoDont/DoDont.vue')),
+  PhishingTactics: defineAsyncComponent(() => import('./Phishing/GuessTactics/PhishingTactics.vue')),
+  ModuleReward: defineAsyncComponent(() => import('../rewardUI/moduleReward.vue')),
+  FinalTest: defineAsyncComponent(() => import('./FInalTest/FinalTest.vue')),
+  ScenarioTraining: defineAsyncComponent(() => import('./ScenarioTraining/scenarioPlayer.vue')),
 }
+
 
 export const editableComponentMap: Record<QuizType, Component> = {
   MultipleChoice: defineAsyncComponent(

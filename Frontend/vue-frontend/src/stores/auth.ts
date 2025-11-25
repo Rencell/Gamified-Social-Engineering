@@ -39,6 +39,9 @@ export const useAuthStore = defineStore('auth', () => {
       if (oldExp < 0 && newExp < oldExp) 
         return;
 
+      if (!useLevelStore().currentSelectedLevel) {
+        return;
+      }
       if(newExp >= useLevelStore().currentSelectedLevel.xp_required) {
         toast.success(`Congratulations you just reached ${User.value.level + 1}`, {
           action: {

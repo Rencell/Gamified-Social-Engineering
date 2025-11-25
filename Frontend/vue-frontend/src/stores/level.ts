@@ -48,6 +48,9 @@ export const useLevelStore = defineStore('level', () => {
   })
 
   const currentSelectedLevel = computed(() => {
+    if (!level_list.value) {
+      return null
+    }
     return (
       level_list.value?.find((level: level) => level.id === currentLevel.value) ||
       level_list.value[0]
