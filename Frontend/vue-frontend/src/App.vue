@@ -23,9 +23,9 @@ const courseUnlockStore = useCourseUnlockStore()
 const isFullscreen = computed(() => route.meta.layout === 'fullscreen')
 
 const initialized = ref(false);
-onMounted(async() => {
+onMounted(async () => {
   authStore.init()
-  initialized.value = true; 
+  initialized.value = true;
 })
 
 const sht = ref(false)
@@ -34,13 +34,13 @@ const sht = ref(false)
 </script>
 
 <template>
-  
+
   <Toaster />
-<CourseUnlock :is-open="courseUnlockStore.openCourseModal" :onClose="courseUnlockStore.closeStreakModal" />
-  <DayStreak :is-open="streakStore.openStreakModal" :onClose="streakStore.closeStreakModal"/>
+  <CourseUnlock :is-open="courseUnlockStore.openCourseModal" :onClose="courseUnlockStore.closeStreakModal" />
+  <DayStreak :is-open="streakStore.openStreakModal" :onClose="streakStore.closeStreakModal" />
   <div v-if="useLoadingPageStore().isLoading">
     <div class="fixed inset-0 flex items-center justify-center bg-black/70 z-99 flex-col gap-4">
-      
+
       <Spinner size="lg" variant="white">
 
       </Spinner>
@@ -51,13 +51,13 @@ const sht = ref(false)
     <RouterView />
   </div>
 
-  
+
   <div v-else>
     <SidebarProvider class="h-screen flex">
       <sidebar />
       <main class="flex-1 overflow-y-auto scroll-hidden">
         <SidebarInset>
-          <div class="md:p-10 p-2 pt-9 mb-20 sm:mb-0" >
+          <div class="md:p-10 p-2 pt-9 mb-20 sm:mb-0">
             <RouterView />
 
           </div>
@@ -68,7 +68,6 @@ const sht = ref(false)
 </template>
 
 <style scoped>
-
 .scroll-hidden::-webkit-scrollbar {
   display: none;
 }
