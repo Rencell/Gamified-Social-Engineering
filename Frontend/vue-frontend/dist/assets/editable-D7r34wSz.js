@@ -1,1 +1,0 @@
-import{d as o,a,v as s,o as r,w as i,i as p,g as t,p as u}from"./index-CRWd4KeT.js";const m=o({__name:"editable",setup(_){const n=a();return(d,e)=>(r(),s(t(u),{onClick:e[0]||(e[0]=f=>t(n).updateContentsQuiz())},{default:i(()=>e[1]||(e[1]=[p("Save",-1)])),_:1,__:[1]}))}});export{m as default};
