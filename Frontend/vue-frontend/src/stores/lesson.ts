@@ -86,13 +86,13 @@ export const useLessonStore = defineStore('Lesson', () => {
     }
   }
 
-  const updateLesson = async (lessonId: number, lessonData: Lesson_test) => {
+  const updateLesson = async (lessonId: number, lessonData: Partial<Lesson_test>) => {
     try {
       const formData = new FormData()
-      formData.append('title', lessonData.title)
-      formData.append('slug', lessonData.slug)
-      formData.append('bg', lessonData.bg)
-      formData.append('description', lessonData.description)
+      formData.append('title', lessonData.title!)
+      formData.append('slug', lessonData.slug!)
+      formData.append('bg', lessonData.bg!)
+      formData.append('description', lessonData.description!)
       if (lessonData.lesson_order !== null) {
         formData.append('lesson_order', String(lessonData.lesson_order))
       }

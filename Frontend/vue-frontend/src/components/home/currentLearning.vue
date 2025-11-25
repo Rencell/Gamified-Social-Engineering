@@ -5,7 +5,7 @@
         
         <Card class="border-1 border-b-5 border-ternary bg-transparent hover:scale-102 transition-all duration-300">
             <CardContent class="flex flex-col sm:flex-row items-center gap-3">
-            <img :src="useImageUrl(latestLessonData?.image?.toString()!)" class="w-25" alt="">
+            <img :src="useImageUrl(latestLessonData?.image?.toString())!" class="w-25" alt="">
             <div class="flex flex-col gap-2 w-full sm:w-50">
                 <p class="font-bold text-center sm:text-left">{{ latestLessonData?.title }}</p>
                 <p class="text-xs font-semibold opacity-40">{{lessonStore.latestPercentageLesson}}% Completed</p>

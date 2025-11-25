@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/auth';
 defineProps<{
     from: string;
     subject: string;
-    link: string;
+    link: { text: string; url: string; };
     date: string;
     body: string[];
     footer: string;
@@ -52,7 +52,7 @@ const auth = useAuthStore();
                 
                 <div class="space-y-3">
                     <template v-for="value in body" :key="value">
-                        <a v-if="value.charAt(0) === '#'" :href="link" class="text-blue-800 underline inline-block" @click.prevent>
+                        <a v-if="value.charAt(0) === '#'" :href="link.url" class="text-blue-800 underline inline-block" @click.prevent>
                             {{ value.trim().substring(1) }}
                         </a>
                         <p v-else>{{ value }}</p>

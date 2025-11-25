@@ -21,7 +21,7 @@ onMounted(async () => {
                 
                 <AssessmentCard 
                     :id="value.id"
-                    :image="value.image ?? 'image not set'" 
+                    :image="String(value.image) ?? 'image not set'" 
                     :bg="value.bg ?? 'bg-purple-700'" 
                     :description="value.description" 
                     :name="value.name" 

@@ -19,8 +19,7 @@ import { ref, computed, onMounted, nextTick } from 'vue';
 import RecursiveContent from './recurse.vue';
 import { ContentService } from '@/services/index.ts';
 import type { Content } from '@/services/contentService.ts';
-import type { LearningType } from './type.ts';
-import { defaultPropsMap } from './UI/learningRegistry.ts';
+import { defaultPropsMap, type LearningType } from './UI/learningRegistry.ts';
 import { componentMap } from './UI/learningRegistry.ts';
 import LearningContent from './UI/Learning/Core/LearningContent.vue';
 

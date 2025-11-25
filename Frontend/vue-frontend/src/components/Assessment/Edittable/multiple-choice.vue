@@ -35,8 +35,11 @@ function setCorrectAnswerMc(id: number) {
 
 function addOption() {
     if (quizData.value.options.length >= 4) return; // Limit to 4 options
-    const nextId = String.fromCharCode(97 + quizData.value.options.length); // Generate 'a', 'b', 'c', etc.
-    quizData.value.options.push({ id: nextId, text: '' });
+    quizData.value.options.push({
+        id: 0, text: '',
+        question: null,
+        is_correct: false
+    });
     const newOption = {
         id: 0,
         text: '',
@@ -114,7 +117,7 @@ const saveChanges = async () => {
 
                 </div>
                 <div class="mt-3 p-3 border rounded-lg bg-background">
-                    <img :src="previewUrl || quizData.image || '/Website.png'" alt="Question preview"
+                    <img :src="previewUrl || String(quizData.image) || '/Website.png'" alt="Question preview"
                         class="max-w-full h-auto max-h-48 rounded mx-auto" />
 
                 </div>
@@ -192,8 +195,8 @@ const saveChanges = async () => {
                     <Input type="file" class="mb-5 !bg-background" @change="image1.onFileChange" />
                     <div class="py-10 rounded-2xl border-dashed border-4 transition-all flex justify-center items-center h-70"
                         :class="{ 'border-accent': quizanswer === 'image1' }">
-                        <img v-if="quizData.options.length < 1" :src="image1.previewUrl.value" alt="" class="h-full object-cover">
-                        <img v-else :src="quizData.options[0].image" alt="" class="h-full object-cover">
+                        <img v-if="quizData.options.length < 1" :src="String(image1.previewUrl.value)" alt="" class="h-full object-cover">
+                        <img v-else :src="String(quizData.options[0].image)" alt="" class="h-full object-cover">
                     </div>
                     <p class="text-center mt-5" :class="quizanswer === 'image1' ? 'brightness-100' : 'brightness-50'">
                         Image
@@ -203,8 +206,8 @@ const saveChanges = async () => {
                     <Input type="file" class="mb-5 !bg-background" @change="image2.onFileChange" />
                     <div class="py-10 rounded-2xl border-dashed border-4 transition-all flex justify-center items-center h-70"
                         :class="{ 'border-accent': quizanswer === 'image2' }">
-                        <img v-if="quizData.options.length < 2" :src="image2.previewUrl.value " alt="" class="h-full object-cover">
-                        <img v-else :src="quizData.options[1].image" alt="" class="h-full object-cover">
+                        <img v-if="quizData.options.length < 2" :src="String(image2.previewUrl.value)" alt="" class="h-full object-cover">
+                        <img v-else :src="String(quizData.options[1].image)" alt="" class="h-full object-cover">
                     </div>
                     <p class="text-center mt-5" :class="quizanswer === 'image2' ? 'brightness-100' : 'brightness-50'">
                         Image

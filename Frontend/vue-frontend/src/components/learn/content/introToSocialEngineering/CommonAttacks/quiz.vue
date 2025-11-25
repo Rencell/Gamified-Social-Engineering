@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import QuestionCard from '../../UI/Question/QuestionCard.vue'
 import type { Question } from '@/components/learn/QuizUI/DragPair/type'
 import DragPair from '../../../QuizUI/DragPair/DragPair.vue'
 import QuizFlowShell from '@/components/learn/QuizUI/quizFlowShell.vue';

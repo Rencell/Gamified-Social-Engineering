@@ -10,6 +10,7 @@
                 :link="currentSelected.email.link"
                 :date="currentSelected.email.date"
                 :body="currentSelected.email.body"
+                :footer="''"
             >
             </Email>
             <Phone v-else
@@ -23,6 +24,7 @@
        
         <Options 
             :key="currentIndex"
+            :question="currentSelected.question"
             :options="currentSelected.options"
             :answer="currentSelected.answer"
             :single-grid="currentSelected.type === 'SMS'"

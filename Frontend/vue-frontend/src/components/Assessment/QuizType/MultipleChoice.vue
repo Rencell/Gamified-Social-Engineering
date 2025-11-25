@@ -9,7 +9,7 @@
           v-if="hasImage"
           class="p-3 bg-black rounded-lg flex items-center justify-center"
         >
-          <img class="object-contain max-h-96 w-full" :src="question.image" alt="">
+          <img class="object-contain max-h-96 w-full" :src="String(question.image)" alt="">
         </div>
   
         <div class="w-full" :class="{'px-20': !hasImage}">

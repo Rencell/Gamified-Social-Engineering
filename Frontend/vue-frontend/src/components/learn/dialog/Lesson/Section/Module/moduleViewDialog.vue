@@ -39,7 +39,7 @@ const emit = defineEmits<{
                     <div class="flex gap-1 items-center">
 
                         <MagnetIcon class="size-4 "></MagnetIcon>
-                        {{ content_quiz ? content_quiz.replace(/([A-Z])/g, ' $1').trim() : '' }}</div>
+                        {{ content_quiz ? String(content_quiz).replace(/([A-Z])/g, ' $1').trim() : '' }}</div>
                 </div>
                 <hr class="border-white/10" />
                 <div class="flex flex-col gap-4 font-bold">

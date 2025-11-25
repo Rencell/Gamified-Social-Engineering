@@ -62,7 +62,7 @@ onMounted(async () => {
 
     // Check if this page load was a refresh/reload
     const navEntries = performance.getEntriesByType("navigation")
-    const isReload = navEntries.length && navEntries[0].type === "reload"
+    const isReload = navEntries.length && (navEntries[0] as PerformanceNavigationTiming).type === "reload"
 
     if (isReload) {
       // 👉 remove only when it's a refresh

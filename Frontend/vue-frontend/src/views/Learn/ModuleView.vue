@@ -97,7 +97,7 @@ const get_all_modules = async () => {
 get_all_modules();
 
 // helper function that returns the first locked module of a section
-const getFirstLockedModule = (section) => {
+const getFirstLockedModule = (section: { modules: any[]; }) => {
   return section.modules.find(m => m.locked === true)
 }
 </script>

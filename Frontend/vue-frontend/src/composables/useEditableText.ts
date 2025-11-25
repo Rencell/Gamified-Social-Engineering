@@ -2,11 +2,7 @@ import { ref, inject } from 'vue'
 
 export function useEditableText(
   initialText: any,
-  emit: DefineEmits<{
-    giveProps: (text: string) => void
-    signalDelete: () => void
-    moveOrder: (id: number, direction: 'up' | 'down') => void
-  }>,
+  emit: any,
 ) {
   const editable = inject('editable', false) // Inject the editable state
   const my_text = ref(initialText) // Reactive text value

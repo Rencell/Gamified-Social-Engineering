@@ -21,7 +21,7 @@
                     <UpdateItems :data="value" />
                 </div>
                 <div>
-                    <img :src="value.image" class="rounded-lg h-35 md:h-45 w-full object-top object-cover" alt="">
+                    <img :src="String(value.image)" class="rounded-lg h-35 md:h-45 w-full object-top object-cover" alt="">
                 </div>
                 <div
                     class="bg-linear-to-r from-transparent via-blue-500/40 to-transparent py-1 md:py-2 mb-3 text-center text-xs uppercase font-semibold text-blue-500 mx-auto">

@@ -352,7 +352,7 @@ const toggleShowModal = () => {
                             class="border border-border rounded-lg p-6 bg-background/50 space-y-4 sticky top-0 self-start">
                             <div class="w-full aspect-square rounded-lg bg-gradient-to-br flex items-center justify-center border"
                                 :style="{ backgroundColor: isEditing ? editableAssessment?.bg : assessment.bg }">
-                                <img :src="isEditing ? editableAssessment?.image : assessment.image"
+                                <img :src="String(isEditing ? editableAssessment?.image : assessment.image)"
                                     class="object-contain" alt="">
                             </div>
 

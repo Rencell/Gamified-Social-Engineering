@@ -45,7 +45,7 @@
             class="rounded-lg absolute inset-0 bg-black/70 border-2 border-white border-dashed z-40 flex items-center justify-center">
             <div>Click anywhere to add a hotspot</div>
         </div>
-        <img :src="imageTool.previewUrl.value || useImageUrl(image)" class="w-full rounded-lg" alt="Phishing Email" />
+        <img :src="imageTool.previewUrl.value! || useImageUrl(image)!" class="w-full rounded-lg" alt="Phishing Email" />
         <div v-for="area in areasData" :key="area.id"
             class="absolute bg-accent text-black size-8 rounded-full shadow-xl text-sm flex justify-center items-center border-slate-700/50 border-1 motion-preset-pop cursor-pointer hover:border-red-300 transition-all duration-150"
             :class="setAnimationDelay"

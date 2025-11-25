@@ -69,7 +69,7 @@ const security_score = computed(() => {
                 <div class="grid gap-6 md:grid-cols-3">
                     <div>
                         <div class="text-sm text-gray-400">Emails Sent</div>
-                        <div class="mt-2 text-3xl font-bold text-white">{{ phishingData[0]?.number_sent }}</div>
+                        <div class="mt-2 text-3xl font-bold text-white">{{ 0 }}</div>
                     </div>
                     <div>
                         <div class="text-sm text-gray-400">Links Clicked</div>

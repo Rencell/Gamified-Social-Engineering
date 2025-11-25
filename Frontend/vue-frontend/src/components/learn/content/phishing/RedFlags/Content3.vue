@@ -123,7 +123,7 @@ const mcq: MCQ = {
         { id: 'B', text: 'This seems legitimate come from google' },
         { id: 'C', text: 'The email is good-to-be-true' }
     ],
-    correctAnswer: 'A'
+    answer: 'A'
 };
 
 

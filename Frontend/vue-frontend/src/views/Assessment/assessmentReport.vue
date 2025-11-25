@@ -116,18 +116,13 @@
             </div>
         </div>
     </div>
-    <pre>{{ shib }}</pre>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { X, Share2, Eye, BarChart3 } from 'lucide-vue-next';
-import Progress from '@/components/ui/progress/Progress.vue'
-import Score from '@/components/Assessment/assessmentReport/score.vue';
 import ReviewAnswer from '@/components/Assessment/assessmentReport/review-answer.vue'
 import { useRouter } from 'vue-router';
-import assessmentService from '@/services/assessmentService';
-import type { AssessmentAnswer } from '@/services/assessmentService';
 interface AssessmentData {
     assessmentName: string;
     score: number;

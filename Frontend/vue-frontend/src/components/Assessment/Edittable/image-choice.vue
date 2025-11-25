@@ -209,7 +209,7 @@ const canSave = computed(() => {
                     >
                         <img 
                             v-if="image1.selectedFile.value || (quizData.options && quizData.options[0]?.image)"
-                            :src="image1.selectedFile.value ? image1.previewUrl.value : quizData.options[0]?.image" 
+                            :src="image1.selectedFile.value ? String(image1.previewUrl.value) : String(quizData.options[0]?.image)" 
                             alt="Image 1" 
                             class="h-full object-cover"
                         >
@@ -234,7 +234,7 @@ const canSave = computed(() => {
                     >
                         <img 
                             v-if="image2.selectedFile.value || (quizData.options && quizData.options[1]?.image)"
-                            :src="image2.selectedFile.value ? image2.previewUrl.value : quizData.options[1]?.image" 
+                            :src="image2.selectedFile.value ? String(image2.previewUrl.value) : String(quizData.options[1]?.image)"
                             alt="Image 2" 
                             class="h-full object-cover"
                         >

@@ -79,7 +79,7 @@ const mcq: MCQ = {
         { id: 'B', text: 'Immediately click or buy before the offer expires, to avoid missing out.' },
         { id: 'C', text: 'There are only 2 left, why not buy them all' }
     ],
-    correctAnswer: 'A'
+    answer: 'A'
 };
 
 onMounted(() => {

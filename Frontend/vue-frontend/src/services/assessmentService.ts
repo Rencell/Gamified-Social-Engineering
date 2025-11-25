@@ -29,10 +29,10 @@ export interface Assessment {
     image?: string | File
     bg?: string
     duration?: number | 0
-    question_count?: number | null
+    question_count?: number | 0
     props?: any | null
     exp_points?: number | null
-    coin_points?: number | null
+    coin_points?: number | 0
     difficulty_level?: string
     instructions?: string[] | null
 }

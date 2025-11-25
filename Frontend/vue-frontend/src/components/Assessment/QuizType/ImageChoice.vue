@@ -19,7 +19,7 @@
                         <!-- Fixed Size Image Container -->
                         <div class="relative bg-gray-100 overflow-hidden w-full h-64">
                             <img 
-                                :src="option.image || `https://via.placeholder.com/300x256/1e293b/64748b?text=Option+${String.fromCharCode(65 + key)}`"
+                                :src="String(option.image) || `https://via.placeholder.com/300x256/1e293b/64748b?text=Option+${String.fromCharCode(65 + key)}`"
                                 :alt="`Option ${String.fromCharCode(65 + key)}`"
                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                 @error="handleImageError"

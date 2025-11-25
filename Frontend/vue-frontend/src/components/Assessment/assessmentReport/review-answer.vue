@@ -76,7 +76,7 @@
           <div>
             <p class="text-xs text-slate-400 uppercase tracking-wide mb-2">Explanation</p>
             <p class="text-sm text-slate-400">
-              {{ answer.question.explanation || 'This question tests your understanding of the topic. Review the recommended resources to strengthen this area.' }}
+              <!-- {{ answer.question || 'This question tests your understanding of the topic. Review the recommended resources to strengthen this area.' }} -->
             </p>
           </div>
         </div>

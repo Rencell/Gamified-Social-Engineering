@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, computed, watch, onMounted } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trash2, Plus } from 'lucide-vue-next';
-import { useContentStore } from '@/stores/content';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { defaultFinalTestProps, type FinalTestProps, defaultPropsMap } from './QuizRegistry';
 import type { Question } from '@/services/assessmentService';
 const props = defineProps<{
     questions: Question[];

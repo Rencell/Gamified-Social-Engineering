@@ -43,7 +43,7 @@
                   <Email 
                       :from="currentTest.email.from"
                       :subject="currentTest.email.subject"
-                      :link="currentTest.email.link"
+                      :link="{ text: 'Link Text', url: currentTest.email.link }"
                       :date="currentTest.email.date"
                       :body="currentTest.email.body"
                       :footer="currentTest.email.footer"
@@ -87,13 +87,11 @@
 </template>
 
 <script setup lang="ts">
-import LearningContent from '../../content/UI/Learning/Core/LearningContent.vue';
 import type { Test } from './type';
 import MultipleChoice from './multipleChoice.vue';
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
 import TwoImageTest from './twoImageTest.vue';
 import TrueFalse from './TrueFalse.vue';
-import { Progress } from '@/components/ui/progress';
 import ProgressHeader from './common/ProgressHeader.vue'
 import ResultFooter from './common/resultFooter.vue'
 import Email from './email.vue';

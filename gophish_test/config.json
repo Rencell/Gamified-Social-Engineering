@@ -14,7 +14,7 @@
     },
     "phish_server": {
         "listen_url": "0.0.0.0:80",
-        "use_tls": false,
+        "use_tls": true,
         "cert_path": "gophish_template.crt",
         "key_path": "gophish_template.key"
     },

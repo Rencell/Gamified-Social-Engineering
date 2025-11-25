@@ -30,7 +30,7 @@ interface LessonForm {
 const props = defineProps<{ lesson: LessonForm }>();
 
 // Reactive object to hold the form data
-const formData = ref<LessonForm>({
+const formData = ref<Partial<LessonForm>>({
     title: props.lesson.title,
     slug: props.lesson.slug,
     image: props.lesson.image,

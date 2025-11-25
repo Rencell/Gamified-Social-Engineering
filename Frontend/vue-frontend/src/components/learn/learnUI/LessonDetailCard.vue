@@ -95,7 +95,7 @@ const save_objectives = async () => {
         <div class="flex justify-center py-3 lg:py-6 grow-0 shrink-0 relative">
             <div class="aspect-video md:aspect-h-5 w-full max-w-sm h-full flex items-center justify-center">
                 <img :class="['object-scale-down mx-auto w-50 sm:w-75 relative z-20', locked ? 'grayscale-100' : '']"
-                    :src="image ? image : '/Human.webp'" alt="">
+                    :src="image ? String(image) : '/Human.webp'" alt="">
 
                 <div class="size-50 bg-white absolute rounded-full blur-2xl opacity-30">
 

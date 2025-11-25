@@ -64,7 +64,7 @@
           <Input v-model="currentTip.head"></Input>
           <div class="relative my-5 w-full bg-background p-3 rounded-xl">
             
-            <img :src="image.previewUrl.value || useImageUrl(currentTip.image)" class=" rounded-lg" alt="Step Image" />
+            <img :src="String(image.previewUrl.value) || useImageUrl(currentTip.image)!" class=" rounded-lg" alt="Step Image" />
             <div class="flex mt-5 gap-3" >
               <Input type="file" @change="image.onFileChange"></Input>
               <Button @click="handleUploadImage">Save Changes</Button>
@@ -81,7 +81,7 @@
             {{ currentTip.head }}</strong>
           <div class="relative mb-5 w-full bg-background p-3 rounded-xl">
   
-            <img :src="useImageUrl(currentTip.image)" class=" rounded-lg" alt="Step Image" />
+            <img :src="useImageUrl(currentTip.image)!" class=" rounded-lg" alt="Step Image" />
           </div>
           <p class="text-center text-sm/6 font-semibold">{{ currentTip.text }}</p>
         </div>
