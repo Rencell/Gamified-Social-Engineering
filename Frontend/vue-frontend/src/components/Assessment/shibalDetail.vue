@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { Clock, FileText, Users, Zap, ArrowLeft, CircleCheck, Wrench, Save, X, Plus, Trash2 } from 'lucide-vue-next';
+import { Clock, FileText, Users, Zap, ArrowLeft, CircleCheck, Wrench, Save, X, Plus, Trash2, Target, Coins } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useRoute, useRouter } from 'vue-router';
 import { useAssessmentStore } from '@/stores/assessment';
-import type { Assessment, AssessmentSession } from '@/services/assessmentService';
+import type { Assessment, AssessmentSession, AssessmentReward } from '@/services/assessmentService';
 import { useAuthStore } from '@/stores/auth';
 import AssessmentStartDialog from './AssessmentStartDialog.vue'
+import { useRewardStore } from '@/stores/reward';
 
 const props = defineProps<{
     id?: string;
@@ -26,12 +27,19 @@ const assessmentStore = useAssessmentStore();
 const assessment = ref<Assessment | null>(null);
 const session = ref<AssessmentSession | null>(null);
 const resume_session = ref<AssessmentSession | null>(null);
+const has_claimed_reward = ref<boolean>(false);
+const session_reward = ref<AssessmentReward | null>(null);
+const rewardStore = useRewardStore();
 
 onMounted(async () => {
     await assessmentStore.detail(route.params.id as string);
     assessment.value = assessmentStore.currentAssessment;
     session.value = await assessmentStore.has_completed_assessment(assessment.value!.id);
     resume_session.value = await assessmentStore.resume_assessment(assessment.value!.id);
+    
+
+    session_reward.value = await assessmentStore.fetch_ready_claim_reward(assessment.value!.id);
+    has_claimed_reward.value = session_reward.value.rewarded;
     
     // Create a copy for editing with deep copy of instructions
     editableAssessment.value = assessment.value ? {
@@ -57,7 +65,7 @@ const editAssessment = async () => {
 };
 
 const viewReport = () => {
-    router.push({ name: 'AssessmentReport', params: { id: session.value?.session_id } });
+    router.push({ name: 'AssessmentReport', params: { a_id: assessment.value?.slug, s_id: session.value?.session_id } });
 };
 
 // Edit functions
@@ -79,13 +87,11 @@ const removeInstruction = (index: number) => {
 
 const toggleEdit = () => {
     if (isEditing.value) {
-        // Cancel editing - restore original values
         editableAssessment.value = assessment.value ? { 
             ...assessment.value,
             instructions: assessment.value.instructions ? [...assessment.value.instructions] : []
         } : null;
     } else {
-        // Start editing - create editable copy with deep clone of instructions
         editableAssessment.value = assessment.value ? { 
             ...assessment.value,
             instructions: assessment.value.instructions ? [...assessment.value.instructions] : []
@@ -96,7 +102,6 @@ const toggleEdit = () => {
 
 
 const cancelEdit = () => {
-    // Restore original values with deep clone of instructions
     editableAssessment.value = assessment.value ? { 
         ...assessment.value,
         instructions: assessment.value.instructions ? [...assessment.value.instructions] : []
@@ -108,18 +113,14 @@ const saveChanges = async () => {
     if (!editableAssessment.value) return;
 
     try {
-        // Save to backend
         if (JSON.stringify(assessment.value) === JSON.stringify(editableAssessment.value)) {
            
             isEditing.value = false;
             return;
         }
         await assessmentStore.update(editableAssessment.value);
-
-        // Update local state
         assessment.value = { ...editableAssessment.value };
 
-        // Exit edit mode
         isEditing.value = false;
 
         console.log('Assessment updated successfully');
@@ -128,6 +129,22 @@ const saveChanges = async () => {
         // Handle error (show toast, etc.)
     }
 };
+
+const claim_reward = async (assessment_id: number) => {
+    try {
+        has_claimed_reward.value = await assessmentStore.claim_reward(assessment_id);
+        
+        alert(assessment.value?.coin_points || 0)
+        rewardStore.increaseUserRewards(    
+            rewardStore.REASONS.assessment, 
+            assessment.value?.coin_points || 0, 
+            assessment.value?.exp_points || 0
+        );
+
+    } catch (error) {
+        console.error('Error claiming assessment reward:', error)
+    }
+}
 
 const showModal = ref(false)
 const toggleShowModal = () => {
@@ -186,6 +203,8 @@ const toggleShowModal = () => {
                                         </Button>
                                     </template>
                                 </div>
+
+                              
                             </div>
 
                             <!-- Editable Metadata Bar -->
@@ -217,6 +236,18 @@ const toggleShowModal = () => {
                                 <div class="flex items-center gap-2 text-muted-foreground">
                                     <Zap class="h-5 w-5" />
                                     <template v-if="!isEditing">
+                                        <span class="text-sm">{{ assessment.exp_points }} PX</span>
+                                    </template>
+                                    <template v-else>
+                                        <Input v-model.number="editableAssessment!.exp_points" type="number"
+                                            class="w-20 h-6 text-sm" min="0" />
+                                        <span class="text-sm">PX</span>
+                                    </template>
+                                </div>
+
+                                <div class="flex items-center gap-2 text-muted-foreground">
+                                    <Coins class="h-5 w-5" />
+                                    <template v-if="!isEditing">
                                         <span class="text-sm">{{ assessment.coin_points }} PX</span>
                                     </template>
                                     <template v-else>
@@ -225,6 +256,19 @@ const toggleShowModal = () => {
                                         <span class="text-sm">PX</span>
                                     </template>
                                 </div>
+
+                                <div class="flex items-center gap-2 text-muted-foreground">
+                                    <Target class="h-5 w-5" />
+                                    <template v-if="!isEditing">
+                                        <span class="text-sm">Passing Rate: {{ assessment.passing_rate }}%</span>
+                                    </template>
+                                    <template v-else>
+                                        <Input v-model.number="editableAssessment!.passing_rate" type="number"
+                                            class="w-20 h-6 text-sm" min="0" max="100" />
+                                        <span class="text-sm">%</span>
+                                    </template>
+                                </div>
+
                             </div>
                         </div>
 
@@ -345,9 +389,26 @@ const toggleShowModal = () => {
                         </div>
                     </div>
 
-                    <!-- Right Column - Sidebar -->
                     <div class="space-y-6">
-                        <!-- Illustration Card -->
+                        <!-- Reward box updated -->
+                        <div v-if="session_reward" class="flex flex-col gap-3 items-center p-2 border-2 rounded-lg shadow-md bg-yellow-900/20 text-slate-300 border-yellow-500/40">
+                            <div class="flex items-center gap-2">
+                                <Zap class="w-5 h-5 text-yellow-400 dark:text-yellow-300 animate-pulse" />
+                                <span class="text-sm font-semibold text-yellow-500">
+                                    Reward: +{{ assessment.exp_points }} PX
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <Coins class="w-5 h-5 text-yellow-400 dark:text-yellow-300 animate-pulse" />
+                                <span class="text-sm font-semibold text-yellow-600 dark:text-yellow-300">
+                                    Reward: +{{ assessment.coin_points }} Coins
+                                </span>
+                            </div>
+                            <Button :disabled="has_claimed_reward" class="bg-yellow-600 text-black font-bold w-full" @click="claim_reward(assessment!.id)">
+                                {{ has_claimed_reward ? 'Claimed' : 'Claim' }}
+                            </Button>
+                        </div>
+
                         <div
                             class="border border-border rounded-lg p-6 bg-background/50 space-y-4 sticky top-0 self-start">
                             <div class="w-full aspect-square rounded-lg bg-gradient-to-br flex items-center justify-center border"
@@ -370,7 +431,7 @@ const toggleShowModal = () => {
                                 
                                 {{ resume_session ? 'Resume assessment' : (!session ? 'Start assessment' : 'Retake assessment') }}
                             </Button>
-
+                            
                             <!-- Points Badge -->
                             <div class="flex items-center justify-center gap-2 py-2 px-3">
                                 <Zap class="h-4 w-4 text-primary" />

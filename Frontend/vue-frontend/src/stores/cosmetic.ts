@@ -129,8 +129,7 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
   )
 
   const setCosmetic = async (backpackItem: CosmeticInventory): Promise<void> => {
-    
-
+  
     const type = backpackItem.item.type
     const equipAvatar = cosmetics.value.find(
       (cosmetic) => cosmetic.equipped_avatar,
@@ -154,7 +153,7 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
     } else {
       background = newId
     }
-    console.log('Setting avatar:', avatar)
+    // console.log('Setting avatar:', avatar)
     try {
       await CosmeticService.create_cosmetic({
         user: authStore.User?.pk || 0,
@@ -162,7 +161,6 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
         equipped_background_id: background,
       })
       await updateService()
-      toast_notification('Inventory has been updated')
     } catch (err: any) {
       error.value = err.message || 'Failed to set cosmetic'
     } finally {
@@ -212,6 +210,8 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
     equipBackground,
     setCosmetic,
     avatarRive,
-    purchaseCosmetic
+    purchaseCosmetic,
+    
+    toast_notification
   }
 })

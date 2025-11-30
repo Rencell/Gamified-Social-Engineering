@@ -19,7 +19,7 @@ const loadedImage = ref<string>('')
 
 // Watch whenever S3 background changes
 watch(
-    () => cosmeticStore.equipBackground?.image,
+    () => cosmeticStore.equipBackground?.image || '/background-repeat.jpg',
     (newImage) => {
         if (!newImage) return
 

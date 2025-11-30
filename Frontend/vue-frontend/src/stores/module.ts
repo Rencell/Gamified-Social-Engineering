@@ -71,17 +71,25 @@ export const useModuleStore = defineStore('Module', () => {
     })
   }
 
+  const authStore = useAuthStore(); 
   const setSelectedModule = (module: ModuleTest) => {
-    selectedModule.value = module
+    // alert(module.locked)
+    if (authStore.User.is_admin){
+      selectedModule.value = module
+      return
+    }
+    
     if (lessonStore.currentLesson?.locked) {
       console.warn('Current lesson is locked. Please unlock it first.')
       return
     }
-
-    // if (module.final && !isFinalQuizUnlocked.value) {
-    //   console.warn('Final Quiz is locked. Complete all modules first.')
-    //   return
-    // }
+    
+    if (module.final && !isFinalQuizUnlocked.value) {
+      console.warn('Final Quiz is locked. Complete all modules first.')
+      return
+    }
+    
+    selectedModule.value = module
   }
 
   const unlockModule = async () => {

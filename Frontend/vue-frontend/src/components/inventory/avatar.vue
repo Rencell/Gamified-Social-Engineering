@@ -47,7 +47,7 @@ const isBackgroundEquipped = (item: string) => {
                     </div>
 
                     <div>
-                        <Button class="w-full bg-background" @click="cosmeticStore.setCosmetic(value)" :class="[
+                        <Button class="w-full bg-background" @click="cosmeticStore.setCosmetic(value); cosmeticStore.toast_notification('Inventory has been updated')" :class="[
                             value.item.type === 'avatar'
                                 ? (isAvatarEquipped(value.item.name) ? 'bg-accent/20' : 'text-white')
                                 : (isBackgroundEquipped(value.item.name) ? 'bg-accent/20' : 'text-white')

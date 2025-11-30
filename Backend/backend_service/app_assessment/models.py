@@ -12,6 +12,7 @@ class Assessment(models.Model):
     question_count = models.PositiveIntegerField()
     exp_points = models.PositiveIntegerField(default=0)
     coin_points = models.PositiveIntegerField(default=0)
+    passing_rate = models.FloatField(default=75, help_text="Passing rate as a percentage")
     difficulty_level = models.CharField(max_length=50)
     instructions = models.JSONField(default=list)
     
@@ -85,8 +86,7 @@ class AssessmentSession(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     started_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
-    score = models.FloatField(default=0.0)
-    
+    score = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     current_question_index = models.PositiveIntegerField(default=0)
     completed_questions = models.JSONField(default=list)
 
@@ -115,3 +115,9 @@ class AssessmentAnswer(models.Model):
     class Meta:
         db_table = 'assessment_answer'
         unique_together = ('session', 'question')
+        
+class AssessmentComplete(models.Model):
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
+    rewarded = models.BooleanField(default=False)
+    rewarded_at = models.DateTimeField(null=True, blank=True)

@@ -1,4 +1,3 @@
-
 from dotenv import load_dotenv
 from pathlib import Path
 import os
@@ -194,7 +193,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_CONFIRMATION_TEMPLATE = 'account/email/email_confirmation_message.txt'
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*']
+ACCOUNT_SIGNUP_FIELDS = []  # Remove password requirements for social auto signup
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_LOGIN_METHOD = 'email'
 
@@ -202,10 +201,17 @@ LOGIN_REDIRECT_URL = "http://localhost:5173/home"
 LOGOUT_REDIRECT_URL = "http://localhost:5173/"
 
 
-CORS_ALLOWED_ORIGINS = [  
+ALLOWED_HOSTS += [
+    'gamified-se.vercel.app',
+    'tectonically-unsailed-jacquline.ngrok-free.dev',
+]
+
+CORS_ALLOWED_ORIGINS = [
     'https://gamified-frontend-caps.onrender.com',
-    'http://localhost:5173',  
+    'http://localhost:5173',
     'https://gamified-social-engineering-git-gh-page-rencells-projects.vercel.app',
+    'https://gamified-se.vercel.app',
+    'https://tectonically-unsailed-jacquline.ngrok-free.dev',
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -217,7 +223,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "https://gamified-frontend-caps.onrender.com",
     "https://gamified-social-engineering-git-gh-page-rencells-projects.vercel.app",
-    
+    "https://gamified-se.vercel.app",
+    "https://tectonically-unsailed-jacquline.ngrok-free.dev",
 ]
 
 CSRF_COOKIE_DOMAIN = None
@@ -261,6 +268,8 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL =  None
 AWS_S3_VERIFY = True
 
+
+SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -279,6 +288,9 @@ SOCIALACCOUNT_PROVIDERS['google']['APP'] = {
     'secret': os.getenv('GOOGLE_CLIENT_SECRET'),
     'key': ''
 }
+
+# Use custom adapter to link existing user accounts by email instead of raising duplicate error
+SOCIALACCOUNT_ADAPTER = 'app_auth.adapters.CustomSocialAccountAdapter'
 
 GOPHISH_URL = os.getenv("GOPHISH_URL", "https://127.0.0.1:3333")
 GOPHISH_API_KEY = os.getenv("GOPHISH_API_KEY", "")

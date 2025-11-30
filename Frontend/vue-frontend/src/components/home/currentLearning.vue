@@ -5,11 +5,15 @@
         
         <Card class="border-1 border-b-5 border-ternary bg-transparent hover:scale-102 transition-all duration-300">
             <CardContent class="flex flex-col sm:flex-row items-center gap-3">
-            <img :src="useImageUrl(latestLessonData?.image?.toString())!" class="w-25" alt="">
-            <div class="flex flex-col gap-2 w-full sm:w-50">
-                <p class="font-bold text-center sm:text-left">{{ latestLessonData?.title }}</p>
-                <p class="text-xs font-semibold opacity-40">{{lessonStore.latestPercentageLesson}}% Completed</p>
-                <Progress :model-value="lessonStore.latestPercentageLesson" bg="bg-violet-500" class="h-5" />
+            <div class="flex w-full gap-3">
+                <div class="flex justify-center items-center w-25">
+                    <img :src="useImageUrl(latestLessonData?.image?.toString())!" class="w-full" alt="">
+                </div>
+                <div class="flex flex-col gap-2 w-full sm:w-50">
+                    <p class="font-bold sm:text-left">{{ latestLessonData?.title }}</p>
+                    <p class="text-xs font-semibold opacity-40">{{lessonStore.latestPercentageLesson}}% Completed</p>
+                    <Progress :model-value="lessonStore.latestPercentageLesson" bg="bg-violet-500" class="h-5" />
+                </div>
             </div>
 
             <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto">

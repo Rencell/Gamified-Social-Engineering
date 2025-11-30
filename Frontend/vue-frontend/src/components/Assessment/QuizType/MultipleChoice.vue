@@ -26,10 +26,10 @@
               >
                 <div class="flex items-center gap-3">
                   <div :class="[
-                    'w-8 h-8 rounded-full flex items-center justify-center font-bold',
-                    getCircleClass(option.id || key)
-                  ]">
-                    {{ String.fromCharCode(65 + key) }}
+                  'w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs',
+                  getCircleClass(option.id || key)
+                  ]" style="aspect-ratio: 1;">
+                  {{ String.fromCharCode(65 + key) }}
                   </div>
                   <span class="text-slate-200 font-bold">{{ option.text }}</span>
                 </div>
