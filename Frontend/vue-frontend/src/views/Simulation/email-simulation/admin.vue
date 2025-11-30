@@ -9,7 +9,7 @@ import type { GoPhish, GoPhishTotalScore } from '@/services/simulationService';
 
 const openGophish = () => {
     const url = import.meta.env.VITE_GOPHISH_URL || 'https://gophish.example.com';
-    window.open(url, '_blank');
+    window.open(url + '/campaigns', '_blank');
 };
 
 const phishingData = ref<GoPhishTotalScore>();

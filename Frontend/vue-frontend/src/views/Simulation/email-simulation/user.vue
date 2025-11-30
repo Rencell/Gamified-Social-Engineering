@@ -13,6 +13,8 @@ import DialogSimulation from '@/components/simulation/dialogSimulation.vue'
 
 const phishingData = ref<GoPhish[]>([])
 const eventsData = ref<GoPhishEvent[]>([])
+const filter_type_email = computed(() => eventsData.value.filter(event => event.type === 'email'))
+
 const isOpen = ref(false);
 function toggleDialog() {
     isOpen.value = !isOpen.value;
@@ -111,22 +113,24 @@ function toggleShowHistory() {
                                 <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Subject</th>
                                 <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Date</th>
                                 <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Time</th>
+                                <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Score</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(email, index) in [...eventsData].reverse()" :key="email.id" :class="`border-b border-slate-800 hover:bg-slate-800/50 transition-colors ${index === eventsData.length - 1 ? 'border-b-0' : ''
+                            <tr v-for="(email, index) in [...filter_type_email].reverse()" :key="email.id" :class="`border-b border-slate-800 hover:bg-slate-800/50 transition-colors ${index === eventsData.length - 1 ? 'border-b-0' : ''
                                 }`">
                                 <td class="px-6 py-4 text-sm text-white flex items-center gap-3">
                                     <Mail class="w-4 h-4 text-slate-500 flex-shrink-0" />
-                                    <div v-if="email.message.toLowerCase().includes('email sent')"
+                                    <div v-if="email.message.toLowerCase().includes('email/sms sent')"
                                         class="text-green-400">
-                                        {{ email.message }}
+                                        Email Sent
                                     </div>
                                     <div v-else-if="email.message.toLowerCase().includes('clicked')"
                                         class="text-orange-400">
                                         {{ email.message }}
                                     </div>
-                                    <div v-else class="text-red-400">
+                                    <div v-else
+                                        class="text-red-400">
                                         {{ email.message }}
                                     </div>
                                 </td>
@@ -141,6 +145,20 @@ function toggleShowHistory() {
                                         {{ new Date(email.received_at).toLocaleTimeString('en-US', {
                                             hour: '2-digit',
                                         minute: '2-digit' }) }}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 text-sm text-slate-300 ">
+                                    <div v-if="email.message.toLowerCase().includes('email/sms sent')"
+                                        class="text-green-400">
+                                        +10
+                                    </div>
+                                    <div v-else-if="email.message.toLowerCase().includes('clicked')"
+                                        class="text-orange-400">
+                                        -20
+                                    </div>
+                                    <div v-else class="text-red-400">
+                                        -30
                                     </div>
                                 </td>
                             </tr>

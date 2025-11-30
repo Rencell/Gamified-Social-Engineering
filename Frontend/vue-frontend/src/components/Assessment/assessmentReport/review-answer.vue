@@ -134,7 +134,7 @@ const getCorrectAnswer = (question: Question) => {
 // Load assessment results
 onMounted(async () => {
   try {
-    const sessionId = router.currentRoute.value.params.id as string;
+    const sessionId = router.currentRoute.value.params.s_id as string;
     if (sessionId) {
       shib.value = await AssessmentService.fetch_assessment_results(sessionId);
     }

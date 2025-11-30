@@ -22,6 +22,7 @@ class RewardLog(models.Model):
         ('quiz', 'Quiz'),
         ('bonus', 'Bonus'),
         ('spend', 'Spend'),
+        ('assessment', 'Assessment'),
         ('admin', 'Admin Adjustment'),
     ]
 

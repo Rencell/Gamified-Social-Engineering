@@ -5,7 +5,7 @@ import { type RouteLocationNormalizedLoaded, type Router, useRoute, useRouter } 
 import { toast } from 'vue-sonner'
 import { useLevelStore } from './level'
 import session from '@/services/api'
-
+import { googleLogout } from "vue3-google-login"
 export interface Register {
   username: string
   email: string
@@ -89,7 +89,6 @@ export const useAuthStore = defineStore('auth', () => {
     if (User.value.username !== 'testuser') {
       return
     }
-    
     if (!isAuthenticatedCheck()) {
       clearUser()
     }

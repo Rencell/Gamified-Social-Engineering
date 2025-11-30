@@ -38,6 +38,7 @@ const sht = ref(false)
   <Toaster />
   <CourseUnlock :is-open="courseUnlockStore.openCourseModal" :onClose="courseUnlockStore.closeStreakModal" />
   <DayStreak :is-open="streakStore.openStreakModal" :onClose="streakStore.closeStreakModal" />
+  
   <div v-if="useLoadingPageStore().isLoading">
     <div class="fixed inset-0 flex items-center justify-center bg-black/70 z-99 flex-col gap-4">
 

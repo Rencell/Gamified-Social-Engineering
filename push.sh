@@ -1,5 +1,5 @@
 #!/bin/bash
 
 git add .
-git commit -m "email - simulation"
+git commit -m "for deployment"
 git push origin caps-b

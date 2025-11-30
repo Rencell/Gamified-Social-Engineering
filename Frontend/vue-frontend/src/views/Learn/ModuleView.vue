@@ -83,11 +83,9 @@ const isFinalLocked = (section: Section) => {
     return anyUnlocked
 }
 
-const tayp = ref<any>(null)
 const get_all_modules = async () => {
     try {
         const modules = await sectionStore.fetchSection(lessonStore.currentLesson?.id || 0);
-        tayp.value = sectionStore.sections
         console.log("All Modules:", modules);
     } catch (error) {
         console.error("Error fetching all modules:", error);
@@ -103,6 +101,7 @@ const getFirstLockedModule = (section: { modules: any[]; }) => {
 </script>
 
 <template>
+    
     <div class="p-2 sm:p-0">
         <RouterLink :to="{ name: 'Learn' }">
             <div class="flex gap-2 mb-5 text-sm items-center text-accent font-bold">
@@ -142,7 +141,7 @@ const getFirstLockedModule = (section: { modules: any[]; }) => {
                             :locked-index="!useAuthStore().User.is_admin ? (!lessonStore.currentLesson?.locked ? (module.final ? !isFinalLocked(section) : false) : !useAuthStore().User.is_admin) : false"
                             :quiz-status="quizzes_progress?.find(q => q.module === module.id)"
                             :quiz-progress="module.accuracy" 
-                            :highlight="module.id === getFirstLockedModule(section)?.id" />
+                            :highlight="lessonStore.currentLesson?.locked ? false : module.id === getFirstLockedModule(section)?.id" />
                         
                     </div>
                 </SectionDivider>

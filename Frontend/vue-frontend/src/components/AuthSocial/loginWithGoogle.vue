@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { googleTokenLogin } from "vue3-google-login"
+import { googleTokenLogin, googleLogout } from "vue3-google-login"
 import { useAuthStore } from '@/stores/auth';
 import { useRouter, useRoute } from 'vue-router';
 import { toast } from 'vue-sonner'
@@ -13,7 +13,6 @@ const login = async () => {
   try {
     // loadingPageStore.startLoading();
     const response = await googleTokenLogin();
-
     if (!response.access_token) {
       throw new Error("No access_token received");
     }
@@ -24,13 +23,13 @@ const login = async () => {
       },
     }).then(res => res.json());
 
-
     // Step 3: Check if email ends with .edu.ph
-    if (!userInfo.email || (!userInfo.email.endsWith("cvsu.edu.ph") && userInfo.email !== "rencelltobelonia67@gmail.com")) {
+    if (!userInfo.email || !userInfo.email.endsWith("cvsu.edu.ph")) {
       toast_alert();
       loadingPageStore.stopLoading();
       return;
     }
+    
     await authStore.loginWithGoogle(response.access_token, router, route);
     loadingPageStore.stopLoading();
   } catch (error) {

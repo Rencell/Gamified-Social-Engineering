@@ -60,6 +60,7 @@ class GoPhishWebhookViewSet(viewsets.ViewSet):
         # Create the GophishEvent instance
         gophish_event = GophishEvent.objects.create(
             gophish_time=gophish_time,
+            type=channel,
             message=message,
             details=details,
             user=user
@@ -147,6 +148,34 @@ class GophishUserScoreViewSet(viewsets.ModelViewSet):
             "max_links_clicked": agg['max_links_clicked'] or 0,
             "max_data_submitted": agg['max_data_submitted'] or 0,
         })    
+        
+    @action(detail=False, methods=['get'])
+    def total_score_sms(self, request):
+        agg = GophishUserScoreSms.objects.aggregate(
+            total_sms_sent=Sum('number_sent'),
+            total_links_clicked=Sum('links_clicked'),
+            total_data_submitted=Sum('data_submitted'),
+            max_sms_sent=Max('number_sent'),
+            max_links_clicked=Max('links_clicked'),
+            max_data_submitted=Max('data_submitted'),
+        )
+        sms_sent = agg['total_sms_sent'] or 0
+        links_clicked = agg['total_links_clicked'] or 0
+        data_submitted = agg['total_data_submitted'] or 0
+
+        avg_click_rate = round((links_clicked / sms_sent) * 100, 2) if sms_sent else 0
+        avg_submission_rate = round((data_submitted / sms_sent) * 100, 2) if sms_sent else 0
+
+        return Response({
+            "total_sms_sent": sms_sent,
+            "total_links_clicked": links_clicked,
+            "total_data_submitted": data_submitted,
+            "avg_click_rate": avg_click_rate,
+            "avg_submission_rate": avg_submission_rate,
+            "max_sms_sent": agg['max_sms_sent'] or 0,
+            "max_links_clicked": agg['max_links_clicked'] or 0,
+            "max_data_submitted": agg['max_data_submitted'] or 0,
+        })
     
 class GophishUserScoreSmsViewSet(viewsets.ModelViewSet):
 
@@ -227,7 +256,7 @@ class GophishConsentViewSet(viewsets.ModelViewSet):
     def email(self, request):
         user = request.user
         consent, created = GophishConsent.objects.get_or_create(user=user)
-        
+        GophishUserScore.objects.get_or_create(user=user)
         email_consent = request.data.get('email_consent')
         
         if email_consent is not None:
@@ -255,11 +284,16 @@ class GophishConsentViewSet(viewsets.ModelViewSet):
     def phone(self, request):
         user = request.user
         consent, created = GophishConsent.objects.get_or_create(user=user)
-        
+        GophishUserScoreSms.objects.get_or_create(user=user)
         phone_number = request.data.get('phone_number')
         
-        if phone_number is not None:
-            user_phone, created = UserPhoneNumber.objects.update_or_create(user=user, phone=phone_number)
+        if phone_number.startswith('09'):
+            phone_number = '639' + phone_number[2:]
+        
+        existing = UserPhoneNumber.objects.filter(user=user).first()
+        if phone_number is not None and existing is None:
+            user_phone, created = UserPhoneNumber.objects.get_or_create(user=user, phone=phone_number)
+            
             consent.phone_consent = True
             
             if consent.phone_consent:
@@ -275,7 +309,7 @@ class GophishConsentViewSet(viewsets.ModelViewSet):
                 "message": "Phone number updated successfully."
             }, status=status.HTTP_200_OK)
             
-        return Response({"error": "Missing phone_number field."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Missing phone_number field or already exists."}, status=status.HTTP_400_BAD_REQUEST)
     
 class UserPhoneNumberViewSet(viewsets.ModelViewSet):
 

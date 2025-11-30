@@ -1,9 +1,9 @@
 from django.utils import timezone
 from django.http import JsonResponse
 from django.shortcuts import render
-from .serializers import AssessmentSerializer, QuestionSerializer, OptionSerializer, AssessmentSessionSerializer, AssessmentAnswerSerializer
+from .serializers import AssessmentSerializer, QuestionSerializer, OptionSerializer, AssessmentSessionSerializer, AssessmentAnswerSerializer, AssessmentCompleteSerializer
 from rest_framework import viewsets, status
-from .models import Assessment, Question, Option, AssessmentSession, AssessmentAnswer
+from .models import Assessment, Question, Option, AssessmentSession, AssessmentAnswer, AssessmentComplete
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
@@ -70,7 +70,7 @@ class AssessmentSessionViewSet(viewsets.ModelViewSet):
                 user=request.user, 
                 assessment=assessment, 
                 status='completed'
-            ).first()
+            ).last()
             if session:
                 serializer = self.get_serializer(session)
                 return Response(serializer.data)
@@ -127,6 +127,17 @@ class AssessmentSessionViewSet(viewsets.ModelViewSet):
         except AssessmentSession.DoesNotExist:
             return Response({'error': 'Session not found'}, status=404)  
         
+    @action(detail=False, methods=['post'])
+    def get_report_assessments(self, request):
+        assessment = request.data.get('assessment_id')
+        sessions = AssessmentSession.objects.filter(
+            assessment__slug=assessment,
+            status='completed'
+        )
+        serializer = self.get_serializer(sessions, many=True)
+        return Response(serializer.data)
+        
+        
         
 class AssessmentAnswerViewSet(viewsets.ModelViewSet):
     queryset = AssessmentAnswer.objects.all()
@@ -167,8 +178,12 @@ class AssessmentAnswerViewSet(viewsets.ModelViewSet):
         total = session.assessment.questions.count()
         if session.current_question_index >= total:
             session.status = "completed"
+            session.score = (AssessmentAnswer.objects.filter(session=session, is_correct=True).count() / total) * 100
+            
             session.completed_at = timezone.now()
-
+            if session.score >= session.assessment.passing_rate:
+                AssessmentComplete.objects.get_or_create(user=session.user, assessment=session.assessment)
+                
         session.save()
 
         return Response({
@@ -188,3 +203,39 @@ class AssessmentAnswerViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except AssessmentSession.DoesNotExist:
             return Response({'error': 'Session not found'}, status=404)
+        
+        
+        
+class AssessmentCompleteViewSet(viewsets.ModelViewSet):
+    queryset = AssessmentComplete.objects.all()
+    serializer_class = AssessmentCompleteSerializer
+    
+    @action(detail=False, methods=['get'])
+    def get_assessment(self, request):
+        assessment_id = request.query_params.get('assessment_id')
+        if not assessment_id:
+            return Response({'error': 'Assessment ID is required'}, status=400)
+        
+        assessments = self.queryset.filter(assessment__id=assessment_id, user=request.user).first()
+        
+        if not assessments:
+            return Response({'error': 'Assessment not found'}, status=404)
+        serializer = self.get_serializer(assessments, many=False)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def reward_claimed(self, request):
+        assessment_id = request.query_params.get('assessment_id')
+        if not assessment_id:
+            return Response({'error': 'Assessment ID is required'}, status=400)
+        
+        assessments = self.queryset.filter(assessment__id=assessment_id, user=request.user).first()
+        assessments.rewarded = True
+        assessments.rewarded_at = timezone.now()
+        assessments.save()
+        serializer = self.get_serializer(assessments, many=False)
+        return Response(serializer.data)
+    
+    
+        
+   

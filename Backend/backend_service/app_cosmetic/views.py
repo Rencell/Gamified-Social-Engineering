@@ -34,18 +34,26 @@ class UserCosmeticViewSet(viewsets.ModelViewSet):
         return UserCosmetics.objects.filter(user=user)
     
     def create(self, request, *args, **kwargs):
-        user = request.data.get('user')
-        avatar_id = request.data.get('equipped_avatar_id')
-        background_id = request.data.get('equipped_background_id')
+        user = request.user  # trust auth, not request body
+        avatar_id = request.data.get('equipped_avatar_id') or None
+        background_id = request.data.get('equipped_background_id') or None
+
+        # Validate that provided backpack items exist and belong to the user
+        defaults = {}
+        if avatar_id is not None:
+            if not BackpackItem.objects.filter(id=avatar_id, user=user).exists():
+                return Response({"detail": "Invalid avatar id."}, status=400)
+            defaults['equipped_avatar_id'] = avatar_id
+
+        if background_id is not None:
+            if not BackpackItem.objects.filter(id=background_id, user=user).exists():
+                return Response({"detail": "Invalid background id."}, status=400)
+            defaults['equipped_background_id'] = background_id
 
         obj, created = UserCosmetics.objects.update_or_create(
-            user_id=user,
-            defaults={
-                'equipped_avatar_id': avatar_id,
-                'equipped_background_id': background_id
-            }
+            user=user,
+            defaults=defaults
         )
 
         serializer = self.get_serializer(obj)
-
         return Response(serializer.data, status=201 if created else 202)

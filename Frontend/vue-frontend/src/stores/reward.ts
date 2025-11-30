@@ -31,6 +31,8 @@ export const useRewardStore = defineStore('reward', () => {
                 user: USER,
             };
             const response = await RewardService.create_reward(reward);
+            authStore.User.coin += coin;
+            authStore.User.exp += xp;
             console.log(`Reward ${act}d successfully:`, response);
         } catch (error) {
             console.error(`Failed to ${act} reward:`, error);
@@ -86,11 +88,12 @@ export const useRewardStore = defineStore('reward', () => {
     }
 
     const REASONS = {
-        content : 'content',
-        quiz    : 'quiz',
-        bonus   : 'bonus',
-        spend   : 'spend',
-        admin   : 'admin',
+        content     : 'content',
+        quiz        : 'quiz',
+        bonus       : 'bonus',
+        spend       : 'spend',
+        assessment  : 'assessment',
+        admin       : 'admin',
     };
     
     return {

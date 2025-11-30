@@ -50,6 +50,9 @@ export const useAssessmentStore = defineStore('assessment', () => {
       if (data.difficulty_level) formData.append('difficulty_level', data.difficulty_level)
       if (data.question_count) formData.append('question_count', data.question_count.toString())
       if (data.instructions) formData.append('instructions', JSON.stringify(data.instructions))
+      if (data.exp_points) formData.append('exp_points', data.exp_points.toString())
+      if (data.coin_points) formData.append('coin_points', data.coin_points.toString())
+      if (data.passing_rate) formData.append('passing_rate', data.passing_rate.toString())
 
       if (data.image instanceof File) {
         formData.append('image', data.image)
@@ -236,6 +239,25 @@ export const useAssessmentStore = defineStore('assessment', () => {
     }
   }
 
+  const fetch_ready_claim_reward = async (assessment_id: number) => {
+    try {
+      const reward = await assessmentService.fetch_assessment_rewards(assessment_id)
+      return reward
+    } catch (error) {
+      console.error('Error fetching assessment reward:', error)
+      throw error
+    }
+  }
+  const claim_reward = async (assessment_id: number) => {
+    try {
+      const reward = await assessmentService.assessment_claim_reward(assessment_id)
+      return reward.rewarded
+    } catch (error) {
+      console.error('Error fetching assessment reward:', error)
+      throw error
+    }
+  }
+
   return {
     courseName,
     currentAssessment,
@@ -258,6 +280,9 @@ export const useAssessmentStore = defineStore('assessment', () => {
     addQuestion,
     deleteQuestion,
     updateOption,
-    deleteOption
+    deleteOption,
+
+    fetch_ready_claim_reward,
+    claim_reward
   }
 })

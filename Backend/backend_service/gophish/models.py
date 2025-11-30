@@ -5,6 +5,7 @@ class GophishEvent(models.Model):
     # raw event
     received_at = models.DateTimeField(auto_now_add=True)
     gophish_time = models.DateTimeField()      
+    type = models.CharField(max_length=50)
     message = models.CharField(max_length=100) 
     details = models.JSONField(default=dict, blank=True)              
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)  
@@ -13,6 +14,7 @@ class GophishEvent(models.Model):
         indexes = [
             models.Index(fields=['user', 'message']),  # updated index to include user
             models.Index(fields=['gophish_time']),
+            models.Index(fields=['type']),  # added index for type
         ]
         
 class GophishUserScore(models.Model):

@@ -27,6 +27,12 @@ import { set } from '@vueuse/core'
 import AssessmentSession from '@/views/Assessment/assessmentSession.vue'
 import AssessmentEdittable from '@/views/Assessment/assessmentEdittable.vue'
 import AssessmentReport from '@/views/Assessment/assessmentReport.vue'
+import OnBoardingView from '@/views/OnBoardingView.vue'
+import onboarding_slide1 from '@/components/onboarding/slide1.vue'
+import onboarding_slide2 from '@/components/onboarding/slide2.vue'
+import onboarding_slide3 from '@/components/onboarding/slide3.vue'
+import onboarding_slide4 from '@/components/onboarding/slide4.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -103,7 +109,7 @@ const router = createRouter({
       meta: { layout: 'fullscreen' }
     },
     {
-      path: '/assessment/session/:id/report',
+      path: '/assessment/:a_id/session/:s_id/report',
       name: 'AssessmentReport',
       beforeEnter: requireAuthenticated,
       component: AssessmentReport,
@@ -177,9 +183,37 @@ const router = createRouter({
       name: 'sms-simulation',
       beforeEnter: requireAuthenticated,
       component: SmsSimulation,
-    }
+    },
+    {
+      path: '/onboarding',
+      name: 'Onboarding',
+      beforeEnter: requireAuthenticated,
+      component: onboarding_slide1,
+      meta: { layout: 'fullscreen' },
+    },
+    {
+      path: '/onboarding/avatar',
+      name: 'Onboarding2',
+      beforeEnter: requireAuthenticated,
+      component: onboarding_slide2,
+      meta: { layout: 'fullscreen' },
+    },
+    {
+      path: '/onboarding/email-simulation',
+      name: 'Onboarding3',
+      beforeEnter: requireAuthenticated,
+      component: onboarding_slide3,
+      meta: { layout: 'fullscreen' },
+    },
+    {
+      path: '/onboarding/sms-simulation',
+      name: 'Onboarding4',
+      beforeEnter: requireAuthenticated,
+      component: onboarding_slide4,
+      meta: { layout: 'fullscreen' },
+    },
   ],
-})
+})  
 
 router.beforeEach((to, from, next) => {
   useLoadingPageStore().startLoading()
