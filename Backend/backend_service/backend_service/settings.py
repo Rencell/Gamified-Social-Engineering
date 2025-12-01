@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENVIRONMENT = "LOCAL"
 
-if ENVIRONMENT == "LOCAL":
+if ENVIRONMENT == "PROD":
     load_dotenv()
     
 # Quick-start development settings - unsuitable for production
