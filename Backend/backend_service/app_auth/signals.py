@@ -13,7 +13,6 @@ def handle_new_user_registration(sender, instance, created, **kwargs):
     # Wrap in atomic but swallow exceptions so user creation isn't rolled back by missing seed data
     try:
         with transaction.atomic():
-    
             lesson = LessonTest.objects.first()
             if lesson:
                 UserLessonTestProgress.objects.get_or_create(user=instance, lesson_test=lesson)

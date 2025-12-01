@@ -9,5 +9,5 @@ python manage.py runserver 0.0.0.0:8000 &
 
 # # Navigate to the frontend directory and start the Vue development server
 cd ../../
-npm --prefix Frontend/vue-frontend run dev -- --host
+npm --prefix Frontend/vue-frontend run dev
 
