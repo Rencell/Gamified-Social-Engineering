@@ -33,6 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
     is_admin: false,
   }) 
 
+  const new_created = ref(false);
   watch(
     () => User.value.exp,
     (newExp, oldExp) => {
@@ -82,6 +83,7 @@ export const useAuthStore = defineStore('auth', () => {
       exp: 0,
       coin: 0,
       level: 1,
+
     }
   }
 
@@ -177,12 +179,14 @@ export const useAuthStore = defineStore('auth', () => {
     try{
       const res = await AuthService.loginGoogle({access_token: response})
       
+      if(res.data.is_new) {
+        new_created.value = true;
+      }
       if(res.data.key){
         console.log(res.data.key)
         MUTATIONS.SET_TOKEN(res.data.key)
-        MUTATIONS.LOGIN_SUCCESS(router, route)
-        console.log(await AuthService.getUser())
         await init()
+        MUTATIONS.LOGIN_SUCCESS(router, route)
       }
     }catch(error){
       console.error('Login failed:', error)
@@ -206,8 +210,13 @@ export const useAuthStore = defineStore('auth', () => {
     LOGIN_SUCCESS: (router: Router, route: RouteLocationNormalizedLoaded) => {
       actionStates.authenticating = false
       actionStates.error = false
+      if(new_created.value){
+        router.push('/onboarding');
+        return;
+      }
       const redirectPath = route.query.redirect || '/home/'
       router.push(redirectPath as string)
+
     },
 
     LOGIN_FAILURE: () => {

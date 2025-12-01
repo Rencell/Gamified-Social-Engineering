@@ -11,7 +11,7 @@ const loadingPageStore = useLoadingPageStore();
 
 const login = async () => {
   try {
-    // loadingPageStore.startLoading();
+    loadingPageStore.startLoading();
     const response = await googleTokenLogin();
     if (!response.access_token) {
       throw new Error("No access_token received");

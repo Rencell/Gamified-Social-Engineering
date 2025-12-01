@@ -24,12 +24,12 @@ const toggleConsent = (async () => {
 const loading = ref(false);
 const goToSmsSimulationConsent = (isConsent: boolean) => {
   
-  toggleConsent();
-
+  
   loading.value = true;
   setTimeout(() => {
     loading.value = false;
     if (isConsent) {
+      toggleConsent();
       router.push('/onboarding/sms-simulation')
     } else {
       router.push('/onboarding/sms-simulation')
@@ -38,9 +38,7 @@ const goToSmsSimulationConsent = (isConsent: boolean) => {
 }
 
 const checked = ref(false);
-const toggleCheckbox = () => {
-  checked.value = !checked.value;
-}
+
 </script>
 
 <template>
