@@ -7,6 +7,7 @@ import { useAuthStore } from './auth'
 import { useSectionStore } from './sections'
 import { useStreakStore } from './pageStreak'
 import { useCourseUnlockStore } from './pageCourseUnlock'
+import { toast } from 'vue-sonner'
 export const useModuleStore = defineStore('Module', () => {
   const lessonStore = useLessonStore()
   const modules = ref<ModuleTest[]>([])
@@ -14,6 +15,18 @@ export const useModuleStore = defineStore('Module', () => {
   const sectionStore = useSectionStore()
   const streakStore = useStreakStore()
   const pageCourseUnlockStore = useCourseUnlockStore()
+
+
+  const toast_notification = (message: string) => {
+    toast.success(message, {
+      action: {
+        label: 'Close',
+        onClick: () => console.log('Closed notification'),
+      },
+      position: 'top-right',
+    })
+  }
+
   const fetchModules = async (lessonId: string) => {
     try {
       modules.value = await ModuleService.get_all_test(lessonId)
@@ -124,6 +137,7 @@ export const useModuleStore = defineStore('Module', () => {
       modules.value.push({ ...newModule, locked: true })
 
       modules.value = sortModules(modules.value)
+      toast_notification('Module created successfully!')
     } catch (error) {
       console.error('Error creating module:', error)
     }
@@ -138,6 +152,7 @@ export const useModuleStore = defineStore('Module', () => {
           Object.assign(mod, moduleData)
         }
       })
+      toast_notification('Module updated successfully!')
     } catch (error) {
       console.error('Error updating module:', error)
     }
@@ -150,6 +165,7 @@ export const useModuleStore = defineStore('Module', () => {
       if (selectedModule.value?.id === moduleId) {
         selectedModule.value = modules.value.length > 0 ? modules.value[0] : null
       }
+      toast_notification('Module deleted successfully!')
     } catch (error) {
       console.error('Error deleting module:', error)
     }
@@ -201,7 +217,6 @@ export const useModuleStore = defineStore('Module', () => {
 
     const section = sectionStore.selectedSection?.modules
 
-    console.log(section)
     const currentIndex = section?.findIndex((m) => m.id === selectedModule.value?.id) ?? -1
     if (section) {
       if (currentIndex < section.length - 1) {

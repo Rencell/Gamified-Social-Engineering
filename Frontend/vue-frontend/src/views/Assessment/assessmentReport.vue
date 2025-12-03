@@ -6,6 +6,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { Select, SelectContent, SelectItem, SelectItemText, SelectTrigger } from '@/components/ui/select';
 import SelectValue from '@/components/ui/select/SelectValue.vue';
 import { AssessmentService } from '@/services';
+import { useAssessmentStore } from '@/stores/assessment';
+import { useAuthStore } from '@/stores/auth';
 interface AssessmentData {
     assessmentName: string;
     score: number;
@@ -32,7 +34,7 @@ interface AssessmentData {
 const props = defineProps<{
     sessionData?: any; // Replace with your actual session type
 }>();
-
+const authStore = useAuthStore();
 // Mock data (replace with real data from props or API)
 const assessmentData = ref<AssessmentData>({
     assessmentName: 'Uxcel Pulse',
@@ -105,10 +107,12 @@ watch(selectedAttempt, (newVal) => {
     window.location.href = `/assessment/${route.params.a_id}/session/${newVal}/report`;
 });
 
+const assessmentStore = useAssessmentStore();
 onMounted(async () => {
     // Fetch real assessment data here if needed
 
     const assessmentId = route.params.a_id as string;
+    await assessmentStore.detail(assessmentId);
     const response = await AssessmentService.assessment_report(assessmentId);
     response.forEach((element, index) => {
         attemptOptions.value.push(
@@ -132,11 +136,11 @@ onMounted(async () => {
 
             <!-- Main Content -->
             <div class="max-w-7xl mx-auto">
-                <div class="grid grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Left Column - Score Section -->
                     <div class="col-span-2">
                         <p class="text-slate-400 text-sm mb-4">Assessment report</p>
-                        <h1 class="text-4xl font-bold mb-6 text-slate-50">{{ assessmentData.assessmentName }}</h1>
+                        <h1 class="text-4xl font-bold mb-6 text-slate-50">{{ assessmentStore.currentAssessment?.name }}</h1>
 
                         <!-- Description -->
                         <p class="text-slate-400 mb-4 leading-relaxed">
@@ -199,7 +203,7 @@ onMounted(async () => {
 
                             <!-- User Info -->
                             <div class="text-center">
-                                <h3 class="font-semibold text-slate-50 mb-1">{{ assessmentData.user.name }}</h3>
+                                <h3 class="font-semibold text-slate-50 mb-1">{{ authStore.User.first_name }}, {{ authStore.User.last_name }}</h3>
                                 <p class="text-sm text-slate-400">{{ assessmentData.user.title }}</p>
                             </div>
 
@@ -213,9 +217,9 @@ onMounted(async () => {
                                         ✓
                                     </div>
                                     <div>
-                                        <p class="font-semibold text-slate-50">{{ assessmentData.assessmentName }}</p>
-                                        <p class="text-xs text-slate-400">{{ assessmentData.duration }} · {{
-                                            assessmentData.questionCount }} questions</p>
+                                        <p class="font-semibold text-slate-50">{{ assessmentStore.currentAssessment?.name }}</p>
+                                        <p class="text-xs text-slate-400">{{ assessmentStore.currentAssessment?.duration }} mins · {{
+                                            assessmentStore.currentAssessment?.question_count }} questions</p>
                                     </div>
                                 </div>
                             </div>

@@ -51,6 +51,7 @@ const fields: Array<{ key: keyof LessonForm; label: string; type: string; placeh
 const lessonStore = useLessonStore();
 const saveLesson = () => {
     lessonStore.updateLesson(props.lesson.id!, formData.value);
+    open.value = false;
 };
 
 
@@ -65,10 +66,12 @@ function onFileChange(event: Event) {
   }
 }
 
+const open = ref(false);
+
 </script>
 
 <template>
-    <Dialog>
+    <Dialog v-model:open="open">
         <DialogTrigger>
             <Button variant="ghost">
                 <Wrench class="size-6" />

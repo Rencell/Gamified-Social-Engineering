@@ -20,6 +20,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useModuleStore } from '@/stores/module';
 import { useRoute } from 'vue-router';
 import { useSectionStore } from '@/stores/sections';
+import DialogClose from '@/components/ui/dialog/DialogClose.vue';
 const lessonStore = useLessonStore();
 const moduleStore = useModuleStore();
 const sectionStore = useSectionStore();
@@ -37,13 +38,29 @@ const formData = ref<Partial<ModuleTest>>({
     section: props.sectionId || null,
 });
 
+// Add validation state for title
+const errors = ref<{ title?: string }>({});
+const touched = ref<{ title: boolean }>({ title: false });
+
+const validate = () => {
+    const e: typeof errors.value = {};
+    if (!formData.value.title || formData.value.title.trim().length === 0) {
+        e.title = 'Title is required.';
+    }
+    errors.value = e;
+    return Object.keys(e).length === 0;
+};
 
 // Function to handle saving the form data
 const saveModule = () => {
+    touched.value.title = true;
+    if (!validate()) return;
     formData.value.lesson = lessonStore.currentLesson?.id || 0;
     moduleStore.createModule(formData.value);
     formData.value.title = '';
     formData.value.final = false;
+    errors.value = {};
+    touched.value.title = false;
 };
 
 const hasFinalModule = computed(() => {
@@ -57,9 +74,12 @@ watch(() => formData.value.final, (newLesson) => {
         formData.value.title = 'Final Module';
     }else {
         formData.value.title = '';
-    
     }
+    // Re-validate on change
+    if (touched.value.title) validate();
 });
+
+
 </script>
 
 <template>
@@ -81,23 +101,28 @@ watch(() => formData.value.final, (newLesson) => {
             <div class="space-y-4">
                 <div class="space-y-2">
                     <Label>Title</Label>
-                    <Input v-model="formData.title" type="text" placeholder="Enter module title" />
-                    
+                    <Input v-model="formData.title" type="text" placeholder="Enter module title"
+                           @blur="touched.title = true; validate()"
+                           @input="touched.title && validate()" />
+                    <p v-if="touched.title && errors.title" class="text-red-500 text-sm">{{ errors.title }}</p>
                 </div>
             </div>
 
             <DialogFooter>
+                
                 <div class="space-y-2 flex items-center">
                     <div class="flex gap-4">
-
+                        
                         <p class="text-xs" v-show="hasFinalModule">(You can only add one Final Module)  </p>
                         <Checkbox v-model="formData.final" :disabled="hasFinalModule">
-
+                                
                         </Checkbox> 
                         <Label>Is Final?</Label>
                     </div>
                 </div>
-                <Button @click="saveModule">Save Module</Button>
+                <DialogClose as-child>
+                    <Button @click="saveModule" :disabled="!validate()" :class="[{ 'opacity-50 cursor-not-allowed': !validate() }]">Save Module</Button>
+                </DialogClose>
             </DialogFooter>
         </DialogContent>
     </Dialog>

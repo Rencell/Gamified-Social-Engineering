@@ -6,14 +6,17 @@ import { computed, onMounted, ref, onUnmounted } from 'vue'
 import { useAssessmentStore } from '@/stores/assessment'
 import type { Option } from '@/services/assessmentService'
 import ImageChoice from '@/components/Assessment/QuizType/ImageChoice.vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 // Ensure multi-word component name for linting
 defineOptions({ name: 'AssessmentPlayingView' })
 
 const assessmentStore = useAssessmentStore()
 const router = useRouter()
+const route = useRoute()
 onMounted(async () => {
+    const session_id = route.params.id as string
+    await assessmentStore.existing_session(session_id)
     await assessmentStore.initialize_questions(assessmentStore.currentAssessment?.id as number)
 })
 
@@ -47,22 +50,35 @@ const isFinishing = ref(false)
 let finishTimeout: number | undefined
 
 const handleQuestionAnswered = async () => {
-    await assessmentStore.save_question_answer({
-        session_id: currentSession.value?.session_id as string,
-        question_id: selectedQuestion.value.id as number,
-        option_id: selectedOption.value ? selectedOption.value.id : null,
-    });
+    
 
     // Move to next question or go to report if finished (after 3s pulse)
     const totalQuestions = assessmentStore.currentQuestion.length;
     const nextIndex = currentIndex.value + 1;
     if (nextIndex >= totalQuestions) {
         isFinishing.value = true;
+        await assessmentStore.save_question_answer({
+            session_id: currentSession.value?.session_id as string,
+            question_id: selectedQuestion.value.id as number,
+            option_id: selectedOption.value ? selectedOption.value.id : null,
+        });
         finishTimeout = window.setTimeout(() => {
-            router.push({ name: 'AssessmentReport', params: { id: currentSession.value?.session_id } });
+            router.push({ 
+            name: 'AssessmentReport', 
+            params: { 
+                a_id: assessmentStore.currentAssessment?.slug, 
+                s_id: currentSession.value?.session_id 
+            } 
+            });
         }, 3000);
         return;
     }
+
+    await assessmentStore.save_question_answer({
+        session_id: currentSession.value?.session_id as string,
+        question_id: selectedQuestion.value.id as number,
+        option_id: selectedOption.value ? selectedOption.value.id : null,
+    });
 
     currentIndex.value = nextIndex;
 }
@@ -74,8 +90,8 @@ onUnmounted(() => {
 })
 </script>
 <template>
-    <div class="h-screen flex flex-col items-center px-50 pb-20"> <!-- Add padding-bottom to prevent content overlap -->
-        <Header :progress="progressPercentage" />
+    <div class="h-screen flex flex-col items-center px-3 pb-20 sm:px-50"> <!-- Add padding-bottom to prevent content overlap -->
+        <Header :progress="progressPercentage" class="w-full" />
         <main class="flex-1">
             <div class="min-h-full flex items-center justify-center">
                 <div class="text-center w-full">

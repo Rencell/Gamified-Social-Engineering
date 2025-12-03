@@ -6,12 +6,18 @@ import { useAssessmentStore } from '@/stores/assessment';
 import MultipleChoice from '@/components/Assessment/Edittable/multiple-choice.vue'
 import ImageChoice from '@/components/Assessment/Edittable/image-choice.vue'
 import { ArrowLeft } from 'lucide-vue-next';
+import Loading from '@/components/loading.vue';
 const route = useRoute();
 const assessmentStore = useAssessmentStore();
-
+const isLoading = ref(true);
 onMounted(async() => {
-    // await assessmentStore.existing_session(route.params.id as string);
-    await assessmentStore.initialize_questions(route.params.id as string);
+
+    isLoading.value = true;
+    try {
+        await assessmentStore.initialize_questions(route.params.id as string);
+    } finally {
+        isLoading.value = false;
+    }
 });
 
 const currentIndex = ref(0);
@@ -53,7 +59,9 @@ const deleteQuestion = async(index: number) => {
                 <ArrowLeft :size="15"></ArrowLeft> Back
             </div>
         </RouterLink>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 ">
+
+        <Loading v-if="isLoading" />
+        <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-8 ">
             <!-- Main Content Area -->
             <div class="lg:col-span-2 space-y-6" :key="currentIndex">
                <MultipleChoice v-if="currentQuestion.question_type === 'multiple_choice'" :question="currentQuestion"  />

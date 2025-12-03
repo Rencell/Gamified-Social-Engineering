@@ -3,6 +3,8 @@ import { ref } from 'vue'
 import { LessonService } from '@/services'
 import type { Lesson_test } from '@/services/lessonService'
 import lessonService from '@/services/lessonService'
+import { toast } from 'vue-sonner'
+import router from '@/router'
 
 export const useLessonStore = defineStore('Lesson', () => {
   const lessons = ref<Lesson_test[]>([])
@@ -20,6 +22,17 @@ export const useLessonStore = defineStore('Lesson', () => {
 
   const latestLessonStatus = ref<LatestLessonStatus | null>(null)
 
+
+  const toast_notification = (message: string) => {
+    toast.success(message, {
+      action: {
+        label: 'Close',
+        onClick: () => console.log('Closed notification'),
+      },
+      position: 'top-right',
+    })
+  }
+  
   const fetchLessons = async () => {
     try {
       lessons.value = await LessonService.get_all_test()
@@ -30,7 +43,6 @@ export const useLessonStore = defineStore('Lesson', () => {
         locked: !unlockedLessons.includes(lesson.slug),
       }))
 
-      console.log('Lessons with locked status:', lessons.value)
     } catch (error) {
       console.error('Error fetching lessons:', error)
     }
@@ -38,7 +50,6 @@ export const useLessonStore = defineStore('Lesson', () => {
 
   const fetchLatestLesson = async () => {
     if (latestLesson.value) {
-      console.log('Latest lesson already fetched:', latestLesson.value)
       return
     }
 
@@ -66,7 +77,6 @@ export const useLessonStore = defineStore('Lesson', () => {
     try {
       const formData = new FormData()
       formData.append('title', lessonData.title)
-      formData.append('slug', lessonData.slug)
       formData.append('bg', lessonData.bg)
       formData.append('description', lessonData.description)
 
@@ -78,9 +88,15 @@ export const useLessonStore = defineStore('Lesson', () => {
         formData.append('image', lessonData.image) // actual File object
       }
 
-      console.log('Creating lesson with data:', lessonData)
       const newLesson = await LessonService.create_lesson_test(formData)
-      lessons.value.push(newLesson)
+      const add_unlocked = {
+        ...newLesson,
+        locked: true
+      }
+      lessons.value.push(add_unlocked)
+      if (newLesson) {
+        toast_notification(`Lesson "${newLesson.title}" created successfully!`)
+      }
     } catch (error) {
       console.error('Error creating lesson:', error)
     }
@@ -90,7 +106,6 @@ export const useLessonStore = defineStore('Lesson', () => {
     try {
       const formData = new FormData()
       formData.append('title', lessonData.title!)
-      formData.append('slug', lessonData.slug!)
       formData.append('bg', lessonData.bg!)
       formData.append('description', lessonData.description!)
       if (lessonData.lesson_order !== null) {
@@ -100,26 +115,28 @@ export const useLessonStore = defineStore('Lesson', () => {
       if (lessonData.image instanceof File) {
         formData.append('image', lessonData.image)
       }
-
-      console.log('Updating lesson with data:', lessonData)
       const updatedLesson = await LessonService.update_lesson_test(lessonId, formData)
       const index = lessons.value.findIndex((l) => l.slug === updatedLesson.slug)
       if (index !== -1) {
         lessons.value[index] = updatedLesson
         currentLesson.value = updatedLesson
       }
+      toast_notification(`Lesson "${updatedLesson.title}" updated successfully!`)
     } catch (error) {
       console.error('Error updating lesson:', error)
     }
   }
 
-  const deleteLesson = async (lessonId: number) => {
+  const deleteLesson
+   = async (lessonId: number) => {
     try {
       await LessonService.delete_lesson_test(lessonId)
       lessons.value = lessons.value.filter((lesson) => lesson.id !== lessonId)
       if (currentLesson.value?.id === lessonId) {
         currentLesson.value = lessons.value.length > 0 ? lessons.value[0] : null
       }
+      toast_notification('Lesson deleted successfully')
+      
     } catch (error) {
       console.error('Error deleting lesson:', error)
     }

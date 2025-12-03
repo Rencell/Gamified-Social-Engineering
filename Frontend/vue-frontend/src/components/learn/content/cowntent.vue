@@ -11,7 +11,6 @@
       @onCreate="handleAddComponent"
       @onReorder="handleReorderComponent" />
   </LearningContent>
-
 </template>
 
 <script setup lang="ts">
