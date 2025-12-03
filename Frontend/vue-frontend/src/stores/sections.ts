@@ -4,21 +4,31 @@ import { ServiceService } from '@/services'
 import type { Section } from '@/services/sectionService'
 import type { ModuleTest } from '@/services/moduleService'
 import { useModuleStore } from './module'
+import { toast } from 'vue-sonner'
 
 export const useSectionStore = defineStore('pageSection', () => {
   const sections = ref<Section[]>([])
   const moduleStore = useModuleStore()
   const selectedSection = ref<Section | null>(null)
+
+
+  const toast_notification = (message: string) => {
+    toast.success(message, {
+      action: {
+        label: 'Close',
+        onClick: () => console.log('Closed notification'),
+      },
+      position: 'top-right',
+    })
+  }
+
   const fetchSection = async (lessonId: number) => {
     try {
       console.log('Fetching sections for lesson:', lessonId)
       sections.value = await ServiceService.get_sections(lessonId)
-
-      console.log('Fetched sections:', sections.value)
       sections.value.forEach(async section => {
         section.modules = (await moduleStore.fetchModulesBySection(section.modules as ModuleTest[])) || []
       })
-      console.log('Sections fetched:', sections.value)
     } catch (error) {
       console.error('Error fetching sections:', error)
     }
@@ -37,6 +47,8 @@ export const useSectionStore = defineStore('pageSection', () => {
     try {
       const newSection = await ServiceService.create_section(data)
       sections.value.push(newSection)
+
+      toast_notification('Section created successfully!')
       console.log('Section created:', newSection)
     } catch (error) {
       console.error('Error creating section:', error)
@@ -47,7 +59,7 @@ export const useSectionStore = defineStore('pageSection', () => {
     try {
       await ServiceService.delete_section(sectionId)
       sections.value = sections.value.filter(section => section.id !== sectionId)
-      console.log('Section deleted:', sectionId)
+      toast_notification('Section deleted successfully!')
     }
     catch (error) {
       console.error('Error deleting section:', error)
@@ -64,6 +76,7 @@ export const useSectionStore = defineStore('pageSection', () => {
 
         console.log('Section updated:', sections.value)
       }
+      toast_notification('Section updated successfully!')
     } catch (error) {
       console.error('Error updating section:', error)
     }

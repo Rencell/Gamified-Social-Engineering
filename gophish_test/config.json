@@ -18,7 +18,7 @@
         "cert_path": "gophish_template.crt",
         "key_path": "gophish_template.key"
     },
-    "django_api": "http://localhost:8000/api/gophish/gophish_webhook/",
+    "django_api": "https://gamified-social-engineering.onrender.com/api/gophish/gophish_webhook/",
     "db_name": "sqlite3",
     "db_path": "gophish.db",
     "migrations_prefix": "db/db_",

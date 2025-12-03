@@ -22,7 +22,7 @@ const delegatedProps = reactiveOmit(props, 'class')
 
 <template>
   <ProgressRoot data-slot="progress" v-bind="delegatedProps" :class="cn(
-    'relative h-5 w-full overflow-hidden rounded-full',
+    'relative h-5 w-auto flex-1 min-w-0 overflow-hidden rounded-full',
     props.class,
     props.bgBackground
   )

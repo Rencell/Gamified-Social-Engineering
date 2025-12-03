@@ -15,6 +15,7 @@ import type { Section } from '@/services/sectionService';
 import SectionDivider from '@/components/learn/learnUI/SectionDivider.vue'
 import moduleService from '@/services/moduleService';
 import { useAuthStore } from '@/stores/auth';
+import Loading from '@/components/loading.vue';
 
 
 const moduleStore   = useModuleStore();
@@ -29,6 +30,8 @@ const quizzes_progress  = ref<(Quiz & { percentage?: number })[]>()
 const lesson_percentage = ref(0)
 const sectionProgress   = ref<Record<number, number>>({});
 const sectionRefs       = ref<Record<number, boolean>>({});
+const isLoading         = ref(true);
+
 
 // Toggle visibility for a specific section
 const toggleSectionVisibility = (sectionId: number) => {
@@ -36,19 +39,19 @@ const toggleSectionVisibility = (sectionId: number) => {
 };
 
 onMounted(async () => {
-    if (lessonStore.lessons.length === 0) {
-        await lessonStore.fetchLessons();
-    }
-
-    lessonStore.setCurrentLesson(lessonId);
-    await moduleStore.fetchModules(lessonId);
-
-    await sectionStore.fetchSection(lessonStore.currentLesson?.id || 0);
-    sectionStore.sections.forEach((section) => {
-        sectionRefs.value[section.id] = true; // Default to visible
-    });
-
+    isLoading.value = true;
     try {
+        if (lessonStore.lessons.length === 0) {
+            await lessonStore.fetchLessons();
+        }
+    
+        lessonStore.setCurrentLesson(lessonId);
+        await moduleStore.fetchModules(lessonId);
+        await sectionStore.fetchSection(lessonStore.currentLesson?.id || 0);
+        sectionStore.sections.forEach((section) => {
+            sectionRefs.value[section.id] = true; // Default to visible
+        });
+        await get_all_modules();
         const map = moduleStore.modules.map(m => m.id).filter((id): id is number => id !== null);
         
         await quizService.get_by_ids(map).then(res => {
@@ -71,6 +74,8 @@ onMounted(async () => {
         lesson_percentage.value = Math.round(lesson_percentage.value / sectionStore.sections.length);
     } catch (err) {
         console.error("Error in fetching lessons or modules:", err);
+    } finally {
+        isLoading.value = false;
     }
 })
 
@@ -91,8 +96,6 @@ const get_all_modules = async () => {
         console.error("Error fetching all modules:", error);
     }
 }
-
-get_all_modules();
 
 // helper function that returns the first locked module of a section
 const getFirstLockedModule = (section: { modules: any[]; }) => {
@@ -122,7 +125,14 @@ const getFirstLockedModule = (section: { modules: any[]; }) => {
                 <CreateSectionDialog />
                 <hr class="my-5" />
             </div>
-            <div v-for="(section, index) in sectionStore.sections" :key="section.name">
+
+            <Loading v-if="isLoading"></Loading>
+
+            <div v-else-if="sectionStore.sections.length === 0" class="text-center py-12">
+                <h2 class="text-lg font-bold text-foreground">No section set for this module.</h2>
+            </div>
+
+            <div v-else v-for="(section, index) in sectionStore.sections" :key="section.name">
 
                 <SectionDivider :index="index" :section="section" :section-progress="sectionProgress[section.id] || 0"
                     :sectionRefs="sectionRefs[section.id]" @toggle="toggleSectionVisibility(section.id)">

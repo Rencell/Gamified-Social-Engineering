@@ -10,6 +10,7 @@ import type { Assessment, AssessmentSession, AssessmentReward } from '@/services
 import { useAuthStore } from '@/stores/auth';
 import AssessmentStartDialog from './AssessmentStartDialog.vue'
 import { useRewardStore } from '@/stores/reward';
+import Loading from '../loading.vue';
 
 const props = defineProps<{
     id?: string;
@@ -30,22 +31,27 @@ const resume_session = ref<AssessmentSession | null>(null);
 const has_claimed_reward = ref<boolean>(false);
 const session_reward = ref<AssessmentReward | null>(null);
 const rewardStore = useRewardStore();
+const isLoading = ref(true);
 
 onMounted(async () => {
-    await assessmentStore.detail(route.params.id as string);
-    assessment.value = assessmentStore.currentAssessment;
-    session.value = await assessmentStore.has_completed_assessment(assessment.value!.id);
-    resume_session.value = await assessmentStore.resume_assessment(assessment.value!.id);
-    
 
-    session_reward.value = await assessmentStore.fetch_ready_claim_reward(assessment.value!.id);
-    has_claimed_reward.value = session_reward.value.rewarded;
+    isLoading.value = true;
+    try {
+        await assessmentStore.detail(route.params.id as string);
+        assessment.value = assessmentStore.currentAssessment;
+        session.value = await assessmentStore.has_completed_assessment(assessment.value!.id);
+        resume_session.value = await assessmentStore.resume_assessment(assessment.value!.id);
     
-    // Create a copy for editing with deep copy of instructions
-    editableAssessment.value = assessment.value ? {
-        ...assessment.value,
-        instructions: assessment.value.instructions ? [...assessment.value.instructions] : []
-    } : null;
+        session_reward.value = await assessmentStore.fetch_ready_claim_reward(assessment.value!.id);
+        has_claimed_reward.value = session_reward.value.rewarded;
+        
+        editableAssessment.value = assessment.value ? {
+            ...assessment.value,
+            instructions: assessment.value.instructions ? [...assessment.value.instructions] : []
+        } : null;
+    } finally {
+        isLoading.value = false;
+    }
 });
 
 // Navigation functions
@@ -156,7 +162,8 @@ const toggleShowModal = () => {
     <div class="container mx-auto px-4 py-8">
         <main class="space-y-8">
             <!-- Assessment not found -->
-            <div v-if="!assessment" class="text-center py-12">
+            <Loading v-if="isLoading" />
+            <div v-else-if="!assessment" class="text-center py-12">
                 <h2 class="text-2xl font-bold text-foreground">Assessment not found</h2>
             </div>
 
@@ -278,8 +285,8 @@ const toggleShowModal = () => {
                                 @click="editAssessment()" :disabled="isEditing">
                                 Edit Questions
                             </Button>
-                            <div v-else class="flex items-center gap-4">
-                                <Button  size="lg" class="bg-accent hover:bg-accent/50 text-white"
+                            <div v-else class="flex flex-col lg:flex-row items-center gap-4">
+                                <Button size="lg" class="bg-accent hover:bg-accent/50 text-white w-full lg:w-auto"
                                     @click="toggleShowModal" :disabled="isEditing">
                                     {{ resume_session ? 'Resume assessment' : (!session ? 'Start assessment' : 'Retake assessment') }}
                                 </Button>
@@ -287,21 +294,25 @@ const toggleShowModal = () => {
                                 <AssessmentStartDialog v-if="showModal"
                                     :data="assessment"
                                     @toggle="toggleShowModal" 
-                                     @start-assessment="startAssessment" />
+                                    @start-assessment="startAssessment" />
     
                                 <Button v-if="session" size="lg" variant="outline" 
+                                    class="w-full lg:w-auto"
                                     @click="viewReport" :disabled="isEditing">
                                     View Report
                                 </Button>
+                                
                                 <div v-if="!session" class="flex items-center gap-1 text-ternary">
                                     <CircleCheck class="size-5" />
                                     <p class="text-sm">Incomplete</p>
                                 </div>
                                 
-                               <div v-else class="flex items-center gap-1">
+                                <div v-else class="flex items-center gap-1">
                                     <CircleCheck class="size-5 text-green-500" />
-                                    <p class="text-xs font-semibold">Last Completed {{ session?.completed_at ? new Date(session.completed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }) : 'N/A' }}</p>
-                               </div>
+                                    <p class="text-xs font-semibold text-center lg:text-left">
+                                        Last Completed {{ session?.completed_at ? new Date(session.completed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }) : 'N/A' }}
+                                    </p>
+                                </div>
                             </div>
                         </div>
 

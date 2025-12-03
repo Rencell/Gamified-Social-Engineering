@@ -3,18 +3,28 @@ import AssessmentCard from '@/components/Assessment/AssessmentCard.vue'
 import { onMounted, ref } from 'vue';
 import AddItems from '@/components/Assessment/dialog/addItems.vue'
 import { useAssessmentStore } from '@/stores/assessment';
+import Loading from '@/components/loading.vue';
 
 
 const assessmentsStore = useAssessmentStore();
+const isLoading = ref(true);
+    
 onMounted(async () => {
-    await assessmentsStore.fetch();
+    isLoading.value = true;
+    try {
+        await assessmentsStore.fetch();
+    } finally {
+        isLoading.value = false;
+    }
 });
 
 </script>
 <template>
     <p class="font-bold text-3xl mb-4">Assessment</p>
     <AddItems />
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+    <Loading v-if="isLoading"/>
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+
         <div v-for="(value, index) in assessmentsStore.assessments" :key="index">
         
             <RouterLink :to="{ name: 'AssessmentDetail', params: { id: value.slug } }">
@@ -30,7 +40,8 @@ onMounted(async () => {
                     :questions="value.question_count ?? 0" />
             </RouterLink>
         </div>
-        <div v-if="assessmentsStore.assessments.length === 0" class="col-span-2 text-center text-gray-500">
+
+        <div v-if="assessmentsStore.assessments.length === 0 && !isLoading" class="col-span-2 text-center text-gray-500">
             No assessments available.
         </div>
     </div>

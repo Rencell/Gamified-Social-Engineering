@@ -64,7 +64,7 @@ function toggleShowHistory() {
                 
                 <RiskIndicator :score="security_score" :max-score="100" risk-level="low" />
                 
-                <p class="mt-6 text-sm leading-relaxed text-gray-400">{description}</p>
+                <!-- <p class="mt-6 text-sm leading-relaxed text-gray-400">{description}</p> -->
             </Card>
         </section>
         
@@ -73,7 +73,7 @@ function toggleShowHistory() {
             <h2 class="mb-8 text-3xl font-bold text-white">Campaign Summary</h2>
             
             <Card class="border-[#1a2332] bg-secondary p-8 rounded-2xl">
-                <div class="grid gap-6 md:grid-cols-3">
+                <div class="grid gap-6 grid-cols-3">
                     <div>
                         <div class="text-sm text-gray-400">Emails Sent</div>
                         <div class="mt-2 text-3xl font-bold text-white">{{ phishingData[0]?.number_sent }}</div>

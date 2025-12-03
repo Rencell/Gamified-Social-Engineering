@@ -1,13 +1,13 @@
 <template>
-    <component
-      :is="componentMap[item.type]"
-      :id="`content-item-${item.id}`"
-      v-bind="item.type === 'InteractiveMCQ' ? { mcq: item.props } : item.props"
-      :item="item"
-      :siblings="siblings"
-      @signalDelete="handleDeleteComponent(item.id)"
-      @addComponent="handleAddComponent($event, item.id)"
-    >
+  <component
+  :is="componentMap[item.type]"
+  :id="`content-item-${item.id}`"
+  v-bind="item.type === 'InteractiveMCQ' ? { mcq: item.props } : item.props"
+  :item="item"
+  :siblings="siblings"
+  @signalDelete="handleDeleteComponent(item.id)"
+  @addComponent="handleAddComponent($event, item.id)"
+  >
       <template v-if="item.children && item.children.length">
         <template v-for="child in item.children" :key="child.id">
         <recurse
@@ -26,6 +26,8 @@
         
       </template>
     </component>
+
+    
 </template>
 
 <script setup lang="ts">

@@ -1,10 +1,10 @@
 <template>
-    <div class="space-y-8 flex flex-col items-center w-3xl">
+    <div class="space-y-8 flex flex-col items-center w-full md:w-4xl">
       <h2 class="w-full text-xl font-display font-bold text-white text-center text-pretty">
         {{ question.text }}
       </h2>
   
-      <div class="grid gap-6 w-full" :class="hasImage ? 'grid-cols-2' : ''">
+      <div class="grid gap-6 w-full md:grid-cols-1" :class="{'md:grid-cols-2': hasImage}">
         <div
           v-if="hasImage"
           class="p-3 bg-black rounded-lg flex items-center justify-center"
@@ -12,7 +12,7 @@
           <img class="object-contain max-h-96 w-full" :src="String(question.image)" alt="">
         </div>
   
-        <div class="w-full" :class="{'px-20': !hasImage}">
+        <div class="w-full" :class="{'md:px-20': !hasImage}">
           <div :class="isAnimationFinished ? 'animate-in fade-in duration-500' : 'opacity-0'">
             <div class="grid grid-cols-1 gap-4">
               <div 
@@ -31,7 +31,7 @@
                   ]" style="aspect-ratio: 1;">
                   {{ String.fromCharCode(65 + key) }}
                   </div>
-                  <span class="text-slate-200 font-bold">{{ option.text }}</span>
+                  <span class="text-slate-200 font-bold text-left">{{ option.text }}</span>
                 </div>
               </div>
             </div>

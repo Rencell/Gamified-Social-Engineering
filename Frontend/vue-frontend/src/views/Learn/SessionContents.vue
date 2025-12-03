@@ -33,44 +33,50 @@ import { useLessonStore } from '@/stores/lesson';
 import { useSectionStore } from '@/stores/sections';
 import type { ModuleTest } from '@/services/moduleService';
 import { useAuthStore } from '@/stores/auth';
+import Loading from '@/components/loading.vue';
 const moduleStore = useModuleStore();
 const lessonStore = useLessonStore();
 const sectionStore = useSectionStore();
 const sectionId = route.params.sectionId as string;
-
+const isLoading = ref(false);
 onMounted(async () => {
 
+  isLoading.value = true;
+  try {
 
-  const lessonId = route.params.lessonId as string;
-
-  if (lessonStore.lessons.length === 0) {
-    await lessonStore.fetchLessons();
-  }
-
-  lessonStore.setCurrentLesson(lessonId);
-  await moduleStore.fetchModules(lessonId);
-  await sectionStore.fetchSection(lessonStore.currentLesson?.id || 0);
-  sectionStore.setSelectedSection(parseInt(sectionId));
-  if(sectionStore.selectedSection?.modules.length === 0) {
-    moduleStore.setSelectedModule(sectionStore.selectedSection?.modules[0] as ModuleTest);
-    return;
-  }
-
-  if (route.query.openQuiz) {
-    // 👉 open your quiz
-    console.log("Open quiz modal")
-
-    // Check if this page load was a refresh/reload
-    const navEntries = performance.getEntriesByType("navigation")
-    const isReload = navEntries.length && (navEntries[0] as PerformanceNavigationTiming).type === "reload"
-
-    if (isReload) {
-      // 👉 remove only when it's a refresh
-      router.replace({
-        path: route.path,
-        query: {} // clears all query params
-      })
+    const lessonId = route.params.lessonId as string;
+  
+    if (lessonStore.lessons.length === 0) {
+      await lessonStore.fetchLessons();
     }
+  
+    lessonStore.setCurrentLesson(lessonId);
+    await moduleStore.fetchModules(lessonId);
+    await sectionStore.fetchSection(lessonStore.currentLesson?.id || 0);
+    sectionStore.setSelectedSection(parseInt(sectionId));
+    if(sectionStore.selectedSection?.modules.length === 0) {
+      moduleStore.setSelectedModule(sectionStore.selectedSection?.modules[0] as ModuleTest);
+      return;
+    }
+  
+    if (route.query.openQuiz) {
+      // 👉 open your quiz
+      console.log("Open quiz modal")
+  
+      // Check if this page load was a refresh/reload
+      const navEntries = performance.getEntriesByType("navigation")
+      const isReload = navEntries.length && (navEntries[0] as PerformanceNavigationTiming).type === "reload"
+  
+      if (isReload) {
+        // 👉 remove only when it's a refresh
+        router.replace({
+          path: route.path,
+          query: {} // clears all query params
+        })
+      }
+    }
+  } finally {
+    isLoading.value = false;
   }
 });
 
@@ -109,8 +115,8 @@ const sectionModules = computed(() => {
 
     <ModuleLayout>
       <ModuleSidebar class="hidden md:block">
-        
-        <ModuleSidebarItem v-for="module in sectionModules" :key="module.title"
+        <Loading class="mt-4" v-if="isLoading"></Loading>
+        <ModuleSidebarItem v-else v-for="module in sectionModules" :key="module.title"
           :active="module.title === moduleStore.selectedModule?.title" :completed="!module.locked"
           :locked-index="useAuthStore().User.is_admin ? false : (module.final ? !isFinalQuizUnlocked(sectionModules) : false)" @click="moduleStore.setSelectedModule(module)">
           {{ module.title }}

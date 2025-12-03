@@ -13,13 +13,20 @@ import {
 import { Button } from "@/components/ui/button"
 import { Trash2 } from "lucide-vue-next";
 import { useLessonStore } from "@/stores/lesson";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const lessonStore = useLessonStore();
 defineProps<{
   lessonId: number | undefined
 }>()
 
 const deleteLesson = async(lessonId: number) => {
-  await lessonStore.deleteLesson(lessonId);
+  try {
+    await lessonStore.deleteLesson(lessonId);
+    router.replace({ name: 'Learn' }); // or router.push(...)
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 </script>
