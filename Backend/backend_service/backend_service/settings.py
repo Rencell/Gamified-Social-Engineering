@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'app_contents',
     'app_section',
     'app_assessment',
+    'app_popup',
+    'app_minigame',
     'gophish',
     'rest_framework',
     'rest_framework.authtoken',

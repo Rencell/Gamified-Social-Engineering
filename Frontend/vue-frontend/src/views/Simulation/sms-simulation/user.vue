@@ -6,6 +6,7 @@ import { computed, onMounted, ref } from 'vue';
 import type {  GoPhishEvent, GoPhishSMS } from '@/services/simulationService';
 import {Clock, Mail, ShieldAlert } from 'lucide-vue-next';
 import DialogSimulation from '@/components/simulation/dialogSimulation.vue'
+import Loading from '@/components/loading.vue';
 
 const phishingData = ref<GoPhishSMS[]>([])
 const eventsData = ref<GoPhishEvent[]>([])
@@ -23,16 +24,21 @@ const toggleConsent = (async (phone: string) => {
         console.error('Error updating consent:', error);
     }
 });
+
+const isLoading = ref(true);
 onMounted(async () => {
     // Fetch simulation data when the component is mounted
+    isLoading.value = true;
     try {
         const response = await SimulationService.get_all_sms();
         const consent = await SimulationService.get_consent();
-        isOpen.value = consent.phone_consent;
         phishingData.value = response;
         eventsData.value = await SimulationService.get_events() as unknown as GoPhishEvent[];
+        isOpen.value = consent.phone_consent;
     } catch (error) {
         console.error('Error fetching simulation data:', error);
+    } finally {
+        isLoading.value = false;
     }
 });
 
@@ -75,7 +81,7 @@ function toggleShowHistory() {
             <Card class="border-[#1a2332] bg-secondary p-8 rounded-2xl">
                 <div class="grid gap-6 grid-cols-3">
                     <div>
-                        <div class="text-sm text-gray-400">Emails Sent</div>
+                        <div class="text-sm text-gray-400">Sms Sent</div>
                         <div class="mt-2 text-3xl font-bold text-white">{{ phishingData[0]?.number_sent }}</div>
                     </div>
                     <div>
@@ -161,7 +167,11 @@ function toggleShowHistory() {
             </Card>
         </section>
     </div>
-    <div v-if="!isOpen" class="absolute inset-0 flex flex-col items-center justify-center space-y-4">
+
+    <div v-if="isLoading" class="absolute inset-0 flex flex-col items-center justify-center space-y-4">
+        <Loading></Loading>
+    </div>
+    <div v-else-if="!isOpen" class="absolute inset-0 flex flex-col items-center justify-center space-y-4">
         <div
         class="w-20 h-20 rounded-full bg-orange-500/20 flex items-center justify-center mx-auto border-2 border-orange-500/50">
             <ShieldAlert class="w-10 h-10 text-orange-500" />

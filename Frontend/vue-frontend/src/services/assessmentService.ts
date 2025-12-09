@@ -36,6 +36,7 @@ export interface Assessment {
     passing_rate?: number | 0
     difficulty_level?: string
     instructions?: string[] | null
+    required_level?: number | 0
 }
 
 export interface AssessmentSession {

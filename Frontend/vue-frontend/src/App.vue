@@ -14,7 +14,8 @@ import { useCourseUnlockStore } from './stores/pageCourseUnlock';
 import 'vue-sonner/style.css'
 import DayStreak from './components/achievement/DayStreak.vue'
 import CourseUnlock from './components/achievement/CourseUnlock.vue'
-import { useLessonStore } from './stores/lesson';
+import Index from './components/PopupTypes/index.vue'
+import { usePopupStore } from './stores/popup';
 
 const streakStore = useStreakStore()
 const route = useRoute()
@@ -28,13 +29,12 @@ onMounted(async () => {
   initialized.value = true;
 })
 
-const sht = ref(false)
 
-
+const popupStore = usePopupStore();
 </script>
 
 <template>
-
+  <Index v-if="popupStore.openPopupModal && popupStore.popupContent" :scenario="popupStore.popupContent?.scenario" />
   <Toaster />
   <CourseUnlock :is-open="courseUnlockStore.openCourseModal" :onClose="courseUnlockStore.closeStreakModal" />
   <DayStreak :is-open="streakStore.openStreakModal" :onClose="streakStore.closeStreakModal" />

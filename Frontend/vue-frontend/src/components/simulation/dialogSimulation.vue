@@ -14,6 +14,7 @@ import { Card, CardContent } from '../ui/card';
 import { Checkbox } from '../ui/checkbox';
 import { AlertTriangle } from 'lucide-vue-next';
 import { Input } from '../ui/input';
+import DialogClose from '../ui/dialog/DialogClose.vue';
 
 const isOpen = ref(false);
 const isChecked = ref(false);
@@ -58,7 +59,7 @@ const props = defineProps<{
         <DialogTrigger>
             <Button size="lg">Start New Simulation?</Button>
         </DialogTrigger>
-        <DialogContent class="max-h-[80vh] overflow-y-auto scroll-hidden">
+        <DialogContent class="max-h-[80vh] overflow-y-auto scroll-hidden" @interact-outside.prevent="(e) => e.preventDefault()" >
             <DialogHeader>
                 <DialogTitle>Phishing Simulation Consent Required</DialogTitle>
                 <DialogDescription>
@@ -162,7 +163,10 @@ const props = defineProps<{
                 </div>
             </DialogHeader>
             <DialogFooter>
-                <Button variant="outline" >Decline</Button>
+                <DialogClose as-child>
+
+                    <Button variant="outline" >Decline</Button>
+                </DialogClose>
                 <Button :disabled="!isChecked || (isSms && !isPhoneValid)" @click="toggleDialog">Accept & Continue</Button>
             </DialogFooter>
         </DialogContent>

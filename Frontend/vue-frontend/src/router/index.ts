@@ -17,17 +17,15 @@ import settingsView from '@/views/settingsView.vue'
 import EmailSimulationView from '@/views/Simulation/EmailSimulationView.vue'
 import SmsSimulation from '@/views/Simulation/SmsSimulation.vue'
 import AssessmentView from '@/views/AssessmentView.vue'
-import assessmentEdittable from '@/views/Assessment/assessmentEdittable.vue'
+import SafeBrowsingView from '@/views/Simulation/SafeBrowsingView.vue'
 import shibalDetail from '@/components/Assessment/shibalDetail.vue'
-
+import NotFound from '@/views/NotFound.vue'
 
 import { requireAuthenticated, redirectLogout } from './guards'
 import { useLoadingPageStore } from '@/stores/pageLoading'
-import { set } from '@vueuse/core'
 import AssessmentSession from '@/views/Assessment/assessmentSession.vue'
 import AssessmentEdittable from '@/views/Assessment/assessmentEdittable.vue'
 import AssessmentReport from '@/views/Assessment/assessmentReport.vue'
-import OnBoardingView from '@/views/OnBoardingView.vue'
 import onboarding_slide1 from '@/components/onboarding/slide1.vue'
 import onboarding_slide2 from '@/components/onboarding/slide2.vue'
 import onboarding_slide3 from '@/components/onboarding/slide3.vue'
@@ -173,6 +171,12 @@ const router = createRouter({
       meta: { layout: 'fullscreen' }
     },
     {
+      path: '/safe-browsing',
+      name: 'safe-browsing',
+      beforeEnter: requireAuthenticated,
+      component: SafeBrowsingView,
+    },
+    {
       path: '/simulation',
       name: 'simulation',
       beforeEnter: requireAuthenticated,
@@ -211,6 +215,13 @@ const router = createRouter({
       beforeEnter: requireAuthenticated,
       component: onboarding_slide4,
       meta: { layout: 'fullscreen' },
+    },
+    // Catch-all 404 route (place at the very end)
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: NotFound,
+      meta: { layout: 'fullscreen' }
     },
   ],
 })  

@@ -4,10 +4,13 @@ import { onMounted, ref } from 'vue';
 import AddItems from '@/components/Assessment/dialog/addItems.vue'
 import { useAssessmentStore } from '@/stores/assessment';
 import Loading from '@/components/loading.vue';
+import { useAuthStore } from '@/stores/auth';
 
 
 const assessmentsStore = useAssessmentStore();
+const authStore = useAuthStore();
 const isLoading = ref(true);
+const requiredLevel = ref(0);
     
 onMounted(async () => {
     isLoading.value = true;
@@ -18,9 +21,14 @@ onMounted(async () => {
     }
 });
 
+
+onMounted(async () => {
+    requiredLevel.value = await authStore.User.level;
+});
+
 </script>
 <template>
-    <p class="font-bold text-3xl mb-4">Assessment</p>
+    <p class="font-bold text-3xl mb-4">Assessment </p>
     <AddItems />
     <Loading v-if="isLoading"/>
     <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
@@ -37,7 +45,9 @@ onMounted(async () => {
                     :name="value.name" 
                     :progress="10" 
                     :duration="value.duration ?? 0" 
-                    :questions="value.question_count ?? 0" />
+                    :questions="value.question_count ?? 0"
+                    :required-level="value.required_level ?? 0"
+                    :isUnlocked="(value.required_level ?? 0) <= requiredLevel" />
             </RouterLink>
         </div>
 

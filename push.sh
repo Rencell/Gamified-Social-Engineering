@@ -1,5 +1,5 @@
 #!/bin/bash
 
 git add .
-git commit -m "for production"
+git commit -m "Mini games, Assessment fixes"
 git push origin caps-b
