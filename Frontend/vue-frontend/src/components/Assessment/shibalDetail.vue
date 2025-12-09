@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { Clock, FileText, Users, Zap, ArrowLeft, CircleCheck, Wrench, Save, X, Plus, Trash2, Target, Coins } from 'lucide-vue-next';
+import { Clock, FileText, Users, Zap, ArrowLeft, CircleCheck, Wrench, Save, X, Plus, Trash2, Target, Coins, Book, BookOpen, Lock, AlertCircle } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -156,6 +156,9 @@ const showModal = ref(false)
 const toggleShowModal = () => {
     showModal.value = !showModal.value;
 }
+
+const authStore = useAuthStore();
+const isLevelElegible = computed(() => authStore.User.level <= (assessment.value?.required_level ?? 0));
 </script>
 
 <template>
@@ -174,8 +177,24 @@ const toggleShowModal = () => {
                     <ArrowLeft :size="15"></ArrowLeft> Back
                 </div>
 
-                <!-- Main Content -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div
+                    v-if="isLevelElegible"
+                    class="bg-gradient-to-r from-amber-600/20 to-orange-600/20 border border-amber-600/30 rounded-lg p-4 flex items-center gap-4">
+                    <div class="flex-shrink-0">
+                        <AlertCircle class="h-6 w-6 text-amber-500" />
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-amber-100 text-sm">Level Requirement</h3>
+                        <p class="text-amber-200/90 text-sm mt-1">
+                            You must reach <span class="font-bold text-amber-100">Level 4</span> to assess your
+                            skill in this
+                            assessment.
+                        </p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 " 
+                     :class="{'opacity-20 blur-xs pointer-events-none' : isLevelElegible}">
+                                        
                     <!-- Left Column -->
                     <div class="lg:col-span-2 space-y-8">
                         <!-- Header Section -->
@@ -334,18 +353,30 @@ const toggleShowModal = () => {
 
                             <div class="pt-2">
                                 <p class="text-sm text-muted-foreground">
-                                    <strong>Skill Level: </strong>
+                                    
                                     <template v-if="!isEditing">
-                                        {{ assessment.difficulty_level }}
+                                        <div class="flex items-center gap-4 bg-accent/10 p-4 rounded-lg mb-4">
+                                            <BookOpen></BookOpen>
+                                            <div class="flex flex-col gap-3">
+                                                <p class="text-xs font-semibold">REQUIRED LEVEL</p>
+                                                <p class="text-lg font-bold">{{ assessment.difficulty_level }}</p>
+                                            </div>
+                                        </div>
                                     </template>
                                     <template v-else>
-                                        <select v-model="editableAssessment!.difficulty_level"
-                                            class="ml-2 px-2 py-1 border rounded text-foreground bg-background">
-                                            <option value="Beginner">Beginner</option>
-                                            <option value="Intermediate">Intermediate</option>
-                                            <option value="Advanced">Advanced</option>
-                                            <option value="Expert">Expert</option>
-                                        </select>
+                                        <div class="flex items-center gap-4 bg-accent/10 p-4 rounded-lg mb-4">
+                                            <BookOpen></BookOpen>
+                                            <div class="flex flex-col gap-3">
+                                                <p class="text-xs font-semibold">REQUIRED LEVEL</p>
+                                                <select v-model="editableAssessment!.difficulty_level"
+                                                    class="ml-2 px-2 py-1 border rounded text-foreground bg-background">
+                                                    <option value="Beginner">Beginner</option>
+                                                    <option value="Intermediate">Intermediate</option>
+                                                    <option value="Advanced">Advanced</option>
+                                                    <option value="Expert">Expert</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </template>
                                 </p>
                             </div>

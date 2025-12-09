@@ -9,6 +9,7 @@ import type { GoPhish } from '@/services/simulationService';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, ShieldAlert, Mail, Clock, CheckCircle2, XCircle } from 'lucide-vue-next';
 import DialogSimulation from '@/components/simulation/dialogSimulation.vue'
+import Loading from '@/components/loading.vue';
 
 
 const phishingData = ref<GoPhish[]>([])
@@ -20,16 +21,21 @@ function toggleDialog() {
     isOpen.value = !isOpen.value;
     toggleshit();
 }
+const isLoading = ref(true);
 onMounted(async () => {
+
+    isLoading.value = true;
     // Fetch simulation data when the component is mounted
     try {
         const response = await SimulationService.get_all();
         const consent = await SimulationService.get_consent();
-        isOpen.value = consent.email_consent;
         phishingData.value = response;
         eventsData.value = await SimulationService.get_events() as unknown as GoPhishEvent[];
+        isOpen.value = consent.email_consent;
     } catch (error) {
         console.error('Error fetching simulation data:', error);
+    } finally {
+        isLoading.value = false;
     }
 });
 
@@ -168,7 +174,10 @@ function toggleShowHistory() {
             </Card>
         </section>
     </div>
-    <div v-if="!isOpen" class="absolute inset-0 flex flex-col items-center justify-center space-y-4">
+    <div v-if="isLoading" class="absolute inset-0 flex flex-col items-center justify-center space-y-4">
+        <Loading></Loading>
+    </div>
+    <div v-else-if="!isOpen" class="absolute inset-0 flex flex-col items-center justify-center space-y-4">
         <div
             class="w-20 h-20 rounded-full bg-orange-500/20 flex items-center justify-center mx-auto border-2 border-orange-500/50">
             <ShieldAlert class="w-10 h-10 text-orange-500" />

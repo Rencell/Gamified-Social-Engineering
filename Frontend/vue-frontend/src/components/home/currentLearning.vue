@@ -10,9 +10,9 @@
                     <img :src="useImageUrl(latestLessonData?.image?.toString())!" class="w-full" alt="">
                 </div>
                 <div class="flex flex-col gap-2 w-full sm:w-50">
-                    <p class="font-bold sm:text-left">{{ latestLessonData?.title }}</p>
-                    <p class="text-xs font-semibold opacity-40">{{lessonStore.latestPercentageLesson}}% Completed</p>
-                    <Progress :model-value="lessonStore.latestPercentageLesson" bg="bg-violet-500" class="h-5" />
+                    <p class="flex-1 font-bold sm:text-left">{{ latestLessonData?.title }}</p>
+                    <p class="flex-1 text-xs font-semibold opacity-40">{{lessonStore.latestPercentageLesson}}% Completed</p>
+                    <Progress :model-value="lessonStore.latestPercentageLesson" bg="bg-violet-500"   />
                 </div>
             </div>
 

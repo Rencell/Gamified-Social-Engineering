@@ -91,7 +91,7 @@ export const useAuthStore = defineStore('auth', () => {
     if (User.value.username !== 'testuser') {
       return
     }
-    if (!isAuthenticatedCheck()) {
+    if (!(await isAuthenticatedCheck())) {
       clearUser()
     }
     try {

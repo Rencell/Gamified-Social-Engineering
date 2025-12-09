@@ -15,6 +15,7 @@ class Assessment(models.Model):
     passing_rate = models.FloatField(default=75, help_text="Passing rate as a percentage")
     difficulty_level = models.CharField(max_length=50)
     instructions = models.JSONField(default=list)
+    required_level = models.PositiveIntegerField(default=0, help_text="Minimum user level required to unlock")
     
     class Meta:
         db_table = 'assessment'
@@ -32,6 +33,7 @@ class Assessment(models.Model):
             return True
         old_name = Assessment.objects.get(pk=self.pk).name
         return old_name != self.name
+
 
 class Question(models.Model):
     
