@@ -17,7 +17,7 @@ const minigameService = {
     session.get(END_POINT + 'minigame/').then((res) => res.data as Minigame[]),
 
   get_minigame_by_id: (id: number): Promise<Minigame> =>
-    session.get(END_POINT + 'minigame/' + id).then((res) => res.data as Minigame)
+    session.get(END_POINT + 'minigame/' + id + '/').then((res) => res.data as Minigame)
 }
 
 export default minigameService

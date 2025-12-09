@@ -25,9 +25,9 @@ const END_POINT = "/api/popup/";
 
 const popupService = {
   get_today: (): Promise<PopupToday> =>
-    session.get(END_POINT + 'today-popup').then(res => res.data),
+    session.get(END_POINT + 'today-popup/').then(res => res.data),
   get_pending_popups: (): Promise<Popup> =>
-    session.get(END_POINT + 'popup-trigger-log/get_pending_popups').then(res => res.data),
+    session.get(END_POINT + 'popup-trigger-log/get_pending_popups/').then(res => res.data),
   mark_popup_as_seen: (popupId: number, status: string): Promise<Popup> =>
     session.post(END_POINT + 'popup-trigger-log/mark_popup_as_seen/', { scenario_id: popupId, status }).then(res => res.data),
   popup_trigger_log: (): Promise<Popup[]> =>
