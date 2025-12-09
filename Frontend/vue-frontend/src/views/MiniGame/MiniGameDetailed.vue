@@ -44,7 +44,7 @@ onMounted(() => {
             // Enforce lock: if user level != required_level, show Error component
             const userLevel = authStore?.User?.level ?? 0;
             const req = minigame.required_level ?? null;
-            if (req === null || userLevel !<= req) {
+            if (req !== null && userLevel < req) {
                 thegame.value = '';
                 return;
             }
