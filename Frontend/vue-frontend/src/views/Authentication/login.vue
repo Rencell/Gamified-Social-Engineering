@@ -53,6 +53,7 @@ const login = async (): Promise<void> => {
             </div>
 
             <div >
+                
                 <LoginWithGoogle class="w-full" />
             </div>
 
@@ -67,7 +68,7 @@ const login = async (): Promise<void> => {
 
             <div>
                 <Button variant="outline" size="lg" class="w-full bg-white hover:bg-gray-50 text-white border-gray-300">
-                    Apple
+                    
                 </Button>
             </div>
 

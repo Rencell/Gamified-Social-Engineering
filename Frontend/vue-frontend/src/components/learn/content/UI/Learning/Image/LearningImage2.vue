@@ -90,14 +90,21 @@ const canMoveDown = computed(() => {
 </script>
 
 <template>
-  <div v-if="fullscreen" class="fixed inset-0 bg-black/90 flex items-center justify-center z-50"
-    @click="toggleFullscreen">
+  <div v-if="fullscreen" class="fixed inset-0 bg-black/90 flex items-center justify-center z-50" @click="toggleFullscreen">
     <img :src="previewUrl ?? undefined" alt="Fullscreen image" class="max-w-full max-h-full object-contain" />
   </div>
-  <div class="relative mb-5 w-full h-100 sm:h-auto bg-background p-3 rounded-xl">
-    <img v-if="previewUrl" :src="previewUrl" alt="Learning content image" class="w-full h-full object-cover rounded-xl"
-      @click="toggleFullscreen" />
-
+  <div class="relative mb-5 w-full bg-background p-2 sm:p-3 rounded-xl">
+    <img
+      v-if="previewUrl"
+      :src="previewUrl"
+      :srcset="`${previewUrl} 1x, ${previewUrl} 2x`"
+      sizes="(max-width: 640px) 100vw, 640px"
+      alt="Learning content image"
+      class="w-full h-auto object-contain sm:object-cover rounded-xl max-h-[60vh] sm:max-h-[80vh]"
+      loading="lazy"
+      decoding="async"
+      @click="toggleFullscreen"
+    />
   </div>
   <template v-if="editable">
     <div class="space-y-2 bg-background p-4 rounded-lg mb-5 group relative">

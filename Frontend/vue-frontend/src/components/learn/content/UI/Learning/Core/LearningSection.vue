@@ -1,23 +1,14 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card/index.ts';
-import { Plus, Trash2 } from 'lucide-vue-next';
-import { ref } from 'vue';
-import { inject } from 'vue';
+// Removed unused imports and variables to fix compile errors
 import EditableCard from '../EditableCard.vue'
 import { useEditableText } from '@/composables/useEditableText';
 import type { Content } from '@/services/contentService';
 import type { LearningType } from '../../learningRegistry';
 
-
 const emit = defineEmits(['signalDelete', "addComponent"]);
-
-
-const showAddComponents = ref(false);
 
 const handleAddComponent = (type: LearningType) => {
   emit("addComponent", type, null);
-  showAddComponents.value = true;
 }
 
 const componentOptions: { type: LearningType; label: string }[] = [
@@ -40,7 +31,7 @@ interface Props {
   siblings?: Content[];
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const { editable, deleteComponent, reorderComponent } = useEditableText(null,emit)
 </script>
@@ -81,41 +72,42 @@ const { editable, deleteComponent, reorderComponent } = useEditableText(null,emi
   }
 }
 
-.animate-parent>* {
+/* Only animate children that are not explicitly marked to skip and not fixed overlays */
+.animate-parent > :not(.no-animate):not(.fixed) {
   opacity: 0;
   animation: drop-in 0.5s ease-out forwards;
 }
 
-/* Optional: staggered effect */
-.animate-parent>*:nth-child(1) {
+/* Optional: staggered effect applies only to animated children */
+.animate-parent > :not(.no-animate):not(.fixed):nth-child(1) {
   animation-delay: 0.3s;
 }
 
-.animate-parent>*:nth-child(2) {
+.animate-parent > :not(.no-animate):not(.fixed):nth-child(2) {
   animation-delay: 0.5s;
 }
 
-.animate-parent>*:nth-child(3) {
+.animate-parent > :not(.no-animate):not(.fixed):nth-child(3) {
   animation-delay: 0.7s;
 }
 
-.animate-parent>*:nth-child(4) {
+.animate-parent > :not(.no-animate):not(.fixed):nth-child(4) {
   animation-delay: 0.9s;
 }
 
-.animate-parent>*:nth-child(5) {
+.animate-parent > :not(.no-animate):not(.fixed):nth-child(5) {
   animation-delay: 1.1s;
 }
 
-.animate-parent>*:nth-child(6) {
+.animate-parent > :not(.no-animate):not(.fixed):nth-child(6) {
   animation-delay: 1.3s;
 }
 
-.animate-parent>*:nth-child(7) {
+.animate-parent > :not(.no-animate):not(.fixed):nth-child(7) {
   animation-delay: 1.5s;
 }
 
-.animate-parent>*:nth-child(8) {
+.animate-parent > :not(.no-animate):not(.fixed):nth-child(8) {
   animation-delay: 1.7s;
 }
 

@@ -5,7 +5,8 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENVIRONMENT = "PROD"
+# Detect environment from env var; defaults to LOCAL
+ENVIRONMENT = os.getenv("DJANGO_ENV", "LOCAL").upper()
 
 if ENVIRONMENT == "LOCAL":
     load_dotenv()

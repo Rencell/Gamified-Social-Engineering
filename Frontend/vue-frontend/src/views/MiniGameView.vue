@@ -28,8 +28,8 @@
                     :style="{ backgroundColor: game.card_color }"
                     class="relative h-70 rounded-2xl p-5 bg-secondary cursor-not-allowed opacity-60"
                     aria-disabled="true">
-                    <div class="bg-ternary rotate-20 absolute -right-5 top-0 rounded-full p-1 px-5">
-                        Level {{ game.required_level ?? '-' }}
+                    <div class="bg-ternary rotate-0 absolute -top-2 right-0 rounded-full p-1 px-5 flex flex-row-reverse items-center gap-2 text-white font-semibold">
+                        <p class="text-sm">Level {{ game.required_level ?? '-' }}</p> <Lock class="size-5"></Lock>
                     </div>
                     <div class="relative">
                         <p class="pb-4 text-xl font-bold" :style="{ color: getTextColor(game.card_color) }">{{ game.name }}</p>

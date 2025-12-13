@@ -1,5 +1,5 @@
 #!/bin/bash
 
 git add .
-git commit -m "Mini games, Assessment fixes"
+git commit -m "Responsiveness fixes"
 git push origin caps-b

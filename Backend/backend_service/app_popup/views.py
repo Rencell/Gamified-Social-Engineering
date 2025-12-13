@@ -48,6 +48,23 @@ class PopupTriggerLogViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(logs, many=True)
         return Response({"security_score": security_score, "popup_count": logs.count(), "total_clicks": total_clicks, "total_closed": total_closed, "logs": serializer.data})
 
+    @action(detail=False, methods=['get'])
+    def get_totals(self, request):
+        # Compute totals for the authenticated user
+        user = request.user
+        logs = PopupTriggerLog.objects.all().exclude(status="waiting")
+        total_popups_sent = logs.count()
+        total_risky_clicks = logs.filter(status="clicked").count()
+        total_safe_closes = logs.filter(status="closed").count()
+        denominator = total_risky_clicks + total_safe_closes
+        overall_risk_rate = round((total_risky_clicks / denominator) * 100, 2) if denominator > 0 else 0
+        return Response({
+            "total_popups_sent": total_popups_sent,
+            "total_risky_clicks": total_risky_clicks,
+            "total_safe_closes": total_safe_closes,
+            "overall_risk_rate": overall_risk_rate
+        })
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_today_popup(request):

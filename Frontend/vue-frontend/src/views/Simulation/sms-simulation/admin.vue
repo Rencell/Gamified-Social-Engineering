@@ -73,7 +73,7 @@ onMounted(async () => {
                 <CardHeader class="pb-3">
                     <CardTitle class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                         <Mail class="h-4 w-4" />
-                        Emails Sent
+                        SMS Sent
                     </CardTitle>
                 </CardHeader>
                 <CardContent>

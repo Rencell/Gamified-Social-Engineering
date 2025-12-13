@@ -24,7 +24,9 @@ export const requireAuthenticated = async (
     });
   } else {
     await streakStore.cacheStreak();
-    await popupStore.loadPopup();
+    if (!await authStore.User.is_admin) {
+      await popupStore.loadPopup();
+    }
     next(
     );
   }

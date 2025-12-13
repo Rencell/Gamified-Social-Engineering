@@ -1,15 +1,29 @@
 <script setup lang="ts">
-import { googleTokenLogin, googleLogout } from "vue3-google-login"
+import { googleTokenLogin } from "vue3-google-login"
 import { useAuthStore } from '@/stores/auth';
 import { useRouter, useRoute } from 'vue-router';
 import { toast } from 'vue-sonner'
 import { useLoadingPageStore } from "@/stores/pageLoading";
+import { computed } from 'vue';
 const authStore = useAuthStore();
 const router = useRouter();
 const route = useRoute();
 const loadingPageStore = useLoadingPageStore();
 
+// Dynamic button label based on username
+const buttonLabel = computed(() => {
+  const username = authStore?.User?.username;
+  return username === 'testuser' ? 'Login with CvSU account' : 'Continue to the app';
+});
+
 const login = async () => {
+  // If not testuser, skip Google auth and go to /home
+  const username = authStore?.User?.username;
+  if (username !== 'testuser') {
+    router.push('/home');
+    return;
+  }
+  
   try {
     loadingPageStore.startLoading();
     const response = await googleTokenLogin();
@@ -54,10 +68,11 @@ const toast_alert = () => {
 </script>
 
 <template>
+  
   <button @click="login"
     class="border-1 rounded-full p-2 py-3 bg-green-500/50 font-semibold text-sm flex justify-center items-center gap-2 cursor-pointer hover:scale-95 transition-all ">
     <img src="https://upload.wikimedia.org/wikipedia/en/d/d2/Cavite_State_University_%28CvSU%29.png" class="size-6"
       alt="">
-    Login with CvSU account
+    {{ buttonLabel }}
   </button>
 </template>
