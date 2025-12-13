@@ -80,7 +80,8 @@ class UserLessonProgressViewSet(viewsets.ModelViewSet):
 
 class LessonTestViewSet(viewsets.ModelViewSet):
 
-    queryset = LessonTest.objects.all()
+    # Ensure deterministic ordering across databases
+    queryset = LessonTest.objects.order_by('id')
     serializer_class = LessonTestSerializer
     
     @action(detail=False, methods=['get'], url_path='unlocked', url_name='unlocked-lessons-test')
@@ -152,5 +153,4 @@ class UserLessonTestProgressViewSet(viewsets.ModelViewSet):
         data['module_count'] = latest_lesson.lesson_test.module_tests.count()
         data['completed_module_count'] = latest_lesson.lesson_test.module_tests.filter(users=user).count()
         return Response(data)
-    
-    
+

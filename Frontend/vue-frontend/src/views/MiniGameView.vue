@@ -64,12 +64,11 @@ import { useAuthStore } from '@/stores/auth';
 const authStore = useAuthStore();
 const loading = ref(false);
 const minigame = ref<Minigame[]>([])
-onMounted(() => {
+onMounted(async () => {
     loading.value = true;
     try {
-        MinigameService.get_minigame().then(data => {
-            minigame.value = data;
-        });
+        const data = await MinigameService.get_minigame();
+        minigame.value = data;
     } finally {
         loading.value = false;
     }
