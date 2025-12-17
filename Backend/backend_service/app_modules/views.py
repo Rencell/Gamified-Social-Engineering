@@ -2,8 +2,8 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Modules, UserModuleProgress, UserModuleTestProgress, ModuleTest
-from .serializers import ModuleSerializer, UserModuleProgressSerializer, UserModuleTestProgressSerializer, ModuleTestSerializer
+from .models import Modules, UserModuleProgress, UserModuleTestProgress, ModuleTest, ModuleSource
+from .serializers import ModuleSerializer, UserModuleProgressSerializer, UserModuleTestProgressSerializer, ModuleTestSerializer, ModuleSourceSerializer
 from app_contents.models import Content
 from app_contents.serializers import ContentSerializer
 class ModuleViewSet(viewsets.ModelViewSet):
@@ -92,3 +92,19 @@ class ModuleTestViewSet(viewsets.ModelViewSet):
         
         serializer = ContentSerializer(unlocked_contents, many=True)
         return Response(serializer.data, status=200)
+    
+    
+class ModuleSourceViewSet(viewsets.ModelViewSet):
+
+    queryset = ModuleSource.objects.all()
+    serializer_class = ModuleSourceSerializer
+    
+    @action(detail=False, methods=['get'])
+    def get_by_module(self, request):
+        module_id = request.query_params.get('module_id')
+        obj = ModuleSource.objects.filter(module__id=module_id) if module_id else None
+        
+        if obj and obj.exists():
+            serializer = self.get_serializer(obj, many=True)
+            return Response(serializer.data, status=200)
+        return Response({'detail': 'Not found.'}, status=404)

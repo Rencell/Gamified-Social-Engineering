@@ -73,7 +73,7 @@ const save_objectives = async () => {
         <div class="flex items-center gap-4 justify-between mb-3">
 
             <div v-if="!locked" class="p-3">
-
+                
                 <LearnProgress class="w-50 sm:w-85" v-if="isLatest" :model-value="lessonModuleUnlocked!"
                     :tongue-color="props.bg" :module-count="moduleCount" position="right" :isLatest="isLatest">
                 </LearnProgress>

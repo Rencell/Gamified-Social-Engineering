@@ -6,6 +6,7 @@ import moneyBag from '/Home/money-bag.svg';
 import { ArrowBigDown, Check, MoveDown } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
 import { useLoadingPageStore } from '@/stores/pageLoading';
+import Citation from './Learning/Highlight/Citation.vue'
 const learningStore = useLearningStore();
 const loadingPageStore = useLoadingPageStore();
 interface ScrollComponent {
@@ -111,6 +112,7 @@ onMounted(async () => {
       <component v-if="idx <= currentVisibleIndex" :is="Comp.component" @showDown="toggleActive"
         @completeModule="toggleMarkComplete" :totalLength="components.length" :content_order="Comp.id" />
 
+      
     </div>
 
     <div class="flex justify-center items-center">

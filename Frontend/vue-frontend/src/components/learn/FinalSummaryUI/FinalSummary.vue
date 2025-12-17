@@ -118,7 +118,7 @@
       <!-- Continue Button -->
       <div class="space-y-3">
         <Button class="w-full font-medium" @click="toggleNext">
-          Go to home
+          <ChevronLeft></ChevronLeft>Back
         </Button>
         <Button variant="ghost" class="w-full" @click="emit('retryQuiz')">
            Retry
@@ -132,7 +132,7 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
 import { CardContent,Card } from "@/components/ui/card";
-import { Shield } from "lucide-vue-next";
+import { ChevronLeft, Shield } from "lucide-vue-next";
 import coins from "/Home/coin.svg";
 import star from "/Home/star.png";
 import my_xp from "/Home/exp.png";

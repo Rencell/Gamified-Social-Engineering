@@ -21,6 +21,13 @@ export interface ModuleTest {
   
 }
 
+export interface ModuleSource {
+  id: number;
+  module_test: number;
+  url: string;
+  title: string;
+}
+
 const END_POINT = "/api/modules/";
 
 const moduleService = {
@@ -40,10 +47,20 @@ const moduleService = {
     session.post(END_POINT + 'module-test/', module).then(res => res.data),
   update_module_test: (module: Partial<ModuleTest>): Promise<ModuleTest> =>
     session.put(END_POINT + `module-test/${module.id}/`, module).then(res => res.data), 
-  // User
-
+  
+  // Module Sources
+  get_module_sources: ( module_id: number ): Promise<ModuleSource[]> =>
+    session.get(END_POINT + 'module-source/get_by_module/', { params: { module_id } }).then(res => res.data),
+  create_module_source: (moduleSource: Partial<ModuleSource>): Promise<ModuleSource> =>
+    session.post(END_POINT + 'module-source/', moduleSource).then(res => res.data),
+  update_module_source: (moduleSource: Partial<ModuleSource>): Promise<ModuleSource> =>
+    session.patch(END_POINT + `module-source/${moduleSource.id}/`, moduleSource).then(res => res.data),
+  delete_module_source: (moduleSourceId: number): Promise<void> =>
+    session.delete(END_POINT + `module-source/${moduleSourceId}/`).then(() => {}),
+  //user
   unlock_module: (data: { module_test: number | null }): Promise<void> =>
     session.post(END_POINT + 'user-module-test-progress/', data).then(() => {}),
+  
 
 };
 

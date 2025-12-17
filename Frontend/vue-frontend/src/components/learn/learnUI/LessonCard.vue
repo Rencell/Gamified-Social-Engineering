@@ -74,6 +74,8 @@ const showLocked = ref(false);
                         </div>
                     </div>
                 </div>
+
+                
                 <Button v-if="!locked"
                     class="text-background text-sm rounded-xl h-13 font-sans font-bold border-b-4 border-x-1 border-ternary/50"
                     :class="[isLatest ? 'bg-primary hover:border-b-1' : 'bg-[#dc9e3a] hover:bg-[#dc9e3a]/70 hover:border-b-1', `text-[${props.bg}]`]"

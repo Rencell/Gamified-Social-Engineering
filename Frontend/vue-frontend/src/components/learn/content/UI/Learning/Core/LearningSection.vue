@@ -4,6 +4,7 @@ import EditableCard from '../EditableCard.vue'
 import { useEditableText } from '@/composables/useEditableText';
 import type { Content } from '@/services/contentService';
 import type { LearningType } from '../../learningRegistry';
+import Citation from '../Highlight/Citation.vue';
 
 const emit = defineEmits(['signalDelete', "addComponent"]);
 
@@ -53,7 +54,12 @@ const { editable, deleteComponent, reorderComponent } = useEditableText(null,emi
         @reorder="reorderComponent($event)" />
   
       <slot></slot>
+
+      
+      
     </div>
+
+    
 </template>
 
 

@@ -48,16 +48,17 @@ const toggleStart = () => {
     quizIntro.value = false;
 }
 
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Intro from './Intro.vue';
 import { shuffle } from '@/composables/shuffleData';
 import { useModuleStore } from '@/stores/module';
 import { useContentStore } from '@/stores/content';
 const router = useRouter();
+const route = useRoute();
 const moduleStore = useModuleStore();
 const nextLesson = () => {
     learningStore.activateModuleInteraction();
-    router.push('/learn');
+    router.push('/learn/' + route.params.lessonId);
 }
 
 const resetQuiz = () => {

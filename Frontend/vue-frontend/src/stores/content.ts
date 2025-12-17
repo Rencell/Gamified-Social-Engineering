@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import Cowntent from '@/components/learn/content/cowntent.vue'
 import { useModuleStore } from './module'
 import type { QuizQuestion } from '@/services/contentService'
+import Citation from '@/components/learn/content/UI/Learning/Highlight/Citation.vue'
 
 export const useContentStore = defineStore('Content', () => {
   const moduleStore = useModuleStore()
@@ -24,6 +25,12 @@ export const useContentStore = defineStore('Content', () => {
           id: content.id || index.toString(),
           component: Cowntent,
         })
+      })
+
+      
+      components.value.push({
+        id: 1000,
+        component: Citation,
       })
     } catch (error) {
       console.error('Error fetching contents:', error)

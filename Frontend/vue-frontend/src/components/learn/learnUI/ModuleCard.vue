@@ -2,7 +2,7 @@
 import { RouterLink } from 'vue-router';
 import Button from '@/components/ui/button/Button.vue';
 import learns from '/Icons/Learns.svg?url'
-import { ChevronDown, ChevronUp, Clock, LockKeyhole, Play, RotateCcw, SquarePen, Target } from 'lucide-vue-next';
+import { ChevronDown, ChevronUp, Clock, LockKeyhole, Play, RotateCcw, Section, SquarePen, Target } from 'lucide-vue-next';
 import UpdateModuleDialog from '../dialog/Lesson/Section/Module/updateModuleDialog.vue'
 import type { ModuleTest } from '@/services/moduleService';
 import { ref, watch } from 'vue';
@@ -16,6 +16,10 @@ import { useAuthStore } from '@/stores/auth';
 
 
 const props = defineProps({
+    sectionIndex: {
+        type: Number,
+        required: true
+    },
     title: {
         type: String,
         required: true
@@ -78,10 +82,12 @@ const formatTime = (time: number | undefined): string => {
 </script>
 
 <template>
-    
+
     <div class="flex gap-3 group ">
-        <div class="relative grow my-2 p-2 flex items-center rounded-xl bg-secondary gap-6" :class="highlight ? 'border-3 border-accent' : ''">
-            <div v-show="props.highlight" class="absolute -top-5 right-1/2 bg-accent p-3 rounded-lg animate-bounce font-bold text-sm">
+        <div class="relative grow my-2 p-2 flex items-center rounded-xl bg-secondary gap-6"
+            :class="highlight && sectionIndex === 0 ? 'border-3 border-accent' : ''">
+            <div v-show="props.highlight && sectionIndex === 0"
+                class="absolute -top-5 right-1/2 bg-accent p-3 rounded-lg animate-bounce font-bold text-sm">
                 Start
 
                 <div class="w-3 h-3 bg-accent absolute top-9.5 left-1/2 transform -translate-x-1/2 rotate-132"></div>
@@ -113,22 +119,24 @@ const formatTime = (time: number | undefined): string => {
                     <!-- Details Section -->
                     <div v-if="showDetails" class="flex gap-4 text-xs">
                         <div class="flex gap-1 items-center">
-                            <Target class="w-4 h-4 text-accent" />Accuracy: <p class="text-green-500">{{quizProgress.toFixed(1)}}%</p>
+                            <Target class="w-4 h-4 text-accent" />Accuracy: <p class="text-green-500">
+                                {{ quizProgress.toFixed(1) }}%</p>
                         </div>
                         <div class="flex gap-1 items-center">
                             <RotateCcw class="w-4 h-4 text-accent" />
                             Attempts: <p class="text-yellow-500">{{ quizStatus?.attempt_number || 0 }}</p>
                         </div>
                         <div class="flex gap-1 items-center">
-                            <Clock class="w-4 h-4 text-accent" />Time: <p class="text-red-500">{{ formatTime(quizStatus?.time_spent) }}</p>
+                            <Clock class="w-4 h-4 text-accent" />Time: <p class="text-red-500">{{
+                                formatTime(quizStatus?.time_spent) }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                   
+
                     <ModuleViewDialog v-if="showModal" @toggle="toggleShowModal"
-                        :total_contents="module.contents_length" :content_quiz="module.content_quiz" :title="module.title"
-                        :routerLink="routerLink" />
+                        :total_contents="module.contents_length" :content_quiz="module.content_quiz"
+                        :title="module.title" :routerLink="routerLink" />
                     <Button v-if="!lockedIndex" @click="toggleShowModal" variant="ghost" size="lg"
                         class="w-full sm:w-auto font-semibold border-2 "
                         :class="interactive ? 'border-green-500' : 'border-ternary'">
@@ -144,7 +152,9 @@ const formatTime = (time: number | undefined): string => {
                     </div>
 
                     <div v-if="!lockedIndex">
-                        <ProgressCircle :progress="quizStatus?.accuracy ? parseFloat(quizStatus.accuracy.toFixed(1)) : 0" size="lg" />
+                        <ProgressCircle
+                            :progress="quizStatus?.accuracy ? parseFloat(quizStatus.accuracy.toFixed(1)) : 0"
+                            size="lg" />
 
                     </div>
                     <div v-else>

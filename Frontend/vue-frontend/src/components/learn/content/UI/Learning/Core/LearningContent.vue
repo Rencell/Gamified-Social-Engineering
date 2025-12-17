@@ -7,6 +7,7 @@
       </div>
     </div>
     <slot></slot>
+    
     <template v-if="useAuthStore().User.is_admin">
       <div v-if="!editable" class="absolute top-0 left-5 flex flex-col gap-2" @mouseenter="hover = true"
         @mouseleave="hover = false">

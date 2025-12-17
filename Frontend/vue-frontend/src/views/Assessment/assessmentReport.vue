@@ -229,7 +229,8 @@ onMounted(async () => {
 
                 <!-- Recommendations Section -->
                 <div class="mt-16 border-t border-slate-700 pt-8">
-                    <h2 class="text-lg font-semibold text-slate-50 mb-6">Recommendations</h2>
+                    <h2 class="text-lg font-semibold text-slate-50 mb-3">Recommendations</h2>
+                    <p class="text-sm mb-3 text-slate-400">These personalized recommendations are based on your skill gaps. Start one now to improve your skills.</p>
                     <div class="grid grid-cols-2 gap-4">
                         <div v-for="(recommendation, index) in assessmentData.recommendations" :key="index"
                             class="flex gap-3 p-4 bg-slate-800 rounded-lg border border-slate-700">

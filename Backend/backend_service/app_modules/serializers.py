@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Modules, UserModuleProgress, UserModuleTestProgress, ModuleTest
+from .models import Modules, UserModuleProgress, UserModuleTestProgress, ModuleTest, ModuleSource
 from app_contents.serializers import ContentSerializer, ContentQuizSerializer
 from app_quizzes.serializers import QuizProgressSerializer
 
@@ -43,3 +43,8 @@ class ModuleTestSerializer(serializers.ModelSerializer):
         progress = obj.quiz_progress.filter(user=request.user).first()
         
         return progress.accuracy if progress else 0.0
+
+class ModuleSourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ModuleSource
+        fields = '__all__'

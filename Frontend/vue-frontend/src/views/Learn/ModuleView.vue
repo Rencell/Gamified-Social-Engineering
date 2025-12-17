@@ -143,6 +143,7 @@ const getFirstLockedModule = (section: { modules: any[]; }) => {
                         <CreateModuleDialog :section-id="section.id" />
 
                         <ModuleCard v-for="(module, key) in section.modules" :lessonkey="key + 1" :key="module.title"
+                            :section-index="index"
                             :module="module" :title="module.title"
                             :router-link="`/learn/${lessonId}/${section.id}/session`" :interactive="!module.locked"
                             @click="moduleStore.setSelectedModule(module)"
