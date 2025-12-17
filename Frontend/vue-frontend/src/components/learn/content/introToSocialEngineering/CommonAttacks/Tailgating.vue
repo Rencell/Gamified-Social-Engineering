@@ -53,9 +53,7 @@
                 <img class="rounded-lg transition-all duration-300" :src="tailgating_Explain" alt="">
                 <div class="mt-2">
                     <LearningSpan>Image Reference: </LearningSpan>
-                    <Citation class=" text-gray-400 italic"
-                        word="https://us.norton.com/blog/emerging-threats/tailgating-attack"
-                        citation-link="https://us.norton.com/blog/emerging-threats/tailgating-attack" />
+                    
                 </div>
             </div>
         </LearningSection>

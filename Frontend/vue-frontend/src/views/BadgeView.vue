@@ -29,10 +29,10 @@ onMounted(() => {
       <img :src="badgesStore.getBadgeSrc(badge.name)" alt="">
       <p class="text-md text-center font-display font-bold">{{ badge.name }}</p>
     </div>
-    <div class="w-[400px] h-[400px] bg-no-repeat bg-cover"
+    <!-- <div class="w-[400px] h-[400px] bg-no-repeat bg-cover"
       :class="true ? 'bg-[position:0_0]' : 'bg-[position:-400px_0]'"
       style="background-image: url('/badges/PhishingBadg.svg')">
-    </div>
+    </div> -->
 
   </div>
 </template>

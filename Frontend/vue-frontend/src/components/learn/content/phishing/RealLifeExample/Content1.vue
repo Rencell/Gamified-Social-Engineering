@@ -16,10 +16,7 @@
                         message source comes from a legitimate source, so how is this a scam?
                     </LearningBody>
 
-                    <LearningBody>
-                        According to <Citation word="Gcash" citation-link="https://www.facebook.com/gcashofficial/posts/how-to-spot-the-spoof-kahit-gcash-ang-nag-text-ng-link-wag-i-click-dahil-sms-spo/1177767221054733/"></Citation>
-                        , Even if the message appears to come from a legitimate source, it can still be a scam. This is because attackers use illegal cellsite to hijack the SMS.
-                    </LearningBody>
+                   
 
                     <LearningBody>
                         <LearningSpan>To protect from this scam</LearningSpan>

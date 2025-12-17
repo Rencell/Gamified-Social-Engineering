@@ -22,14 +22,7 @@
             <LearningBody>
                 <LearningSpan>Watch how to setup</LearningSpan>
                 <LearningList>
-                    <LearningListItem>
-                        
-                        <Citation word="Desktop" citation-link="https://www.youtube.com/watch?v=sf8qa2HcKSs&ab_channel=Bitwarden" ></Citation>
-                    </LearningListItem>
-                    <LearningListItem>
-                        <Citation word="Android" citation-link="https://www.youtube.com/watch?v=sf8qa2HcKSs&ab_channel=Bitwarden" ></Citation>
-                    </LearningListItem>
-                    
+               
                 </LearningList>
             </LearningBody>
 
@@ -45,7 +38,6 @@ import LearningSection from '../../UI/Learning/Core/LearningSection.vue';
 
 import video1 from '/Learning/Content/phishing/Protect/Content2/PasswordManager.mp4'
 import Video from '../../UI/Learning/Video.vue'
-import Citation from '../../UI/Learning/Highlight/Citation.vue';
 import LearningList from '../../UI/Learning/Listing/LearningList.vue';
 import LearningListItem from '../../UI/Learning/Listing/LearningListItem.vue';
 import LearningSpan from '../../UI/Learning/Highlight/LearningSpan.vue';

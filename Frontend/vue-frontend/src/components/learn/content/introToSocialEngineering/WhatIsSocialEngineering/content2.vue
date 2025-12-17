@@ -28,8 +28,7 @@
 
             <LearningQuote>
                 Statistically says, 98% of cyber attacks involve some form of social engineering.
-                <Citation word="(Indusface, 2025)"
-                    citation-link="https://www.indusface.com/learning/what-is-a-social-engineering-attack/" />
+               
             </LearningQuote>
         </LearningSection>
 
@@ -37,8 +36,6 @@
 </template>
 
 <script setup lang="ts">
-import LearningImage from '../../UI/Learning/Image/LearningImage.vue'
-import Citation from '../../UI/Learning/Highlight/Citation.vue'
 import LearningSection from '../../UI/Learning/Core/LearningSection.vue'
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue'
 import LearningBody from '../../UI/Learning/Core/LearningBody.vue'
