@@ -203,7 +203,7 @@ onMounted(async () => {
 
                             <!-- User Info -->
                             <div class="text-center">
-                                <h3 class="font-semibold text-slate-50 mb-1">{{ authStore.User.first_name }}, {{ authStore.User.last_name }}</h3>
+                                <h3 class="font-semibold text-slate-50 mb-1">{{ authStore.User.username }}, {{ authStore.User.username }}</h3>
                                 <p class="text-sm text-slate-400">{{ assessmentData.user.title }}</p>
                             </div>
 

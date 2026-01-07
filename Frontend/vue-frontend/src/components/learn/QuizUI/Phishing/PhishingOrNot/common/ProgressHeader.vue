@@ -35,7 +35,7 @@ const currentIndex = computed(() => props.currentIndex);
 // Timer variables
 const totalTime = 120; 
 const timeLeft = ref(totalTime);
-let timer: number | null = null;
+let timer: ReturnType<typeof setInterval> | null = null;
 
 const progress = computed(() => {
   return ((currentIndex.value + 1) / props.length) * 100;

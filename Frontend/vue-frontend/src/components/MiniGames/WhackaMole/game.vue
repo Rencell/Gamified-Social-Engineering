@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button';
 
 const visibility = ref([false, false, false, false, false, false]); // Array to manage visibility of each Whack
 const score = ref(0); // Track the player's score
-let intervalId: number | null = null;
+let intervalId: ReturnType<typeof setInterval> | null = null;
 
 // Function to randomly toggle visibility
 const randomToggle = () => {

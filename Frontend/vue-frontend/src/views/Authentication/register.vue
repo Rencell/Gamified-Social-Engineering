@@ -59,7 +59,7 @@ const submit = async (): Promise<void> => {
 
     loading.value = true;
     try {
-        await authStore.registration(form);
+        // await authStore.registration(form);
         (Object.keys(errors) as Array<keyof typeof errors>).forEach(key => errors[key] = '');
         clearForm();
         emit('switchComponent', 'inbox');

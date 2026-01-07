@@ -170,7 +170,7 @@ const toggleStart = () => {
 let cachedPreviousScore: number | undefined
 async function previousScore() {
   if (cachedPreviousScore !== undefined) return cachedPreviousScore
-  const { pk: userId } = authStore.User.pk
+  const userId = authStore.User.pk
   const moduleOrder    = moduleStore.selectedModule?.id ?? 0
 
   try {

@@ -140,7 +140,7 @@ const saveQuizResult = async () => {
 let cachedPreviousScore: number | undefined
 const previousScore = async () => {
     if (cachedPreviousScore !== undefined) return cachedPreviousScore
-    const { pk: userId } = authStore.User.pk
+    const userId = authStore.User.pk
     const moduleOrder = moduleStore.selectedModule?.id ?? 0
 
     try {

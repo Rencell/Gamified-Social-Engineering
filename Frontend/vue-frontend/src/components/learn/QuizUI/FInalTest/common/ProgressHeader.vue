@@ -36,7 +36,8 @@ const currentIndex = computed(() => props.currentIndex);
 // Timer variables
 const totalTime = (60*15); 
 const timeLeft = ref(totalTime);
-let timer: number | null = null;
+// Updated the type of `timer` to `ReturnType<typeof setInterval>` to fix the type error.
+let timer: ReturnType<typeof setInterval> | null = null;
 
 const progress = computed(() => {
   return ((currentIndex.value + 1) / props.length) * 100;

@@ -14,7 +14,7 @@
                     </div>
 
                     <div class=" h-full flex items-center justify-center">
-                        <img :src="game.thumbnail!" class="h-full size-45" :alt="`${game.name} Thumbnail`">
+                        <img :src="String(game.thumbnail)" class="h-full size-45" :alt="`${game.name} Thumbnail`">
                     </div>
                     <div class="h-10 w-30 rounded-full bg-accent absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white font-bold shadow-lg hover:bg-accent-dark cursor-pointer">
                         
@@ -32,7 +32,7 @@
                     </div>
 
                     <div class=" h-full flex items-center justify-center">
-                        <img :src="game.thumbnail!" class="h-full size-45" :alt="`${game.name} Thumbnail`">
+                        <img :src="String(game.thumbnail)" class="h-full size-45" :alt="`${game.name} Thumbnail`">
                     </div>
                     <div class="h-10 w-30 rounded-full bg-accent absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white font-bold shadow-lg hover:bg-accent-dark cursor-pointer">
                         <Play class="fill-white size-4 me-2"></Play>
@@ -56,7 +56,7 @@
                     </div>
 
                     <div class=" h-full flex items-center justify-center">
-                        <img :src="game.thumbnail!" class="h-full size-45 filter grayscale" :alt="`${game.name} Thumbnail`">
+                        <img :src="String(game.thumbnail)" class="h-full size-45 filter grayscale" :alt="`${game.name} Thumbnail`">
                     </div>
                     <div
                         class="h-10 w-30 rounded-full bg-ternary absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white font-bold shadow-lg cursor-not-allowed">

@@ -74,12 +74,12 @@ export default defineConfig(
       setupFiles: ['./src/test/setup.ts'],
       globals: true,
     },
-    server: {
-      allowedHosts: [
-        'localhost',
-        '127.0.0.1',
-        'tectonically-unsailed-jacquline.ngrok-free.dev'
-      ]
-    },
+    // server: {
+    //   allowedHosts: [
+    //     'localhost',
+    //     '127.0.0.1',
+    //     'tectonically-unsailed-jacquline.ngrok-free.dev'
+    //   ]
+    // },
   }) as unknown as UserConfig,
 )

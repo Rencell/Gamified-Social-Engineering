@@ -15,7 +15,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 const totalTime = 60 * 10; 
 const timeLeft = ref(totalTime);
-let timer:  number | null = null;
+let timer:  ReturnType<typeof setInterval> | null = null;
 
 const emit = defineEmits(['timeUp']);
 
