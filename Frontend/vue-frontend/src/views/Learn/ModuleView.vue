@@ -2,7 +2,6 @@
 import { ArrowLeft } from 'lucide-vue-next';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import ModuleCard from '@/components/learn/learnUI/ModuleCard.vue'
-import { useLearningStore } from '@/stores/learning'
 import { computed, onMounted, ref } from 'vue';
 import LessonDetailCard from '@/components/learn/learnUI/LessonDetailCard.vue';
 import { useModuleStore } from '@/stores/module';
@@ -19,7 +18,6 @@ import Loading from '@/components/loading.vue';
 
 const moduleStore = useModuleStore();
 const lessonStore = useLessonStore();
-const learningStore = useLearningStore()
 const route = useRoute()
 const sectionStore = useSectionStore();
 const lessonId = route.params.lessonId as string;
@@ -114,7 +112,8 @@ const getFirstLockedModule = (section: { modules: any[]; }) => {
 
         <Loading v-if="isLoading"></Loading>
         <div v-else-if="!lessonStore.currentLesson" class="text-center py-4 text-foreground">No data available.</div>
-        <LessonDetailCard v-else :progress="learningStore.completionPercentage"
+        <LessonDetailCard v-else 
+            :progress="0"
             :description="lessonStore.currentLesson?.description" :title="lessonStore.currentLesson?.title"
             :image="lessonStore.currentLesson?.image" :bg="lessonStore.currentLesson?.bg"
             :locked="lessonStore.currentLesson?.locked" :module-count="moduleStore.modules.length" :isLatest="true"

@@ -5,7 +5,7 @@ export interface Minigame {
     name: string
     required_level: number | null
     route_path: string
-    thumbnail: string | null
+    thumbnail: File | string | null
     card_color: string
     is_daily: boolean
 }
@@ -17,7 +17,11 @@ const minigameService = {
     session.get(END_POINT + 'minigame/').then((res) => res.data as Minigame[]),
 
   get_minigame_by_id: (id: number): Promise<Minigame> =>
-    session.get(END_POINT + 'minigame/' + id + '/').then((res) => res.data as Minigame)
+    session.get(END_POINT + 'minigame/' + id + '/').then((res) => res.data as Minigame),
+
+  update_minigame: (id: number, minigameData: FormData): Promise<Minigame> =>
+    session.patch(END_POINT + 'minigame/' + id + '/', minigameData).then((res) => res.data as Minigame)
+  
 }
 
 export default minigameService

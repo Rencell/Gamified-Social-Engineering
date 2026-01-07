@@ -10,7 +10,7 @@ import type { QuizType } from '@/components/learn/QuizUI/QuizRegistry';
 import FinalQuizFlowShell from '@/components/learn/FinalSummaryUI/FinalQuizFlowShell.vue';
 import { Input } from '@/components/ui/input';
 const editable = inject('editable', false)
-defineProps<{
+const props = defineProps<{
     questions: any;
     quizComponent: any;
     editableComponent: any;
@@ -35,9 +35,6 @@ const quiz: QuizMode[] = [
     { label: "Scenario Story", id: "ScenarioTraining" },
 ]
 
-// const quiz: QuizMode[] = [
-//     { label: "Phishing Email", id: "PhishingTactics" },
-// ]
 
 function changeQuizType(newType: QuizType) {
     emit('onChangeQuestionType', newType);
@@ -47,9 +44,8 @@ function changeQuizType(newType: QuizType) {
 <template>
     <component v-if="!editable && quizType === 'ModuleReward'" :is="quizComponent" />
     
-    <FinalQuizFlowShell v-else-if="!editable && quizType === 'FinalTest'" :quiz-component="quizComponent" :questions="questions" />
-    <QuizFlowShell v-else-if="!editable && quizType !== 'ModuleReward'"  :quiz-limit="quizLimit" :questions="questions" :quiz-component="quizComponent" />
-
+    <FinalQuizFlowShell v-else-if="!editable && quizType === 'FinalTest'" :quiz-component="quizComponent" :questions="questions"  />
+    <QuizFlowShell v-else-if="!editable && quizType !== 'ModuleReward'"  :quiz-limit="quizLimit" :questions="questions" :quiz-component="quizComponent" :quiz-type="props.quizType" />
     <template v-else>
 
         <div v-if="quizType !== 'FinalTest'" class="container mx-auto px-6">

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ContentService } from '@/services'
+import { ContentService, ModuleService } from '@/services'
 import { ref } from 'vue'
 import Cowntent from '@/components/learn/content/cowntent.vue'
 import { useModuleStore } from './module'
@@ -27,11 +27,17 @@ export const useContentStore = defineStore('Content', () => {
         })
       })
 
+      const resp = await ModuleService.get_module_sources(moduleId)
+      if(resp.length > 0) {
+
+        components.value.push({
+          id: 1000,
+          component: Citation,
+        })
+
+      }
+
       
-      components.value.push({
-        id: 1000,
-        component: Citation,
-      })
     } catch (error) {
       console.error('Error fetching contents:', error)
     }

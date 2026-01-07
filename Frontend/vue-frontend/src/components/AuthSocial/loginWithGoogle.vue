@@ -17,7 +17,6 @@ const buttonLabel = computed(() => {
 });
 
 const login = async () => {
-  // If not testuser, skip Google auth and go to /home
   const username = authStore?.User?.username;
   if (username !== 'testuser') {
     router.push('/home');

@@ -17,13 +17,11 @@ import { onMounted, ref } from 'vue';
 import FinalSummary from './FinalSummary.vue'
 import FinalAchivements from './FinalAchivements.vue'
 import { Progress } from '@/components/ui/progress';
-import { useLearningStore } from '@/stores/learning';
 import { useAuthStore } from '@/stores/auth';
 import { useRewardStore } from '@/stores/reward';
 import { QuizService } from '@/services';
 
 const rewardStore = useRewardStore();
-const learningStore = useLearningStore();
 const authStore = useAuthStore();
 
 
@@ -57,7 +55,6 @@ const router = useRouter();
 const route = useRoute();
 const moduleStore = useModuleStore();
 const nextLesson = () => {
-    learningStore.activateModuleInteraction();
     router.push('/learn/' + route.params.lessonId);
 }
 

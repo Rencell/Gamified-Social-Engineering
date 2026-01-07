@@ -1,5 +1,0 @@
-export { default as WhatIsPhishing } from './WhatIsPhishing/index.vue'
-export { default as RedFlags } from './RedFlags/index.vue'
-export { default as RealWorldExamples } from './RealLifeExample/index.vue'
-export { default as HowToProtect } from './ProtectFromPhishing/index.vue'
-export { default as FinalQuizPhishing } from './FinalQuiz/index.vue'

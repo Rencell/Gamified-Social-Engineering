@@ -1,17 +1,8 @@
 from rest_framework import serializers
-from .models import Modules, UserModuleProgress, UserModuleTestProgress, ModuleTest, ModuleSource
+from .models import UserModuleTestProgress, ModuleTest, ModuleSource
 from app_contents.serializers import ContentSerializer, ContentQuizSerializer
 from app_quizzes.serializers import QuizProgressSerializer
 
-class ModuleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Modules
-        fields = '__all__'
-
-class UserModuleProgressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserModuleProgress
-        fields = '__all__'
 
 class UserModuleTestProgressSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,16 +1,17 @@
 import { defineStore } from "pinia";
 import { RewardService } from "@/services";
 import { useAuthStore } from "./auth";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 export const useRewardStore = defineStore('reward', () => {
     const authStore = useAuthStore();
 
     // State
-    const rewardXp = ref();
-    const rewardCoin = ref();
+    const rewardXp = ref<number | undefined>();
+    const rewardCoin = ref<number | undefined>();
 
-    const USER = authStore.User.pk || null
+    // Keep user id in sync with auth store
+    const USER = computed(() => authStore.User?.pk ?? null)
 
     // Actions
     const action = ref<'increase' | 'decrease'>('increase');
@@ -28,7 +29,7 @@ export const useRewardStore = defineStore('reward', () => {
                 reason: reason || null,
                 coin: coin ?? null,
                 xp: xp ?? null,
-                user: USER,
+                user: USER.value,
             };
             const response = await RewardService.create_reward(reward);
             authStore.User.coin += coin;
@@ -55,9 +56,9 @@ export const useRewardStore = defineStore('reward', () => {
 
     const purchaseCoinDeduct = async (coin: number) => {
         if (coin > 0) {
-            decreaseUserRewards(REASONS.spend, -coin, 0);
+            // Await so callers/tests can reliably observe side effects
+            await decreaseUserRewards(REASONS.spend, -coin, 0);
         }
-
     }
 
     // ------------- REWARDING -------------
@@ -81,10 +82,8 @@ export const useRewardStore = defineStore('reward', () => {
         const coins = moduleIndex * 2
         const xp = moduleIndex * 4
 
+        // updateUserRewards already mutates authStore.User.*; don't double-add here
         increaseUserRewards(REASONS.content, coins, xp)
-        
-        authStore.User.exp += xp;
-        authStore.User.coin += coins;
     }
 
     const REASONS = {

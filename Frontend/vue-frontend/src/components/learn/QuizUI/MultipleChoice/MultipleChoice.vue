@@ -5,9 +5,6 @@ import Typewriter from '@/components/ui/typewriter/Typewriter.vue';
 import { Card } from '@/components/ui/card/';
 import { Button } from '@/components/ui/button';
 import LearningImage from '../../content/UI/Learning/Image/LearningImage.vue';
-import Phishing from '../../content/introToSocialEngineering/CommonAttacks/Phishing.vue'
-import Progress from '@/components/ui/progress/Progress.vue'
-import Editable from './Editable.vue'
 import { useImageUrl } from '@/composables/useImageUrl';
 import Timer from '../timer.vue'
 

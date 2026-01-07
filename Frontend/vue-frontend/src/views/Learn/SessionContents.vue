@@ -5,11 +5,9 @@ import ModuleLayout from '@/components/learn/learnUI/ModuleLayout.vue';
 import ModuleSidebar from '@/components/learn/learnUI/ModuleSidebar.vue';
 import ModuleContent from '@/components/learn/learnUI/ModuleContent.vue';
 import ModuleSidebarItem from '@/components/learn/learnUI/ModuleSidebarItem.vue';
-import { useLearningStore } from '@/stores/learning';
 import { useRoute, useRouter } from 'vue-router';
 import { ChevronRight, Section } from 'lucide-vue-next';
 import { toast } from 'vue-sonner';
-const learningStore = useLearningStore();
 
 const route = useRoute();
 const router = useRouter();

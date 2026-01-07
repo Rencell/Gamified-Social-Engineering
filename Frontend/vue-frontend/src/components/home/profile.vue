@@ -73,8 +73,8 @@ streakStore.cacheStreak();
                 </div>
                 <div
                     class="overflow-hidden relative bottom-5 size-25 md:size-30 bg-black border-secondary border-5 rounded-full flex items-center justify-center">
-                    <div class="w-35 sm:w-50 absolute -bottom-12 sm:-bottom-20">
-                        <RivePlayer />
+                    <div class="w-35 absolute">
+                        <RivePlayer :position-state="1" />
                     </div>
 
                 </div>

@@ -207,6 +207,7 @@ LOGOUT_REDIRECT_URL = "http://localhost:5173/"
 ALLOWED_HOSTS += [
     'gamified-se.vercel.app',
     'tectonically-unsailed-jacquline.ngrok-free.dev',
+    'https://pfsnrpkgti.a.pinggy.link'
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -215,6 +216,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://gamified-social-engineering-git-gh-page-rencells-projects.vercel.app',
     'https://gamified-se.vercel.app',
     'https://tectonically-unsailed-jacquline.ngrok-free.dev',
+    'https://pfsnrpkgti.a.pinggy.link'
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -228,6 +230,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://gamified-social-engineering-git-gh-page-rencells-projects.vercel.app",
     "https://gamified-se.vercel.app",
     "https://tectonically-unsailed-jacquline.ngrok-free.dev",
+    'https://pfsnrpkgti.a.pinggy.link'
 ]
 
 CSRF_COOKIE_DOMAIN = None

@@ -26,9 +26,13 @@ export const useSectionStore = defineStore('pageSection', () => {
     try {
       console.log('Fetching sections for lesson:', lessonId)
       sections.value = await ServiceService.get_sections(lessonId)
-      sections.value.forEach(async section => {
-        section.modules = (await moduleStore.fetchModulesBySection(section.modules as ModuleTest[])) || []
-      })
+
+      // Ensure all module lookups complete before resolving.
+      await Promise.all(
+        sections.value.map(async section => {
+          section.modules = (await moduleStore.fetchModulesBySection(section.modules as ModuleTest[])) || []
+        }),
+      )
     } catch (error) {
       console.error('Error fetching sections:', error)
     }

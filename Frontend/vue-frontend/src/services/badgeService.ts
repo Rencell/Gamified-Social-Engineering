@@ -2,6 +2,8 @@ import session from './api'
 
 export interface Badge {
   name: string
+  image: string
+  description: string
   lesson: number
 }
 

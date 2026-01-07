@@ -14,8 +14,6 @@ import { Pen, Plus, Wrench } from 'lucide-vue-next';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { Assessment } from '@/services/assessmentService';
-import { useCosmeticStore } from '@/stores/cosmetic';
-import { useUploadContent } from '@/composables/useUploadContent';
 import { useAssessmentStore } from '@/stores/assessment';
 
 

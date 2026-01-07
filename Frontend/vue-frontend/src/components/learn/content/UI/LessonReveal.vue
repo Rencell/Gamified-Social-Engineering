@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import { ref, watchEffect, nextTick, onMounted, type ComponentPublicInstance, watch, computed } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
-import { useLearningStore } from '@/stores/learning';
-import moneyBag from '/Home/money-bag.svg';
-import { ArrowBigDown, Check, MoveDown } from 'lucide-vue-next';
+import { MoveDown } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
 import { useLoadingPageStore } from '@/stores/pageLoading';
-import Citation from './Learning/Highlight/Citation.vue'
-const learningStore = useLearningStore();
 const loadingPageStore = useLoadingPageStore();
 interface ScrollComponent {
   id: string | number;
@@ -58,8 +54,8 @@ const showNextComponent = async () => {
     if (markComplete.value)
       return;
 
-    learningStore.activateModuleInteraction();
-    learningStore.nextModule();
+    // learningStore.activateModuleInteraction();
+    // learningStore.nextModule();
   }
 };
 

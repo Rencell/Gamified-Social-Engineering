@@ -7,7 +7,8 @@ class UserStreak(models.Model):
     current_streak = models.IntegerField()
     longest_streak = models.IntegerField()
     last_activity_date = models.DateField()
-    streak_start_date = models.DateField()
+    # Make streak_start_date nullable since views reset it to None when the streak breaks
+    streak_start_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

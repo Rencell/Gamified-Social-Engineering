@@ -50,7 +50,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref, defineProps, onMounted, watch } from "vue";
+import { ref, watch } from "vue";
 import { Button } from "@/components/ui/button";
 import fire from '/Learning/fire.svg'
 import fire_greyed from '/Learning/fire-greyed.svg'

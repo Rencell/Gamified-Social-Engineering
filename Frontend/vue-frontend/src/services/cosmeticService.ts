@@ -5,6 +5,7 @@ export interface Cosmetic {
   name: string
   type: string
   image: string | File | undefined
+  avatarfile: string | File | undefined
   price: number
   rive_code: number
 }

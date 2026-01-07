@@ -1,6 +1,0 @@
-export {default as WhatIsSocialEngineering} from './WhatIsSocialEngineering/index.vue'
-export { default as CommonAttacks } from './CommonAttacks/index.vue'
-export { default as FinalQuiz } from './FinalQuiz/index.vue'
-export { default as HowToProtectYourself } from './HowToProtectYourself/index.vue'
-export { default as InteractiveScenarioSpotTheAttack } from './InteractiveScenarioSpotTheAttack/index.vue'
-export { default as TheArtOfManipulation } from './TheArtOfManipulation/index.vue'

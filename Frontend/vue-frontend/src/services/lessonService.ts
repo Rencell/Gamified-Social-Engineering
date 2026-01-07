@@ -33,16 +33,8 @@ const END_POINT = '/api/lessons/'
 const USER_END_POINT = '/api/lessons/user-lesson-progress/'
 
 const lessonService = {
-  get_all: (): Promise<Lesson[]> => session.get(END_POINT + 'lesson/').then((res) => res.data),
-  get_unlocked_lessons: (): Promise<any> => session.get(END_POINT + 'lesson/unlocked/'),
-  get_unlocked_modules_from_lessons: (num: number): Promise<any> =>
-    session.get(`${END_POINT}lesson/${num}/unlocked-modules/`).then((res) => res.data),
-  create_lesson: (module: Partial<Lesson>): Promise<Lesson> =>
-    session.post(USER_END_POINT, module).then((res) => res.data),
   get_latest_lesson: (): Promise<LatestLessonStatus> =>
     session.get(END_POINT + 'user-lesson-test-progress/current_lesson/').then((res) => res.data),
-  
-  // test
   get_all_test: (): Promise<Lesson_test[]> => session.get(END_POINT + 'lesson-test/').then((res) => res.data),
   create_lesson_test: (module: FormData): Promise<Lesson_test> =>
     session.post(END_POINT + 'lesson-test/', module).then((res) => res.data),

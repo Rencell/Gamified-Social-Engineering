@@ -1,43 +1,6 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
-import { reactive, ref } from "vue";
-import { useAuthStore } from "@/stores/auth";
-
-import { useRoute, useRouter } from "vue-router";
 import LoginWithGoogle from '@/components/AuthSocial/loginWithGoogle.vue'
-
-const authStore = useAuthStore();
-const router = useRouter();
-const route = useRoute();
-
-const step = ref(1);
-
-const form = reactive({
-    email: '',
-    password: '',
-});
-
-const nextStep = () => {
-    step.value = 2;
-};
-const previousStep = () => {
-    step.value = 1;
-};
-
-const loading = ref(false);
-const login = async (): Promise<void> => {
-    loading.value = true;
-    try {
-        await authStore.login(form, router, route);
-    } catch (error) {
-        // handle error (e.g., show notification)
-        console.error(error);
-    } finally {
-        loading.value = false;
-    }
-};
-
-
 
 </script>
 

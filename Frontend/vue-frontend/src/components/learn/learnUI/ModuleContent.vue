@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import Button from '@/components/ui/button/Button.vue';
 import { ChevronLeft, ChevronRight, Home } from 'lucide-vue-next';
-import { useLearningStore } from '@/stores/learning';
 import { onMounted, ref, watch } from 'vue';
 import Content from '../content/content.vue'
 import { useModuleStore } from '@/stores/module';
 import { useRouter } from 'vue-router';
 
-
-const learningStore = useLearningStore();
 const moduleStore = useModuleStore();
 const router = useRouter();
 const moduleContent = ref<HTMLElement | null>(null);

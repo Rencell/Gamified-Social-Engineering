@@ -7,7 +7,8 @@ def send_sms(phone_number: str, message: str) -> dict:
     params = {
         "api_token": settings.IPROG_SMS_API_TOKEN,
         "message": message,
-        "phone_number": phone_number
+        "phone_number": phone_number,
+        "sender_name": "Ka Prets",
     }
     try:
         response = requests.post(url, params=params, timeout=10)

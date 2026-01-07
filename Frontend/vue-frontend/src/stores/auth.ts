@@ -1,29 +1,16 @@
 import { defineStore } from 'pinia'
 import { AuthService, RewardService } from '@/services'
 import { computed, reactive, ref, watch } from 'vue'
-import { type RouteLocationNormalizedLoaded, type Router, useRoute, useRouter } from 'vue-router'
+import { type RouteLocationNormalizedLoaded, type Router } from 'vue-router'
 import { toast } from 'vue-sonner'
 import { useLevelStore } from './level'
-import session from '@/services/api'
-import { googleLogout } from "vue3-google-login"
-export interface Register {
-  username: string
-  email: string
-  password1: string
-  password2: string
-}
-
-interface LoginPayload {
-  username?: string
-  email?: string
-  password: string
-}
+import type { Authentication } from '@/services/authService'
 
 export const useAuthStore = defineStore('auth', () => {
   const TOKEN_STORAGE = 'auth_token'
 
   //User
-  const User = ref<any>({
+  const User = ref<Authentication>({
     pk: 1,
     username: 'testuser',
     email: '',
@@ -83,7 +70,7 @@ export const useAuthStore = defineStore('auth', () => {
       exp: 0,
       coin: 0,
       level: 1,
-
+      is_admin: false,
     }
   }
 
@@ -117,58 +104,6 @@ export const useAuthStore = defineStore('auth', () => {
       // role: 'admin',
     }
      
-  }
-
-  const registration = async (payload: Register) => {
-    MUTATIONS.LOGIN_BEGIN()
-    try {
-      const response = await AuthService.register(payload)
-      console.log('Registration successful:', response)
-      MUTATIONS.SET_TOKEN(response.data['key'])
-      MUTATIONS.ACTION_TERMINATE()
-      init()
-    } catch (error) {
-      console.error('Login failed:', error)
-      MUTATIONS.LOGIN_FAILURE()
-    }
-  }
-
-  const login = async (
-    payload: LoginPayload,
-    router: Router,
-    route: RouteLocationNormalizedLoaded,
-  ) => {
-    MUTATIONS.LOGIN_BEGIN()
-    try {
-      const response = await AuthService.login(payload)
-      MUTATIONS.SET_TOKEN(response.data['key'])
-      MUTATIONS.LOGIN_SUCCESS(router, route)
-      await init()
-    } catch (error) {
-      console.error('Login failed:', error)
-      MUTATIONS.LOGIN_FAILURE()
-    }
-  }
-
-
-
-  const loginWithFacebook = async (
-    response: any, 
-    router: Router,
-    route: RouteLocationNormalizedLoaded,
-  ) => {
-    try{
-      const res = await AuthService.loginFacebook({access_token: response})
-      if(res.data.key){
-        
-        MUTATIONS.SET_TOKEN(res.data.key)
-        MUTATIONS.LOGIN_SUCCESS(router, route)
-        await init()
-      }
-    }catch(error){
-      console.error('Login failed:', error)
-      MUTATIONS.LOGIN_FAILURE()
-    }
   }
 
   const loginWithGoogle = async (
@@ -245,10 +180,7 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     init,
     User,
-    login,
     loginWithGoogle,
-    loginWithFacebook,
-    registration,
     refreshUser,
     logout,
     isAuthenticated,

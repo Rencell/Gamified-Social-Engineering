@@ -1,4 +1,4 @@
-<script script setup lang="ts">
+<script setup lang="ts">
 import LearningContent from '../../content/UI/Learning/Core/LearningContent.vue';
 import type { ScenarioStep } from '@/components/learn/QuizUI/ScenarioTraining/type';
 import Story from './story.vue'

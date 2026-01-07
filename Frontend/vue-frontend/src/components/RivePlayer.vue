@@ -4,10 +4,9 @@ import { Rive, StateMachineInput } from '@rive-app/canvas';
 import { useCosmeticStore } from '@/stores/cosmetic';
 
 const props = defineProps({
-  celebrateState: {
-    type: Boolean,
-    default: true,
-  },
+  celebrateState: { type: Boolean, default: true },
+  positionState: { type: Number, default: 0 },
+  
 });
 
 const cosmeticStore = useCosmeticStore();
@@ -15,77 +14,61 @@ const canvasRef = ref<HTMLCanvasElement | null>(null);
 let riveInstance: Rive | null = null;
 
 let numberInput: StateMachineInput | null = null;
+let positionInput: StateMachineInput | null = null;
 let celebInput: StateMachineInput | null = null;
-let blinkInput: StateMachineInput | null = null;
 
-onMounted(() => {
-  if (!canvasRef.value) return; // Ensure the canvas is mounted
+onMounted(async () => {
+  if (!canvasRef.value) return;
+
+  await cosmeticStore.fetchCosmetics();
+
+  // Safely resolve src from store
+  const userCosmetic = cosmeticStore.cosmetics[0];
+  const avatarSrc = userCosmetic?.equipped_avatar?.item;
+  if (!avatarSrc) {
+    return; // No avatar src available; skip initializing Rive
+  }
 
   riveInstance = new Rive({
-    src: '/Home/robot-try-2.riv', // Path to your Rive file
+    src: String(avatarSrc.avatarfile),
     canvas: canvasRef.value,
     autoplay: true,
     stateMachines: ['State Machine 1'],
     onLoad: () => {
-      console.log('Rive animation loaded');
-      if (riveInstance) {
-        const inputs = riveInstance.stateMachineInputs('State Machine 1');
+      if (!riveInstance) return;
+      const inputs = riveInstance.stateMachineInputs('State Machine 1');
 
-        // Debug: Log all available inputs
-        console.log('Available inputs:', inputs);
+      // Find inputs
+      numberInput = inputs.find((i) => i.name === 'skinColor') || null;
+      positionInput = inputs.find((i) => i.name === 'position') || null;
+      celebInput = inputs.find((i) => i.name === 'celeb') || null;
 
-        // Find inputs and ensure they exist
-        blinkInput = inputs.find((i) => i.name === 'blink') || null;
-        numberInput = inputs.find((i) => i.name === 'numColor') || null;
-        celebInput = inputs.find((i) => i.name === 'celeb') || null;
+      // Set defaults
+      if (numberInput) numberInput.value = avatarSrc.rive_code || 0;
+      if (celebInput) celebInput.value = props.celebrateState;
+      if (positionInput) positionInput.value = props.positionState;
 
-        // Set default values if inputs exist
-        if (numberInput) {
-          numberInput.value = cosmeticStore.avatarRive || 0;
-        } else {
-          console.warn("State machine input 'numColor' not found.");
-        }
-
-        if (celebInput) {
-          celebInput.value = props.celebrateState;
-        } else {
-          console.warn("State machine input 'celeb' not found.");
-        }
-      }
-
-      // Blink animation logic
-      if (blinkInput) {
-        setInterval(() => {
-          if (blinkInput) {
-            blinkInput.value = true;
-
-            setTimeout(() => {
-              if (blinkInput) {
-                blinkInput.value = false;
-              }
-            }, 600); // Blink duration
-          }
-        }, 6000); // Blink interval
-      } else {
-        console.warn("State machine input 'blink' not found.");
-      }
+    
     },
   });
 });
 
+// Update numColor when avatarRive changes
 watch(
   () => cosmeticStore.avatarRive,
   (newVal) => {
-    if (numberInput) {
-      numberInput.value = newVal ?? 0;
-    }
-  },
-  { immediate: false }
+    if (numberInput) numberInput.value = newVal ?? 0;
+  }
 );
 
-onBeforeUnmount(() => {
-  riveInstance?.cleanup();
-});
+// Reflect celebrateState prop changes
+watch(
+  () => props.celebrateState,
+  (val) => {
+    if (celebInput) celebInput.value = val;
+  }
+);
+
 </script>
 
 <template>

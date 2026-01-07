@@ -2,12 +2,9 @@
 import { ArrowLeft, ChevronLeft, ChevronRight, PanelLeftClose, PanelRightClose } from 'lucide-vue-next';
 import { RouterLink } from 'vue-router';
 import Button from '@/components/ui/button/Button.vue';
-import ModuleSidebarItem from './ModuleSidebarItem.vue';
-import { useLearningStore } from '@/stores/learning';
-import { ref, Transition } from 'vue';
+import { ref } from 'vue';
 import { useModuleStore } from '@/stores/module';
 
-const learningStore = useLearningStore();
 const moduleStore = useModuleStore();
 const hideSideBar = ref(false);
 

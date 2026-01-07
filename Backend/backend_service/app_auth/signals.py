@@ -27,7 +27,6 @@ def handle_new_user_registration(sender, instance, created, **kwargs):
             item = Item.objects.filter(rive_code=0, type="avatar").first()
             item2 = Item.objects.filter(rive_code=1, type="avatar").first()
             backpack1 = None
-            print(item, item2)
             if item:
                 backpack1 = BackpackItem.objects.create(user=instance, item=item)
             if item2:

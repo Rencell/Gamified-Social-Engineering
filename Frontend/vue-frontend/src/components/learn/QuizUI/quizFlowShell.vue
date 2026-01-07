@@ -1,8 +1,8 @@
 <template>
+   
   <QuizIntro v-if="quizIntro"
    @start-quiz="toggleStart" 
    :QuizIntro="introMeta" />
-
   <template v-else>
     <component class="slide-next" v-if="!quizCompleted" 
       :is="quizComponent" 
@@ -29,7 +29,6 @@
 import { computed, onMounted, ref } from 'vue';
 import QuizSummary from './quizSummary.vue'
 import QuizIntro from './quizIntro.vue';
-import { useLearningStore } from '@/stores/learning';
 import { useAuthStore } from '@/stores/auth';
 import { useRewardStore } from '@/stores/reward';
 import { QuizService } from '@/services';
@@ -50,6 +49,7 @@ interface QuizProps {
   quizComponent: any;
   questions: any[];
   quizLimit?: number;
+  quizType: string;
 }
 const props = defineProps<QuizProps>();
 
@@ -58,7 +58,6 @@ const emit = defineEmits(['completeModule', 'showDown']);
 
 // Stores
 const moduleStore = useModuleStore();
-const learningStore = useLearningStore();
 const rewardStore = useRewardStore();
 const authStore = useAuthStore();
 
@@ -118,7 +117,7 @@ const introMeta = computed(() => {
       image: TwoImage
     },
   }
-  return map[props.quizComponent.name] ?? map.MatchingQuiz
+  return map[props.quizType] ?? map.MatchingQuiz
 })
 
 
@@ -237,9 +236,6 @@ onMounted(async () => {
     shuffleQuestions.value = natural_questions.value; // Do not shuffle
   } else 
 
-  if (learningStore.selectedModule?.final) {
-    quizIntro.value = false;
-  }
 
   try {
     score.value         = await previousScore()

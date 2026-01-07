@@ -17,12 +17,8 @@ export const componentMap: Record<QuizType, Component> = {
 
 
 export const editableComponentMap: Record<QuizType, Component> = {
-  MultipleChoice: defineAsyncComponent(
-    () => import('./MultipleChoice/Editable.vue'),
-  ),
-  MatchingType: defineAsyncComponent(
-    () => import('./MatchingType/editable.vue'),
-  ),
+  MultipleChoice: defineAsyncComponent(() => import('./MultipleChoice/Editable.vue')),
+  MatchingType: defineAsyncComponent(() => import('./MatchingType/editable.vue')),
   DragPair: defineAsyncComponent(() => import('./DragPair/editable.vue')),
   DoDont: defineAsyncComponent(() => import('./DoDont/editable.vue')),
   PhishingTactics: defineAsyncComponent(() => import('./Phishing/GuessTactics/editable.vue')),

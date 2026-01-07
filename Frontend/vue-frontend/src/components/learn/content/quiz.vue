@@ -80,9 +80,10 @@ function deleteQuestion(index: number) {
 </script>
 <template>
     <LearningContent>
+
         <QuizEdit 
         :questions="Question.props" 
-        :quizComponent="componentMap[Question.type as QuizType]"
+        :quizComponent="componentMap[Question.type]"
         :editableComponent="editableComponentMap[Question.type as QuizType]" 
         :quiz-limit="contentItems.quiz_limit"
         :quizType="Question.type as QuizType"

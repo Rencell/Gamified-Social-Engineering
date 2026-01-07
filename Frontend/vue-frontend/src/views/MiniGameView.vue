@@ -4,8 +4,25 @@
         <Loading v-if="loading"></Loading>
         <div v-else class="grid grid-cols-1 md:grid-cols-4 gap-14 md:gap-4 md:gap-y-10">
             <template v-for="game in minigame" :key="game.id">
+              
+                <div v-if="authStore?.User?.is_admin"
+                :style="{ backgroundColor: game.card_color }"
+                  class="relative h-70 rounded-2xl p-5 hover:scale-105 transition-transform duration-300 ease-in-out">
+                    <div class="relative">
+                        <p class="pb-4 text-xl font-bold" :style="{ color: getTextColor(game.card_color) }">{{ game.name }}</p>
+                        <div class="h-1 w-10 absolute bottom-0" :style="{ backgroundColor: getTextColor(game.card_color) }"></div>
+                    </div>
+
+                    <div class=" h-full flex items-center justify-center">
+                        <img :src="game.thumbnail!" class="h-full size-45" :alt="`${game.name} Thumbnail`">
+                    </div>
+                    <div class="h-10 w-30 rounded-full bg-accent absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white font-bold shadow-lg hover:bg-accent-dark cursor-pointer">
+                        
+                        <Dialog :MiniGame="game" :key="game.id" />
+                    </div>
+                </div>
                 <!-- Playable card when user level equals required_level -->
-                <RouterLink v-if="canPlay(game)"
+                <RouterLink v-else-if="canPlay(game)"
                     :to="{ name: 'MiniGamesDetail', params: { gameId: game.id } }"
                     :style="{ backgroundColor: game.card_color }"
                     class="relative h-70 rounded-2xl p-5 hover:scale-105 transition-transform duration-300 ease-in-out">
@@ -28,6 +45,8 @@
                     :style="{ backgroundColor: game.card_color }"
                     class="relative h-70 rounded-2xl p-5 bg-secondary cursor-not-allowed opacity-60"
                     aria-disabled="true">
+
+                    
                     <div class="bg-ternary rotate-0 absolute -top-2 right-0 rounded-full p-1 px-5 flex flex-row-reverse items-center gap-2 text-white font-semibold">
                         <p class="text-sm">Level {{ game.required_level ?? '-' }}</p> <Lock class="size-5"></Lock>
                     </div>
@@ -55,26 +74,26 @@
 // removed unused image imports
 import { Play, Lock } from 'lucide-vue-next';
 import { RouterLink } from 'vue-router';
-import { onMounted, ref } from 'vue';
-import { MinigameService } from '@/services';
+import { computed, onMounted, ref } from 'vue';
 import type { Minigame } from '@/services/minigameService';
 import Loading from '@/components/loading.vue';
 import { useAuthStore } from '@/stores/auth';
+import { useMiniGameStore } from '@/stores/minigame';
+import Dialog from '@/components/MiniGames/dialog.vue'
 
 const authStore = useAuthStore();
 const loading = ref(false);
-const minigame = ref<Minigame[]>([])
+const minigameStore = useMiniGameStore()
+const minigame = computed(() => minigameStore.minigame);
 onMounted(async () => {
     loading.value = true;
     try {
-        const data = await MinigameService.get_minigame();
-        minigame.value = data;
+        await minigameStore.fetchMinigames();
     } finally {
         loading.value = false;
     }
 });
 
-// Helper to determine if the game is playable based on user level
 type MinigameWithReq = Minigame & { required_level: number | null };
 function canPlay(game: MinigameWithReq): boolean {
   const userLevel = authStore?.User?.level as number | undefined;
@@ -83,7 +102,6 @@ function canPlay(game: MinigameWithReq): boolean {
   return userLevel >= requiredLevel;
 }
 
-// Compute text color (black/white) based on background brightness
 function getTextColor(bgColor?: string): string {
   if (!bgColor) return '#ffffff';
   const rgb = parseColorToRGB(bgColor);
@@ -94,7 +112,6 @@ function getTextColor(bgColor?: string): string {
 
 function parseColorToRGB(color: string): { r: number; g: number; b: number } | null {
   const c = color.trim().toLowerCase();
-  // #rgb or #rrggbb
   const hexMatch = c.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
   if (hexMatch) {
     let hex = hexMatch[1];
@@ -104,7 +121,7 @@ function parseColorToRGB(color: string): { r: number; g: number; b: number } | n
     const num = parseInt(hex, 16);
     return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
   }
-  // rgb(r,g,b) or rgba(r,g,b,a)
+
   const rgbMatch = c.match(/^rgba?\(([^)]+)\)$/);
   if (rgbMatch) {
     const parts = rgbMatch[1].split(',').map(p => parseFloat(p.trim()));

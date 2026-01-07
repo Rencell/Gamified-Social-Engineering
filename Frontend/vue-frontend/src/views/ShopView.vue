@@ -21,6 +21,7 @@
         </div>
         <div v-else class="grid grid-cols-2 md:grid-cols-4 sm:grid-cols-3 gap-3 md:gap-6">
             <div v-for="value in shop_list" :key="value.id" class="p-2 space-y-4 bg-secondary rounded-lg ">
+                
                 <div class="flex mb-2 gap-2 justify-center">
                     <DeleteItems :cosmetic-id="value.id" />
                     <UpdateItems :data="value" />
@@ -70,8 +71,7 @@
 import { ArrowLeft } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import coin from '/Home/coin.svg';
-import { onMounted, ref } from 'vue';
-// import { CosmeticService } from '@/services';
+import { onMounted, computed } from 'vue';
 import type { Cosmetic } from '@/services/cosmeticService';
 import { useAuthStore } from '@/stores/auth';
 import { useRewardStore } from '@/stores/reward';
@@ -79,12 +79,13 @@ import { useCosmeticStore } from '@/stores/cosmetic';
 import AddItems from '@/components/home/shop/addItems.vue'
 import UpdateItems from '@/components/home/shop/updateItems.vue'
 import DeleteItems from '@/components/home/shop/deleteItems.vue'
+
 const cosmeticStore = useCosmeticStore();
 const purchaseItem = useRewardStore();
 const authStore = useAuthStore();
 
-// Track the current list and remove items once purchased
-const shop_list = ref<(Cosmetic & { purchased: boolean })[]>([]);
+// Store-driven list
+const shop_list = computed(() => cosmeticStore.shop_list)
 
 const buyItem = async (item: Cosmetic & { purchased: boolean }) => {
     if (authStore.User.coin >= item.price) {
@@ -93,22 +94,14 @@ const buyItem = async (item: Cosmetic & { purchased: boolean }) => {
         await cosmeticStore.updateInventory();
         authStore.User.coin -= item.price;
         item.purchased = true;
-        // Remove the purchased item from the displayed list
-        shop_list.value = shop_list.value.filter(i => i.id !== item.id);
+
+        // Remove the purchased item from the displayed list (store)
+        cosmeticStore.removeFromShopList(item.id)
         console.log('Purchase successful');
     };
 }
 
 onMounted(async () => {
-    try {
-        await cosmeticStore.fetchCosmeticItems()
-        // Initialize list from store
-        shop_list.value = cosmeticStore.item_cosmetics.map(item => ({
-            ...item,
-            purchased: false
-        }));
-    } catch (error) {
-        console.error('Error fetching cosmetics:', error);
-    }
+    await cosmeticStore.fetchCosmeticItems()
 });
 </script>

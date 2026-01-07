@@ -24,6 +24,7 @@ class GoPhishWebhookViewSet(viewsets.ViewSet):
         
         body = data.get('body')
         to = data.get('to')
+        print("Debug: data:", data)
         if body and to:
             phone_number = UserPhoneNumber.objects.filter(dummy_number=to).first()
             if phone_number:

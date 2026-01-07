@@ -44,7 +44,6 @@ class PopupTriggerLogViewSet(viewsets.ModelViewSet):
         total_clicks = logs.filter(status="clicked").count()
         total_closed = logs.filter(status="closed").count()
         security_score = max(0, min(100, 100 + (total_closed * 10) - (total_clicks * 10)))
-        print("SECURITY SCORE:", security_score)
         serializer = self.get_serializer(logs, many=True)
         return Response({"security_score": security_score, "popup_count": logs.count(), "total_clicks": total_clicks, "total_closed": total_closed, "logs": serializer.data})
 
@@ -54,6 +53,7 @@ class PopupTriggerLogViewSet(viewsets.ModelViewSet):
         user = request.user
         logs = PopupTriggerLog.objects.all().exclude(status="waiting")
         total_popups_sent = logs.count()
+        print("TOTAL POPUPS SENT:", total_popups_sent)
         total_risky_clicks = logs.filter(status="clicked").count()
         total_safe_closes = logs.filter(status="closed").count()
         denominator = total_risky_clicks + total_safe_closes
@@ -72,16 +72,22 @@ def get_today_popup(request):
     user = request.user
     today = datetime.date.today()
 
-    # Check history
+    # Do not show popups to admin or staff users
+    if getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False):
+        return Response({"show": False, "scenario": None}, status=200)
+
+    if PopupTriggerLog.objects.filter(user=user, status="waiting").exists():
+        return Response({"show": False, "scenario": None}, status=200)
+
     existing_log = PopupTriggerLog.objects.filter(user=user, date_triggered=today).first()
 
     if existing_log:
-        return Response({"show": False, "scenario": None})
+        return Response({"show": False, "scenario": None}, status=200)
     
     scenarios = PopupScenario.objects.all()
 
     if not scenarios.exists():
-        return Response({"show": False, "scenario": None})
+        return Response({"show": False, "scenario": None}, status=200)
 
     scenario = random.choice(list(scenarios))
 
@@ -94,4 +100,4 @@ def get_today_popup(request):
     return Response({
         "show": True,
         "scenario": PopupScenarioSerializer(scenario).data
-    })
+    }, status=200)

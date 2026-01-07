@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import LessonCard from '@/components/learn/learnUI/LessonCard.vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { useLearningStore } from '@/stores/learning';
 import { onMounted, ref } from 'vue';
 import DayStreak from '@/components/learn/dayStreak/DayStreak.vue'
 import Metrics from '@/components/learn/metrics/metrics.vue'
-const learningStore = useLearningStore();
 const route = useRoute();
 
 
@@ -20,8 +18,6 @@ const isLoading = ref(true);
 onMounted(async () => {
     isLoading.value = true;
     try {
-        await learningStore.fetchLessons();
-        await learningStore.fetchLatestLesson();
 
         await lessonStore.fetchLessons();
         await lessonStore.fetchLatestLesson();
