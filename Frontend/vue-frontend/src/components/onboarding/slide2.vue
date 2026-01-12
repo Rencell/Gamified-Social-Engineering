@@ -25,7 +25,7 @@ const goToAvatarSelection = () => {
 const updateCosmetic = () => {
   // cosmeticStore.setCosmetic()
   if(selectedColor.value === 'purple') {
-    const item = cosmeticStore.inventory_items.find(item => item.item.id === 3)
+    const item = cosmeticStore.inventory_items.find(item => item.item.rive_code === 0)
     if (item) {
       cosmeticStore.setCosmetic(item);
     } else {
@@ -33,7 +33,15 @@ const updateCosmetic = () => {
     }
   }
   else if(selectedColor.value === 'green') {
-    const item = cosmeticStore.inventory_items.find(item => item.item.id === 7)
+    const item = cosmeticStore.inventory_items.find(item => item.item.rive_code === 3)
+    if (item) {
+      cosmeticStore.setCosmetic(item);
+    } else {
+      console.error('Item not found in inventory.');
+    }
+  }
+  else if(selectedColor.value === 'gray') {
+    const item = cosmeticStore.inventory_items.find(item => item.item.rive_code === 2)
     if (item) {
       cosmeticStore.setCosmetic(item);
     } else {
@@ -41,7 +49,7 @@ const updateCosmetic = () => {
     }
   }
   else {
-    const item = cosmeticStore.inventory_items.find(item => item.item.id === 4)
+    const item = cosmeticStore.inventory_items.find(item => item.item.rive_code === 1)
     if (item) {
       cosmeticStore.setCosmetic(item);
     } else {
@@ -81,6 +89,7 @@ onMounted(() => {
         <div class="size-8 rounded-full bg-purple-600" @click="changeColor('purple')" :class="{'border-2 border-black': selectedColor === 'red'}"></div>
         <div class="size-8 rounded-full bg-orange-600" @click="changeColor('orange')" :class="{'border-2 border-black': selectedColor === 'blue'}"></div>
         <div class="size-8 rounded-full bg-green-600" @click="changeColor('green')" :class="{'border-2 border-black': selectedColor === 'green'}"></div>
+        <div class="size-8 rounded-full bg-slate-600" @click="changeColor('gray')" :class="{'border-2 border-black': selectedColor === 'gray'}"></div>
       </div>
       
     </div>

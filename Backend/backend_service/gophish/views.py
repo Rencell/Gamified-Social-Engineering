@@ -13,6 +13,9 @@ import requests
 import json
 from django.db.models import Sum, Max
 
+# popup app model used for overall defence score aggregation
+from app_popup.models import PopupTriggerLog
+
 class GoPhishWebhookViewSet(viewsets.ViewSet):
     # POST /api/gophish/
     def create(self, request):
@@ -122,6 +125,66 @@ class GophishUserScoreViewSet(viewsets.ModelViewSet):
         # students see only their own
         return GophishUserScore.objects.filter(user=user)
     
+    @action(detail=False, methods=['get'])
+    def overall_defence(self, request):
+        """Return a single overall defence score for the authenticated user.
+
+        Combines:
+        - GoPhish email score (GophishUserScore.security_score)
+        - GoPhish SMS score (GophishUserScoreSms.security_score)
+        - Popup safe-browsing score (same rule as app_popup.get_popup_log_statistics)
+        """
+
+        user = request.user
+
+        email_score_obj = GophishUserScore.objects.filter(user=user).first()
+        sms_score_obj = GophishUserScoreSms.objects.filter(user=user).first()
+
+        email_score = int(email_score_obj.security_score) if email_score_obj else 100
+        sms_score = int(sms_score_obj.security_score) if sms_score_obj else 100
+
+        popup_logs = PopupTriggerLog.objects.filter(user=user).exclude(status="waiting")
+        popup_clicks = popup_logs.filter(status="clicked").count()
+        popup_closed = popup_logs.filter(status="closed").count()
+        popup_score = max(0, min(100, 100 + (popup_closed * 30) - (popup_clicks * 10)))
+
+        # weights can be tuned later
+        weights = {
+            "email": 0.4,
+            "sms": 0.3,
+            "popup": 0.3,
+        }
+
+        overall = round(
+            (email_score * weights["email"]) + (sms_score * weights["sms"]) + (popup_score * weights["popup"]),
+            1,
+        )
+
+        return Response({
+            "overall_score": overall,
+            "weights": weights,
+            "components": {
+                "gophish_email": {
+                    "security_score": email_score,
+                    "emails_sent": email_score_obj.emails_sent if email_score_obj else 0,
+                    "links_clicked": email_score_obj.links_clicked if email_score_obj else 0,
+                    "data_submitted": email_score_obj.data_submitted if email_score_obj else 0,
+                },
+                "gophish_sms": {
+                    "security_score": sms_score,
+                    "number_sent": sms_score_obj.number_sent if sms_score_obj else 0,
+                    "links_clicked": sms_score_obj.links_clicked if sms_score_obj else 0,
+                    "data_submitted": sms_score_obj.data_submitted if sms_score_obj else 0,
+                },
+                "popup": {
+                    "security_score": popup_score,
+                    "total_clicks": popup_clicks,
+                    "total_closed": popup_closed,
+                    "popup_count": popup_logs.count(),
+                },
+            },
+        })
+
     @action(detail=False, methods=['get'])
     def total_score(self, request):
         agg = GophishUserScore.objects.aggregate(
@@ -263,7 +326,6 @@ class GophishConsentViewSet(viewsets.ModelViewSet):
         if email_consent is not None:
             consent.email_consent = email_consent
             
-            # If user is consenting (email_consent is True), add them to GoPhish
             if email_consent:
                 group_id = getattr(settings, 'GOPHISH_DEFAULT_GROUP_ID', 1)
                 success = self._add_target_to_gophish(user, user.email, group_id)
@@ -271,7 +333,6 @@ class GophishConsentViewSet(viewsets.ModelViewSet):
                 if not success:
                     print(f"Warning: Failed to add {user.email} to GoPhish, but consent was still saved")
             
-            # Save the consent regardless of GoPhish operation result
             consent.save()
             
             return Response({

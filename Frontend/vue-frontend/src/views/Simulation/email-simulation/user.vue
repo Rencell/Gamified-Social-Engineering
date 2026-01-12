@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import RiskIndicator from '@/components/simulation/riskIndicator.vue'
 import { SimulationService } from '@/services';
 import type { GoPhishEvent } from '@/services/simulationService';
 import { computed, onMounted, ref } from 'vue';
 import type { GoPhish } from '@/services/simulationService';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, ShieldAlert, Mail, Clock, CheckCircle2, XCircle } from 'lucide-vue-next';
+import { ShieldAlert, Mail, Clock, XCircle, Info } from 'lucide-vue-next';
 import DialogSimulation from '@/components/simulation/dialogSimulation.vue'
 import Loading from '@/components/loading.vue';
 
+defineOptions({
+  name: 'EmailSimulationUser',
+});
 
 const phishingData = ref<GoPhish[]>([])
 const eventsData = ref<GoPhishEvent[]>([])
@@ -60,14 +62,94 @@ function toggleShowHistory() {
     showHistory.value = !showHistory.value;
 }
 
+const isInfoOpen = ref(false);
+function toggleInfo() {
+    isInfoOpen.value = !isInfoOpen.value;
+}
+
+const isCampaignInfoOpen = ref(false);
+function toggleCampaignInfo() {
+    isCampaignInfoOpen.value = !isCampaignInfoOpen.value;
+}
+
 </script>
 
 <template>
-    <!--     
-    <Button @click="toggleshit">Toggle Dialog></Button> -->
     <div class="mx-auto max-w-7xl space-y-12 font-display" :class="{ 'blur-md brightness-50': !isOpen }">
         <section>
-            <h1 class="mb-8 text-4xl font-bold text-white font-display">Security Risk Score - <span class="text-yellow-500">Email</span></h1>
+            <div class="mb-8 flex items-center justify-between gap-4">
+                <h1 class="text-4xl font-bold text-white font-display">
+                    Security Risk Score - <span class="text-yellow-500">Email</span>
+                </h1>
+
+                <div class="relative">
+                    <button
+                        type="button"
+                        class="inline-flex items-center justify-center rounded-full border border-slate-700 bg-slate-900/40 p-2 text-slate-300 hover:bg-slate-800/60 hover:text-white transition-colors"
+                        aria-label="What is this score?"
+                        :aria-expanded="isInfoOpen"
+                        @click="toggleInfo"
+                    >
+                        <Info class="h-5 w-5 text-blue-500 cursor-pointer" />
+                    </button>
+
+                    <!-- lightweight popover/modal -->
+                    <div
+                        v-if="isInfoOpen"
+                        class="absolute right-0 z-50 mt-3 w-[22rem] rounded-xl border border-slate-700 bg-[#0b1220] p-4 shadow-xl"
+                        role="dialog"
+                        aria-modal="false"
+                    >
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <div class="text-sm font-semibold text-white">About the Security Risk Score</div>
+                                <div class="mt-1 text-xs leading-relaxed text-slate-300">
+                                    This score reflects how safely you respond to simulated security scenarios.
+                                    Higher is better.
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                class="rounded-md p-1 text-slate-400 hover:text-white hover:bg-slate-800/60"
+                                aria-label="Close"
+                                @click="isInfoOpen = false"
+                            >
+                                <XCircle class="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <div class="mt-3 space-y-3 text-xs text-slate-300">
+                            <div>
+                                <div class="font-semibold text-slate-200">What affects it</div>
+                                <ul class="mt-1 list-disc pl-5 space-y-1">
+                                    <li>Safe decisions increase your score.</li>
+                                    <li>Risky actions (like interacting with suspicious content) can reduce it.</li>
+                                    <li>Your history below shows what happened and how it impacted your score.</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <div class="font-semibold text-slate-200">What this simulation is</div>
+                                <div class="mt-1 leading-relaxed">
+                                    A controlled training exercise using realistic prompts to help you practice identifying common social-engineering tactics.
+                                </div>
+                            </div>
+
+                            <div class="rounded-lg bg-slate-900/40 border border-slate-700 p-3">
+                                <div class="font-semibold text-slate-200">Tip</div>
+                                <div class="mt-1 leading-relaxed">
+                                    Look for urgency, unexpected requests, and links that don’t match the sender.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 flex justify-end">
+                            <Button variant="secondary" @click="isInfoOpen = false">Got it</Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <Card class="border-[#1a2332] bg-secondary p-8 rounded-2xl">
                 <div class="mb-6 flex items-baseline gap-4">
                     <div class="text-5xl font-bold text-white">{{ security_score }}</div>
@@ -76,27 +158,75 @@ function toggleShowHistory() {
 
                 <RiskIndicator :score="security_score" :max-score="100" risk-level="low" />
 
-                <!-- <p class="mt-6 text-sm leading-relaxed text-gray-400">{description}</p> -->
+                <p class="mt-6 text-sm leading-relaxed text-gray-400">You’ll occasionally receive realistic security scenarios designed to help you practice spotting suspicious content and making safer choices.</p>
             </Card>
         </section>
 
 
         <section>
-            <h2 class="mb-8 text-3xl font-bold text-white">Campaign Summary</h2>
+            <div class="mb-8 flex items-center justify-between gap-4">
+                <h2 class="text-3xl font-bold text-white">Campaign Summary</h2>
+
+                <div class="relative">
+                    <button
+                        type="button"
+                        class="inline-flex items-center justify-center rounded-full border border-slate-700 bg-slate-900/40 p-2 text-slate-300 hover:bg-slate-800/60 hover:text-white transition-colors"
+                        aria-label="How points work"
+                        :aria-expanded="isCampaignInfoOpen"
+                        @click="toggleCampaignInfo"
+                    >
+                        <Info class="h-5 w-5 text-blue-500 cursor-pointer" />
+                    </button>
+
+                    <div
+                        v-if="isCampaignInfoOpen"
+                        class="absolute right-0 z-50 mt-3 w-[22rem] rounded-xl border border-slate-700 bg-[#0b1220] p-4 shadow-xl"
+                        role="dialog"
+                        aria-modal="false"
+                    >
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <div class="text-sm font-semibold text-white">How points work</div>
+                                <div class="mt-1 text-xs leading-relaxed text-slate-300">
+                                    Actions can increase or decrease your score during the campaign.
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                class="rounded-md p-1 text-slate-400 hover:text-white hover:bg-slate-800/60"
+                                aria-label="Close"
+                                @click="isCampaignInfoOpen = false"
+                            >
+                                <XCircle class="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <ul class="mt-3 text-sm text-gray-400 space-y-1">
+                            <li><span class="text-green-400 font-semibold">+10</span> for each email successfully sent</li>
+                            <li><span class="text-orange-400 font-semibold">-20</span> for each link clicked</li>
+                            <li><span class="text-red-400 font-semibold">-30</span> for any data submitted</li>
+                        </ul>
+
+                        <div class="mt-4 flex justify-end">
+                            <Button variant="secondary" @click="isCampaignInfoOpen = false">Got it</Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <Card class="border-[#1a2332] bg-secondary p-8 rounded-2xl ">
                 <div class="grid gap-6 grid-cols-3">
                     <div>
                         <div class="text-sm text-gray-400">Emails Sent</div>
-                        <div class="mt-2 text-3xl font-bold text-white">{{ phishingData[0]?.emails_sent }}</div>
+                        <div class="mt-2 text-3xl font-bold text-white">{{ phishingData[0]?.emails_sent || 0 }}</div>
                     </div>
                     <div>
                         <div class="text-sm text-gray-400">Links Clicked</div>
-                        <div class="mt-2 text-3xl font-bold text-[#ff6b35]">{{ phishingData[0]?.links_clicked }}</div>
+                        <div class="mt-2 text-3xl font-bold text-[#ff6b35]">{{ phishingData[0]?.links_clicked || 0 }}</div>
                     </div>
                     <div>
                         <div class="text-sm text-gray-400">Data Submitted</div>
-                        <div class="mt-2 text-3xl font-bold text-[#ef4444]">{{ phishingData[0]?.data_submitted }}</div>
+                        <div class="mt-2 text-3xl font-bold text-[#ef4444]">{{ phishingData[0]?.data_submitted || 0 }}</div>
                     </div>
                 </div>
             </Card>

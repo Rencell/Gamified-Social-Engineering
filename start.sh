@@ -11,4 +11,7 @@ python manage.py runserver 0.0.0.0:8000 &
 cd ../../
 npm --prefix Frontend/vue-frontend run dev
 
+#ssh -p 443 -R0:127.0.0.1:8000   6hRtyw79MSs@pro.pinggy.io
+
+
 

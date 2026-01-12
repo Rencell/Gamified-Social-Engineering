@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -12,19 +12,17 @@ import {
 } from '@/components/ui/dialog';
 import { Plus } from 'lucide-vue-next';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useLessonStore } from '@/stores/lesson';
 import type { ModuleTest } from '@/services/moduleService';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useModuleStore } from '@/stores/module';
-import { useRoute } from 'vue-router';
 import { useSectionStore } from '@/stores/sections';
 import DialogClose from '@/components/ui/dialog/DialogClose.vue';
+import { Spinner } from '@/components/ui/spinner';
 const lessonStore = useLessonStore();
 const moduleStore = useModuleStore();
 const sectionStore = useSectionStore();
-const route = useRoute();
 
 
 const props = defineProps<{
@@ -52,15 +50,22 @@ const validate = () => {
 };
 
 // Function to handle saving the form data
-const saveModule = () => {
+const loading = ref(false);
+const saveModule = async () => {
     touched.value.title = true;
     if (!validate()) return;
     formData.value.lesson = lessonStore.currentLesson?.id || 0;
-    moduleStore.createModule(formData.value);
-    formData.value.title = '';
-    formData.value.final = false;
-    errors.value = {};
-    touched.value.title = false;
+    loading.value = true;
+    try {
+        await moduleStore.createModule(formData.value);
+        // reset form
+        formData.value.title = '';
+        formData.value.final = false;
+        errors.value = {};
+        touched.value.title = false;
+    } finally {
+        loading.value = false;
+    }
 };
 
 const hasFinalModule = computed(() => {
@@ -121,7 +126,14 @@ watch(() => formData.value.final, (newLesson) => {
                     </div>
                 </div>
                 <DialogClose as-child>
-                    <Button @click="saveModule" :disabled="!validate()" :class="[{ 'opacity-50 cursor-not-allowed': !validate() }]">Save Module</Button>
+                    <Button @click="saveModule" :disabled="!validate() || loading" :class="[{ 'opacity-50 cursor-not-allowed': !validate() || loading }]">
+                        <template v-if="loading">
+                            <Spinner class="mr-2" /> Saving...
+                        </template>
+                        <template v-else>
+                            Save Module
+                        </template>
+                    </Button>
                 </DialogClose>
             </DialogFooter>
         </DialogContent>

@@ -180,6 +180,7 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     init,
     User,
+    new_created,
     loginWithGoogle,
     refreshUser,
     logout,

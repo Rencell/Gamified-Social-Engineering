@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -15,8 +15,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { ModuleTest } from '@/services/moduleService';
 import { useModuleStore } from '@/stores/module';
-const moduleStore = useModuleStore();
+import { useLessonStore } from '@/stores/lesson';
+import DialogClose from '@/components/ui/dialog/DialogClose.vue';
+import { Spinner } from '@/components/ui/spinner';
 
+const moduleStore = useModuleStore();
+const lessonStore = useLessonStore();
 
 const props = defineProps<{
     module: ModuleTest
@@ -28,10 +32,31 @@ const formData = ref<Partial<ModuleTest>>({
     lesson:  0,
 });
 
+// Add validation state for title
+const errors = ref<{ title?: string }>({});
+const touched = ref<{ title: boolean }>({ title: false });
+const validate = () => {
+    const e: typeof errors.value = {};
+    if (!formData.value.title || formData.value.title.trim().length === 0) {
+        e.title = 'Title is required.';
+    }
+    errors.value = e;
+    return Object.keys(e).length === 0;
+};
+
 // Function to handle saving the form data
-const saveModule = () => {
-    formData.value.lesson = props.module.lesson || 0;
-    moduleStore.updateModule(formData.value);
+const loading = ref(false);
+const saveModule = async () => {
+    if (loading.value) return;
+    touched.value.title = true;
+    if (!validate()) return;
+    formData.value.lesson = props.module.lesson || lessonStore.currentLesson?.id || 0;
+    loading.value = true;
+    try {
+        await moduleStore.updateModule(formData.value);
+    } finally {
+        loading.value = false;
+    }
 };
 </script>
 
@@ -53,14 +78,18 @@ const saveModule = () => {
             <div class="space-y-4">
                 <div class="space-y-2">
                     <Label>Title</Label>
-                    <Input v-model="formData.title" type="text" placeholder="Enter module title" />
-                    
+                    <Input v-model="formData.title" type="text" placeholder="Enter module title" @blur="touched.title = true; validate()" @input="validate()" />
+                    <p v-if="touched.title && errors.title" class="text-red-500">{{ errors.title }}</p>
                 </div>
             </div>
 
             <DialogFooter>
-               
-                <Button @click="saveModule">Save Module</Button>
+                <DialogClose asChild>
+                    <Button @click="saveModule" :disabled="loading">
+                        <Spinner v-if="loading" class="mr-2" />
+                        Save Module
+                    </Button>
+                </DialogClose>
             </DialogFooter>
         </DialogContent>
     </Dialog>

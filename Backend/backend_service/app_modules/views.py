@@ -36,7 +36,10 @@ class ModuleTestViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path='lesson')
     def get_by_lesson(self, request):
         lesson_slug = request.query_params.get('lesson_slug')
+        
         obj = ModuleTest.objects.filter(lesson__slug=lesson_slug) if lesson_slug else None
+        if not obj.exists() and lesson_slug and lesson_slug.isdigit():
+            obj = ModuleTest.objects.filter(lesson__id=lesson_slug) if lesson_slug else None
         
         if obj and obj.exists():
             serializer = self.get_serializer(obj, many=True)

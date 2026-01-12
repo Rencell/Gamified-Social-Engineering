@@ -16,6 +16,8 @@ import DayStreak from './components/achievement/DayStreak.vue'
 import CourseUnlock from './components/achievement/CourseUnlock.vue'
 import Index from './components/PopupTypes/index.vue'
 import { usePopupStore } from './stores/popup';
+import BadgeUnlock from './components/achievement/BadgeUnlock.vue'
+import { useBadgesStore } from './stores/badges';
 
 const streakStore = useStreakStore()
 const route = useRoute()
@@ -38,6 +40,7 @@ const popupStore = usePopupStore();
   <Toaster />
   <CourseUnlock :is-open="courseUnlockStore.openCourseModal" :onClose="courseUnlockStore.closeStreakModal" />
   <DayStreak :is-open="streakStore.openStreakModal" :onClose="streakStore.closeStreakModal" />
+  <BadgeUnlock :is-open="useBadgesStore().openBadgeModal" :onClose="useBadgesStore().closeBadgeModal" />
   
   <div v-if="useLoadingPageStore().isLoading">
     <div class="fixed inset-0 flex items-center justify-center bg-black/70 z-99 flex-col gap-4">

@@ -158,7 +158,11 @@ const toggleShowModal = () => {
 }
 
 const authStore = useAuthStore();
-const isLevelElegible = computed(() => authStore.User.level <= (assessment.value?.required_level ?? 0));
+const isLevelElegible = computed(() => {
+    // Only compute eligibility for admins; non-admin users won't see the level requirement
+    if (authStore.User.is_admin) return false;
+    return authStore.User.level <= (assessment.value?.required_level ?? 0);
+});
 </script>
 
 <template>

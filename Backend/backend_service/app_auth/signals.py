@@ -26,11 +26,17 @@ def handle_new_user_registration(sender, instance, created, **kwargs):
             # Default avatars
             item = Item.objects.filter(rive_code=0, type="avatar").first()
             item2 = Item.objects.filter(rive_code=1, type="avatar").first()
+            item3 = Item.objects.filter(rive_code=2, type="avatar").first()
+            item4 = Item.objects.filter(rive_code=3, type="avatar").first()
             backpack1 = None
             if item:
                 backpack1 = BackpackItem.objects.create(user=instance, item=item)
             if item2:
                 BackpackItem.objects.create(user=instance, item=item2)
+            if item3:
+                BackpackItem.objects.create(user=instance, item=item3)
+            if item4:
+                BackpackItem.objects.create(user=instance, item=item4)
 
             
             # Default background

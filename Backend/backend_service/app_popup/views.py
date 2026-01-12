@@ -43,7 +43,7 @@ class PopupTriggerLogViewSet(viewsets.ModelViewSet):
         logs = PopupTriggerLog.objects.filter(user=user).exclude(status="waiting").order_by('-date_triggered')
         total_clicks = logs.filter(status="clicked").count()
         total_closed = logs.filter(status="closed").count()
-        security_score = max(0, min(100, 100 + (total_closed * 10) - (total_clicks * 10)))
+        security_score = max(0, min(100, 100 + (total_closed * 30) - (total_clicks * 10)))
         serializer = self.get_serializer(logs, many=True)
         return Response({"security_score": security_score, "popup_count": logs.count(), "total_clicks": total_clicks, "total_closed": total_closed, "logs": serializer.data})
 

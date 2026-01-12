@@ -3,14 +3,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { GripVertical, ImageIcon, Plus, Check, Trash2, Flag } from 'lucide-vue-next';
+import { GripVertical, Plus, Check, Trash2, Save } from 'lucide-vue-next';
 import { Badge } from '@/components/ui/badge';
 import { computed, onMounted, ref } from 'vue';
 
 import { useUploadContentQuiz } from '@/composables/useUploadContentQuiz';
 import type { Question, Option } from '@/services/assessmentService';
 import { useAssessmentStore } from '@/stores/assessment';
-const { previewUrl, changeUpdate, onFileChange, selectedFile } = useUploadContentQuiz();
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useLessonStore } from '@/stores/lesson';
+import type { ModuleTest } from '@/services/moduleService';
+import { watch } from 'vue';
+import { LessonService, ModuleService } from '@/services';
+const { previewUrl, onFileChange, selectedFile } = useUploadContentQuiz();
 
 const assessmentStore = useAssessmentStore();
 const image1 = useUploadContentQuiz();
@@ -31,15 +36,13 @@ function setCorrectAnswerMc(id: number) {
     quizData.value.options.forEach(option => {
         option.is_correct = option.id === id
     })
+
+    assessmentStore.updateOption(quizData.value.options.find(option => option.id === id) as Option);
 }
 
 function addOption() {
     if (quizData.value.options.length >= 4) return; // Limit to 4 options
-    quizData.value.options.push({
-        id: 0, text: '',
-        question: null,
-        is_correct: false
-    });
+   
     const newOption = {
         id: 0,
         text: '',
@@ -49,9 +52,11 @@ function addOption() {
     assessmentStore.addOption(newOption);
 }
 
-const updateOption = async (option: Option) => {
-    await assessmentStore.updateOption(option);
-    
+async function updateOption(id: number) {
+    const option = quizData.value.options.find(option => option.id === id);
+    if (option) {
+        await assessmentStore.updateOption(option);
+    }
 }
 
 async function removeOption(id: number) {
@@ -73,12 +78,50 @@ const saveChanges = async () => {
         toggle();
     }, 1000);
     quizData.value.image = selectedFile.value || quizData.value.image;
+    if (selectedLesson.value) {
+        quizData.value.related_module = Number(selectedModule.value);
+    }
     await assessmentStore.updateQuestions(quizData.value);
 };
+
+const lesson = useLessonStore();
+const lessonData = computed(() => lesson.lessons);
+// v-model for the Select is a string id from SelectItem values; allow null for the "None" option
+const selectedLesson = ref<string | null>(null);
+
+const moduleData = ref<ModuleTest[]>([]);
+const selectedModule = ref<ModuleTest | null>(null);
+onMounted(async() => {
+    await lesson.fetchLessons();
+    selectedModule.value = quizData.value.related_module as ModuleTest | null;
+    if (quizData.value.related_module) {
+        const moduleDetail = await ModuleService.detail(quizData.value.related_module as number);
+        const lessonDetail = await LessonService.detail_lesson_test(moduleDetail.lesson as number);
+        selectedLesson.value = String(lessonDetail.title);
+        selectedModule.value = moduleDetail;
+        const modules = await ModuleService.get_all_test(String(moduleDetail.lesson));
+        moduleData.value = modules;
+    } else {
+        selectedLesson.value = null;
+    }
+    // selectedLesson.value = null;
+});
+
+watch(selectedLesson, async (newLessonId) => {
+    if (newLessonId) {
+        const modules = await ModuleService.get_all_test(String(newLessonId))
+        moduleData.value = modules;
+    } else {
+        moduleData.value = [];
+        selectedModule.value = null;
+    }
+});
+
 </script>
 
 <template>
     <!-- Question Section -->
+     
     <Card>
         <CardHeader>
             <CardTitle class="flex items-center gap-2">
@@ -103,10 +146,45 @@ const saveChanges = async () => {
                 </Select>
             </div> -->
             <div>
-                
                 <label class="text-sm font-medium text-foreground mb-2 block">Question Text</label>
                 <Textarea v-model="quizData.text" placeholder="Enter your question here..."
                     class="min-h-[100px] resize-none !bg-background" />
+            </div>
+
+            <div class="space-y-3">
+                <label class="text-sm font-medium text-foreground mb-2 block">Related Lesson
+                    (Optional)</label>
+
+                <div class="text-xs text-primary/50">Select the lesson this question belongs to</div>
+                <div class="flex gap-2">
+                    <Select v-model="selectedLesson">
+                    <SelectTrigger id="question-type" class="!bg-background !text-white">
+                        <SelectValue :placeholder="selectedLesson || 'Select lesson'" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem :value="null">None</SelectItem>
+                        <SelectItem v-for="lesson in lessonData" :key="lesson.id ?? lesson.title" :value="String(lesson.id ?? '')">{{ lesson.title }}</SelectItem>
+                    </SelectContent>
+                </Select>
+                </div>
+            </div>
+
+            <!-- {{ quizData.related_module}} -->
+            <div class="space-y-3" v-show="selectedLesson !== null || quizData.related_module !== null">
+                <label class="text-sm font-medium text-foreground mb-2 block">Related Module
+                    (Optional)</label>
+
+                <div class="text-xs text-primary/50">Select the module this question relates to</div>
+                <div class="flex gap-2">
+                    <Select v-model="selectedModule" :default-value="'multiple_choice'">
+                    <SelectTrigger id="question-type" class="!bg-background !text-white">
+                        <SelectValue :placeholder="selectedModule?.title || 'Select Module'" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem v-for="module in moduleData" :key="module.id ?? module.title" :value="module.id">{{ module.title }}</SelectItem>
+                    </SelectContent>
+                </Select>
+                </div>
             </div>
             <!-- image here -->
             <div v-if="quizData.question_type === 'multiple_choice'">
@@ -153,6 +231,10 @@ const saveChanges = async () => {
 
                 <Input :placeholder="`Option ${String.fromCharCode(65 + index)}`" v-model="option.text"
                     class="flex-1" />
+                <Button v-if="true" variant="outline" size="sm" @click="updateOption(option.id)"
+                    class="text-blue-500 hover:text-blue-700">
+                    <Save class="h-4 w-4" />
+                </Button>
                 <Button :variant="option.is_correct ? 'default' : 'outline'" size="sm"
                     @click="setCorrectAnswerMc(option.id)" class="gap-1 min-w-[80px]">
                     <template v-if="option.is_correct">
@@ -164,10 +246,7 @@ const saveChanges = async () => {
                     </template>
                 </Button>
 
-                <Button v-if="true" variant="outline" size="sm" @click="updateOption(option)"
-                    class="text-blue-500 hover:text-accent/70">
-                    Save Changes
-                </Button>
+                
                 <Button v-if="true" variant="outline" size="sm" @click="removeOption(option.id)"
                     class="text-destructive hover:text-destructive">
                     <Trash2 class="h-4 w-4" />

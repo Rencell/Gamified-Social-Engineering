@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useLessonStore } from '@/stores/lesson';
+import { Spinner } from '@/components/ui/spinner';
 
 interface LessonForm {
     title: string
@@ -81,9 +82,15 @@ const fields: Array<{ key: keyof LessonForm; label: string; type: string; placeh
 
 // Function to handle saving the form data
 const lessonStore = useLessonStore();
+const loading = ref(false);
 const saveLesson = async () => {
     if (!validateForm()) return;
-    await lessonStore.createLesson(formData.value);
+    loading.value = true;
+    try {
+        await lessonStore.createLesson(formData.value);
+    } finally {
+        loading.value = false;
+    }
     open.value = false;
 };
 
@@ -154,7 +161,9 @@ function onFileChange(event: Event) {
             </div>
 
             <DialogFooter>
-                <Button @click="saveLesson">Save Lesson</Button>
+                <Button @click="saveLesson();" :disabled="loading"><span v-if="loading">
+                  <Spinner variant="white" size="sm"></Spinner></span>{{ 'Save Lesson' }}
+                </Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>

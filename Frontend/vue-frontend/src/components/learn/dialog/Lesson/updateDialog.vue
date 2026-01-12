@@ -1,4 +1,4 @@
- <script setup lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,11 +10,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Edit2, Plus, Wrench } from 'lucide-vue-next';
+import { Wrench } from 'lucide-vue-next';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useLessonStore } from '@/stores/lesson';
+import { Spinner } from '@/components/ui/spinner';
 
 interface LessonForm {
     id?: number
@@ -49,9 +50,16 @@ const fields: Array<{ key: keyof LessonForm; label: string; type: string; placeh
 
 // Function to handle saving the form data
 const lessonStore = useLessonStore();
-const saveLesson = () => {
-    lessonStore.updateLesson(props.lesson.id!, formData.value);
-    open.value = false;
+const loading = ref(false);
+const saveLesson = async () => {
+    if (loading.value) return;
+    loading.value = true;
+    try {
+        await lessonStore.updateLesson(props.lesson.id!, formData.value);
+        open.value = false;
+    } finally {
+        loading.value = false;
+    }
 };
 
 
@@ -97,7 +105,9 @@ const open = ref(false);
             </div>
 
             <DialogFooter>
-                <Button @click="saveLesson">Update Lesson</Button>
+                <Button @click="saveLesson" :disabled="loading"><span v-if="loading">
+                  <Spinner variant="white" size="sm"></Spinner></span>{{ 'Update Lesson' }}
+                </Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>

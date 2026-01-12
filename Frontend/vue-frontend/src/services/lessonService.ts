@@ -36,6 +36,8 @@ const lessonService = {
   get_latest_lesson: (): Promise<LatestLessonStatus> =>
     session.get(END_POINT + 'user-lesson-test-progress/current_lesson/').then((res) => res.data),
   get_all_test: (): Promise<Lesson_test[]> => session.get(END_POINT + 'lesson-test/').then((res) => res.data),
+  detail_lesson_test: (lessonId: number): Promise<Lesson_test> =>
+    session.get(END_POINT + `lesson-test/${lessonId}/`).then((res) => res.data),
   create_lesson_test: (module: FormData): Promise<Lesson_test> =>
     session.post(END_POINT + 'lesson-test/', module).then((res) => res.data),
   update_lesson_test: (lessonId: number, module: FormData): Promise<Lesson_test> =>

@@ -5,100 +5,20 @@ import ReviewAnswer from '@/components/Assessment/assessmentReport/review-answer
 import { useRoute, useRouter } from 'vue-router';
 import { Select, SelectContent, SelectItem, SelectItemText, SelectTrigger } from '@/components/ui/select';
 import SelectValue from '@/components/ui/select/SelectValue.vue';
+import LessonCard, { type LessonRecommendation } from '@/components/Assessment/LessonCard.vue';
 import { AssessmentService } from '@/services';
 import { useAssessmentStore } from '@/stores/assessment';
 import { useAuthStore } from '@/stores/auth';
-interface AssessmentData {
-    assessmentName: string;
-    score: number;
-    maxScore: number;
-    percentile: number;
-    riskLevel: string;
-    description: string;
-    user: {
-        name: string;
-        title: string;
-        community: string;
-        followers: number;
-        avatar: string;
-    };
-    date: string;
-    attempt: string;
-    duration: string;
-    questionCount: number;
-    credentialsVerified: boolean;
-    recommendations: string[];
-}
+import type { AssessmentRecommendedModules } from '@/services/assessmentService';
 
-// Props (you can pass real data from parent component)
-const props = defineProps<{
-    sessionData?: any; // Replace with your actual session type
-}>();
 const authStore = useAuthStore();
-// Mock data (replace with real data from props or API)
-const assessmentData = ref<AssessmentData>({
-    assessmentName: 'Uxcel Pulse',
-    score: 78,
-    maxScore: 100,
-    percentile: 1,
-    riskLevel: 'High Performance',
-    description: 'You received a score of 78. You performed better than 1% of all others that have taken this assessment.',
-    user: {
-        name: 'Tobelonia, Rencell, G',
-        title: 'Art Director',
-        community: 'COMMUNITY',
-        followers: 0,
-        avatar: '/professional-portrait.png'
-    },
-    date: 'Nov 16, 2025',
-    attempt: 'Attempt #2 (UX)',
-    duration: '25m',
-    questionCount: 25,
-    credentialsVerified: true,
-    recommendations: [
-        'Focus on user research methodologies',
-        'Explore advanced prototyping techniques',
-        'Study interaction design principles',
-        'Review design system best practices'
-    ]
-});
-
-// Generate chart bars with random heights
-const chartBars = computed(() => {
-    return Array.from({ length: 20 }, () => ({
-        height: Math.random() * 100
-    }));
-});
-
-// Functions for button actions
-const handleShare = () => {
-    console.log('Share assessment results');
-    // Implement share functionality
-};
-
-const handleSkillGraph = () => {
-    console.log('Show skill graph impact');
-    // Navigate to skill graph page
-};
-
-const handleReviewAnswers = () => {
-    console.log('Review answers');
-    // Navigate to answer review page
-};
-
-const handleClose = () => {
-    console.log('Close results');
-    // Navigate back or close modal
-};
-
-
 
 const router = useRouter();
 const route = useRoute();
 const selectedAttempt = ref('Attempt #2 (UX)');
 interface AttemptOption { value: string; label: string }
 const attemptOptions = ref<AttemptOption[]>([]);
-
+const recommended_modules = ref<AssessmentRecommendedModules[]>([]);
 const goBack = () => {
     router.push({ name: 'Assessments' })
 };
@@ -109,18 +29,45 @@ watch(selectedAttempt, (newVal) => {
 
 const assessmentStore = useAssessmentStore();
 onMounted(async () => {
-    // Fetch real assessment data here if needed
-
     const assessmentId = route.params.a_id as string;
+    const sessionId = route.params.s_id as string;
     await assessmentStore.detail(assessmentId);
     const response = await AssessmentService.assessment_report(assessmentId);
+    recommended_modules.value = await AssessmentService.fetch_recommended_modules(sessionId);
     response.forEach((element, index) => {
         attemptOptions.value.push(
             { value: element.session_id, label: `Attempt #${index + 1}` });
     });
 });
+
+const lessonRecommendations = computed<LessonRecommendation[]>(() => {
+    return (recommended_modules.value || []).map((rec) => {
+        const lesson = rec.lesson;
+        const modules = (rec.modules || []).map((m) => ({
+            id: (m.id ?? m.slug ?? m.title) as string | number,
+            title: m.title,
+            description: `Accuracy: ${Math.round((m.accuracy ?? 0) * 10) / 10}% • Quiz: ${m.content_quiz}`,
+        }));
+
+        return {
+            id: lesson.id,
+            iconUrl: typeof lesson.image === 'string' ? lesson.image : undefined,
+            title: lesson.title,
+            slug: lesson.slug,
+            instructor: 'Recommended for you',
+            description: lesson.description,
+            difficulty: 'Recommended',
+            duration: undefined,
+            rating: undefined,
+            ratingCount: undefined,
+            modules,
+        } satisfies LessonRecommendation;
+    });
+});
 </script>
 <template>
+
+   <!-- <pre>{{ recommended_modules }}</pre> -->
     <div class="min-h-screen flex justify-center bg-background text-slate-50 p-6 ">
         <div class="w-5xl">
             <div class="flex items-center justify-between mb-12 ">
@@ -144,9 +91,9 @@ onMounted(async () => {
 
                         <!-- Description -->
                         <p class="text-slate-400 mb-4 leading-relaxed">
-                            {{ assessmentData.description }}
+                            Your assessment report is ready.
                         </p>
-
+                        
                         <!-- Credentials & Date -->
                         <div class="flex items-center gap-4 mb-8 text-sm text-slate-400">
                             <div class="flex items-center gap-2">
@@ -154,7 +101,7 @@ onMounted(async () => {
                                 <span>Credentials verified</span>
                             </div>
                             <span>•</span>
-                            <span>{{ assessmentData.date }}</span>
+                            <span>—</span>
                         </div>
 
                         <!-- Attempt Selector & Actions -->
@@ -197,14 +144,14 @@ onMounted(async () => {
                             <!-- Avatar -->
                             <div class="flex justify-center">
                                 <img src="https://cdn-icons-png.flaticon.com/512/3273/3273898.png"
-                                    :alt="assessmentData.user.name"
+                                    :alt="authStore.User?.username ?? 'User'"
                                     class="w-24 h-24 rounded-full object-cover ring-2 ring-slate-700" />
                             </div>
 
                             <!-- User Info -->
                             <div class="text-center">
-                                <h3 class="font-semibold text-slate-50 mb-1">{{ authStore.User.username }}, {{ authStore.User.username }}</h3>
-                                <p class="text-sm text-slate-400">{{ assessmentData.user.title }}</p>
+                                <h3 class="font-semibold text-slate-50 mb-1">{{ authStore.User?.username }}</h3>
+                                <p class="text-sm text-slate-400">—</p>
                             </div>
 
 
@@ -230,16 +177,20 @@ onMounted(async () => {
                 <!-- Recommendations Section -->
                 <div class="mt-16 border-t border-slate-700 pt-8">
                     <h2 class="text-lg font-semibold text-slate-50 mb-3">Recommendations</h2>
-                    <p class="text-sm mb-3 text-slate-400">These personalized recommendations are based on your skill gaps. Start one now to improve your skills.</p>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div v-for="(recommendation, index) in assessmentData.recommendations" :key="index"
-                            class="flex gap-3 p-4 bg-slate-800 rounded-lg border border-slate-700">
-                            <div
-                                class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold text-white">
-                                {{ index + 1 }}
-                            </div>
-                            <p class="text-sm text-slate-300">{{ recommendation }}</p>
-                        </div>
+                    <p class="text-sm mb-3 text-slate-400">
+                        These personalized recommendations are based on your skill gaps. Start one now to improve your skills.
+                    </p>
+
+                    <div v-if="lessonRecommendations.length === 0" class="text-sm text-slate-400">
+                        No recommendations available.
+                    </div>
+
+                    <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <LessonCard
+                            v-for="lesson in lessonRecommendations"
+                            :key="String(lesson.id ?? lesson.title)"
+                            :lesson="lesson"
+                        />
                     </div>
                 </div>
             </div>

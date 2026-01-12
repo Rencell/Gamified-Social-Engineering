@@ -154,6 +154,7 @@ export const useAssessmentStore = defineStore('assessment', () => {
     try {
       const formData = new FormData()
       if (data.question_type) formData.append('question_type', data.question_type)
+      if (data.related_module) formData.append('related_module', data.related_module.toString());
       if (data.text) formData.append('text', data.text)
       if (data.image instanceof File) {
         formData.append('image', data.image)
@@ -190,7 +191,7 @@ export const useAssessmentStore = defineStore('assessment', () => {
     try {
       const formData = new FormData()
       if (data.text) formData.append('text', data.text)
-      if (data.is_correct !== undefined) formData.append('is_correct', data.is_correct.toString())
+      if (data.is_correct !== undefined) formData.append('is_correct', String(data.is_correct))
       if (data.image instanceof File) {
         formData.append('image', data.image)
       }
@@ -216,7 +217,7 @@ export const useAssessmentStore = defineStore('assessment', () => {
       const formData = new FormData()
       if (data.text) formData.append('text', data.text)
       if (data.question) formData.append('question', data.question.toString())
-      if (data.is_correct) formData.append('is_correct', data.is_correct.toString())
+      if (data.is_correct !== undefined) formData.append('is_correct', String(data.is_correct))
       if (data.image instanceof File) {
         formData.append('image', data.image)
       }

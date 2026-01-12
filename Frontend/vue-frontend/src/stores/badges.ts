@@ -7,6 +7,12 @@ export const useBadgesStore = defineStore('badges', () => {
   // State
   const badges = ref<Badge[]>([]);
   const badgesUnlocked = ref<UserBadge[]>([]);
+
+  // badge claim modal
+  const openBadgeModal = ref(false);
+  const claimedBadge = ref<Pick<Badge, 'name' | 'image'> | null>(null);
+
+  const badgesClaimable = ref<Badge[]>([]);
   const isLoading = ref(false);
 
   // Actions
@@ -25,18 +31,41 @@ export const useBadgesStore = defineStore('badges', () => {
     }
   };
 
-  const getBadgeSrc = (name: string) => {
-    // Check if unlocked
-    const isUnlocked = badgesUnlocked.value.some((b) => b.badge.name === name);
-    return `/badges/${name.replace(/\s+/g, '')}Badge${isUnlocked ? '' : '_locked'}.svg`;
+  const fetchBadgesClaimable = async () => {
+    try {
+      isLoading.value = true;
+      const response = await BadgeService.get_badge_claimable();
+      badgesClaimable.value = response;
+    } catch (error) {
+      console.error('Error fetching claimable badges:', error);
+    }
+    finally {
+      isLoading.value = false;
+    }
   };
 
+  const openClaimedBadgeModal = (badge: Pick<Badge, 'name' | 'image'>) => {
+    claimedBadge.value = { name: badge.name, image: badge.image };
+    openBadgeModal.value = true;
+  };
+
+  const closeBadgeModal = () => {
+    openBadgeModal.value = false;
+    claimedBadge.value = null;
+  }
 
   return {
     badges,
     badgesUnlocked,
+    badgesClaimable,
     isLoading,
+
+    openBadgeModal,
+    claimedBadge,
+    openClaimedBadgeModal,
+
     fetchBadges,
-    getBadgeSrc,
+    fetchBadgesClaimable,
+    closeBadgeModal,
   };
 });

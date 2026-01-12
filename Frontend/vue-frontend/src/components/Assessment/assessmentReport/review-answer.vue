@@ -6,7 +6,7 @@
         <span class="text-6xl font-bold text-slate-50">{{ score }}</span>
         <span class="text-2xl text-slate-400">/{{ totalQuestions }}</span>
     </div>
-    
+   <!-- <pre> {{ shib }}</pre> -->
     <div class="space-y-3">
       <div
         v-for="(answer, index) in shib"
@@ -36,7 +36,7 @@
               {{ answer.is_correct ? '✓' : '✗' }}
             </div>
           </div>
-
+          
           <!-- Question Content -->
           <div class="flex-1 text-left">
             <p class="text-slate-50 font-medium mb-1">{{ answer.question.text }}</p>

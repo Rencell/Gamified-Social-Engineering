@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -15,16 +15,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useLessonStore } from '@/stores/lesson';
-import type { ModuleTest } from '@/services/moduleService';
-import { Checkbox } from '@/components/ui/checkbox';
 import { useSectionStore } from '@/stores/sections';
-import { useRoute } from 'vue-router';
-import type { Section } from '@/services/sectionService';   
 import DialogClose from '@/components/ui/dialog/DialogClose.vue';
+import { Spinner } from '@/components/ui/spinner';
+import type { Section } from '@/services/sectionService';
 const lessonStore = useLessonStore();
 const sectionStore = useSectionStore();
-const route = useRoute();
-
 
 const formData = ref<Partial<Section>>({
     name: '',
@@ -50,16 +46,23 @@ const validate = () => {
 };
 
 // Function to handle saving the form data
-const saveSection = () => {
+const loading = ref(false);
+const saveSection = async () => {
+    if (loading.value) return;
     touched.value = { name: true, description: true };
     if (!validate()) return;
 
     formData.value.lesson = lessonStore.currentLesson?.id || 0;
-    sectionStore.createSection(formData.value as Section);
-    formData.value.name = '';
-    formData.value.description = '';
-    errors.value = {};
-    touched.value = { name: false, description: false };
+    loading.value = true;
+    try {
+        await sectionStore.createSection(formData.value as Section);
+        formData.value.name = '';
+        formData.value.description = '';
+        errors.value = {};
+        touched.value = { name: false, description: false };
+    } finally {
+        loading.value = false;
+    }
 };
 
 </script>
@@ -102,7 +105,14 @@ const saveSection = () => {
 
             <DialogFooter>
                 <DialogClose as-child>
-                    <Button @click="saveSection" :disabled="!validate()" :class="[{ 'opacity-50 cursor-not-allowed': !validate() }]">Save Section</Button>
+                    <Button @click="saveSection" :disabled="!validate() || loading" :class="[{ 'opacity-50 cursor-not-allowed': !validate() || loading }]">
+                        <template v-if="loading">
+                            <Spinner class="mr-2" /> Saving...
+                        </template>
+                        <template v-else>
+                            Save Section
+                        </template>
+                    </Button>
                 </DialogClose>
             </DialogFooter>
         </DialogContent>

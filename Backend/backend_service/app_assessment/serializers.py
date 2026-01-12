@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Assessment, Question, Option, AssessmentSession, AssessmentAnswer, AssessmentComplete
-
+from app_modules.serializers import ModuleTestSerializer
 
         
 class OptionSerializer(serializers.ModelSerializer):
@@ -32,6 +32,7 @@ class AssessmentAnswerSerializer(serializers.ModelSerializer):
     
     question = QuestionSerializer(read_only=True)
     selected_option = OptionSerializer(read_only=True)
+    recommended_module = ModuleTestSerializer(read_only=True)
     
     class Meta:
         model = AssessmentAnswer

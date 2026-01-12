@@ -64,11 +64,11 @@ function toggleShowHistory() {
             <h1 class="mb-8 text-4xl font-bold text-white font-display">Security Risk Score - <span class="text-yellow-500">SMS</span></h1>
             <Card class="border-[#1a2332] bg-secondary p-8 rounded-2xl">
                 <div class="mb-6 flex items-baseline gap-4">
-                    <div class="text-5xl font-bold text-white">{{ security_score }}</div>
+                    <div class="text-5xl font-bold text-white">{{ security_score || 100 }}</div>
                     <div class="text-lg text-gray-400">Security Risk Score</div>
                 </div>
                 
-                <RiskIndicator :score="security_score" :max-score="100" risk-level="low" />
+                <RiskIndicator :score="security_score || 100" :max-score="100" risk-level="low" />
                 
                 <!-- <p class="mt-6 text-sm leading-relaxed text-gray-400">{description}</p> -->
             </Card>
@@ -82,15 +82,15 @@ function toggleShowHistory() {
                 <div class="grid gap-6 grid-cols-3">
                     <div>
                         <div class="text-sm text-gray-400">Sms Sent</div>
-                        <div class="mt-2 text-3xl font-bold text-white">{{ phishingData[0]?.number_sent }}</div>
+                        <div class="mt-2 text-3xl font-bold text-white">{{ phishingData[0]?.number_sent || 0}}</div>
                     </div>
                     <div>
                         <div class="text-sm text-gray-400">Links Clicked</div>
-                        <div class="mt-2 text-3xl font-bold text-[#ff6b35]">{{ phishingData[0]?.links_clicked }}</div>
+                        <div class="mt-2 text-3xl font-bold text-[#ff6b35]">{{ phishingData[0]?.links_clicked || 0}}</div>
                     </div>
                     <div>
                         <div class="text-sm text-gray-400">Data Submitted</div>
-                        <div class="mt-2 text-3xl font-bold text-[#ef4444]">{{ phishingData[0]?.data_submitted }}</div>
+                        <div class="mt-2 text-3xl font-bold text-[#ef4444]">{{ phishingData[0]?.data_submitted || 0}}</div>
                     </div>
                 </div>
             </Card>

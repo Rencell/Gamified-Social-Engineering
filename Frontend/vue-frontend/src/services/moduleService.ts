@@ -38,6 +38,8 @@ const moduleService = {
 
   get_all: (): Promise<Module[]> =>
     session.get(END_POINT + 'module-test/').then(res => res.data),
+  detail: (moduleId: number): Promise<ModuleTest> =>
+    session.get(END_POINT + `module-test/${moduleId}/`).then(res => res.data),
   get_all_test: ( lesson_slug: string ): Promise<ModuleTest[]> =>
     session.get(END_POINT + 'module-test/lesson/', { params: { lesson_slug } }).then(res => res.data),
   get_unlocked_modules_test: (): Promise<any> => session.get(END_POINT + 'module-test/unlocked/').then((res) => res.data),

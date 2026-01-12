@@ -1,5 +1,7 @@
 import { get } from '@vueuse/core'
 import session from './api'
+import type { ModuleTest } from './moduleService'
+import type { Lesson_test } from './lessonService'
 
 export interface Option {
     id: number
@@ -18,6 +20,7 @@ export interface Question {
     order: number
     assessment: number
     options: Option[]
+    related_module?: number | null
 }
 
 export interface Assessment {
@@ -57,6 +60,7 @@ export interface AssessmentAnswer {
     question: Question;
     selected_option: Option;
     is_correct: boolean;
+    recommended_module: ModuleTest | null;  
 }
 
 export interface AssessmentReward {
@@ -65,6 +69,12 @@ export interface AssessmentReward {
     rewarded_at: string | null;
     user: number;
     assessment: number;
+}
+
+export interface AssessmentRecommendedModules {
+    
+    lesson: Lesson_test;
+    modules: ModuleTest[];
 }
 
 const END_POINT = '/api/assessment/'
@@ -93,6 +103,7 @@ const assessmentService = {
     deleteQuestion: (id: number): Promise<void> => session.delete(`${END_POINT}question/${id}/`).then(() => {}),
     
     fetch_assessment_results: (session_id: string): Promise<AssessmentAnswer[]> => session.get(`${END_POINT}session-answer/get_answers_for_session/`, { params: { session_id }}).then((res) => res.data),
+    fetch_recommended_modules: (session_id: string): Promise<AssessmentRecommendedModules[]> => session.get(`${END_POINT}session-answer/recommended-modules/`, { params: { session_id }}).then((res) => res.data),
     fetch_assessment_rewards: (assessment_id: number): Promise<AssessmentReward> => session.get(`${END_POINT}assessment-complete/get_assessment/`, { params: { assessment_id }}).then((res) => res.data),
     assessment_claim_reward: (assessment_id: number): Promise<AssessmentReward> => session.get(`${END_POINT}assessment-complete/reward_claimed/`, { params: { assessment_id }}).then((res) => res.data),
 

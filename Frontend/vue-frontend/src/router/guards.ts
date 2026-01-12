@@ -24,9 +24,14 @@ export const requireAuthenticated = async (
     });
   } else {
     await streakStore.cacheStreak();
-    if (!await authStore.User.is_admin) {
+    if (authStore.User.is_admin ) return next();
+
+    // Don't show popups during onboarding flows
+    const isOnboarding = _to.path.startsWith('/onboarding/');
+    if (!isOnboarding) {
       await popupStore.loadPopup();
     }
+
     next(
     );
   }
