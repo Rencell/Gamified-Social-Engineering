@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ 'flex-row-reverse': mcq.position == 'right' }" class="flex items-center gap-10">
+    <div :class="{ 'flex-row-reverse': mcq.position == 'right' }" class="flex flex-col md:flex-row items-center gap-10">
         <LearningImage class="h-60" :image="useImageUrl(mcq.image)!" />
         <div>
             <div class="w-sm flex flex-col gap-2">

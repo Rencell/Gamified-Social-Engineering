@@ -16,7 +16,7 @@ const emit = defineEmits(['toggleNext'])
 </script>
 
 <template>
-    <LearningSection class="flex items-center gap-4 w-lg">
+    <LearningSection class="flex items-center gap-4 w-full">
         <LearningHeader>
             {{data.title}}
         </LearningHeader>

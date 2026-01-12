@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen text-white p-4 w-xl">
+  <div class="min-h-screen text-white p-4 w-full sm:w-xl ">
     <!-- Header -->
     <Timer ref="timerRef" @time-up="toggleFinish($event)" />
 

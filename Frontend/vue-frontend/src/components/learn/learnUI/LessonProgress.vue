@@ -21,8 +21,6 @@ defineProps<{
             <Timer></Timer>3 hours
         </div>
     
-        <div class="flex gap-2 my-4 items-center text-sm text-muted-foreground">
-            <ChartColumnBig/>Advanced
-        </div>
+        
     </div>
 </template>

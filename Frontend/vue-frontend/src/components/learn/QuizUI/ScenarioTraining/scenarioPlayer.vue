@@ -44,7 +44,7 @@ const storyCount = computed(() =>
 </script>
 <template>
     <LearningContent>
-        <Timer class="w-xl" ref="timerRef" @time-up="finish($event)"/>
+        <Timer class="w-full" ref="timerRef" @time-up="finish($event)"/>
         <Story v-if="currentScenario.type == 'story'" 
         :key="currentIndex"
         :data="currentScenario"

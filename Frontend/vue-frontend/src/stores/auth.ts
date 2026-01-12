@@ -57,7 +57,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await AuthService.getUser()
       return !!response.data
-    } catch (err: unknown) {
+    } catch {
       return false
     }
   }
@@ -107,7 +107,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const loginWithGoogle = async (
-    response: any, 
+    response: string,
     router: Router,
     route: RouteLocationNormalizedLoaded,
   ) => {
@@ -123,9 +123,11 @@ export const useAuthStore = defineStore('auth', () => {
         await init()
         MUTATIONS.LOGIN_SUCCESS(router, route)
       }
-    }catch(error){
+    }catch(error: unknown){
       console.error('Login failed:', error)
       MUTATIONS.LOGIN_FAILURE()
+      // Re-throw so the caller (UI) can show a toast based on backend response.
+      throw error
     }
   }
 

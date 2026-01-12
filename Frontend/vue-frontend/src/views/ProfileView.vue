@@ -44,8 +44,8 @@ onMounted(() => {
     <div class="grid grid-cols-1 grid-rows-2 sm:grid-cols-3 sm:grid-rows-2 gap-4 min-h-[85dvh] sm:p-0 mb-20 sm:mb-0">
         <div class="row-span-2 col-span-2 sm:row-span-2 sm:col-span-1 flex flex-1">
             <Card class="flex-1 h-full">
-                <div class="ms-5">
-                    <Defence />
+                <div class="ms-5 animate-pulse">
+                    <Defence class=""/>
                 </div>
                 <CardContent class="flex justify-center items-center h-full flex-col">
                     <p class="italic font-bold text-3xl text-center">{{ authStore.User.username.toUpperCase() }}</p>

@@ -1,7 +1,7 @@
 <template>
-    <div class="min-h-screen py-10">
+    <div class="min-h-screen py-10 sm:w-auto w-full">
         <Timer ref="timerRef" @time-up="finish($event)" />
-        <div class="w-2xl rounded-lg relative min-h-[90dvh] bg-secondary border-t-4 border-t-blue-500 flex flex-col">
+        <div class="w-full sm:w-2xl rounded-lg relative min-h-[90dvh] bg-secondary border-t-4 border-t-blue-500 flex flex-col">
     
             <div v-if="answered" class="px-4 py-2">
                 <div class="mb-2 ">

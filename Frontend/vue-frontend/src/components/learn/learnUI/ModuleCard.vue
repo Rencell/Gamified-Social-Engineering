@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
 import Button from '@/components/ui/button/Button.vue';
 import learns from '/Icons/Learns.svg?url'
-import { ChevronDown, ChevronUp, Clock, LockKeyhole, Play, RotateCcw, Section, SquarePen, Target } from 'lucide-vue-next';
+import { ChevronDown, ChevronUp, Clock, LockKeyhole, Play, RotateCcw, SquarePen, Target } from 'lucide-vue-next';
 import UpdateModuleDialog from '../dialog/Lesson/Section/Module/updateModuleDialog.vue'
 import type { ModuleTest } from '@/services/moduleService';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import ProgressCircle from './ProgressCircle.vue'
 import DeleteModuleAlert from '../dialog/Lesson/Section/Module/deleteModuleAlert.vue';
 import ModuleViewDialog from '../dialog/Lesson/Section/Module/moduleViewDialog.vue'
 import { useLoadingPageStore } from '@/stores/pageLoading';
-import Badge from '@/components/ui/badge/Badge.vue';
 import type { Quiz } from '@/services/quizService';
 import { useAuthStore } from '@/stores/auth';
 
@@ -117,18 +115,21 @@ const formatTime = (time: number | undefined): string => {
                         </Button>
                     </p>
                     <!-- Details Section -->
-                    <div v-if="showDetails" class="flex gap-4 text-xs">
+                    <div v-if="showDetails" class="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 text-xs">
                         <div class="flex gap-1 items-center">
-                            <Target class="w-4 h-4 text-accent" />Accuracy: <p class="text-green-500">
-                                {{ quizProgress.toFixed(1) }}%</p>
+                            <Target class="w-4 h-4 text-accent shrink-0" />
+                            <span>Accuracy:</span>
+                            <p class="text-green-500">{{ quizProgress.toFixed(1) }}%</p>
                         </div>
                         <div class="flex gap-1 items-center">
-                            <RotateCcw class="w-4 h-4 text-accent" />
-                            Attempts: <p class="text-yellow-500">{{ quizStatus?.attempt_number || 0 }}</p>
+                            <RotateCcw class="w-4 h-4 text-accent shrink-0" />
+                            <span>Attempts:</span>
+                            <p class="text-yellow-500">{{ quizStatus?.attempt_number || 0 }}</p>
                         </div>
                         <div class="flex gap-1 items-center">
-                            <Clock class="w-4 h-4 text-accent" />Time: <p class="text-red-500">{{
-                                formatTime(quizStatus?.time_spent) }}</p>
+                            <Clock class="w-4 h-4 text-accent shrink-0" />
+                            <span>Time:</span>
+                            <p class="text-red-500">{{ formatTime(quizStatus?.time_spent) }}</p>
                         </div>
                     </div>
                 </div>
@@ -138,14 +139,12 @@ const formatTime = (time: number | undefined): string => {
                         :total_contents="module.contents_length" :content_quiz="module.content_quiz"
                         :title="module.title" :routerLink="routerLink" />
                     <Button v-if="!lockedIndex" @click="toggleShowModal" variant="ghost" size="lg"
-                        class="w-full sm:w-auto font-semibold border-2 "
+                        class="w-auto font-semibold border-2 "
                         :class="interactive ? 'border-green-500' : 'border-ternary'">
-                        <!-- <RouterLink class="flex gap-2 items-center"> -->
 
                         <Play :size="18" fill="white"></Play>
                         <p v-if="!interactive" class="font-bold">Learn</p>
                         <p v-else class="font-bold">Review</p>
-                        <!-- </RouterLink> -->
                     </Button>
                     <div v-else class="text-ternary text-sm font-semibold flex">
                         Complete the previous lessons to unlock

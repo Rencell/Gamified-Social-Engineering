@@ -174,7 +174,7 @@ async function deleteSource(id: number) {
 
 <template>
   <div class="flex flex-col items-center">
-    <div class="mt-10 border-t border-gray-800 pt-6 w-2xl ">
+    <div class="mt-10 border-t border-gray-800 pt-6 w-full sm:w-2xl px-4">
       <div class="mb-3 flex items-center justify-between">
         <p class="text-xs font-medium uppercase tracking-wider text-gray-500">
           {{ props.title ?? 'Sources' }}

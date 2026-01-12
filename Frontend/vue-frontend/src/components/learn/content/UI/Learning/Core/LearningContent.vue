@@ -1,5 +1,5 @@
 <template>
-  <div class="snap-start min-h-screen flex flex-col items-center justify-center">
+  <div class="snap-start min-h-screen flex flex-col items-center justify-center p-3">
     <div v-if="editable" class="w-full ms-10 sm:p-0">
       <div class="flex gap-2 mb-5 text-sm items-center text-accent font-bold cursor-pointer"
         @click="editable = !editable">
