@@ -39,7 +39,7 @@ defineProps({
       <span v-else>
         <LockKeyhole class="w-4 text-ternary"></LockKeyhole>
       </span>
-      <span class="font-medium hover:text-accent/40" :class="active ? 'text-accent' : 'text-secondary-foreground'">
+      <span class=" hover:text-accent/40" :class="active ? 'text-accent font-bold' : 'text-secondary- font-medium'">
         <slot></slot>
       </span>
       <span v-if="active">

@@ -82,7 +82,7 @@ const open = ref(false);
     <Dialog v-model:open="open">
         <DialogTrigger>
             <Button variant="ghost">
-                <Wrench class="size-6" />
+                <Wrench class="size-6 text-white" />
             </Button>
         </DialogTrigger>
         <DialogContent>

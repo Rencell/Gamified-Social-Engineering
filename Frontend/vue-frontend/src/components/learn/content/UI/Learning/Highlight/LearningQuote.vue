@@ -72,9 +72,9 @@ const quoteVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-green-900/20 text-slate-300 border-green-500/40',
-        info: 'bg-blue-900/20 text-slate-300 border-blue-500/40',
-        danger: 'bg-red-900/20 text-slate-300 border-red-500/40',
+        default: 'bg-green-900/20 dark:text-slate-300  border-green-500/40',
+        info: 'bg-blue-900/20 dark:text-slate-300 border-blue-500/40',
+        danger: 'bg-red-900/20 dark:text-slate-300 border-red-500/40',
       },
     },
     defaultVariants: {

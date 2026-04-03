@@ -57,7 +57,7 @@
         </div>
 
         <div v-show="loading"
-            class="absolute z-99 flex w-sm flex-col gap-5 bg-secondary text-primary p-5  rounded-xl border-accent animate-fade-in motion-preset-slide-right "
+            class="absolute z-99 flex w-sm flex-col gap-5 bg-secondary text-primary p-5  rounded-xl border-accent animate-fade-in motion-preset-slide-right tooltip-panel"
             :class="{ 'ms-10': currentArea?.position?.includes('right') || !currentArea?.position }"
             style="box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;"
             :style="getPositionStyle(currentArea)">
@@ -133,6 +133,10 @@ const image = ref(props.image);
 const loading = ref(false);
 const addHotspot = ref(false);
 
+const isMobile = computed(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(max-width: 640px)').matches;
+});
 
 async function handleUploadImage() {
     await imageTool.uploadImage(
@@ -203,6 +207,9 @@ const currentArea = computed(() => {
 });
 
 const getPositionStyle = (area: TooltipData | null) => {
+    // If we're centering the tooltip on mobile, don't apply hotspot anchor styles.
+    if (isMobile.value) return {};
+
     if (!area) return {};
 
     const baseStyle = { top: `${area.y}px`, left: `${area.x}px` };
@@ -264,3 +271,20 @@ const canMoveDown = computed(() => {
     return index < props.siblings.length - 1;
 });
 </script>
+
+<style scoped>
+/* On small screens put the tooltip in the center of the viewport */
+@media (max-width: 640px) {
+  .tooltip-panel {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: min(92vw, 420px);
+    max-height: 80vh;
+    overflow: auto;
+    margin-left: 0 !important; /* override ms-10 */
+    z-index: 9999;
+  }
+}
+</style>

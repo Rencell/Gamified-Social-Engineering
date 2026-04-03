@@ -52,7 +52,7 @@ const config = computed(() => riskConfig[props.riskLevel]);
 <template>
   <div class="relative">
     <!-- Background bar -->
-    <div class="flex gap-2 h-12 overflow-hidden bg-[#1a2332]">
+    <div class="flex gap-2 h-12 overflow-hidden dark:bg-[#1a2332]">
       <!-- Loop through riskConfig -->
       <div
         v-for="(risk, key) in riskConfig"
@@ -67,7 +67,7 @@ const config = computed(() => riskConfig[props.riskLevel]);
           v-if="percentage >= risk.range[0] && percentage <= risk.range[1]"
           class="absolute inset-0 flex items-center justify-center"
         >
-          <span :class="`text-xs font-bold text-black`">{{ risk.label }}</span>
+          <span class="text-xs font-bold">{{ risk.label }}</span>
         </div>
       </div>
     </div>
@@ -77,7 +77,7 @@ const config = computed(() => riskConfig[props.riskLevel]);
       class="absolute -bottom-2 -translate-x-1/2 rotate-180 transform"
       :style="{ left: `${percentage}%` }"
     >
-      <div class="h-0 w-0 border-l-[8px] border-r-[8px] border-t-[12px] border-l-transparent border-r-transparent border-t-white" />
+      <div class="h-0 w-0 border-l-[8px] border-r-[8px] border-t-[12px] border-l-transparent border-r-transparent border-t-blue-400" />
     </div>
   </div>
 </template>

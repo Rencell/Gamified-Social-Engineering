@@ -23,9 +23,12 @@ export interface ModuleTest {
 
 export interface ModuleSource {
   id: number;
-  module_test: number;
-  url: string;
+  module: number;
   title: string;
+  url: string;
+  author: string[];
+  date: Date | string | null;
+  publisher: string;
 }
 
 const END_POINT = "/api/modules/";

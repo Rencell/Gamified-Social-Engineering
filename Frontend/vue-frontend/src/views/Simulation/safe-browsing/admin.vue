@@ -27,14 +27,14 @@ onMounted(async () => {
 </script>
 
 <template>
-    <h1 class="mb-8 text-4xl font-bold text-white font-display">
+    <h1 class="mb-8 text-4xl font-bold font-display">
         Safe Browsing
     </h1>
 
     <section class="mx-auto max-w-7xl py-8 ">
         <!-- Key Metrics -->
         <div class="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card class="bg-card">
+            <Card>
                 <CardHeader class="pb-3">
                     <CardTitle class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                         <Mail class="h-4 w-4" />
@@ -47,7 +47,7 @@ onMounted(async () => {
                 </CardContent>
             </Card>
 
-            <Card class="bg-card">
+            <Card class="">
                 <CardHeader class="pb-3">
                     <CardTitle class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                         <MousePointer class="h-4 w-4" />
@@ -60,7 +60,7 @@ onMounted(async () => {
                 </CardContent>
             </Card>
 
-            <Card class="bg-card">
+            <Card class="">
                 <CardHeader class="pb-3">
                     <CardTitle class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                         <Users class="h-4 w-4" />
@@ -73,7 +73,7 @@ onMounted(async () => {
                 </CardContent>
             </Card>
 
-            <Card class="bg-card">
+            <Card class="">
                 <CardHeader class="pb-3">
                     <CardTitle class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                         <Database class="h-4 w-4" />

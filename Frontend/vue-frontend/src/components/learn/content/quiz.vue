@@ -71,12 +71,13 @@ function changeQuestionType(newType: QuizType) {
 
 function deleteQuestion(index: number) {
     if (Question.value.props.length > 1) {
-        alert(index)
         Question.value.props.splice(index, 1); 
     } else {
         alert("You must have at least one question.");
     }
 }
+const here = computed(() => contentStore.test)
+
 </script>
 <template>
     <LearningContent>

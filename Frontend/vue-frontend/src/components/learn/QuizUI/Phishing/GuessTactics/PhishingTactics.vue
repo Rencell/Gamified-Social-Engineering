@@ -105,8 +105,11 @@ const triggerWhy = ref(false)
                 <div class="p-5  bg-white rounded-lg border-1 border-black/40 shadow-xl motion-preset-fade">
                     <div class="py-4 text-black text-sm flex flex-col gap-3">
                         <template v-for="value in currentQuestion.content" :key="value">
-                            <a v-if="value.charAt(0) === '#'" href="#"
-                                 class="bg-yellow-400 text-black px-4 py-2 w-fit  rounded">
+                            <a v-if="value.charAt(0) === '#'"
+                               :href="currentQuestion.link"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="bg-yellow-400 text-black px-4 py-2 w-fit rounded">
                                 {{ value.trim().substring(1) }}
                             </a>
 

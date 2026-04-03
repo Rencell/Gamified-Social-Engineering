@@ -5,11 +5,25 @@ import Cowntent from '@/components/learn/content/cowntent.vue'
 import { useModuleStore } from './module'
 import type { QuizQuestion } from '@/services/contentService'
 import Citation from '@/components/learn/content/UI/Learning/Highlight/Citation.vue'
+import type { QuizType } from '@/components/learn/QuizUI/QuizRegistry'
+import { toast } from 'vue-sonner'
 
 export const useContentStore = defineStore('Content', () => {
   const moduleStore = useModuleStore()
   const contents = ref<any[]>([])
   const components = ref<{ id: number; component: any }[]>([])
+  const test = ref<any>(null)
+
+
+  const toast_notification = (message: string) => {
+    toast.success(message, {
+      action: {
+        label: 'Close',
+        onClick: () => console.log('Closed notification'),
+      },
+      position: 'top-right',
+    })
+  }
 
   const fetchContents = async (moduleId: number) => {
     try {
@@ -146,8 +160,24 @@ export const useContentStore = defineStore('Content', () => {
 
   }
 
+  const generateQuizAI = async (moduleId: number, quiz: QuizType, total: number) => {
+    try {
+      const response = await ContentService.generate_quiz(moduleId, quiz, total)
+      if(contentItems.value) {
+        response.output_text.forEach((newQuizItem: any) => {
+          contentItems.value.props.push(newQuizItem)
+        })
+      }
+      console.log('Quiz generated:', response.output_text)
+      toast_notification('Quiz generated successfully!')
+    } catch (error) {
+      console.error("Failed to generate quiz:", error);
+    }
+  }
+
   return {
     contents,
+    test,
     contentItems,
     fetchContents,
     fetchContentQuiz,
@@ -156,5 +186,6 @@ export const useContentStore = defineStore('Content', () => {
     createContent,
     updateContentsQuiz,
     handleReorderComponent,
+    generateQuizAI
   }
 })

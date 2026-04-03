@@ -27,7 +27,7 @@
                                         </div>
                                         <div class="flex justify-between">
                                             <p>Passing Score:</p>
-                                            <p class="text-accent">75%</p>
+                                            <p class="text-accent">{{useContentStore().contentItems.pass_rate}}%</p>
                                         </div>
                                         <div class="flex justify-between">
                                             <p>Questions:</p>

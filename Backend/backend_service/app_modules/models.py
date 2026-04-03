@@ -75,9 +75,13 @@ class ModuleTest(models.Model):
 
 class ModuleSource(models.Model):
     module = models.ForeignKey(ModuleTest, on_delete=models.CASCADE, related_name="sources")
+
     title = models.CharField(max_length=255)
     url = models.URLField()
-    
+    author = models.JSONField(default=dict, blank=True)  
+    date = models.DateField(null=True, blank=True)
+    publisher = models.CharField(max_length=255, blank=True, default="")
+
     def __str__(self):
         return self.title
 

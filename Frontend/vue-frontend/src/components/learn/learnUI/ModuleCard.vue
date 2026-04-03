@@ -85,7 +85,7 @@ const formatTime = (time: number | undefined): string => {
         <div class="relative grow my-2 p-2 flex items-center rounded-xl bg-secondary gap-6"
             :class="highlight && sectionIndex === 0 ? 'border-3 border-accent' : ''">
             <div v-show="props.highlight && sectionIndex === 0"
-                class="absolute -top-5 right-1/2 bg-accent p-3 rounded-lg animate-bounce font-bold text-sm">
+                class="absolute -top-5 right-1/2 bg-accent p-3 rounded-lg animate-bounce font-bold text-sm text-white">
                 Start
 
                 <div class="w-3 h-3 bg-accent absolute top-9.5 left-1/2 transform -translate-x-1/2 rotate-132"></div>
@@ -140,7 +140,7 @@ const formatTime = (time: number | undefined): string => {
                         :title="module.title" :routerLink="routerLink" />
                     <Button v-if="!lockedIndex" @click="toggleShowModal" variant="ghost" size="lg"
                         class="w-auto font-semibold border-2 "
-                        :class="interactive ? 'border-green-500' : 'border-ternary'">
+                        :class="interactive ? 'dark:border-green-500 border-green-700' : 'border-ternary'">
 
                         <Play :size="18" fill="white"></Play>
                         <p v-if="!interactive" class="font-bold">Learn</p>

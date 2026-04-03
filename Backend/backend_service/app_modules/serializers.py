@@ -20,7 +20,6 @@ class ModuleTestSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_content_quiz(self, obj):
-        # Get the first related ContentQuiz object and return its `type`
         first_quiz = obj.content_quiz.first()
         return first_quiz.type if first_quiz else None
     
@@ -36,6 +35,7 @@ class ModuleTestSerializer(serializers.ModelSerializer):
         return progress.accuracy if progress else 0.0
 
 class ModuleSourceSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = ModuleSource
         fields = '__all__'

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-2xl mx-auto space-y-5">
+  <div class="w-full sm:w-2xl mx-auto space-y-5">
     
     <ProgressHeader 
       :length="questions.length"

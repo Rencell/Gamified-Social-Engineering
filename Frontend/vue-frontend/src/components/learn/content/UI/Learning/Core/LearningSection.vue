@@ -4,7 +4,6 @@ import EditableCard from '../EditableCard.vue'
 import { useEditableText } from '@/composables/useEditableText';
 import type { Content } from '@/services/contentService';
 import type { LearningType } from '../../learningRegistry';
-import Citation from '../Highlight/Citation.vue';
 
 const emit = defineEmits(['signalDelete', "addComponent"]);
 
@@ -39,7 +38,7 @@ const { editable, deleteComponent, reorderComponent } = useEditableText(null,emi
 <template>
 
 
-    <div class="flex flex-col w-full sm:w-2xl my-2 text-gray-200 p-2 sm:p-0"
+    <div class="flex flex-col w-full sm:w-2xl my-2 dark:text-gray-200 text-slate-800 p-2 sm:p-0"
       :class="!editable ? 'ms-0 animate-parent' : 'ms-5 '">
       
       <editable-card 

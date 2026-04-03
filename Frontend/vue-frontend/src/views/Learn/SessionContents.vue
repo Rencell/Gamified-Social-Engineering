@@ -104,7 +104,7 @@ const sectionModules = computed(() => {
       <div>Learn</div>
       <ChevronRight></ChevronRight>
       <RouterLink :to="{ name: 'Learn-Phishing', params: { lessonId: route.params.lessonId } }">
-        {{ route.params.lessonId }}
+        <span class="text-accent">{{ route.params.lessonId }}</span>
       </RouterLink>
       <ChevronRight></ChevronRight>
       <div>{{sectionStore.selectedSection?.name}}</div>

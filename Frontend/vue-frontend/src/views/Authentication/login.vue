@@ -21,7 +21,7 @@ function goToAdmin() {
     
     <div class="w-full max-w-md space-y-8">
       <div class="space-y-3 text-center font-display">
-        <h2 class="text-3xl font-bold text-white">Welcome Back</h2>
+        <h2 class="text-3xl font-bold">Welcome Back</h2>
         <p class="text-slate-400 font-semibold text-sm">Sign in to your account</p>
       </div>
 
@@ -35,7 +35,7 @@ function goToAdmin() {
           <div class="w-full border-t border-slate-700"></div>
         </div>
         <div class="relative flex justify-center text-sm">
-          <span class="bg-background px-2 text-white font-bold">Or continue with</span>
+          <span class="bg-background px-2 font-bold">Or continue with</span>
         </div>
       </div>
 
@@ -55,11 +55,11 @@ function goToAdmin() {
     
     <p class="text-xs text-slate-400 text-center">
       By continuing, you agree to our
-      <a href="#" class="text-white hover:underline">
+      <a href="#" class="font-bold hover:underline">
         Terms of Service
       </a>
       and
-      <a href="#" class="text-white hover:underline">
+      <a href="#" class="font-bold hover:underline">
         Privacy Policy
       </a>
     </p>

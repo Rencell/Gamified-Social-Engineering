@@ -72,11 +72,11 @@ const { editable, my_text, updateProps, deleteComponent, addComponent, reorderCo
         ]">
           <CardContent class="flex gap-3 items-center">
             <div>
-              <p class="w-10 h-10 text-xs bg-ternary rounded-full flex justify-center items-center">
+              <p class="w-10 h-10 text-xs bg-ternary text-white rounded-full flex justify-center items-center">
                 {{ option.id }}
               </p>
             </div>
-            <p class="font-bold text-lg text-white/70">{{ option.text }}</p>
+            <p class="font-bold text-lg dark:text-white/70 ">{{ option.text }}</p>
           </CardContent>
         </Card>
       </div>

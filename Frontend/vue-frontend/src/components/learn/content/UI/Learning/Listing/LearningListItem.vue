@@ -3,8 +3,8 @@
     <div class="flex items-center">
       <span class="flex-shrink-0 inline-block w-3 h-3 rounded-full bg-[#299F69] mr-6"></span>
       <div :class="[
-        'text-gray-200 font-medium',
-        size === 'lg' ? 'text-base/loose' : 'text-sm/loose'
+        'dark:text-gray-200 text-slate-800 font-medium',
+        size === 'lg' ? 'text-base/loose' : 'text-base/loose'
       ]">
         <slot></slot>
         <learning-bold :text="my_text.text" />

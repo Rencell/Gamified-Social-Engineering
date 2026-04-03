@@ -83,11 +83,10 @@ const getCircleClass = (id: string) => {
 
         <!-- Icon Section -->
         
-        <div class="flex items-center justify-center space-x-4 mb-6 ">
+        <div v-if="useImageUrl(currentQuestion.image)" class="flex items-center justify-center space-x-4 mb-6 ">
             <LearningImage :image="useImageUrl(currentQuestion.image) as string" />
         </div>
-
-        <div class="w-full h-10">
+        <div class="w-full">
             <div class="text-2xl font-semibold mb-2 font-sans">
                 <Typewriter :text="currentQuestion.question" @animationEnd="onAnimationEnd" :delay="30" />
             </div>
@@ -104,10 +103,10 @@ const getCircleClass = (id: string) => {
                 ]" @click="handleAnswerSelect(option.id)">
                     <div class="flex items-center gap-3">
                         <div :class="[
-                            'w-8 h-8 rounded-full flex items-center justify-center font-bold',
+                            'rounded-full flex items-center justify-center font-bold',
                             getCircleClass(option.id)
                         ]">
-                            {{ option.id }}
+                           <p class="w-8 h-8 flex items-center justify-center"> {{ option.id }}</p>
                         </div>
                         <span class="text-slate-200 font-bold">{{ option.text }}</span>
                     </div>

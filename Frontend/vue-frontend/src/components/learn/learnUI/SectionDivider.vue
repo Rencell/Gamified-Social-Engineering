@@ -33,7 +33,7 @@ const isSectionComplete = computed(() => {
     <div class="flex flex-col gap-2 font-display my-5">
         <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3 md:gap-0">
             <div class="font-semibold flex items-center gap-3 flex-wrap">
-                <div class="size-6 md:size-7 rounded-full bg-accent/50 flex justify-center items-center ">{{ index + 1 }}</div>
+                <div class="size-6 md:size-7 rounded-full bg-accent/50 flex justify-center items-center text-white">{{ index + 1 }}</div>
                 <p class="text-lg md:text-xl break-words">{{ section.name }}</p>
                 <Badge v-if="isSectionComplete" variant="success">Completed</Badge>
             </div>

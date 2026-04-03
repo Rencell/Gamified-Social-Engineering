@@ -4,11 +4,13 @@ import { RouterLink } from 'vue-router';
 import Button from '@/components/ui/button/Button.vue';
 import { ref } from 'vue';
 import { useModuleStore } from '@/stores/module';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const moduleStore = useModuleStore();
 const hideSideBar = ref(false);
 
-
+// Theme toggle is handled by <ThemeToggle />
+const THEME_STORAGE_KEY = 'theme'
 </script>
 
 <template>
@@ -20,11 +22,14 @@ const hideSideBar = ref(false);
                     <RouterLink :to="{ name: 'Learn-Phishing' }" v-show="!hideSideBar"
                         class="p-4 flex gap-2 text-sm items-center text-accent border-b-1 border-background">
 
-                        <ArrowLeft :size="15"></ArrowLeft> Back
+                        <ArrowLeft :size="15"></ArrowLeft> <p class="font-bold">Back</p>
                     </RouterLink>
                 </Transition>
-
-                <div class="p-4 animate-in" @click="hideSideBar = !hideSideBar ">
+                <div class="p-4 animate-in flex gap-3 items-center" @click="hideSideBar = !hideSideBar ">
+                    <ThemeToggle
+                        class="h-9 w-9"
+                        :storage-key="THEME_STORAGE_KEY"
+                    />
                     <PanelRightClose v-if="hideSideBar" />
                     <PanelLeftClose v-else />
                 </div>
