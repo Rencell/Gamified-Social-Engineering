@@ -1,0 +1,88 @@
+<script setup lang="ts">
+import { Card } from '@/components/ui/card';
+import RiskIndicator from '@/components/simulation/riskIndicator.vue'
+import { SimulationService } from '@/services';
+import { computed, onMounted, ref } from 'vue';
+import type {  GoPhishEvent, GoPhishSMS } from '@/services/simulationService';
+import {Clock, Mail, ShieldAlert } from 'lucide-vue-next';
+import DialogSimulation from '@/components/simulation/dialogSimulation.vue'
+import Loading from '@/components/loading.vue';
+import KpiMetrics from '@/components/simulation/UI/KpiMetrics.vue'
+import SimulationHistoryTable from '@/components/simulation/UI/SimulationHistoryTable.vue';
+
+const phishingData = ref<GoPhishSMS[]>([])
+const eventsData = ref<GoPhishEvent[]>([])
+const filter_type_phone = computed(() => eventsData.value.filter(event => event.type === 'phone'))
+
+const isOpen = ref(false);
+function toggleDialog(phone: string) {
+    isOpen.value = !isOpen.value;
+    toggleConsent(phone);
+}
+const toggleConsent = (async (phone: string) => {
+    try {
+        await SimulationService.update_phone_consent(phone);
+    } catch (error) {
+        console.error('Error updating consent:', error);
+    }
+});
+
+const isLoading = ref(true);
+onMounted(async () => {
+    // Fetch simulation data when the component is mounted
+    isLoading.value = true;
+    try {
+        const response = await SimulationService.get_all_sms();
+        const consent = await SimulationService.get_consent();
+        phishingData.value = response;
+        eventsData.value = await SimulationService.get_events() as unknown as GoPhishEvent[];
+        isOpen.value = consent.phone_consent;
+    } catch (error) {
+        console.error('Error fetching simulation data:', error);
+    } finally {
+        isLoading.value = false;
+    }
+});
+
+const security_score = computed(() => {
+    if (phishingData.value.length > 0) {
+        return phishingData.value[0].security_score;
+    }
+    return 0; // Default score if data is not available
+});
+
+const showHistory = ref(false);
+function toggleShowHistory() {
+    showHistory.value = !showHistory.value;
+}
+
+interface Summary {
+    label: string;
+    value: number;
+}
+
+const summary = computed<Summary[]>(() => [
+    { label: 'SMS Sent', value: phishingData.value[0]?.number_sent ?? 0 },
+    { label: 'Links Clicked', value: phishingData.value[0]?.links_clicked ?? 0 },
+    { label: 'Data Submitted', value: phishingData.value[0]?.data_submitted ?? 0 },
+]);
+
+
+
+</script>
+
+<template>
+<!--     
+    <Button @click="toggleshit">Toggle Dialog></Button> -->
+    <div class="mx-auto max-w-7xl space-y-12 font-display"
+        :class="{ 'blur-md brightness-50': !isOpen }">
+       
+        <KpiMetrics :phishingData="summary" title="Vishing" :security_score="security_score"/>
+        
+        <SimulationHistoryTable :emails="filter_type_phone" title="Vishing History"/>
+    </div>
+
+    <div v-if="isLoading" class="absolute inset-0 flex flex-col items-center justify-center space-y-4">
+        <Loading></Loading>
+    </div>
+</template>

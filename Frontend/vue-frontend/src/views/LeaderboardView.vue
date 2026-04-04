@@ -53,14 +53,14 @@ leaderboard();
       class="h-[80dvh] w-full bg-[#3635b7] rounded-2xl flex justify-center bg-top bg-cover bg-center bg-no-repeat"
       :style="{ backgroundImage: `url(${background})` }"
     >
-      <div class="flex items-end">
+      <div class="flex items-end text-white">
         <!-- Top 2 -->
         <div  class="flex flex-col items-center">
           <img v-if="topThree[1]" :src="`/levels/badge${topThree[1].level}.svg`" class="w-16 popup-animate delay-4" alt="" />
           <img v-if="topThree[1]" :src="RobotSilver" class="relative w-20 scale-120 popup-animate delay-2" alt="" />
           <div class="relative flex items-center justify-center flex-col">
             <img :src="silver" alt="" />
-            <div class="absolute text-center">
+            <div class="absolute text-center ">
               <p class="text-6xl font-bold">2</p>
               <p class="text-sm font-bold">{{ topThree[1] ? topThree[1].user_name : '?' }}</p>
               <p class="text-xs opacity-50">{{ topThree[1] ? topThree[1].exp : 0}} XP</p>

@@ -1,3 +1,4 @@
+import { showExpToast } from '@/components/ui/sonner/ExpToast/ExpToast'
 import popupService, { type Popup, type PopupToday } from '@/services/popupService'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
@@ -13,6 +14,7 @@ export const usePopupStore = defineStore('pagePopup', () => {
   }
   const closePopup = () => {
     openPopupModal.value = false
+    showExpToast();
   }
 
   const loadPopup = async () => {

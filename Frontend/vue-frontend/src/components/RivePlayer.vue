@@ -29,6 +29,7 @@ onMounted(async () => {
     return; // No avatar src available; skip initializing Rive
   }
 
+  
   riveInstance = new Rive({
     src: String(avatarSrc.avatarfile),
     canvas: canvasRef.value,

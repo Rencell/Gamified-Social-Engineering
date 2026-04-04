@@ -258,7 +258,7 @@ const isLevelElegible = computed(() => {
                                     </template>
                                     <template v-else>
                                         <Input v-model.number="editableAssessment!.question_count" type="number"
-                                            class="w-20 h-6 text-sm" min="1" />
+                                            class="w-20 h-6 text-sm" min="1" readonly />
                                         <span class="text-sm">questions</span>
                                     </template>
                                 </div>
@@ -456,7 +456,7 @@ const isLevelElegible = computed(() => {
                         </div>
 
                         <div
-                            class="border border-border rounded-lg p-6 bg-background/50 space-y-4 sticky top-0 self-start">
+                            class="border border-border rounded-lg p-6 bg-secondary/50 space-y-4 sticky top-0 self-start">
                             <div class="w-full aspect-square rounded-lg bg-gradient-to-br flex items-center justify-center border"
                                 :style="{ backgroundColor: isEditing ? editableAssessment?.bg : assessment.bg }">
                                 <img :src="String(isEditing ? editableAssessment?.image : assessment.image)"

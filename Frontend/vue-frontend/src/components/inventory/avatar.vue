@@ -32,7 +32,7 @@ const isBackgroundEquipped = (item: string) => {
         <div v-if="isOpen">
             <hr>
             <div class="grid grid-cols-2 md:grid-cols-4 sm:grid-cols-3 gap-3 md:gap-6 pt-5">
-                <div v-for="(value, index) in inventory_items" :key="index" class="p-2 space-y-4 bg-secondary rounded-lg">
+                <div v-for="(value, index) in inventory_items" :key="index" class="shadow-xl border-1 p-2 space-y-4 bg-secondary rounded-lg">
 
                     <div>
                         <img :src="String(value.item.image)" class="rounded-lg h-45 w-full object-cover object-top" alt="">
@@ -47,10 +47,10 @@ const isBackgroundEquipped = (item: string) => {
                     </div>
 
                     <div>
-                        <Button class="w-full bg-background" @click="cosmeticStore.setCosmetic(value); cosmeticStore.toast_notification('Inventory has been updated')" :class="[
+                        <Button class="w-full bg-ternary" @click="cosmeticStore.setCosmetic(value); cosmeticStore.toast_notification('Inventory has been updated')" :class="[
                             value.item.type === 'avatar'
-                                ? (isAvatarEquipped(value.item.name) ? 'bg-accent/20' : 'text-white')
-                                : (isBackgroundEquipped(value.item.name) ? 'bg-accent/20' : 'text-white')
+                                ? (isAvatarEquipped(value.item.name) ? 'dark:bg-accent/20 bg-accent' : 'text-white')
+                                : (isBackgroundEquipped(value.item.name) ? 'dark:bg-accent/20 bg-accent' : 'text-white')
                         ]">
                             <p>
                                 {{

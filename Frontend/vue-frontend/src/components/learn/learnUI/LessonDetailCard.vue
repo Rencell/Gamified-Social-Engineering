@@ -41,7 +41,7 @@ const props = defineProps<Props>()
 
 const bgDefined = () => {
     if (props.locked) {
-        return 'bg-secondary/30 border-[#35d1ac] ';
+        return 'dark:bg-secondary/30 bg-black/20 border-[#35d1ac] ';
     }
 
     if (props.bg) {
@@ -89,7 +89,7 @@ const save_objectives = async () => {
             <div>
                 <DeleteAlert :lesson-id="lessonStore.currentLesson?.id" />
                 <UpdateDialog v-if="lessonStore.currentLesson" :lesson="lessonStore.currentLesson" />
-            </div>
+            </div>  
         </div>
         <!-- images -->
         <div class="flex justify-center py-3 lg:py-6 grow-0 shrink-0 relative">
@@ -97,7 +97,7 @@ const save_objectives = async () => {
                 <img :class="['object-scale-down mx-auto w-50 sm:w-75 relative z-20', locked ? 'grayscale-100' : '']"
                     :src="image ? String(image) : '/Human.webp'" alt="">
 
-                <div class="size-50 bg-white absolute rounded-full blur-2xl opacity-30">
+                <div class="size-50 dark:bg-white bg-black absolute rounded-full blur-2xl opacity-50">
 
                 </div>
             </div>
@@ -105,7 +105,7 @@ const save_objectives = async () => {
 
         <!-- Text -->
         <div class="flex flex-col justi-between grow">
-            <h2 class="text-center font-bold text-2xl my-3">{{ title }}</h2>
+            <h2 class="text-center font-bold text-2xl my-3 text-white">{{ title }}</h2>
             <p class="text-center text-gray-400 mb-2 text-xs font-bold">{{ description }}</p>
         </div>
 
@@ -114,7 +114,7 @@ const save_objectives = async () => {
         <div class="border-t border-ternary pt-4">
             <button @click="expandedObjectives = !expandedObjectives"
                 class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-background/50 transition-colors text-left cursor-pointer">
-                <span class="font-semibold">Module Objectives</span>
+                <span class="font-semibold text-white">Module Objectives</span>
                 <ChevronDown :size="20" :class="`transition-transform ${expandedObjectives ? 'rotate-180' : ''}`" />
             </button>
 

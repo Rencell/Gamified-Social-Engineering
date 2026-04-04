@@ -31,6 +31,9 @@ import onboarding_slide2 from '@/components/onboarding/slide2.vue'
 import onboarding_slide3 from '@/components/onboarding/slide3.vue'
 import onboarding_slide4 from '@/components/onboarding/slide4.vue'
 
+import WsTestView from '@/views/WsTestView.vue'
+import VishingSimulation from '@/views/Simulation/VishingSimulation.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -189,6 +192,12 @@ const router = createRouter({
       component: SmsSimulation,
     },
     {
+      path: '/vishing-simulation',
+      name: 'vishing-simulation',
+      beforeEnter: requireAuthenticated,
+      component: VishingSimulation,
+    },
+    {
       path: '/onboarding',
       name: 'Onboarding',
       beforeEnter: requireAuthenticated,
@@ -215,6 +224,11 @@ const router = createRouter({
       beforeEnter: requireAuthenticated,
       component: onboarding_slide4,
       meta: { layout: 'fullscreen' },
+    },
+    {
+      path: '/ws-test',
+      name: 'WsTest',
+      component: WsTestView,
     },
     // Catch-all 404 route (place at the very end)
     {

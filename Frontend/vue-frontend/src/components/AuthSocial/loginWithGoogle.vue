@@ -69,9 +69,9 @@ const toast_alert = () => {
 <template>
   
   <button @click="login"
-    class="border-1 rounded-full p-2 py-3 bg-green-500/50 font-semibold text-sm flex justify-center items-center gap-2 cursor-pointer hover:scale-95 transition-all ">
+    class="border-1 rounded-full p-2 py-3 dark:bg-green-500/50 bg-green-800  font-semibold text-sm flex justify-center items-center gap-2 cursor-pointer hover:scale-95 transition-all ">
     <img src="https://upload.wikimedia.org/wikipedia/en/d/d2/Cavite_State_University_%28CvSU%29.png" class="size-6"
       alt="">
-    {{ buttonLabel }}
+    <p class="text-white font-display font-bold">{{ buttonLabel }}</p>
   </button>
 </template>

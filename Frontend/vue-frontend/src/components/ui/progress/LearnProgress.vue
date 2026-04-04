@@ -54,7 +54,7 @@ const bg = 'bg-violet-500'
       </ProgressIndicator>
 
 
-      <div class="text-sm absolute top-0 w-full font-bold text-primary text-center">
+      <div class="text-sm absolute top-0 w-full font-bold text-white text-center">
         {{ UnlockedModules  }} / {{ moduleCount }}
       </div>
     </ProgressRoot>

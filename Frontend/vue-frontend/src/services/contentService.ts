@@ -33,6 +33,10 @@ export interface QuizQuestion {
     pass_rate?: number;
 }
 
+export interface QuizGenerateAI{
+    prompt: any,
+    output_text: any
+}
 
 const END_POINT = '/api/contents/'
 
@@ -56,6 +60,10 @@ const contentService = {
     update_quiz: (quizId: number, data: QuizQuestion): Promise<QuizQuestion> => session.put(END_POINT + `content-quiz/${quizId}/`, data).then((res) => res.data),
     uploadQuizImage: (formData: FormData): Promise<ContentQuizImage> => session.post(END_POINT + 'content-quiz-image/', formData, {
     }).then((res) => res.data),
+
+    //Quiz generation
+    generate_quiz: (moduleId: number, quiz: QuizType, total: number): Promise<QuizGenerateAI> =>
+        session.post(END_POINT + 'content-items/generate_quiz_items/', { moduleId, quiz, total }).then((res) => res.data),
 }
 
 export default contentService

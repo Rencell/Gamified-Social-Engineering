@@ -93,7 +93,7 @@ const canMoveDown = computed(() => {
   <div v-if="fullscreen" class="fixed inset-0 bg-black/90 flex items-center justify-center z-50" @click="toggleFullscreen">
     <img :src="previewUrl ?? undefined" alt="Fullscreen image" class="max-w-full max-h-full object-contain" />
   </div>
-  <div class="relative mb-5 w-full bg-background p-2 sm:p-3 rounded-xl">
+  <div class="relative mb-5 w-full dark:bg-background bg-gray-300 p-2 sm:p-3 rounded-xl">
     <img
       v-if="previewUrl"
       :src="previewUrl"

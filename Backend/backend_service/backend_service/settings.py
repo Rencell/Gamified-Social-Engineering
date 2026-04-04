@@ -1,3 +1,5 @@
+#python 3.12.6
+
 from dotenv import load_dotenv
 from pathlib import Path
 import os
@@ -66,6 +68,7 @@ INSTALLED_APPS = [
     
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
+    "channels"
 ]
 
 MIDDLEWARE = [
@@ -100,7 +103,23 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend_service.wsgi.application'
+ASGI_APPLICATION = "backend_service.asgi.application"
 
+CHANNEL_LAYERS = {
+    "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
+}
+
+# WebSocket settings (Channels)
+# These are separate from CORS/CSRF. Browsers send an `Origin` header for WS.
+# Keep this in sync with your SPA origins.
+WS_ALLOWED_ORIGINS = [
+    o.strip()
+    for o in os.getenv("WS_ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+    if o.strip()
+]
+
+# If True, require an authenticated Django session user for WS connections.
+WS_REQUIRE_AUTH = os.getenv("WS_REQUIRE_AUTH", "False").lower() == "true"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -316,3 +335,8 @@ GOPHISH_VERIFY_SSL = os.getenv("GOPHISH_VERIFY_SSL", "true").lower() in ("1","tr
 
 IPROG_SMS_API_TOKEN = os.getenv("IPROG_SMS_API_TOKEN", "1231asd1")
 IPROG_SMS_BASE_URL = os.getenv("IPROG_SMS_BASE_URL", "https://www.iprogsms.com/api/v1/sms_messages")
+
+# OpenAI (server-side only)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")

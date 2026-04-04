@@ -18,6 +18,7 @@ import Index from './components/PopupTypes/index.vue'
 import { usePopupStore } from './stores/popup';
 import BadgeUnlock from './components/achievement/BadgeUnlock.vue'
 import { useBadgesStore } from './stores/badges';
+import ExpToast from './components/ui/sonner/ExpToast/ExpToast.vue'
 
 const streakStore = useStreakStore()
 const route = useRoute()
@@ -36,6 +37,7 @@ const popupStore = usePopupStore();
 </script>
 
 <template>
+
   <Index v-if="popupStore.openPopupModal && popupStore.popupContent" :scenario="popupStore.popupContent?.scenario" />
   <Toaster />
   <CourseUnlock :is-open="courseUnlockStore.openCourseModal" :onClose="courseUnlockStore.closeStreakModal" />
@@ -45,10 +47,10 @@ const popupStore = usePopupStore();
   <div v-if="useLoadingPageStore().isLoading">
     <div class="fixed inset-0 flex items-center justify-center bg-black/70 z-99 flex-col gap-4">
 
-      <Spinner size="lg" variant="white">
+      <Spinner size="lg" variant="default">
 
       </Spinner>
-      <div>Loading ...</div>
+      <div class="font-display font-bold text-white">Loading ...</div>
     </div>
   </div>
   <div v-if="isFullscreen">

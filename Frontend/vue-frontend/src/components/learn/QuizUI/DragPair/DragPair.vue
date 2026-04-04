@@ -130,11 +130,13 @@ const handleAnswerClick = (answer: "top" | "bottom") => {
         selectedAnswer.value = answer
         isAnimating.value = true
         answered.value = true
+        if (answer === question.value.correctAnswer) {
+            score.value++
+        } else {
+            timerRef.value?.decreaseTime(64); // Decrease time by 10 seconds for incorrect answer
+        }
     }, 2000)
 
-    if (answer === question.value.correctAnswer) {
-        score.value++
-    }
 
 }
 

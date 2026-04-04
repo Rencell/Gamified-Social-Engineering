@@ -1,4 +1,3 @@
-
 from rest_framework import serializers, viewsets
 from .models import Content, ContentItem, ContentImage, ContentQuiz, ContentQuizImage
 
@@ -8,9 +7,13 @@ class ContentSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class ContentItemSerializer(serializers.ModelSerializer):
+    # Derived field: ContentItem -> Content -> ModuleTest
+    module_id = serializers.IntegerField(source='content.modules_id', read_only=True)
+
     class Meta:
         model = ContentItem
         fields = '__all__'
+        # If you ever switch to an explicit field list, include: 'module_id'
         
         
 class ContentImageSerializer(serializers.ModelSerializer):

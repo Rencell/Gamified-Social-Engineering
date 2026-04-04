@@ -28,7 +28,7 @@ const bgDefined = () => {
     }
 
     if (props.bg) {
-        return `bg-[${props.bg}] brightness-90`;
+        return `bg-[${props.bg}] brightness-100`;
     } else {
         return 'bg-[#4f1c51] ';
     }
@@ -41,7 +41,7 @@ const showLocked = ref(false);
 <template>
     
     <div class="p-3 rounded-xl shadow-2xl hover:opacity-100 hover:scale-103 duration-175 transition-all relative"
-        :class="[isLatest ? 'border-[#dc9e3a] border-b-8 border-1' : 'opacity-40', bgDefined()]"
+        :class="[isLatest ? 'border-amber-500 border-b-8 border-1' : 'dark:opacity-40 opacity-70', bgDefined()]"
         :style="{ backgroundColor: props.bg && !props.locked ? props.bg : '' }"
         @mouseenter="showLocked = true" @mouseleave="showLocked = false"
         >
@@ -49,7 +49,7 @@ const showLocked = ref(false);
         <div class="p-4 flex flex-col-reverse sm:flex-row">
             <div class="flex flex-col flex-4 justify-between gap-5">
                 <div class="flex flex-col gap-6">
-                    <p class="font-extrabold text-xl">Module {{ index }}: {{ title }}</p>
+                    <p class="font-extrabold text-xl text-white">Module {{ index }}: {{ title }}</p>
                    
                     <div v-if="!locked">
                         <LearnProgress :model-value="progress" :tongue-color="props.bg"
@@ -78,7 +78,7 @@ const showLocked = ref(false);
                 
                 <Button v-if="!locked"
                     class="text-background text-sm rounded-xl h-13 font-sans font-bold border-b-4 border-x-1 border-ternary/50"
-                    :class="[isLatest ? 'bg-primary hover:border-b-1' : 'bg-[#dc9e3a] hover:bg-[#dc9e3a]/70 hover:border-b-1', `text-[${props.bg}]`]"
+                    :class="[isLatest ? 'bg-white hover:border-b-1' : 'bg-[#dc9e3a] hover:bg-[#dc9e3a]/70 hover:border-b-1', `text-[${props.bg}]`]"
                     :style="{ color: isLatest ? props.bg : 'white' }">
                     CONTINUE
                 </Button>
