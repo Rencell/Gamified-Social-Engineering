@@ -78,6 +78,7 @@ import { X, ArrowUp, ArrowDown, Ban, Edit, BookOpen, Shield } from "lucide-vue-n
 import { Typewriter } from '@/components/ui/typewriter'
 import type { Question } from './type'
 import Timer from '../timer.vue'
+import { playSoundFx, SoundFx } from "@/composables/useSoundFx"
 
 defineOptions({
     name: "DragPair"
@@ -132,8 +133,10 @@ const handleAnswerClick = (answer: "top" | "bottom") => {
         answered.value = true
         if (answer === question.value.correctAnswer) {
             score.value++
+            playSoundFx(SoundFx.Correct)
         } else {
             timerRef.value?.decreaseTime(64); // Decrease time by 10 seconds for incorrect answer
+            playSoundFx(SoundFx.Error)
         }
     }, 2000)
 

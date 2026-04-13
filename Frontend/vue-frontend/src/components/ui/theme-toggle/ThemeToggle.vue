@@ -2,6 +2,7 @@
 import { onMounted, ref, type HTMLAttributes } from 'vue'
 import { Sun, Moon } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx'
 
 const THEME_STORAGE_KEY = 'theme'
 
@@ -51,6 +52,12 @@ function initTheme() {
 
 function toggleTheme() {
   applyTheme(isDarkMode.value ? 'light' : 'dark')
+
+  if(isDarkMode.value){
+    playSoundFx(SoundFx.TransitionUp)
+  }else{
+    playSoundFx(SoundFx.TransitionDown)
+  }
 }
 
 onMounted(() => {

@@ -11,6 +11,7 @@ import { RouterLink } from 'vue-router';
 import { Progress } from '@/components/ui/progress';
 import { useBadgesStore } from '@/stores/badges';
 import Defence from '@/components/home/dialog/defence.vue'
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 const badgeStore = useBadgesStore();
 const authStore = useAuthStore();
 const levelStore = useLevelStore();
@@ -36,7 +37,7 @@ onMounted(() => {
 
 <template>
     <RouterLink :to="{ name: 'Home' }">
-        <div class="flex gap-2 mb-5 text-sm items-center text-accent -mt-3">
+        <div class="flex gap-2 mb-5 text-sm items-center text-accent -mt-3" @click="playSoundFx(SoundFx.Button)">
             <ArrowLeft :size="15"></ArrowLeft>
             <p class="font-semibold w-fit">Back</p>
         </div>

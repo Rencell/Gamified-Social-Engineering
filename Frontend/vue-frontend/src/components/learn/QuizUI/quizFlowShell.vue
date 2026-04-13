@@ -44,6 +44,7 @@ import TwoImage from '/Learning/QuizType/TwoImage.png'
 import { shuffle } from '@/composables/shuffleData';
 import { useModuleStore } from '@/stores/module';
 import { useContentStore } from '@/stores/content';
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 
 interface QuizProps {
   quizComponent: any;
@@ -129,6 +130,7 @@ async function onFinish(finalScore: number, time_spent?: number) {
   showReward.value    = false
   timeSpent.value     = (60 * 10) - (time_spent ?? 0)
 
+  playSoundFx(SoundFx.Celebration);
   if(useContentStore().contentItems.pass_rate! > (score.value / total_questions.value * 100)) {
     alert('You did not pass the quiz. Please try again.')
     quizCompleted.value = true

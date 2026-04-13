@@ -2,6 +2,7 @@
 import ProgressCircle from '@/components/learn/learnUI/ProgressCircle.vue';
 import { Button } from '@/components/ui/button';
 import { LearnProgress } from '@/components/ui/progress';
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 import { CircleCheck, Lock, LockKeyhole } from 'lucide-vue-next';
 import { ref } from 'vue';
 
@@ -43,13 +44,14 @@ const showLocked = ref(false);
     <div class="p-3 rounded-xl shadow-2xl hover:opacity-100 hover:scale-103 duration-175 transition-all relative"
         :class="[isLatest ? 'border-amber-500 border-b-8 border-1' : 'dark:opacity-40 opacity-70', bgDefined()]"
         :style="{ backgroundColor: props.bg && !props.locked ? props.bg : '' }"
-        @mouseenter="showLocked = true" @mouseleave="showLocked = false"
+        @click="playSoundFx(SoundFx.Button)"
+        @mouseenter="showLocked = true; playSoundFx(SoundFx.Transition)" @mouseleave="showLocked = false"
         >
     
         <div class="p-4 flex flex-col-reverse sm:flex-row">
             <div class="flex flex-col flex-4 justify-between gap-5">
                 <div class="flex flex-col gap-6">
-                    <p class="font-extrabold text-xl text-white">Module {{ index }}: {{ title }}</p>
+                    <p class="font-extrabold text-xl" :class="!props.locked ? 'text-white' : ''">Module {{ index }}: {{ title }}</p>
                    
                     <div v-if="!locked">
                         <LearnProgress :model-value="progress" :tongue-color="props.bg"
@@ -79,11 +81,13 @@ const showLocked = ref(false);
                 <Button v-if="!locked"
                     class="text-background text-sm rounded-xl h-13 font-sans font-bold border-b-4 border-x-1 border-ternary/50"
                     :class="[isLatest ? 'bg-white hover:border-b-1' : 'bg-[#dc9e3a] hover:bg-[#dc9e3a]/70 hover:border-b-1', `text-[${props.bg}]`]"
-                    :style="{ color: isLatest ? props.bg : 'white' }">
+                    :style="{ color: isLatest ? props.bg : 'white' }"
+                    >
                     CONTINUE
                 </Button>
                 <Button v-else
-                    class="bg-ternary text-background text-sm rounded-xl h-13 font-sans font-bold border-b-4 border-x-1 border-secondary">
+                    class="bg-ternary text-background text-sm rounded-xl h-13 font-sans font-bold border-b-4 border-x-1 border-secondary"
+                    >
                     SEE LESSONS
                 </Button>
             </div>

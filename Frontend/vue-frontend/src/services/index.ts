@@ -12,7 +12,7 @@ export {default as ServiceService } from './sectionService.ts';
 export {default as AssessmentService } from './assessmentService.ts';
 export {default as PopupService } from './popupService.ts';
 export {default as MinigameService } from './minigameService.ts';
-
+export {default as AgreementService } from './agreementService.ts';
 // export {default as GoPhishService } from './goPhishService.ts';
 export {default as SimulationService } from './simulationService.ts';
 

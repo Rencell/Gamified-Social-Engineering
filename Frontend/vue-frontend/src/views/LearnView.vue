@@ -42,8 +42,9 @@ onMounted(async () => {
 
                 <div v-else class="flex-2 grid grid-cols-1 gap-4">
                     <RouterLink v-for="(lesson, index) in lessonStore.lessons" :key="lesson.slug"
-                        :to="`${route.path}/${lesson.slug}`">
-
+                        :to="`${route.path}/${lesson.slug}`"
+                        >
+                        
                         <div>
                             <LessonCard :class="[useAuthStore().User.is_admin ? false : lesson?.locked
                                 ? 'opacity-50 cursor-not-allowed border-1 border-ternary rounded-4xl' :
