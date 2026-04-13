@@ -11,6 +11,7 @@ import ModuleViewDialog from '../dialog/Lesson/Section/Module/moduleViewDialog.v
 import { useLoadingPageStore } from '@/stores/pageLoading';
 import type { Quiz } from '@/services/quizService';
 import { useAuthStore } from '@/stores/auth';
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 
 
 const props = defineProps({
@@ -61,6 +62,7 @@ const showModal = ref(false)
 const toggleShowModal = () => {
     useLoadingPageStore().count = 0;
     showModal.value = !showModal.value;
+    playSoundFx(SoundFx.TransitionUp)
 }
 
 const showDetails = ref(false);

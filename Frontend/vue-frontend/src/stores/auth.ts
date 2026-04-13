@@ -5,6 +5,7 @@ import { type RouteLocationNormalizedLoaded, type Router } from 'vue-router'
 import { toast } from 'vue-sonner'
 import { useLevelStore } from './level'
 import type { Authentication } from '@/services/authService'
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx'
 
 export const useAuthStore = defineStore('auth', () => {
   const TOKEN_STORAGE = 'auth_token'
@@ -39,6 +40,7 @@ export const useAuthStore = defineStore('auth', () => {
           position: 'top-right',
           duration: 5000,
         })
+        playSoundFx(SoundFx.LevelUp)
       }
       
     },

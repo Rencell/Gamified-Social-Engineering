@@ -14,6 +14,7 @@ import type { Section } from '@/services/sectionService';
 import SectionDivider from '@/components/learn/learnUI/SectionDivider.vue'
 import { useAuthStore } from '@/stores/auth';
 import Loading from '@/components/loading.vue';
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 
 
 const moduleStore = useModuleStore();
@@ -105,7 +106,7 @@ const getFirstLockedModule = (section: { modules: any[]; }) => {
 
     <div class="p-2 sm:p-0">
         <RouterLink :to="{ name: 'Learn' }">
-            <div class="flex gap-2 mb-5 text-sm items-center text-accent font-bold">
+            <div class="flex gap-2 mb-5 text-sm items-center text-accent font-bold" @click="playSoundFx(SoundFx.Button)">
                 <ArrowLeft :size="15"></ArrowLeft> Back
             </div>
         </RouterLink>

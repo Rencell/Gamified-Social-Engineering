@@ -11,6 +11,7 @@ import { useAuthStore } from '@/stores/auth';
 import AssessmentStartDialog from './AssessmentStartDialog.vue'
 import { useRewardStore } from '@/stores/reward';
 import Loading from '../loading.vue';
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 
 const props = defineProps<{
     id?: string;
@@ -56,6 +57,7 @@ onMounted(async () => {
 
 // Navigation functions
 const goBack = () => {
+    playSoundFx(SoundFx.Button)
     router.push('/assessments');
 };
 

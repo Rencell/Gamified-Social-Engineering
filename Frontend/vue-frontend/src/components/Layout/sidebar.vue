@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/sidebar'
 import { useAuthStore } from '@/stores/auth'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx'
 const authStore = useAuthStore();
 
 const route = useRoute()
@@ -109,6 +110,7 @@ const openGroups = ref<Record<string, boolean>>({})
 const isGroupOpen = (title: string) => !!openGroups.value[title]
 const toggleGroup = (title: string) => {
   openGroups.value[title] = !openGroups.value[title]
+  playSoundFx(SoundFx.Button);
 }
 
 const handleClickOutside = (event: MouseEvent) => {
@@ -158,7 +160,7 @@ onBeforeUnmount(() => {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu class="space-y-3" role="list" aria-labelledby="sidebar-learning-label">
-              <SidebarMenuItem v-for="item in navigationData.learning" :key="item.title">
+              <SidebarMenuItem v-for="item in navigationData.learning" :key="item.title" @click="playSoundFx(SoundFx.Button)">
                 <template v-if="item.children">
                   <div class="flex items-center gap-3 ">
                     <SidebarMenuButton

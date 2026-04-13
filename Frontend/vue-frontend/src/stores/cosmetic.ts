@@ -5,6 +5,7 @@ import type { UserCosmetic, CosmeticInventory, Cosmetic } from '@/services/cosme
 import { useAuthStore } from '@/stores/auth'
 import { toast } from 'vue-sonner'
 import cosmeticService from '@/services/cosmeticService'
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx'
 export const useCosmeticStore = defineStore('cosmetic', () => {
   // State
   const authStore = useAuthStore()
@@ -205,6 +206,7 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
       },
       position: 'top-right',
     })
+    playSoundFx(SoundFx.Notification)
   }
 
   const avatarRive = computed(() => equipAvatar.value?.rive_code)
