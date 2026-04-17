@@ -80,41 +80,64 @@ const shuffleQuestions = ref(shuffle(natural_questions.value).slice(0, props.qui
 const total_questions = ref(shuffleQuestions.value.length)
 const max_score = ref(0)
 
+type IntroStep = {
+  title: string
+  description?: string
+  imageAlt?: string
+  image?: string
+}
+
 const introMeta = computed(() => {
-  const map: Record<string, { title: string; description: string, image: string }> = {
+  const map: Record<string, { title: string; description: string, introStep: IntroStep[], image: string }> = {
     MatchingQuiz: { 
       title: 'Matching Quiz', 
       description: 'Match all the words before the time runs out! Collect the reward ahead',
+      introStep: [
+        { title: 'Welcome to the Matching Quiz!', description: 'Match all the words before the time runs out!', image: '/Learning/QuizInstructions/MTI1.webp' },
+        { title: 'Mistakes', description: 'Every mistake decreases your time by 20 seconds.', image: '/Learning/QuizInstructions/MTI2.webp' }
+      ],
       image: matching
     },
     DragPair: { 
       title: 'Drag & Drop', 
       description: 'Drag the words to their correct positions.',
+      introStep: [
+        { title: 'Welcome to the Drag & Drop Quiz!', description: 'Drag the words to their correct positions.', image: '/Learning/QuizInstructions/DP1.webp' },
+      ],
       image: DragPair
     },
     DoDont: { 
       title: 'Do & Don\'t Quiz', 
       description: 'Select the correct answer for each question.',
+      introStep: [
+        { title: 'Welcome to the Do & Don\'t Quiz!', description: 'Select the correct answer for each question.', image: '/Learning/QuizInstructions/IS1.webp' },
+      ],
       image: DoDont
     },
     ScenarioTraining: { 
       title: 'Scenario Training Quiz', 
       description: 'Let us see how well you can identify these scenarios.',
+      introStep: [
+        { title: 'Welcome to the Scenario Training Quiz!', description: 'Let us see how well you can identify these scenarios.', image: '/Learning/QuizInstructions/IS1.webp' },
+      ],
       image: ScenarioTraining 
     },
     MultipleChoice: { 
       title: 'Multiple Choice', 
       description: 'Select the correct answer from the options provided.',
+      introStep: [],
       image: MultipleChoice
     },
     PhishingTactics: { 
       title: 'Guess the Tactic', 
       description: 'You have to identify the used Phishing tactics on the given Email or Smishing.',
+      introStep: [],
       image: GuessTactics
     },
     TwoImage: { 
       title: '2 Pics Quiz', 
       description: 'You have to identify the used Phishing tactics on the given Email or Smishing.',
+      introStep: [],
       image: TwoImage
     },
   }

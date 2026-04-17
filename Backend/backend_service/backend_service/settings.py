@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'app_popup',
     'app_minigame',
     'app_commons',
+    'app_vishing',
     'gophish',
     'rest_framework',
     'rest_framework.authtoken',

@@ -1,135 +1,117 @@
 <script setup lang="ts">
-import { ShieldX, PhoneCall, CirclePlus, ChevronDown, ChevronUp } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
-
-interface Feature {
-    id: string; 
-    title: string;
-    description?: string;
-    total: number;
-    icon: typeof PhoneCall | typeof ShieldX | typeof CirclePlus;
-    style: string;
-    tips: string;
-}
+import { Button } from '@/components/ui/button';
+import { showExpToast } from '@/components/ui/sonner/ExpToast/ExpToast';
+import { AlertTriangle, CheckCircle2, PhoneCall, X } from 'lucide-vue-next';
+import { computed, onUnmounted } from 'vue';
 
 const props = defineProps<{
     callResult: string;
 }>();
 
+type ResultView = {
+    key: string;
+    title: string;
+    description: string;
+    details?: string;
+    buttonText: string;
+    buttonVariant?: 'default' | 'destructive' | 'secondary' | 'outline' | 'ghost' | 'link';
+    icon: typeof CheckCircle2 | typeof AlertTriangle | typeof PhoneCall;
+    iconWrapClass: string;
+    iconClass: string;
+};
 
-const feature_list: Feature[] = [
-    {
-        id: 'refused',
-        title: "Refused",
-        description: "Simulation refused",
-        total: 0,
-        icon: ShieldX,
-        style: "text-blue-600 bg-blue-50 ring-blue-100",
-        tips: "The call was refused by the recipient."
-    },
-    {
-        id: 'gave_information',
-        title: "Submitted Info",
-        description: "Simulation submitted",
-        total: 1,
-        icon: CirclePlus,
-        style: "text-red-600 bg-red-50 ring-red-100",
-        tips: "The call was submitted successfully."
-    },
-    {
-        id: 'seamless',
-        title: "Seamless",
-        description: "Simulation seamless",
-        total: 0 ,
-        icon: CirclePlus,
-        style: "text-green-600 bg-green-50 ring-green-100",
-        tips: "The call was seamless."
+const resultKey = computed(() => (props.callResult ?? '').trim().toLowerCase());
+
+const view = computed<ResultView>(() => {
+    if (resultKey.value === 'refused') {
+        return {
+            key: 'refused',
+            title: 'Success Message',
+            description: 'You refused to share information during the call.',
+            details:
+                'That’s the safest response. If this were real, hang up and call back using an official number.',
+            buttonText: 'Continue',
+            buttonVariant: 'default',
+            icon: CheckCircle2,
+            iconWrapClass: 'bg-emerald-50 ring-emerald-100',
+            iconClass: 'text-emerald-600',
+        };
     }
-];
-const filteredResult = computed(() => {
-    const result = props.callResult.toLowerCase();
-    return feature_list.find(feature => feature.id === result) || null;
+
+    if (resultKey.value === 'gave_information') {
+        return {
+            key: 'gave_information',
+            title: 'Failed Message',
+            description: 'You shared information during the call.',
+            details:
+                'Real attackers pressure you to act quickly. Pause, verify the caller, and avoid sharing personal details.',
+            buttonText: 'Beware Next Time',
+            buttonVariant: 'destructive',
+            icon: AlertTriangle,
+            iconWrapClass: 'bg-red-50 ring-red-100',
+            iconClass: 'text-red-600',
+        };
+    }
+
+    return {
+        key: 'unknown',
+        title: 'Call Summary',
+        description: 'No summary available for this call.',
+        buttonText: 'Go to homepage',
+        buttonVariant: 'secondary',
+        icon: PhoneCall,
+        iconWrapClass: 'bg-slate-50 ring-slate-200',
+        iconClass: 'text-slate-700',
+    };
 });
 
-const openTipTitle = ref<string | null>(null);
-const toggleTips = (title: string) => {
-    openTipTitle.value = openTipTitle.value === title ? null : title;
-};
-const isTipsOpen = (title: string) => openTipTitle.value === title;
+onUnmounted(() => {
+    if (resultKey.value === 'refused') {
+        showExpToast();
+    }
+});
 </script>
 
 <template>
-    <div class="fixed inset-0 z-50 grid place-items-center bg-slate-900/40 backdrop-blur-sm p-6 font-display">
-        <div class="px-6 pb-10 pt-8">
-            <div class="mx-auto max-w-xl rounded-2xl bg-white p-8 shadow-xl ring-1 ring-slate-200">
-                <div
-                    class="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full bg-blue-50 ring-1 ring-blue-100">
-                    <div class="grid h-10 w-10 place-items-center rounded-full bg-blue-600">
-                        <PhoneCall class="h-5 w-5 text-white" />
-                    </div>
-                </div>
+    <div class="fixed inset-0 z-50 grid place-items-center bg-black/60 backdrop-blur-sm p-6 font-display">
+        <div class="relative w-full max-w-md rounded-2xl bg-white p-8 shadow-xl ring-1 ring-slate-200">
+            <Button
+                asChild
+                variant="ghost"
+                size="icon"
+                class="absolute right-3 top-3 text-slate-500 hover:text-slate-900"
+            >
+                <RouterLink to="/home" aria-label="Close">
+                    <X class="h-4 w-4" />
+                </RouterLink>
+            </Button>
 
-                <h2 class="text-center text-xl font-semibold text-slate-900">
-                    Call Summary.
-                </h2>
-
-                <p class="mt-2 text-center text-sm leading-6 text-slate-500">
-                    You just got a confirmation from <span class="font-medium text-slate-700">Conor</span> on your
-                    order.
-                    Payment info is successfully filled in based on the same business day.
-                </p>
-
-                <div class="mt-6 overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200">
-                    <div v-if="filteredResult" class="flex flex-col divide-y divide-slate-100">
-                        <button
-                            type="button"
-                            @click="toggleTips(filteredResult.title)"
-                            class="group flex w-full flex-col gap-3 px-5 py-4 text-left transition hover:brightness-[0.99] focus:outline-none">
-                            <div class="flex items-center justify-between gap-4">
-                                <div class="min-w-0">
-                                    <div class="text-sm font-semibold" :class="filteredResult.style.split(' ')[0]">{{ filteredResult.title }}</div>
-                                    <div class="mt-0.5 text-xs text-slate-500">{{ filteredResult.description ?? '' }}</div>
-                                </div>
-
-                                <div class="flex items-center gap-3">
-                                    <div class="text-sm font-semibold" :class="filteredResult.style.split(' ')[0]">{{ filteredResult.total }}</div>
-                                    <ChevronDown v-if="!isTipsOpen(filteredResult.title)" class="h-4 w-4 text-slate-400 group-hover:text-slate-600" />
-                                    <ChevronUp v-else class="h-4 w-4 text-slate-400 group-hover:text-slate-600" />
-                                </div>
-                            </div>
-
-                            <Transition name="fade">
-                                <div
-                                  v-if="isTipsOpen(filteredResult.title)"
-                                  class="rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-600 ring-1 ring-slate-100">
-                                    {{ filteredResult.tips }}
-                                </div>
-                            </Transition>
-                        </button>
-                    </div>
-
-                    <div v-else class="px-5 py-4 text-sm text-slate-500">
-                        No summary available.
-                    </div>
-                </div>
-
-                <button type="button"
-                    class="mt-6 w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2">
-                    Go to homepage
-                </button>
+            <div
+                class="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full ring-1"
+                :class="view.iconWrapClass"
+            >
+                <component :is="view.icon" class="h-8 w-8" :class="view.iconClass" />
             </div>
+
+            <h2 class="text-center text-xl font-semibold text-slate-900">
+                {{ view.title }}
+            </h2>
+
+            <p class="mt-2 text-center text-sm leading-6 text-slate-500">
+                {{ view.description }}
+            </p>
+
+            <p v-if="view.details" class="mt-3 text-center text-xs leading-5 text-slate-500">
+                {{ view.details }}
+            </p>
+
+            <Button asChild class="mt-6 w-full" :variant="view.buttonVariant">
+                <RouterLink to="/home">
+                    {{ view.buttonText }}
+                </RouterLink>
+            </Button>
         </div>
     </div>
 </template>
 
-<style scoped>
-.fade-enter-active{
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: translateY(-4px);
-}
-</style>
+<style scoped></style>

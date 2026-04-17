@@ -21,6 +21,7 @@ urlpatterns = [
     path('api/gophish/', include('gophish.urls')),
     path('api/popup/', include('app_popup.urls')),
     path('api/minigames/', include('app_minigame.urls')),
-    path('api/common', include('app_commons.urls')),
+    path('api/common/', include('app_commons.urls')),
+    path('api/vishing/', include('app_vishing.urls')),
     path("accounts/", include("allauth.urls")),
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

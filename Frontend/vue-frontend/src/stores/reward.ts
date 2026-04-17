@@ -89,6 +89,7 @@ export const useRewardStore = defineStore('reward', () => {
     const REASONS = {
         content     : 'content',
         quiz        : 'quiz',
+        reward      : 'reward',
         bonus       : 'bonus',
         spend       : 'spend',
         assessment  : 'assessment',

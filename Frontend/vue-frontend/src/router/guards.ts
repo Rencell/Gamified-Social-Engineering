@@ -2,7 +2,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useLevelStore } from '@/stores/level'
 import { useStreakStore } from '@/stores/pageStreak';
 import { usePopupStore } from '@/stores/popup';
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+import { useRoute, type NavigationGuardNext, type RouteLocationNormalized } from 'vue-router'
 
 
 export const requireAuthenticated = async (
@@ -11,8 +11,10 @@ export const requireAuthenticated = async (
   next: NavigationGuardNext
 ) => {
 
-  
+  const allowedRoutes = ['/home', '/learn'];
   const authStore = useAuthStore();
+  const isAuthValid = authStore.User.exp > 0;
+  const route = useRoute();
   const levelStore = useLevelStore();
   const streakStore = useStreakStore();
   const popupStore = usePopupStore();
@@ -29,7 +31,7 @@ export const requireAuthenticated = async (
     // Don't show popups during onboarding flows
     const isOnboarding = _to.path.startsWith('/onboarding/');
     if (!isOnboarding) {
-      await popupStore.loadPopup();
+      await popupStore.loadPopup(route);
     }
 
     next(

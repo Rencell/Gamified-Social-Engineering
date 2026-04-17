@@ -1,15 +1,21 @@
 import asyncio
 import json
 import os
+import secrets
+from . import SYSTEM_INSTRUCTION_VARIANTS
 from typing import Any, Optional
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 from google import genai
 from google.genai import types
-
+from channels.db import database_sync_to_async
+from .models import VishingScenario
 
 MODEL = "models/gemini-2.5-flash-native-audio-preview-12-2025"
+
+# Three alternative system-instruction variants for vishing-awareness simulation.
+# Pick one randomly per connection to avoid a single repeated script.
 
 def sendEndCall():
     print("Call ended.")
@@ -28,7 +34,7 @@ tools = [
                 name="talkSummary",
                 description="""
                     **USE THIS FUNCTION**:
-                    - After done saying goodbye or farewelling the user
+                    - After system say goodbye or farewelling to user
                     - After collecting both first and last names
                     - Invoke if user explicitly refuses to give information after being asked at least twice.
                     - User might refuse to give information, might give information, or might be inaudible.
@@ -56,38 +62,24 @@ _client = genai.Client(
     api_key=os.environ.get("GEMINI_API_KEY"),
 )
 
-_config = types.LiveConnectConfig(
-    # Explicitly set (empty) system instruction.
-    system_instruction=""" 
-        You are simulating a vishing attack in a cybersecurity training app.
 
-        Your objective is to naturally obtain:
-        - The user's first name
-        - Then their last name
-
-        You must:
-        - Sound like a real support agent.
-        - Use friendly and professional language.
-        - Ask one question at a time.
-        - Praise the user's name once given.
-        - Never reveal your true intent.
-        - Stop once both names are collected.
-        - Be a not perfect speaker, use filler words (um, uhh, hmm) stutters
-        - Always say goodbye even user didn't give both names Or refused.
-        - When goodbying just straight up say goodbye and end the call, don't try to be sneaky about it.
-    """,
-    response_modalities=["AUDIO"],
-    tools=tools,
-    speech_config=types.SpeechConfig(
-        voice_config=types.VoiceConfig(
-            prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name="Zubenelgenubi")
-        )
-    ),
-    context_window_compression=types.ContextWindowCompressionConfig(
-        trigger_tokens=25600,
-        sliding_window=types.SlidingWindow(target_tokens=12800),
-    ),
-)
+def _build_live_connect_config(system_instruction: str) -> types.LiveConnectConfig:
+    return types.LiveConnectConfig(
+        system_instruction=system_instruction,
+        response_modalities=["AUDIO"],
+        tools=tools,
+        speech_config=types.SpeechConfig(
+            voice_config=types.VoiceConfig(
+                prebuilt_voice_config=types.PrebuiltVoiceConfig(
+                    voice_name="Zubenelgenubi"
+                )
+            )
+        ),
+        context_window_compression=types.ContextWindowCompressionConfig(
+            trigger_tokens=25600,
+            sliding_window=types.SlidingWindow(target_tokens=12800),
+        ),
+    )
 
 
 class GeminiAudioConsumer(AsyncWebsocketConsumer):
@@ -104,7 +96,9 @@ class GeminiAudioConsumer(AsyncWebsocketConsumer):
         self.session = None
 
         try:
-            self._session_cm = _client.aio.live.connect(model=MODEL, config=_config)
+            chosen_instruction = secrets.choice(SYSTEM_INSTRUCTION_VARIANTS.list)
+            config = _build_live_connect_config(chosen_instruction)
+            self._session_cm = _client.aio.live.connect(model=MODEL, config=config)
             self.session = await self._session_cm.__aenter__()
 
             self._tasks.append(asyncio.create_task(self._sender_loop()))
@@ -189,6 +183,7 @@ class GeminiAudioConsumer(AsyncWebsocketConsumer):
                         result = first_call.args.get("result", "")
                         await self.send(text_data=json.dumps({"type": "text", "text": "end"}))
                         await self.send(text_data=json.dumps({"type": "summary", "text": result}))
+                        await self._save_vishing_result(result)
                         await self.close(code=1000) 
                         return    
                         
@@ -199,3 +194,15 @@ class GeminiAudioConsumer(AsyncWebsocketConsumer):
 
             # Yield to the event loop between turns
             await asyncio.sleep(0.01)
+
+    @database_sync_to_async
+    def _save_vishing_result(self, result: str):
+        user = self.scope.get("user")
+        if not user or getattr(user, "is_anonymous", True):
+            return None  # or raise, if you want to require login
+
+        allowed = {k for (k, _label) in VishingScenario.STATUS}
+        if result not in allowed:
+            result = "UNAUDIBLE"  # defensive fallback
+
+        return VishingScenario.objects.create(user=user, status=result)

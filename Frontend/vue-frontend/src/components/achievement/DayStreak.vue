@@ -1,49 +1,67 @@
 <template>
-    <div v-if="isOpen" class=" fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-        <div class="motion-preset-pop bg-secondary rounded-2xl p-8 max-w-md w-full relative">
-            <Button size="sm" variant="secondary" @click="onClose()" class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors">
-                <X/>
+    <div
+        v-if="isOpen"
+        class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
+    >
+        <div class="motion-preset-pop bg-secondary rounded-2xl p-5 sm:p-8 max-w-md w-full relative my-6 sm:my-auto">
+            <Button
+                size="sm"
+                variant="secondary"
+                @click="onClose()"
+                class="absolute top-3 right-3 sm:top-4 sm:right-4 text-white/70 hover:text-white transition-colors"
+            >
+                <X />
             </Button>
 
             <div class="flex items-start gap-4 mb-6">
-                <div class="w-16 h-16 bg-orange-200 rounded-full flex items-center justify-center flex-shrink-0">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-orange-200 rounded-full flex items-center justify-center flex-shrink-0">
                     <div class="w-10 h-10 rounded-full flex items-center justify-center">
-                       
-                        <img :src="fire" class="size-10" />
+                        <img :src="fire" class="size-9 sm:size-10" />
                     </div>
                 </div>
                 <div>
-                    <h2 class="text-white text-2xl font-bold text-balance font-display">{{streakDays}} day Streak!
+                    <h2 class="text-white text-xl sm:text-2xl leading-tight font-bold text-balance font-display">
+                        {{ streakDays }} day Streak!
                     </h2>
-                    <p class="text-white/80 text-sm mt-1 text-pretty font-display">Practice everyday so your streak
-                        won't reset</p>
+                    <p class="text-white/80 text-xs sm:text-sm mt-1 text-pretty font-display">
+                        Practice everyday so your streak won't reset
+                    </p>
                 </div>
             </div>
 
-            <div class="mb-8 ">
-                <div class="flex justify-between mb-3">
-                    <div v-for="(day, index) in weekDays" :key="index"
-                        class="text-white/60 text-sm font-medium w-8 text-center">
+            <div class="mb-8">
+                <div class="grid grid-cols-7 gap-2 mb-3">
+                    <div
+                        v-for="(day, index) in weekDays"
+                        :key="index"
+                        class="text-white/60 text-xs sm:text-sm font-medium text-center"
+                    >
                         {{ day }}
                     </div>
                 </div>
 
-                <div class="flex justify-between animate-parent">
-                    <div v-for="(_, index) in weekDays" :key="index" class="w-8 h-8 flex items-center justify-center">
-                        <div v-if="isActive(index)"
-                            class="w-8 h-8 bg-orange-500/50 rounded-full flex items-center justify-center">
+                <div class="grid grid-cols-7 gap-2 animate-parent">
+                    <div v-for="(_, index) in weekDays" :key="index" class="flex items-center justify-center">
+                        <div
+                            v-if="isActive(index)"
+                            class="size-7 sm:size-8 bg-orange-500/50 rounded-full flex items-center justify-center"
+                        >
                             <img :src="fire" class="w-4 h-4 text-white" />
                         </div>
-                        <div v-else class="w-8 h-8 border-2 border-white/30 rounded-full flex items-center justify-center">
+                        <div
+                            v-else
+                            class="size-7 sm:size-8 border-2 border-white/30 rounded-full flex items-center justify-center"
+                        >
                             <img :src="fire_greyed" class="w-4 h-4 text-white" />
-
                         </div>
                     </div>
                 </div>
             </div>
 
-            <Button @click="onClose()"
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg">
+            <Button
+                @click="onClose()"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 sm:py-3 rounded-lg text-sm sm:text-base"
+            >
                 Challenge Accepted!
             </Button>
         </div>

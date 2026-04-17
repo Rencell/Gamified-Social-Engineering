@@ -8,7 +8,7 @@
             </div>
             <Card class="border-[#1a2332] bg-secondary p-8 rounded-2xl">
                 <div class="mb-6 flex items-baseline gap-4">
-                    <div class="text-5xl font-bold">{{ security_score }}</div>
+                    <div class="text-5xl font-bold">{{ props.security_score.toFixed(0) }}</div>
                     <div class="text-lg text-gray-400">Security Risk Score</div>
                 </div>
 

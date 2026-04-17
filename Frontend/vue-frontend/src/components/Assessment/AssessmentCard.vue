@@ -34,7 +34,7 @@ const isUnlocked = computed(() =>
 </script>
 
 <template>
-    <div class="p-3 rounded-xl" :style="{ backgroundColor: !isUnlocked ? 'var(--secondary)' : props.bg, opacity: isUnlocked ? 1 : 0.4 }">
+    <div class="p-3 rounded-xl" :style="{ backgroundColor: !isUnlocked ? 'var(--secondary)' : props.bg, opacity: isUnlocked ? 1 : 0.9 }">
         <!-- loading  -->
         <div class="flex flex-col-reverse md:flex-row justify-between font-display">
             
@@ -70,7 +70,8 @@ const isUnlocked = computed(() =>
 
         <!-- Text -->
         <div class="flex flex-col justi-between grow">
-            <h2 class="text-center font-bold text-2xl my-3 text-white">{{name}}</h2>
+            <h2 v-if="isUnlocked" class="text-center font-bold text-2xl my-3 text-white" >{{name}}</h2>
+            <h2 v-else class="text-center font-bold text-2xl my-3 text-black dark:text-white" >{{name}}</h2>
         </div>
     </div>
 </template>

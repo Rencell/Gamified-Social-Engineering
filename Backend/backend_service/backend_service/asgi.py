@@ -2,19 +2,20 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from channels.auth import AuthMiddlewareStack
-from channels.routing import ProtocolTypeRouter, URLRouter
-from django.core.asgi import get_asgi_application
 
-# Load Backend/.env explicitly (repo structure: Backend/backend_service/backend_service/asgi.py)
+# Load Backend/.env explicitly
 ENV_PATH = Path(__file__).resolve().parents[2] / ".env"
 load_dotenv(ENV_PATH)
 
-from app_contents.routing import websocket_urlpatterns
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend_service.settings")
 
-django_asgi_app = get_asgi_application()
+from django.core.asgi import get_asgi_application
+django_asgi_app = get_asgi_application()  # <-- loads apps registry
+
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+
+from app_vishing.routing import websocket_urlpatterns  # <-- import AFTER apps loaded
 
 application = ProtocolTypeRouter(
     {
