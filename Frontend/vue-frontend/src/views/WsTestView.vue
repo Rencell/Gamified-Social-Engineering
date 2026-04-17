@@ -1,4 +1,4 @@
-<!-- filepath: d:\Programming\Capstone v2\Frontend\vue-frontend\src\views\WsTestView.vue -->
+
 <template>
   <Incoming_call v-if="showIncoming" @close="showIncoming = false" @decline="showIncoming = false" />
   <div class="p-6 space-y-4">

@@ -45,7 +45,7 @@ const percentage = (props.score / props.length) * 100;
 const performanceMessage = computed(() => {
 
   if (percentage < 10) {
-    return 'Nice try, buddy';
+    return 'Let’s try again!';
   } else if (percentage < 50) {
     return 'Good effort!';
   } else if (percentage < 80) {
@@ -72,7 +72,9 @@ const retryQuiz = () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center p-4 w-full">
+  <div class="min-h-screen flex items-center justify-center p-4 w-full flex-col">
+    
+
     <div class="w-xl max-w-xl mx-auto text-center space-y-4 animate-parent">
       <!-- Score and Title -->
       <div class="space-y-5">

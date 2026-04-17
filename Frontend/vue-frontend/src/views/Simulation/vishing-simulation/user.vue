@@ -3,40 +3,29 @@ import { Card } from '@/components/ui/card';
 import RiskIndicator from '@/components/simulation/riskIndicator.vue'
 import { SimulationService } from '@/services';
 import { computed, onMounted, ref } from 'vue';
-import type {  GoPhishEvent, GoPhishSMS } from '@/services/simulationService';
+import type {  GoPhishEvent, VishingScenario, VishingScenarioTotal } from '@/services/simulationService';
 import {Clock, Mail, ShieldAlert } from 'lucide-vue-next';
 import DialogSimulation from '@/components/simulation/dialogSimulation.vue'
 import Loading from '@/components/loading.vue';
 import KpiMetrics from '@/components/simulation/UI/KpiMetrics.vue'
 import SimulationHistoryTable from '@/components/simulation/UI/SimulationHistoryTable.vue';
+import { showIncomingCallToast } from '@/components/vishing_simulation/UI/toastCall';
+import Incoming_call from '@/components/vishing_simulation/incoming_call.vue';
 
-const phishingData = ref<GoPhishSMS[]>([])
-const eventsData = ref<GoPhishEvent[]>([])
-const filter_type_phone = computed(() => eventsData.value.filter(event => event.type === 'phone'))
+const phishingData = ref<VishingScenario[]>([]);
+const phishingDataTotal = ref<VishingScenarioTotal | null>(null);
 
 const isOpen = ref(false);
-function toggleDialog(phone: string) {
-    isOpen.value = !isOpen.value;
-    toggleConsent(phone);
-}
-const toggleConsent = (async (phone: string) => {
-    try {
-        await SimulationService.update_phone_consent(phone);
-    } catch (error) {
-        console.error('Error updating consent:', error);
-    }
-});
 
 const isLoading = ref(true);
 onMounted(async () => {
     // Fetch simulation data when the component is mounted
     isLoading.value = true;
     try {
-        const response = await SimulationService.get_all_sms();
-        const consent = await SimulationService.get_consent();
+        const response = await SimulationService.get_vishing_scenarios();
+        const total = await SimulationService.get_vishing_scenarios_total();
+        phishingDataTotal.value = total;
         phishingData.value = response;
-        eventsData.value = await SimulationService.get_events() as unknown as GoPhishEvent[];
-        isOpen.value = consent.phone_consent;
     } catch (error) {
         console.error('Error fetching simulation data:', error);
     } finally {
@@ -45,16 +34,11 @@ onMounted(async () => {
 });
 
 const security_score = computed(() => {
-    if (phishingData.value.length > 0) {
-        return phishingData.value[0].security_score;
+    if (phishingDataTotal.value) {
+        return phishingDataTotal.value.security_score;
     }
     return 0; // Default score if data is not available
 });
-
-const showHistory = ref(false);
-function toggleShowHistory() {
-    showHistory.value = !showHistory.value;
-}
 
 interface Summary {
     label: string;
@@ -62,24 +46,36 @@ interface Summary {
 }
 
 const summary = computed<Summary[]>(() => [
-    { label: 'SMS Sent', value: phishingData.value[0]?.number_sent ?? 0 },
-    { label: 'Links Clicked', value: phishingData.value[0]?.links_clicked ?? 0 },
-    { label: 'Data Submitted', value: phishingData.value[0]?.data_submitted ?? 0 },
+    { label: 'Vishing Total', value: phishingDataTotal.value?.total ?? 0 },
+    { label: 'Gave Information', value: phishingDataTotal.value?.gave_information ?? 0 },
+    { label: 'Contact Refused', value: phishingDataTotal.value?.refused ?? 0 },
 ]);
 
-
+const showIncoming = ref(false)
+function triggerIncomingToast() {
+  showIncomingCallToast({
+    callerName: 'Sarah Johnson',
+    callerNumber: '+1 (555) 123-4567',
+    onAccept: () => {
+      showIncoming.value = true
+    },
+    onDecline: () => {
+      showIncoming.value = false
+    },
+  })
+}
 
 </script>
 
 <template>
+    <Incoming_call v-if="showIncoming" @close="showIncoming = false" @decline="showIncoming = false" />
 <!--     
     <Button @click="toggleshit">Toggle Dialog></Button> -->
-    <div class="mx-auto max-w-7xl space-y-12 font-display"
-        :class="{ 'blur-md brightness-50': !isOpen }">
-       
+    <div class="mx-auto max-w-7xl space-y-12 font-display">
+       <button class="px-3 py-2 border rounded" @click="triggerIncomingToast">Trigger Incoming Call Toast</button>
         <KpiMetrics :phishingData="summary" title="Vishing" :security_score="security_score"/>
         
-        <SimulationHistoryTable :emails="filter_type_phone" title="Vishing History"/>
+        <!-- <SimulationHistoryTable :emails="filter_type_phone" title="Vishing History"/> -->
     </div>
 
     <div v-if="isLoading" class="absolute inset-0 flex flex-col items-center justify-center space-y-4">

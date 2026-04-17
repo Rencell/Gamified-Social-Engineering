@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { Check, X } from 'lucide-vue-next';
 import { computed, onMounted, ref } from 'vue'
+import { SimulationTopic } from './expToastTypes'
 
 const props = withDefaults(
     defineProps<{
@@ -10,6 +11,7 @@ const props = withDefaults(
         streakPercent?: number
         streakLabel?: string
         progressDuration?: number
+        topic?: SimulationTopic
     }>(),
     {
         totalXp: 121,
@@ -18,6 +20,7 @@ const props = withDefaults(
         streakPercent: 1,
         streakLabel: 'Daily Streak',
         progressDuration: 5000,
+        topic: SimulationTopic.Vishing,
     },
 )
 
@@ -38,6 +41,10 @@ onMounted(() => {
 })
 
 const progressPct = computed(() => `${progressBar.value * 100}%`);
+
+const topicLabel = computed(() =>
+    props.topic === SimulationTopic.Malvertisement ? 'Malvertisement' : 'Vishing',
+);
 
 </script>
 
@@ -62,6 +69,11 @@ const progressPct = computed(() => `${progressBar.value * 100}%`);
                 </div>
 
                 <div class="mt-1 space-y-0.5 text-sm text-muted-foreground font-display">
+                    <div class="flex items-center justify-between gap-3">
+                        <p class="truncate">Topic: {{ topicLabel }}</p>
+                        <span class="shrink-0" />
+                    </div>
+
                     <div class="flex items-center justify-between gap-3">
                         <p class="truncate">+{{ props.lessonXp }} xp (Lesson)</p>
                         <span class="shrink-0" />

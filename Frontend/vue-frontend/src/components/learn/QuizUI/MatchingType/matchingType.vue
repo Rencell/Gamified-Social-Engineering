@@ -192,7 +192,11 @@ const handleCardClick = (word: string, type: 'a' | 'b') => {
       }
     } else {
       error.value = true;
-      score.value -= 1;
+      timerRef.value?.decreaseTime(20);
+      if (score.value > 0) {
+        score.value -= 1;
+      }
+      
       playSoundFx(SoundFx.Error)
     }
     setTimeout(() => {

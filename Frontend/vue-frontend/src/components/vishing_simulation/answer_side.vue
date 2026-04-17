@@ -75,6 +75,19 @@
       >
         <span class="text-sm">Send</span>
       </button>
+      <button
+        type="button"
+        class="h-11 rounded-lg flex items-center justify-center gap-2 font-medium transition-colors"
+        
+        :class="[
+          !note
+            ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
+            : 'bg-slate-700 text-white hover:bg-slate-600',
+        ]"
+        @click="emitText('goodbye')"
+      >
+        <span class="text-sm">goodbye</span>
+      </button>
     </div>
 
 

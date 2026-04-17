@@ -80,6 +80,18 @@ export interface OverallDefenceResponse {
     components: OverallDefenceComponents;
 }
 
+
+export interface VishingScenario {
+    user: number;
+    status: string;
+    created_at: string;
+}
+export interface VishingScenarioTotal {
+    total: number;
+    gave_information: number;
+    refused: number;
+    security_score: number;
+}
 const END_POINT = '/api/gophish/'
 
 const gophishService = {
@@ -100,7 +112,12 @@ const gophishService = {
   update_phone_consent: (phone_number: string): Promise<GoPhishConsent> =>
     session.post(END_POINT + 'gophish_consent/phone/', { phone_number }).then((res) => res.data[0]),
   get_overall_defence: (): Promise<OverallDefenceResponse> =>
-    session.get(END_POINT + 'gophish_user_score/overall_defence/').then((res) => res.data)
+    session.get(END_POINT + 'gophish_user_score/overall_defence/').then((res) => res.data),
+
+  get_vishing_scenarios: (): Promise<VishingScenario[]> =>
+    session.get('/api/vishing/score/').then((res) => res.data),
+  get_vishing_scenarios_total: (): Promise<VishingScenarioTotal> =>
+    session.get('/api/vishing/score/summary/').then((res) => res.data)
 }
 
 export default gophishService

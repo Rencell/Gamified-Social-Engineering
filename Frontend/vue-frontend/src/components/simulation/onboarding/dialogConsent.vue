@@ -240,7 +240,7 @@ onMounted(async() => {
                                
                                 <Wrench class="h-4 w-4" />
                            </Button>
-                            <div>
+                            <div class="flex flex-col gap-5">
                                 <DialogTitle>{{ aggreement?.title }}</DialogTitle>
                                 <DialogDescription>
                                     {{ aggreement?.content }}
@@ -266,7 +266,7 @@ onMounted(async() => {
                     <Card class="bg-orange-500/10 border-orange-500/30 border-2 flex dark:bg-orange-500/10 dark:border-orange-500/30">
                         <CardContent class="text-slate-800 dark:text-gray-200 font-semibold text-sm flex gap-5">
                             <AlertTriangle class="h-9 w-9 text-orange-500 " />
-                            <div>
+                            <div class="text-left">
                                 <strong>Important Notice:</strong>
                                 <div>
                                     By participating in this
@@ -303,8 +303,8 @@ onMounted(async() => {
                             </div>
                             <div class="w-full">
                                 <template v-if="!isEditingAgreement(value.id)">
-                                    <h4 class="font-semibold mb-1 text-slate-900 dark:text-white">{{ value.title }}</h4>
-                                    <p class="text-sm text-slate-600 dark:text-gray-400">{{ value.description }}</p>
+                                    <h4 class="font-semibold mb-1 text-slate-900 dark:text-white text-left">{{ value.title }}</h4>
+                                    <p class="text-sm text-slate-600 dark:text-gray-400 text-left">{{ value.description }}</p>
                                 </template>
 
                                 <template v-else>
@@ -352,7 +352,7 @@ onMounted(async() => {
                 <Button @click="toggleEditMode" v-if="useAuthStore().User.is_admin"><Wrench></Wrench> Edit Mode</Button>
                 <DialogClose as-child>
                     <Button variant="outline" >
-                        Back
+                        Okay
                     </Button>
                 </DialogClose>
             </DialogFooter>

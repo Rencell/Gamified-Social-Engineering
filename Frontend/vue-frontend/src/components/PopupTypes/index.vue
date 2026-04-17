@@ -1,11 +1,11 @@
 <template>
-  
-    <div :class="['absolute z-50', wrapperClass]" >
+    <div :class="['absolute z-999', wrapperClass]"  >
         <component
-        v-if="visible"
+        v-if="visible"  
         :is="selectedPopup"
         @click-action="handleClick"
         @close-action="handleClose"
+        class="overflow-hidden"
         />
     </div>
 </template>
@@ -30,6 +30,9 @@ import Popup10 from "./popup10.vue";
 import { PopupService } from '@/services';
 import { usePopupStore } from '@/stores/popup';
 import { toast } from 'vue-sonner';
+import { useAuthStore } from '@/stores/auth';
+import { showExpToast } from '../ui/sonner/ExpToast/ExpToast';
+import { useRoute } from 'vue-router';
 
 const props = defineProps<{ scenario: number }>();
 const popupStore = usePopupStore();
@@ -110,6 +113,8 @@ function toast_notification(message: string) {
   })
 }
 
+
+
 async function handleClick() {
   try {
     await PopupService.mark_popup_as_seen(props.scenario, 'clicked')
@@ -126,6 +131,7 @@ async function handleClose() {
   try {
     await PopupService.mark_popup_as_seen(props.scenario, 'closed')
     toast_notification('Nice! Popup dismissed.')
+    showExpToast();
   } catch (e) {
     console.error('Failed to mark popup as seen (closed):', e)
     toast.error('Something went wrong. Please try again.', { position: 'top-right' })
