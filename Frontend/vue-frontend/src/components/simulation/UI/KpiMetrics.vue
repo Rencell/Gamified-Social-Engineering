@@ -1,10 +1,12 @@
 <template>
     <div>
         <section>
-            <div class="flex items-center justify-between">
-                <h1 class="mb-8 text-4xl font-bold font-display">Security Risk Score - <span
-                        class="text-yellow-500">{{ props.title }}</span></h1>
-                <SecurityGuide />
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                <h1 class="mb-4 sm:mb-0 text-2xl sm:text-4xl font-bold font-display">Security Risk Score - <span class="text-yellow-500">{{ props.title }}</span></h1>
+                <!-- <SecurityGuide /> -->
+                 
+               
+
             </div>
             <Card class="border-[#1a2332] bg-secondary p-8 rounded-2xl">
                 <div class="mb-6 flex items-baseline gap-4">
@@ -43,6 +45,9 @@ import { type PropType } from 'vue';
 import RiskIndicator from '../riskIndicator.vue';
 import { Card } from '@/components/ui/card';
 import SecurityGuide from './dialogue/securityGuide.vue'
+import AvoidGuide from './dialogue/avoidGuide.vue'
+import { CircleQuestionMark, Info } from 'lucide-vue-next';
+import Button from '@/components/ui/button/Button.vue';
 
 
 interface Summary {

@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import RiskIndicator from '@/components/simulation/riskIndicator.vue';
-import { Card } from '@/components/ui/card';
-import { PopupService } from '@/services';
-import type { Popup, PopupLogStatistics } from '@/services/popupService';
+import { PopupService, SimulationService } from '@/services';
+import type { PopupLogStatistics } from '@/services/popupService';
 import { computed, onMounted, ref } from 'vue';
 import KpiMetrics from '@/components/simulation/UI/KpiMetrics.vue'
+import AvoidGuide from '@/components/simulation/UI/dialogue/avoidGuide.vue';
+import type { SimulationGuide } from '@/services/simulationService';
+import { useSimulationStore } from '@/stores/simulation';
+
+defineOptions({
+    name: 'SafeBrowsingUser',
+});
 
 
 const popupData = ref<PopupLogStatistics>();
@@ -25,11 +30,16 @@ const summary = computed<Summary[]>(() => [
   
 ])
 
+const simulationStore = useSimulationStore();
 
+simulationStore.getDialogService('safeBrowsing');
 </script>
 
 <template>
-     <div class="mx-auto max-w-7xl space-y-12 font-display">
+    <div class="mx-auto max-w-7xl space-y-12 font-display relative">
+        <AvoidGuide 
+            :guides="simulationStore.simulationGuides"
+            dialog-title="How to Avoid Pop-ups" />
         <KpiMetrics :phishing-data="summary" title="Safe Browsing" :security_score="popupData?.security_score ?? 0" />
     </div>
 </template>

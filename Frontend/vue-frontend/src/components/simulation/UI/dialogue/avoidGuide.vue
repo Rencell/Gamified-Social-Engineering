@@ -1,0 +1,194 @@
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+import { Button } from '@/components/ui/button'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog'
+import DialogClose from '@/components/ui/dialog/DialogClose.vue'
+import { CircleQuestionMark } from 'lucide-vue-next'
+import { useRoute, useRouter } from 'vue-router'
+import type { SimulationGuide } from '@/services/simulationService'
+
+type GuideSlide = {
+    title: string
+    description?: string
+    imageAlt?: string
+    image?: string
+}
+
+const props = withDefaults(
+    defineProps<{
+        guides?: SimulationGuide[]
+        showForUser?: boolean
+        dialogTitle?: string
+        dialogDescription?: string
+    }>(),
+    {
+        showForUser: true,
+        dialogTitle: 'How this quiz works',
+        dialogDescription: 'Click Next to continue. You can close anytime.',
+    },
+)
+
+const open = defineModel<boolean>('open', { default: false })
+const activeIndex = ref(0)
+
+const defaultSlides: GuideSlide[] = [
+    {
+        title: 'Read the question',
+        description: 'Take a moment to understand what is being asked before answering.',
+        imageAlt: 'Placeholder image for step 1',
+    },
+    {
+        title: 'Choose your answer',
+        description: 'Select the best option. Some quizzes may be timed, so stay focused.',
+        imageAlt: 'Placeholder image for step 2',
+    },
+    {
+        title: 'Finish and review',
+        description: 'At the end you will see your score and any rewards you earned.',
+        imageAlt: 'Placeholder image for step 3',
+    },
+]
+
+const slides = computed<GuideSlide[]>(() => {
+    const source = props.guides?.length ? props.guides : undefined
+    if (!source) return defaultSlides
+    return source.map((g) => ({
+        title: g.title,
+        description: g.description,
+        image: g.image,
+        imageAlt: g.image_alt_text || g.title,
+    }))
+})
+
+const currentSlide = computed(() => slides.value[activeIndex.value] ?? slides.value[0])
+const isFirst = computed(() => activeIndex.value <= 0)
+const isLast = computed(() => activeIndex.value >= slides.value.length - 1)
+const route = useRoute()
+const router = useRouter()
+
+watch(
+  () => route.query.openQuiz,
+  (openQuiz) => {
+    const shouldOpen =openQuiz === 'true'
+    if (shouldOpen) {
+      open.value = true
+      router.replace({ query: { ...route.query, openQuiz: undefined } })
+    }
+  },
+  { immediate: true },
+)
+
+watch(
+    () => open.value,
+    (isOpen) => {
+        if (isOpen) activeIndex.value = 0
+    },
+)
+
+const goTo = (index: number) => {
+    if (index < 0 || index >= slides.value.length) return
+    activeIndex.value = index
+}
+
+const next = () => {
+    if (isLast.value) {
+        open.value = false
+        return
+    }
+    activeIndex.value += 1
+}
+
+const back = () => {
+    if (isFirst.value) return
+    activeIndex.value -= 1
+}
+</script>
+
+<template>
+    <div class="absolute top-0 right-0" >
+        <Dialog v-model:open="open" :show-for-user="showForUser">
+            <DialogTrigger as-child>
+                <Button variant="ghost">
+                    <CircleQuestionMark class="h-5 w-5 text-blue-500" /> 
+                </Button>
+            </DialogTrigger>
+    
+            <DialogContent class="sm:max-w-[760px]">
+                <DialogHeader>
+                    <DialogTitle>{{ dialogTitle }}</DialogTitle>
+                    <DialogDescription>{{ dialogDescription }}</DialogDescription>
+                </DialogHeader>
+    
+                <div class="mt-6">
+                    <Transition name="intro-step" mode="out-in">
+                        <div :key="activeIndex" class="grid gap-6">
+                            <div class="text-center space-y-2">
+                                <h3 class="text-xl sm:text-2xl font-bold tracking-tight">{{ currentSlide?.title }}</h3>
+                                <p class="text-sm sm:text-base text-muted-foreground">
+                                    {{ currentSlide?.description }}
+                                </p>
+                            </div>
+    
+                            <div class="flex justify-center">
+                                <div class="w-full max-w-md aspect-video rounded-xl border bg-muted/20 overflow-hidden flex items-center justify-center"
+                                    :aria-label="currentSlide?.imageAlt">
+                                    <img v-if="currentSlide?.image" :src="currentSlide.image"
+                                        :alt="currentSlide?.imageAlt ?? currentSlide?.title"
+                                        class="object-cover w-full h-full" loading="lazy" decoding="async" />
+                                    <div v-else class="flex items-center justify-center p-4">
+                                        <span class="text-xs text-muted-foreground">Image placeholder</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Transition>
+    
+                    <div class="mt-6 flex items-center justify-center gap-2" aria-label="Instruction pages">
+                        <button v-for="(_, i) in slides" :key="i" type="button"
+                            class="h-2.5 w-2.5 rounded-full transition-colors"
+                            :class="i === activeIndex ? 'bg-accent' : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'"
+                            :aria-label="`Go to page ${i + 1}`" @click="goTo(i)" />
+                    </div>
+                </div>
+    
+                <DialogFooter class="mt-6 w-full">
+                    <div class="flex w-full items-center justify-between gap-3">
+                        <Button variant="outline" :disabled="isFirst" @click="back">Back</Button>
+    
+                        <div class="flex items-center gap-2">
+                            <Button v-if="!isLast" @click="next">Next</Button>
+                            <DialogClose v-else as-child>
+                                <Button @click="next">Ok, Got it</Button>
+                            </DialogClose>
+                        </div>
+                    </div>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    </div>
+</template>
+
+<style scoped>
+.intro-step-enter-active,
+.intro-step-leave-active {
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.intro-step-enter-from {
+    opacity: 0;
+    transform: translateX(10px);
+}
+
+.intro-step-leave-to {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+</style>

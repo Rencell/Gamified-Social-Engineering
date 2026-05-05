@@ -12,9 +12,12 @@ import { Button } from '@/components/ui/button';
 const coins = computed(() => useAuthStore().User.coin || 0);
 
 import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
+import { showPopupFailed } from '@/components/ui/sonner/popupFailed/PopupFailed';
 </script>
 
 <template>
+
+    <button @click="showPopupFailed()">Click me</button>
     <div class="flex flex-col gap-5 p-2">
         <div class="flex justify-between h-15">
             <router-link :to="{ name: 'Shop' }">

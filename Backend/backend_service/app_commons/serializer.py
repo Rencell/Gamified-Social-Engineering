@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import AgreementSection, Agreement
+from .models import AgreementSection, Agreement, simulationGuide
 
         
 class AgreementSerializer(serializers.ModelSerializer):
@@ -15,3 +15,8 @@ class AgreementSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AgreementSection
         fields = ['id', 'title', 'type', 'content', 'created_at', 'agreements']
+        
+class SimulationGuideSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = simulationGuide
+        fields = '__all__'

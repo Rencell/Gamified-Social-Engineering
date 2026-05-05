@@ -46,50 +46,6 @@
       <p v-if="error" class="text-xs text-red-300 mt-3">Error: {{ error }}</p>
     </div>
 
-    <!-- Controls -->
-    <div class="grid grid-cols-2 gap-3">
-      <button
-        type="button"
-        class="h-11 rounded-lg flex items-center justify-center gap-2 font-medium transition-colors"
-        :disabled="!isSupported"
-        :class="[
-          !isSupported
-            ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-            : (isListening ? 'bg-emerald-700 text-white hover:bg-emerald-600' : 'bg-emerald-600 text-white hover:bg-emerald-500'),
-        ]"
-        @click="toggleListening"
-      >
-        <span class="text-sm">{{ isListening ? 'Stop listening' : 'Start listening' }}</span>
-      </button>
-
-      <button
-        type="button"
-        class="h-11 rounded-lg flex items-center justify-center gap-2 font-medium transition-colors"
-        
-        :class="[
-          !note
-            ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-            : 'bg-slate-700 text-white hover:bg-slate-600',
-        ]"
-        @click="sendTranscript"
-      >
-        <span class="text-sm">Send</span>
-      </button>
-      <button
-        type="button"
-        class="h-11 rounded-lg flex items-center justify-center gap-2 font-medium transition-colors"
-        
-        :class="[
-          !note
-            ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-            : 'bg-slate-700 text-white hover:bg-slate-600',
-        ]"
-        @click="emitText('goodbye')"
-      >
-        <span class="text-sm">goodbye</span>
-      </button>
-    </div>
-
 
   </div>
 </template>
@@ -113,6 +69,7 @@ const AUTO_SEND_SILENCE_MS = 2000;
 const MIN_CHARS_TO_SEND = 3;
 let autoSendTimer: number | null = null;
 const lastAutoSentText = ref('');
+let refreshListenTimer: number | null = null;
 
 function clearAutoSendTimer() {
   if (autoSendTimer != null) {
@@ -121,12 +78,46 @@ function clearAutoSendTimer() {
   }
 }
 
+function clearRefreshListenTimer() {
+  if (refreshListenTimer != null) {
+    window.clearTimeout(refreshListenTimer);
+    refreshListenTimer = null;
+  }
+}
+
+function refreshListening() {
+  clearRefreshListenTimer();
+  if (!isSupported.value) return;
+  if (props.isSpeaking) return;
+
+  // Refresh recognition by toggling, waiting, then toggling again.
+  toggleListening();
+  window.setTimeout(() => {
+    if (props.isSpeaking) return;
+    toggleListening();
+    scheduleRefreshIfStillEmpty();
+  }, 500);
+}
+
+function scheduleRefreshIfStillEmpty() {
+  clearRefreshListenTimer();
+  if (props.isSpeaking) return;
+  if (!isListening.value) return;
+
+  refreshListenTimer = window.setTimeout(() => {
+    if (props.isSpeaking) return;
+    if (note.value.trim()) return;
+    refreshListening();
+  }, 3000);
+}
+
 function clearTranscript() {
   note.value = '';
   finalNote.value = '';
   error.value = null;
   lastAutoSentText.value = '';
   clearAutoSendTimer();
+  clearRefreshListenTimer();
 }
 
 function emitText(text: string) {
@@ -136,24 +127,25 @@ function emitText(text: string) {
   emit('sent', trimmed);
 }
 
-function sendTranscript() {
-  const text = "my first name is janice and my last name is toby"
-  // const text = "No sorry i can't give you that and please dont repeatedly ask me, because i will not give even you insist, just goodbye"
-  // const text = (finalNote.value || note.value).trim();
-  // if (!text) return;
-  emitText(text);
-}
-
 const hasSpokenOnce = ref(false);
 watch(
     () => props.isSpeaking,
     (val) => {
-      if (!val && hasSpokenOnce.value) {
-        isListening.value = true;
-      } else {
+      note.value = '';
+      finalNote.value = '';
+      clearRefreshListenTimer();
+      if (val) {
         hasSpokenOnce.value = true;
         isListening.value = false;
+        return;
       }
+
+      if (!hasSpokenOnce.value) {
+        hasSpokenOnce.value = true;
+      }
+
+      isListening.value = true;
+      scheduleRefreshIfStillEmpty();
     },
     { immediate: true },
 )
@@ -166,6 +158,8 @@ watch(
 
     const current = (finalNote.value || val || '').trim();
     if (current.length < MIN_CHARS_TO_SEND) return;
+
+    clearRefreshListenTimer();
 
     clearAutoSendTimer();
     autoSendTimer = window.setTimeout(() => {
@@ -185,11 +179,20 @@ watch(
 );
 
 watch(isListening, (val) => {
-  if (!val) clearAutoSendTimer();
+  if (!val) {
+    clearAutoSendTimer();
+    clearRefreshListenTimer();
+    return;
+  }
+
+  if (!props.isSpeaking && !note.value.trim()) {
+    scheduleRefreshIfStillEmpty();
+  }
 });
 
 onBeforeUnmount(() => {
   clearAutoSendTimer();
+  clearRefreshListenTimer();
   stop();
 });
 </script>

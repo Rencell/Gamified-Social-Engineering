@@ -1,6 +1,7 @@
 import { h } from 'vue'
 import { toast } from 'vue-sonner'
 import ToastCall from './toastCall.vue'
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx'
 
 export function showIncomingCallToast(opts: {
   callerName?: string
@@ -8,6 +9,7 @@ export function showIncomingCallToast(opts: {
   onAccept: () => void
   onDecline?: () => void
 }) {
+  playSoundFx(SoundFx.Calling, true)
   toast.custom(
     () =>
       h(ToastCall, {

@@ -6,11 +6,13 @@ import type { GoPhishEvent } from '@/services/simulationService';
 import { computed, onMounted, ref } from 'vue';
 import type { GoPhish } from '@/services/simulationService';
 import { Button } from '@/components/ui/button';
-import { ShieldAlert, Mail, Clock, XCircle, Info } from 'lucide-vue-next';
+import { ShieldAlert, Mail, Clock, XCircle, Info, CircleQuestionMark } from 'lucide-vue-next';
 import DialogSimulation from '@/components/simulation/dialogSimulation.vue'
 import Loading from '@/components/loading.vue';
 import KpiMetrics from '@/components/simulation/UI/KpiMetrics.vue'
 import SimulationHistoryTable from '@/components/simulation/UI/SimulationHistoryTable.vue';
+import AvoidGuide from '@/components/simulation/UI/dialogue/avoidGuide.vue';
+import { useSimulationStore } from '@/stores/simulation';
 
 defineOptions({
   name: 'EmailSimulationUser',
@@ -93,10 +95,17 @@ const summary = computed<Summary[]>(() => [
     { label: 'Data Submitted', value: phishingData.value[0]?.data_submitted ?? 0 },
 ]);
 
+const simulationStore = useSimulationStore();
+
+simulationStore.getDialogService('phishing');
+
 </script>
 
 <template>
-    <div class="mx-auto max-w-7xl space-y-12 font-display" :class="{ 'blur-md brightness-50': !isOpen }">
+    <div class="mx-auto max-w-7xl space-y-12 font-display relative" :class="{ 'blur-md brightness-50': !isOpen }">
+        <AvoidGuide 
+            :guides="simulationStore.simulationGuides"
+            dialog-title="How to Avoid Email Phishing" />
         <KpiMetrics :security_score="security_score" :phishingData="summary" title="Email" />
 
         <SimulationHistoryTable :emails="filter_type_email" title="s"/>

@@ -1,4 +1,5 @@
 import session from './api'
+import { serviceFactory } from './baseService'
 
 export interface GoPhish {
     emails_sent : number
@@ -92,7 +93,26 @@ export interface VishingScenarioTotal {
     refused: number;
     security_score: number;
 }
+
+export interface SimulationGuide {
+    id: number;
+    title: string;
+    description: string;
+    type: string;
+    image: string;
+    image_alt_text: string;
+}
+
 const END_POINT = '/api/gophish/'
+
+
+const END_POINT_COMMON = "/api/common/";
+
+const simulationGuides = {
+    ...serviceFactory<SimulationGuide>(END_POINT_COMMON + 'simulation-guide/'),
+    get_type: (type: string): Promise<SimulationGuide[]> =>
+        session.get(END_POINT_COMMON + 'simulation-guide/', { params: { type } }).then((res) => res.data),
+};
 
 const gophishService = {
   get_all: (): Promise<GoPhish[]> => 
@@ -117,7 +137,11 @@ const gophishService = {
   get_vishing_scenarios: (): Promise<VishingScenario[]> =>
     session.get('/api/vishing/score/').then((res) => res.data),
   get_vishing_scenarios_total: (): Promise<VishingScenarioTotal> =>
-    session.get('/api/vishing/score/summary/').then((res) => res.data)
+    session.get('/api/vishing/score/summary/').then((res) => res.data),
+
+  simulationGuides: simulationGuides,
 }
+
+
 
 export default gophishService

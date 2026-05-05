@@ -130,12 +130,12 @@
         
         
     <div v-if="isResult">
-        <Call_result :call-result="callResult[0].toLowerCase()" />
+        <Call_result :call-result="callResult[0].toLowerCase()" @close="handleResultClose" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { Phone, PhoneOff, X } from 'lucide-vue-next'
 
 import Button from '@/components/ui/button/Button.vue'
@@ -168,84 +168,6 @@ const isTransitioning = ref(false)
 const isResult = ref<boolean>(false)
 const callResult = ref<string[]>([])
 
-// ---- Audio (must be started from a user gesture due to autoplay policy)
-const backgroundAudio = ref<HTMLAudioElement | null>(null)
-const ringingAudio = ref<HTMLAudioElement | null>(null)
-
-const backgroundSrc = '/sounds/office_background.mp3'
-const ringingSrc = '/sounds/ringing.mp3'
-
-function ensureBackgroundAudio() {
-    if (backgroundAudio.value) return backgroundAudio.value
-    const a = new Audio(backgroundSrc)
-    a.loop = true
-    a.volume = 0.8
-    a.preload = 'auto'
-    backgroundAudio.value = a
-    return a
-}
-
-function ensureRingingAudio() {
-    if (ringingAudio.value) return ringingAudio.value
-    const a = new Audio(ringingSrc)
-    a.loop = true
-    a.volume = 0.9
-    a.preload = 'auto'
-    ringingAudio.value = a
-    return a
-}
-
-async function playFromUserGesture(a: HTMLAudioElement) {
-    await a.play()
-}
-
-function stopAndReset(a: HTMLAudioElement | null) {
-    if (!a) return
-    a.pause()
-    try {
-        a.currentTime = 0
-    } catch {
-        // ignore
-    }
-}
-
-onMounted(() => {
-    // Create & preload (OK without user gesture). Do NOT call play() here.
-    ensureBackgroundAudio()
-    ensureRingingAudio()
-})
-
-onBeforeUnmount(() => {
-    stopAndReset(backgroundAudio.value)
-    stopAndReset(ringingAudio.value)
-})
-
-// Start/stop ringing when the call becomes active/incoming.
-watch(
-    callState,
-    async (state) => {
-        if (state === 'incoming' && isVisible.value) {
-            try {
-                await playFromUserGesture(ensureRingingAudio())
-            } catch {
-                // Autoplay policies can block until a user gesture.
-                // If blocked, it will start on the first user click (Accept/Decline/Close).
-            }
-        } else {
-            stopAndReset(ringingAudio.value)
-        }
-    },
-    { flush: 'post', immediate: true },
-)
-
-// Also stop ringing if the modal is hidden.
-watch(
-    isVisible,
-    (visible) => {
-        if (!visible) stopAndReset(ringingAudio.value)
-    },
-    { flush: 'post' },
-)
 
 const callerName = computed(() => props.callerName)
 const callerNumber = computed(() => props.callerNumber)
@@ -260,16 +182,7 @@ const callerInitials = computed(() =>
 )
 
 async function handleAccept() {
-    // Stop ringing once the call is accepted.
-    stopAndReset(ringingAudio.value)
-
-    // User gesture: safe place to start background ambience.
-    try {
-        await playFromUserGesture(ensureBackgroundAudio())
-    } catch {
-        // ignore
-    }
-
+    
     isTransitioning.value = true
     window.setTimeout(() => {
         callState.value = 'active'
@@ -279,30 +192,14 @@ async function handleAccept() {
     emit('accept')
 }
 
-function handleDecline() {
-    stopAndReset(backgroundAudio.value)
-    stopAndReset(ringingAudio.value)
+const handleDecline = () => showVisibleAndResult(false, true)
+const handleClose = () => showVisibleAndResult(false, true)
+const handleEndCall = () => showVisibleAndResult(false, true)
+const handleResultClose = () => showVisibleAndResult(false, false)
 
-    isVisible.value = false
-    // emit('decline')
-}
-
-function handleClose() {
-    stopAndReset(backgroundAudio.value)
-    stopAndReset(ringingAudio.value)
-
-    isVisible.value = false
-    isResult.value = true
-    // emit('close')
-}
-
-function handleEndCall() {
-    stopAndReset(backgroundAudio.value)
-    stopAndReset(ringingAudio.value)
-
-    isVisible.value = false
-    isResult.value = true
-    // emit('decline')
+function showVisibleAndResult(visible: boolean, result: boolean) {
+    isVisible.value = visible
+    isResult.value = result
 }
 
 function handleResult(result: string[]) {

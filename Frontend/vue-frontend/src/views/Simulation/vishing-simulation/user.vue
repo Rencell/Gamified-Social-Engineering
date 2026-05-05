@@ -4,13 +4,15 @@ import RiskIndicator from '@/components/simulation/riskIndicator.vue'
 import { SimulationService } from '@/services';
 import { computed, onMounted, ref } from 'vue';
 import type {  GoPhishEvent, VishingScenario, VishingScenarioTotal } from '@/services/simulationService';
-import {Clock, Mail, ShieldAlert } from 'lucide-vue-next';
+import {CircleQuestionMark, Clock, Mail, ShieldAlert } from 'lucide-vue-next';
 import DialogSimulation from '@/components/simulation/dialogSimulation.vue'
 import Loading from '@/components/loading.vue';
 import KpiMetrics from '@/components/simulation/UI/KpiMetrics.vue'
 import SimulationHistoryTable from '@/components/simulation/UI/SimulationHistoryTable.vue';
 import { showIncomingCallToast } from '@/components/vishing_simulation/UI/toastCall';
 import Incoming_call from '@/components/vishing_simulation/incoming_call.vue';
+import AvoidGuide from '@/components/simulation/UI/dialogue/avoidGuide.vue';
+import { Button } from '@/components/ui/button';
 
 const phishingData = ref<VishingScenario[]>([]);
 const phishingDataTotal = ref<VishingScenarioTotal | null>(null);
@@ -71,11 +73,13 @@ function triggerIncomingToast() {
     <Incoming_call v-if="showIncoming" @close="showIncoming = false" @decline="showIncoming = false" />
 <!--     
     <Button @click="toggleshit">Toggle Dialog></Button> -->
-    <div class="mx-auto max-w-7xl space-y-12 font-display">
-       <button class="px-3 py-2 border rounded" @click="triggerIncomingToast">Trigger Incoming Call Toast</button>
+    <div class="mx-auto max-w-7xl space-y-12 font-display relative">
+       
+        <AvoidGuide/>
         <KpiMetrics :phishingData="summary" title="Vishing" :security_score="security_score"/>
         
         <!-- <SimulationHistoryTable :emails="filter_type_phone" title="Vishing History"/> -->
+         <button class="px-3 py-2 border rounded" @click="triggerIncomingToast">Trigger Incoming Call Toast</button>
     </div>
 
     <div v-if="isLoading" class="absolute inset-0 flex flex-col items-center justify-center space-y-4">

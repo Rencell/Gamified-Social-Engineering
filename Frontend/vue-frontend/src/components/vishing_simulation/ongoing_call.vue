@@ -50,20 +50,6 @@
             </button>
         </div>
 
-        <!-- End Call Button -->
-        <button @click="emit('end-call')" class="group relative flex flex-col items-center gap-3" type="button">
-            <div class="relative">
-                <div
-                    class="absolute inset-0 rounded-full bg-red-500/20 blur-xl group-hover:bg-red-500/30 transition-all" />
-                <div
-                    class="relative flex h-16 w-16 items-center justify-center rounded-full bg-red-500 hover:bg-red-600 transition-colors shadow-lg">
-                    <PhoneOff class="h-7 w-7 text-white" />
-                </div>
-            </div>
-            <span class="text-xs font-medium text-slate-400 group-hover:text-white transition-colors">
-                End Call
-            </span>
-        </button>
         <div class="w-full max-w-xl mt-10">
             <AnswerSide @sent="sendMessage" :is-speaking="isSpeaking" />
         </div>
@@ -77,6 +63,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { Mic, MicOff, PhoneOff, Pause }  from 'lucide-vue-next'
 import { useGeminiWs } from '@/composables/useGeminiAudio'
 import AnswerSide from '@/components/vishing_simulation/answer_side.vue'
+import { disconnectSoundFx, playSoundFx, SoundFx } from '@/composables/useSoundFx';
 
 
 const {
@@ -120,6 +107,8 @@ const sendMessage = (message: string) => {
 };
 
 onMounted(() => {
+    disconnectSoundFx();
+    playSoundFx(SoundFx.OfficeBackground, true);
     intervalId = window.setInterval(() => {
         timer.value += 1;
     }, 1000);
@@ -129,7 +118,9 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (intervalId != null) window.clearInterval(intervalId);
+  disconnectSoundFx();
   disconnect();
+
 });
 
 // End call UI if the websocket disconnects (closed OR error)

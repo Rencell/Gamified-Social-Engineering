@@ -3,9 +3,15 @@ import { Button } from '@/components/ui/button';
 import { showExpToast } from '@/components/ui/sonner/ExpToast/ExpToast';
 import { AlertTriangle, CheckCircle2, PhoneCall, X } from 'lucide-vue-next';
 import { computed, onUnmounted } from 'vue';
+import type { RouteLocationRaw } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
     callResult: string;
+}>();
+
+const emit = defineEmits<{
+    (e: 'close'): void;
 }>();
 
 type ResultView = {
@@ -65,25 +71,40 @@ const view = computed<ResultView>(() => {
     };
 });
 
-onUnmounted(() => {
-    if (resultKey.value === 'refused') {
-        showExpToast();
+const nextRoute = computed<RouteLocationRaw>(() => {
+    if (props.callResult === 'gave_information') {
+        return {
+            path: '/vishing-simulation',
+            query: { openQuiz: 'true' },
+        };
     }
+    showExpToast();
+    return '/home';
 });
+
+const router = useRouter();
+
+const handleNavigate = async () => {
+    emit('close');
+    await router.push(nextRoute.value);
+};
+
+const handleClose = () => {
+    emit('close');
+};
 </script>
 
 <template>
     <div class="fixed inset-0 z-50 grid place-items-center bg-black/60 backdrop-blur-sm p-6 font-display">
         <div class="relative w-full max-w-md rounded-2xl bg-white p-8 shadow-xl ring-1 ring-slate-200">
             <Button
-                asChild
                 variant="ghost"
                 size="icon"
                 class="absolute right-3 top-3 text-slate-500 hover:text-slate-900"
+                aria-label="Close"
+                @click="handleClose"
             >
-                <RouterLink to="/home" aria-label="Close">
-                    <X class="h-4 w-4" />
-                </RouterLink>
+                <X class="h-4 w-4" />
             </Button>
 
             <div
@@ -105,10 +126,8 @@ onUnmounted(() => {
                 {{ view.details }}
             </p>
 
-            <Button asChild class="mt-6 w-full" :variant="view.buttonVariant">
-                <RouterLink to="/home">
-                    {{ view.buttonText }}
-                </RouterLink>
+            <Button class="mt-6 w-full" :variant="view.buttonVariant" @click="handleNavigate">
+                {{ view.buttonText }}
             </Button>
         </div>
     </div>

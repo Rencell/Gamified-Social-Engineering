@@ -4,11 +4,14 @@ import RiskIndicator from '@/components/simulation/riskIndicator.vue'
 import { SimulationService } from '@/services';
 import { computed, onMounted, ref } from 'vue';
 import type {  GoPhishEvent, GoPhishSMS } from '@/services/simulationService';
-import {Clock, Mail, ShieldAlert } from 'lucide-vue-next';
+import {CircleQuestionMark, Clock, Mail, ShieldAlert } from 'lucide-vue-next';
 import DialogSimulation from '@/components/simulation/dialogSimulation.vue'
 import Loading from '@/components/loading.vue';
 import KpiMetrics from '@/components/simulation/UI/KpiMetrics.vue'
 import SimulationHistoryTable from '@/components/simulation/UI/SimulationHistoryTable.vue';
+import AvoidGuide from '@/components/simulation/UI/dialogue/avoidGuide.vue';
+import Button from '@/components/ui/button/Button.vue';
+import { useSimulationStore } from '@/stores/simulation';
 
 const phishingData = ref<GoPhishSMS[]>([])
 const eventsData = ref<GoPhishEvent[]>([])
@@ -67,16 +70,22 @@ const summary = computed<Summary[]>(() => [
     { label: 'Data Submitted', value: phishingData.value[0]?.data_submitted ?? 0 },
 ]);
 
+const simulationStore = useSimulationStore();
 
+simulationStore.getDialogService('smishing');
 
 </script>
 
 <template>
 <!--     
     <Button @click="toggleshit">Toggle Dialog></Button> -->
-    <div class="mx-auto max-w-7xl space-y-12 font-display"
+    <div class="mx-auto max-w-7xl space-y-12 font-display relative"
         :class="{ 'blur-md brightness-50': !isOpen }">
        
+        <AvoidGuide 
+            :guides="simulationStore.simulationGuides"
+            dialog-title="How to Avoid SMS Phishing" />
+
         <KpiMetrics :phishingData="summary" title="SMS" :security_score="security_score"/>
         
         <SimulationHistoryTable :emails="filter_type_phone" title="SMS History"/>

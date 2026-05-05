@@ -94,12 +94,10 @@ export default function useSpeechRecognition() {
 
     recognition.onerror = (event) => {
       error.value = event.error;
-      // If user is still in listening mode, restart after an error.
       scheduleRestart();
     };
 
     recognition.onend = () => {
-      // Browser may end recognition on its own; restart if user still wants it.
       if (isListening.value && shouldRestart) {
         scheduleRestart();
         return;
@@ -115,7 +113,6 @@ export default function useSpeechRecognition() {
     try {
       recognition.start();
     } catch {
-      // start() throws if already started; still ensure restart loop is armed.
       scheduleRestart();
     }
   };
@@ -129,6 +126,7 @@ export default function useSpeechRecognition() {
     }
     try {
       recognition.stop();
+      
     } catch {
       // ignore
     }
