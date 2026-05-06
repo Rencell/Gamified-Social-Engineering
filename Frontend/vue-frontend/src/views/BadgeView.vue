@@ -73,12 +73,12 @@ onMounted(async () => {
     Loading badges...
   </div>
 
-  <div v-else class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-6">
-    <div class="p-6 space-y-3 rounded-lg relative transition" v-for="badge in badgesStore.badges" :key="badge.name"
+  <div v-else class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-6 gap-3 md:gap-6">
+    <div class="relative flex flex-col items-center gap-3 rounded-lg p-6 text-center transition" v-for="badge in badgesStore.badges" :key="badge.name"
       :class="(!isUnlocked(badge.name) && !isClaimable(badge.name)) ? 'opacity-60 grayscale' : ''" @click="closeTooltip">
       
       <div class="relative group">
-        <img :src="badge.image" :alt="badge.name" class="mx-auto" />
+        <img :src="badge.image" :alt="badge.name" class="mx-auto block h-20 w-20 object-contain sm:h-40 sm:w-40" />
 
         <!-- Tooltip for locked/claimable badges -->
         <div v-if="!isUnlocked(badge.name)" class="absolute inset-0 flex items-center justify-center">
@@ -113,7 +113,9 @@ onMounted(async () => {
         No rule
       </badgeUi>
 
-      <UpdateBadge :data="badge"/>
+      <div class="w-full pt-1 flex justify-center">
+        <UpdateBadge :data="badge" />
+      </div>
     </div>
 
     <AddBadge />

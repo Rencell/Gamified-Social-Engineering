@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Input, InputProfanity } from '@/components/ui/input';
+import { Textarea, TextareaProfanity } from '@/components/ui/textarea';
 import { GripVertical, Plus, Check, Trash2, Save } from 'lucide-vue-next';
 import { Badge } from '@/components/ui/badge';
 import { computed, onMounted, ref } from 'vue';
@@ -28,6 +28,7 @@ const props = defineProps<{
 const quizData = computed(() => props.question);
 
 const quizanswer = ref('');
+const questionIsProfane = ref(false);
 
 function setCorrectAnswer(id: "image1" | "image2") {
     quizanswer.value = id;
@@ -53,6 +54,10 @@ function addOption() {
 }
 
 async function updateOption(id: number) {
+    if ( hasAnyProfanity.value) {
+        alert('Please remove inappropriate language before saving.');
+        return;
+    }
     const option = quizData.value.options.find(option => option.id === id);
     if (option) {
         await assessmentStore.updateOption(option);
@@ -71,7 +76,21 @@ const toggle = () => {
     toggleChange.value = !toggleChange.value;
 };
 
+const optionProfanityStates = ref<Record<number, boolean>>({});
+
+const hasAnyProfanity = computed(() => {
+  return (
+    questionIsProfane.value ||
+    Object.values(optionProfanityStates.value).some(isProfane => isProfane)
+  );
+});
+
 const saveChanges = async () => {
+    if ( hasAnyProfanity.value) {
+        alert('Please remove inappropriate language before saving.');
+        return;
+    }
+    
     // Save changes logic here
     toggle();
     setTimeout(() => {
@@ -132,23 +151,15 @@ watch(selectedLesson, async (newLessonId) => {
             </CardTitle>
         </CardHeader>
         <CardContent class="space-y-4">
-            <!-- <div>
-                
-                <label for="question-type" class="text-sm font-medium text-foreground mb-2 block">Question Type</label>
-                <Select v-model="quizData.question_type" :default-value="'multiple_choice'">
-                    <SelectTrigger id="question-type" class="!bg-background !text-white">
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="multiple_choice">Multiple Choice</SelectItem>
-                        <SelectItem value="image_choice">Image Choice</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div> -->
+           
             <div>
                 <label class="text-sm font-medium text-foreground mb-2 block">Question Text</label>
-                <Textarea v-model="quizData.text" placeholder="Enter your question here..."
-                    class="min-h-[100px] resize-none !bg-background" />
+                                <TextareaProfanity
+                                    v-model="quizData.text"
+                                    v-model:isProfane="questionIsProfane"
+                                    placeholder="Enter your question here..."
+                                />
+
             </div>
 
             <div class="space-y-3">
@@ -201,7 +212,7 @@ watch(selectedLesson, async (newLessonId) => {
                 </div>
                 <div class="flex justify-end mt-4 items-center gap-3">
                     <p v-if="toggleChange" class="text-green-500 text-sm">Save Success</p>
-                    <Button @click="saveChanges">Save Changes</Button>
+                    <Button @click="saveChanges" :disabled="questionIsProfane">Save Changes</Button>
                 </div>
             </div>
         </CardContent>
@@ -229,8 +240,11 @@ watch(selectedLesson, async (newLessonId) => {
                     </span>
                 </div>
 
-                <Input :placeholder="`Option ${String.fromCharCode(65 + index)}`" v-model="option.text"
-                    class="flex-1" />
+                <InputProfanity :placeholder="`Option ${String.fromCharCode(65 + index)}`" 
+                    v-model:is-profane="optionProfanityStates[option.id]"
+                    v-model="option.text"
+                    class="" />
+
                 <Button v-if="true" variant="outline" size="sm" @click="updateOption(option.id)"
                     class="text-blue-500 hover:text-blue-700">
                     <Save class="h-4 w-4" />

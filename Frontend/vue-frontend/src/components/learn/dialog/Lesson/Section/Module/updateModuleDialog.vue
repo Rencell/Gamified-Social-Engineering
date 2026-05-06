@@ -11,7 +11,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Wrench } from 'lucide-vue-next';
-import { Input } from '@/components/ui/input';
+import { Input, InputProfanity } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { ModuleTest } from '@/services/moduleService';
 import { useModuleStore } from '@/stores/module';
@@ -31,6 +31,8 @@ const formData = ref<Partial<ModuleTest>>({
     section: props.module.section || 0,
     lesson:  0,
 });
+
+const inputProfanityFilter = ref(false);
 
 // Add validation state for title
 const errors = ref<{ title?: string }>({});
@@ -78,14 +80,14 @@ const saveModule = async () => {
             <div class="space-y-4">
                 <div class="space-y-2">
                     <Label>Title</Label>
-                    <Input v-model="formData.title" type="text" placeholder="Enter module title" @blur="touched.title = true; validate()" @input="validate()" />
+                    <InputProfanity v-model="formData.title" v-model:is-profane="inputProfanityFilter" type="text" placeholder="Enter module title" @blur="touched.title = true; validate()" @input="validate()" />
                     <p v-if="touched.title && errors.title" class="text-red-500">{{ errors.title }}</p>
                 </div>
             </div>
 
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button @click="saveModule" :disabled="loading">
+                    <Button @click="saveModule" :disabled="loading || inputProfanityFilter">
                         <Spinner v-if="loading" class="mr-2" />
                         Save Module
                     </Button>

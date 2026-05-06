@@ -17,7 +17,6 @@ import { showPopupFailed } from '@/components/ui/sonner/popupFailed/PopupFailed'
 
 <template>
 
-    <button @click="showPopupFailed()">Click me</button>
     <div class="flex flex-col gap-5 p-2">
         <div class="flex justify-between h-15">
             <router-link :to="{ name: 'Shop' }">

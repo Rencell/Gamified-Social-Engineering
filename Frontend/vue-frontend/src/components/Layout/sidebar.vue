@@ -304,7 +304,7 @@ onBeforeUnmount(() => {
               <RouterLink
                 :to="{ name: 'logout' }"
                 role="menuitem"
-                class="flex items-center gap-2 my-3 p-2 text-sm text-slate-300 hover:bg-accent hover:text-white cursor-pointer"
+                class="flex items-center gap-2 my-3 p-2 text-sm hover:bg-accent hover:text-white cursor-pointer"
               >
                 <img :src="logout" alt="" aria-hidden="true" class="h-7"> <span>Sign Out</span>
               </RouterLink>

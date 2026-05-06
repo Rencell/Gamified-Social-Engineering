@@ -11,8 +11,8 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Plus } from 'lucide-vue-next';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Input, InputProfanity } from '@/components/ui/input';
+import {  TextareaProfanity } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useLessonStore } from '@/stores/lesson';
 import { Spinner } from '@/components/ui/spinner';
@@ -29,6 +29,10 @@ interface LessonForm {
 }
 // control dialog open state
 const open = ref(false);
+
+const inputProfanityFilter = ref(false);
+const textAreaProfanityFilter = ref(false);
+
 
 // Reactive object to hold the form data
 const formData = ref<LessonForm>({
@@ -84,6 +88,10 @@ const fields: Array<{ key: keyof LessonForm; label: string; type: string; placeh
 const lessonStore = useLessonStore();
 const loading = ref(false);
 const saveLesson = async () => {
+    if (inputProfanityFilter.value || textAreaProfanityFilter.value) {
+        alert('Please remove inappropriate language before saving.');
+        return;
+    }
     if (!validateForm()) return;
     loading.value = true;
     try {
@@ -123,14 +131,23 @@ function onFileChange(event: Event) {
                     Fill in the details for the new lesson. Click save when you're done.
                 </DialogDescription>
             </DialogHeader>
-
             <!-- Form Fields -->
             <div class="space-y-4">
                 <div v-for="field in fields" :key="field.key" class="space-y-2">
                     <Label>{{ field.label }}</Label>
                     <!-- text/color inputs -->
+                    <InputProfanity
+                      v-if="field.type !== 'textarea' && field.type !== 'file' && field.type !== 'color'"
+                      v-model:is-profane="inputProfanityFilter"
+                      v-model="formData[field.key] as string"
+                      :type="field.type"
+                      :placeholder="field.placeholder"
+                      @blur="validateField(field.key)"
+                      required
+                    />
+
                     <Input
-                      v-if="field.type !== 'textarea' && field.type !== 'file'"
+                      v-else-if="field.type === 'color'"
                       v-model="formData[field.key] as string"
                       :type="field.type"
                       :placeholder="field.placeholder"
@@ -147,16 +164,14 @@ function onFileChange(event: Event) {
                       required
                     />
                     <!-- textarea -->
-                    <Textarea
+                    <TextareaProfanity
                       v-else
+                      v-model:is-profane="textAreaProfanityFilter"
                       v-model="formData[field.key] as string"
                       :placeholder="field.placeholder"
                       @blur="validateField(field.key)"
                       required
                     />
-
-                    <!-- inline error -->
-                    <p v-if="errors[field.key]" class="text-red-500 text-sm">{{ errors[field.key] }}</p>
                 </div>
             </div>
 

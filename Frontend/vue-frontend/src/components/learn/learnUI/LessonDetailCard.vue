@@ -10,7 +10,7 @@ import type { Lesson_test } from '@/services/lessonService';
 import DeleteAlert from '../dialog/Lesson/deleteAlert.vue'
 import LessonProgress from './LessonProgress.vue'
 import { computed, ref } from 'vue';
-import { Input } from '@/components/ui/input';
+import { Input, InputProfanity } from '@/components/ui/input';
 import LearningBold from '../content/UI/Learning/Highlight/LearningBold.vue';
 import { useAuthStore } from '@/stores/auth';
 
@@ -26,6 +26,7 @@ interface Props {
     lessonModuleUnlocked?: number
     lessonPercentage?: number
 }
+const inputProfanityFilter = ref<boolean[]>([]);
 
 // Add reactive state for expanded objectives
 const expandedObjectives = ref(false);
@@ -58,6 +59,10 @@ const toggleEditObjective = () => {
 };
 
 const save_objectives = async () => {
+    if (inputProfanityFilter.value.some((v) => v)) {
+        alert('Please remove inappropriate language from objectives before saving.');
+        return;
+    }
     await lessonStore.addObjective(course.value.objectives);
     editObjective.value = false;
 };
@@ -137,8 +142,9 @@ const save_objectives = async () => {
                 <div v-else class="space-y-2">
                     <div v-for="(objective, index) in course.objectives" :key="index" class="flex gap-3 text-sm text-purple-100 items-center">
                         <span class="text-purple-400 font-bold min-w-fit">{{ index + 1 }}.</span>
-                        <Input 
+                        <InputProfanity 
                             v-model="course.objectives[index]" 
+                            v-model:is-profane="inputProfanityFilter[index]"
                             type="text"
                         />
                         <Button variant="destructive" @click="course.objectives.splice(index, 1)"><Trash2></Trash2></Button>

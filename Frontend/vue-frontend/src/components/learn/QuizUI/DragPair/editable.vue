@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea, TextareaProfanity } from '@/components/ui/textarea';
 import { GripVertical, ImageIcon, Plus, Check, Trash2 } from 'lucide-vue-next';
 import { Badge } from '@/components/ui/badge';
 import SidebarEdittable from '../SidebarEdittable.vue';
@@ -22,6 +22,11 @@ defineEmits(['toggleOnDeleteQuestion']);
 function setCorrectAnswer(id: string) {
     quizData.value.correctAnswer = id;
 }
+
+const textAreaProfanityFilter = ref<boolean[]>([false, false, false]); // Assuming 3 textareas: question, topAnswer, bottomAnswer
+const checkProfanity = computed(() => {
+    return textAreaProfanityFilter.value.some(isProfane => isProfane);
+});
 
 </script>
 
@@ -42,17 +47,17 @@ function setCorrectAnswer(id: string) {
                 <CardContent class="space-y-4">
                     <div>
                         <label class="text-sm font-medium text-foreground mb-2 block">Question</label>
-                        <Textarea placeholder="Enter your question here..." v-model="quizData.question"
+                        <TextareaProfanity v-model:isProfane="textAreaProfanityFilter[0]" placeholder="Enter your question here..." v-model="quizData.question"
                             class="min-h-[100px] resize-none" />
                     </div>
                     <div>
                         <label class="text-sm font-medium text-foreground mb-2 block">Top Answer</label>
-                        <Textarea placeholder="Enter your question here..." v-model="quizData.topAnswer"
+                        <TextareaProfanity v-model:isProfane="textAreaProfanityFilter[1]" placeholder="Enter your question here..." v-model="quizData.topAnswer"
                             class="min-h-[100px] resize-none" />
                     </div>
                     <div>
                         <label class="text-sm font-medium text-foreground mb-2 block">Bottom Answer</label>
-                        <Textarea placeholder="Enter your question here..." v-model="quizData.bottomAnswer"
+                        <TextareaProfanity v-model:isProfane="textAreaProfanityFilter[2]" placeholder="Enter your question here..." v-model="quizData.bottomAnswer"
                             class="min-h-[100px] resize-none" />
                     </div>
                 </CardContent>
@@ -102,7 +107,7 @@ function setCorrectAnswer(id: string) {
                 <CardContent class="space-y-4">
                    <div>
                         <label class="text-sm font-medium text-foreground mb-2 block">Explanation</label>
-                        <Textarea placeholder="Enter your question here..." v-model="quizData.feedback"
+                        <TextareaProfanity placeholder="Enter your question here..." v-model="quizData.feedback"
                             class="min-h-[100px] resize-none" />
                     </div>
                 </CardContent>
@@ -114,6 +119,7 @@ function setCorrectAnswer(id: string) {
             :questions="props.questions"
             :propsMap="defaultPropsMap.DragPair"
             :currentIndex="currentIndex"
+            :textAreaProfanityFilter="checkProfanity"
             @update:currentIndex="currentIndex = $event"
         />
     </div>

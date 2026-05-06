@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea, TextareaProfanity } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { computed, ref, onMounted } from 'vue';
 import { useUploadContentQuiz } from '@/composables/useUploadContentQuiz';
@@ -12,6 +12,7 @@ import { useAssessmentStore } from '@/stores/assessment';
 const assessmentStore = useAssessmentStore();
 const image1 = useUploadContentQuiz();
 const image2 = useUploadContentQuiz();
+const questionIsProfane = ref(false);
 
 const props = defineProps<{
     question: Question;
@@ -78,6 +79,11 @@ const toggle = () => {
 };
 
 const saveChanges = async () => {
+    if (questionIsProfane.value) {
+        alert('Please remove inappropriate language before saving.');
+        return;
+    }
+    
     toggle();
     setTimeout(() => {
         toggle();
@@ -167,6 +173,7 @@ const canSave = computed(() => {
 
 <template>
     <!-- Question Section -->
+     
     <Card>
         <CardHeader>
             <CardTitle class="flex items-center gap-2">
@@ -177,15 +184,16 @@ const canSave = computed(() => {
         <CardContent class="space-y-4">
             <div>
                 <label class="text-sm font-medium text-foreground mb-2 block">Question Text</label>
-                <Textarea 
+                <TextareaProfanity 
                     v-model="quizData.text" 
+                    v-model:isProfane="questionIsProfane"
                     placeholder="Enter your question here..."
                     class="min-h-[100px] resize-none !bg-background" 
                 />
             </div>
             <div class="flex justify-end mt-4 items-center gap-3">
                 <p v-if="toggleChange" class="text-green-500 text-sm">Save Success</p>
-                <Button @click="saveChanges">Save Changes</Button>
+                <Button @click="saveChanges" :disabled="questionIsProfane">Save Changes</Button>
             </div>
         </CardContent>
     </Card>

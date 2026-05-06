@@ -26,7 +26,7 @@
 
         <!-- Render a textarea for all other keys -->
         <template v-else>
-          <Textarea v-if="typeof value === 'string'" v-model="editableProps[key]" :id="key"
+          <TextareaProfanity v-if="typeof value === 'string'" v-model:is-profane="textAreaProfanityFilter" v-model="editableProps[key]" :id="key"
             class="min-h-[60px] resize-none" :placeholder="'Enter ' + key + '...'" />
 
           <template v-else-if="Array.isArray(editableProps[key])">
@@ -38,7 +38,7 @@
 
       </div>
       <div class="flex gap-2">
-        <Button size="sm" class="h-8" @click="saveProps">
+        <Button size="sm" class="h-8" @click="saveProps" :disabled="textAreaProfanityFilter">
           <Check class="w-3 h-3 mr-1" />
           Save
         </Button>
@@ -72,7 +72,7 @@
 <script setup lang="ts">
 import { computed, ref, type PropType } from 'vue';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea, TextareaProfanity } from '@/components/ui/textarea';
 import { Check, X, Trash2, ChevronUp, ChevronDown } from 'lucide-vue-next';
 import LearningTextFormat from './Highlight/LearningBold.vue';
 import { defaultPropsMap, PropsMultiSelector } from '../learningRegistry';
@@ -120,6 +120,8 @@ const props = defineProps({
   },
 });
 
+const textAreaProfanityFilter = ref(false);
+
 const canMoveUp = computed(() => {
   if (!props.item || !props.siblings) return false;
   const index = props.siblings.findIndex(sib => sib.id === props.item?.id);
@@ -143,6 +145,10 @@ const toggleEdit = () => {
 
 // Save the updated props and emit them
 const saveProps = () => {
+  if (textAreaProfanityFilter.value) {
+    alert('Please remove inappropriate language from the text before saving.');
+    return;
+  }
   emit('updateProps', editableProps.value);
   toggleEdit();
 };

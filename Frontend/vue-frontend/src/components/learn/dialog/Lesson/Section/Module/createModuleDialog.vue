@@ -11,7 +11,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Plus } from 'lucide-vue-next';
-import { Input } from '@/components/ui/input';
+import { Input, InputProfanity } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useLessonStore } from '@/stores/lesson';
 import type { ModuleTest } from '@/services/moduleService';
@@ -36,11 +36,16 @@ const formData = ref<Partial<ModuleTest>>({
     section: props.sectionId || null,
 });
 
+const inputProfanityFilter = ref(false);
+
 // Add validation state for title
 const errors = ref<{ title?: string }>({});
 const touched = ref<{ title: boolean }>({ title: false });
 
 const validate = () => {
+    if (inputProfanityFilter.value) {
+        return false;
+    }
     const e: typeof errors.value = {};
     if (!formData.value.title || formData.value.title.trim().length === 0) {
         e.title = 'Title is required.';
@@ -52,6 +57,10 @@ const validate = () => {
 // Function to handle saving the form data
 const loading = ref(false);
 const saveModule = async () => {
+    if (inputProfanityFilter.value) {
+        alert('Please remove inappropriate language from the title before saving.');
+        return;
+    }
     touched.value.title = true;
     if (!validate()) return;
     formData.value.lesson = lessonStore.currentLesson?.id || 0;
@@ -106,7 +115,7 @@ watch(() => formData.value.final, (newLesson) => {
             <div class="space-y-4">
                 <div class="space-y-2">
                     <Label>Title</Label>
-                    <Input v-model="formData.title" type="text" placeholder="Enter module title"
+                    <InputProfanity v-model="formData.title" v-model:is-profane="inputProfanityFilter" type="text" placeholder="Enter module title"
                            @blur="touched.title = true; validate()"
                            @input="touched.title && validate()" />
                     <p v-if="touched.title && errors.title" class="text-red-500 text-sm">{{ errors.title }}</p>
