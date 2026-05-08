@@ -6,7 +6,7 @@
             <!-- Close Button -->
             <Button variant="ghost" size="icon"
                 class="absolute top-4 right-4 z-10 text-slate-400 hover:text-white hover:bg-slate-800/50"
-                @click="handleClose">
+                @click="handleDecline">
                 <X class="h-5 w-5" />
             </Button>
 
@@ -56,7 +56,7 @@
                 <!-- Actions -->
                 <div class="flex items-center justify-center gap-20 w-full">
                     <!-- Decline Button -->
-                    <button @click="handleDecline" class="group relative flex flex-col items-center gap-3">
+                    <!-- <button @click="handleDecline" class="group relative flex flex-col items-center gap-3">
                         <div class="relative">
                             <div
                                 class="absolute inset-0 rounded-full bg-red-500/20 blur-xl group-hover:bg-red-500/30 transition-all" />
@@ -68,7 +68,7 @@
                         <span class="text-xs font-medium text-slate-400 group-hover:text-white transition-colors">
                             Decline
                         </span>
-                    </button>
+                    </button> -->
 
                     <!-- Accept Button -->
                     <button @click="handleAccept" class="group relative flex flex-col items-center gap-3">
@@ -135,12 +135,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { Phone, PhoneOff, X } from 'lucide-vue-next'
 
 import Button from '@/components/ui/button/Button.vue'
 import Ongoing_call from './ongoing_call.vue'
 import Call_result from './dialog/call_result.vue'
+import { disconnectSoundFx, playSoundFx, SoundFx } from '@/composables/useSoundFx'
+import { disconnect } from 'process'
 
 type CallState = 'incoming' | 'active'
 
@@ -150,11 +152,34 @@ interface Props {
     callerAvatar?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
-    callerName: 'Sarah Johnson',
-    callerNumber: '+1 (555) 123-4567',
-    callerAvatar: '',
-})
+const neutralCallerNames = [
+    'Alex Morgan',
+    'Taylor Reed',
+    'Jordan Lee',
+    'Casey Quinn',
+    'Riley Brooks',
+    'Avery Lane',
+    'Skyler Hayes',
+    'Cameron Blake',
+]
+
+const callerNumbers = [
+    '+1 (555) 204-7712',
+    '+1 (555) 318-6409',
+    '+1 (555) 472-1538',
+    '+1 (555) 589-2264',
+    '+1 (555) 697-8841',
+    '+1 (555) 745-3097',
+]
+
+function pickRandom<T>(items: T[]): T {
+    return items[Math.floor(Math.random() * items.length)]
+}
+
+const randomCallerName = pickRandom(neutralCallerNames)
+const randomCallerNumber = pickRandom(callerNumbers)
+
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
     (e: 'accept'): void
@@ -169,9 +194,9 @@ const isResult = ref<boolean>(false)
 const callResult = ref<string[]>([])
 
 
-const callerName = computed(() => props.callerName)
-const callerNumber = computed(() => props.callerNumber)
-const callerAvatar = computed(() => props.callerAvatar)
+const callerName = computed(() => props.callerName ?? randomCallerName)
+const callerNumber = computed(() => props.callerNumber ?? randomCallerNumber)
+const callerAvatar = computed(() => props.callerAvatar ?? '')
 
 const callerInitials = computed(() =>
     callerName.value
@@ -192,7 +217,8 @@ async function handleAccept() {
     emit('accept')
 }
 
-const handleDecline = () => showVisibleAndResult(false, true)
+
+const handleDecline = () => showVisibleAndResult(false, false)
 const handleClose = () => showVisibleAndResult(false, true)
 const handleEndCall = () => showVisibleAndResult(false, true)
 const handleResultClose = () => showVisibleAndResult(false, false)
@@ -200,9 +226,13 @@ const handleResultClose = () => showVisibleAndResult(false, false)
 function showVisibleAndResult(visible: boolean, result: boolean) {
     isVisible.value = visible
     isResult.value = result
+    disconnectSoundFx();
 }
 
 function handleResult(result: string[]) {
     callResult.value = result
 }
+onMounted(() => {
+     playSoundFx(SoundFx.Calling, true)
+})
 </script>

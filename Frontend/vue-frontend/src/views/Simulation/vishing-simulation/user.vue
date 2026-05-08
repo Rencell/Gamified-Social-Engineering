@@ -55,16 +55,7 @@ const summary = computed<Summary[]>(() => [
 
 const showIncoming = ref(false)
 function triggerIncomingToast() {
-  showIncomingCallToast({
-    callerName: 'Sarah Johnson',
-    callerNumber: '+1 (555) 123-4567',
-    onAccept: () => {
-      showIncoming.value = true
-    },
-    onDecline: () => {
-      showIncoming.value = false
-    },
-  })
+    showIncoming.value = true
 }
 
 </script>

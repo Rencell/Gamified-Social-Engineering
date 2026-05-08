@@ -11,7 +11,7 @@ import { Gamepad2 } from 'lucide-vue-next';
 import QuizAIGenerate from './quizAIGenerate.vue'
 const editable = inject('editable', false)
 const props = defineProps<{
-    questions: unknown[];
+    questions: any;
     quizComponent: unknown;
     editableComponent: unknown;
     quizType: QuizType;

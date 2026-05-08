@@ -64,6 +64,7 @@ _client = genai.Client(
 
 
 def _build_live_connect_config(system_instruction: str) -> types.LiveConnectConfig:
+    chosen_voice = secrets.choice(SYSTEM_INSTRUCTION_VARIANTS.voices)
     return types.LiveConnectConfig(
         system_instruction=system_instruction,
         response_modalities=["AUDIO"],
@@ -71,7 +72,7 @@ def _build_live_connect_config(system_instruction: str) -> types.LiveConnectConf
         speech_config=types.SpeechConfig(
             voice_config=types.VoiceConfig(
                 prebuilt_voice_config=types.PrebuiltVoiceConfig(
-                    voice_name="Zubenelgenubi"
+                    voice_name=chosen_voice
                 )
             )
         ),
@@ -96,7 +97,8 @@ class GeminiAudioConsumer(AsyncWebsocketConsumer):
         self.session = None
 
         try:
-            chosen_instruction = secrets.choice(SYSTEM_INSTRUCTION_VARIANTS.list)
+            chosen_instruction = SYSTEM_INSTRUCTION_VARIANTS.list
+            print(f"Chosen system instruction:\n{SYSTEM_INSTRUCTION_VARIANTS.list}\n---")
             config = _build_live_connect_config(chosen_instruction)
             self._session_cm = _client.aio.live.connect(model=MODEL, config=config)
             self.session = await self._session_cm.__aenter__()
@@ -184,6 +186,7 @@ class GeminiAudioConsumer(AsyncWebsocketConsumer):
                         await self.send(text_data=json.dumps({"type": "text", "text": "end"}))
                         await self.send(text_data=json.dumps({"type": "summary", "text": result}))
                         await self._save_vishing_result(result)
+                        
                         await self.close(code=1000) 
                         return    
                         

@@ -59,7 +59,7 @@
 
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
 import { Mic, MicOff, PhoneOff, Pause }  from 'lucide-vue-next'
 import { useGeminiWs } from '@/composables/useGeminiAudio'
 import AnswerSide from '@/components/vishing_simulation/answer_side.vue'
@@ -78,7 +78,7 @@ const {
 const timer = ref(0);
 const isMuted = ref(false);
 let intervalId: number | null = null;
-
+const CALL_TIMEOUT = 180; // 3 minutes in seconds
 
 defineProps<{
     callerName: string;
@@ -129,6 +129,14 @@ watch(isDisconnected, (disconnected) => {
     emit('end-call');
     emit('result', callResult.value);
   } 
+});
+
+// Forcefully end call after timeout if no result yet
+watch(timer, (currentTime) => {
+  if (currentTime >= CALL_TIMEOUT ) {
+    sendMessage('Goodbye, User ended the call.');
+    // disconnect();
+  }
 });
 
 </script>

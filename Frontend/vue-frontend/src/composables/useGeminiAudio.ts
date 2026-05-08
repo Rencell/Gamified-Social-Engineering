@@ -211,7 +211,6 @@ export function useGeminiWs() {
         
       // Text frames from backend are JSON strings
       
-      console.log('Received WebSocket message:', evt.data)
       if (typeof evt.data === 'string') {
         const raw = evt.data
         messages.value.push({ ts: Date.now(), kind: 'in', data: raw })

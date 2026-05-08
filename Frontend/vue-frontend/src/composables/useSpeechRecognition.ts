@@ -1,4 +1,4 @@
-import { watch, ref, onBeforeUnmount } from 'vue';
+import { watch, ref, onBeforeUnmount, unref, isRef, type Ref } from 'vue';
 
 // Minimal typings to avoid depending on DOM lib SpeechRecognition types
 type SpeechRecognitionCtor = new () => SpeechRecognitionLike;
@@ -32,12 +32,25 @@ function getSpeechRecognitionCtor(): SpeechRecognitionCtor | null {
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
 
-export default function useSpeechRecognition() {
+export default function useSpeechRecognition(language?: Ref<string> | string) {
   const isSupported = ref(false);
   const isListening = ref(false);
   const note = ref('');
   const finalNote = ref('');
   const error = ref<string | null>(null);
+
+  // Resolve language: accept a string or a Ref<string>. Default to navigator.language.
+  let langRef: Ref<string>;
+  if (language == null) {
+    const nav = typeof navigator !== 'undefined' ? (navigator.language || 'en-US') : 'en-US';
+    // Prefer Filipino tag if navigator indicates Tagalog/Filipino
+    const prefer = nav.startsWith('fil') || nav.startsWith('tl') ? 'fil-PH' : 'en-US';
+    langRef = ref(prefer);
+  } else if (isRef(language)) {
+    langRef = language as Ref<string>;
+  } else {
+    langRef = ref(String(language));
+  }
 
   const Ctor = getSpeechRecognitionCtor();
   const recognition = Ctor ? new Ctor() : null;
@@ -72,10 +85,10 @@ export default function useSpeechRecognition() {
   if (recognition) {
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.lang = 'en-US';
+    recognition.lang = unref(langRef);
 
     recognition.onresult = (event) => {
-      // Build interim + final transcript
+      
       let interim = '';
       let finalText = '';
 
@@ -110,6 +123,12 @@ export default function useSpeechRecognition() {
     if (!recognition) return;
     error.value = null;
     shouldRestart = true;
+    // ensure recognition uses current language before starting
+    try {
+      recognition.lang = unref(langRef);
+    } catch {
+      // ignore if setting lang fails in some environments
+    }
     try {
       recognition.start();
     } catch {
@@ -151,6 +170,8 @@ export default function useSpeechRecognition() {
     toggleListening,
     start,
     stop,
+    language: langRef,
+    setLanguage: (l: string) => { langRef.value = l; },
     note,
     finalNote,
     error,

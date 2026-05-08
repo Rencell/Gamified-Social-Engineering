@@ -52,6 +52,7 @@ const editingId = ref<number | null>(null);
 const editTitle = ref<string>('');
 const editUrl = ref<string>('');
 const editAuthor = ref<string[]>([]);
+const editAuthorText = ref<string>('');
 const editDate = ref<string>('');
 const editPublisher = ref<string>('');
 
@@ -147,7 +148,8 @@ function startEdit(ms: ModuleSource) {
   editingId.value = ms.id;
   editTitle.value = ms.title;
   editUrl.value = ms.url;
-  editAuthor.value = ms.author;
+  editAuthor.value = Array.isArray(ms.author) ? ms.author : [];
+  editAuthorText.value = editAuthor.value.join(', ');
   editDate.value = ms.date ? ms.date.toString() : '';
   editPublisher.value = ms.publisher ?? '';
 }
@@ -157,6 +159,7 @@ function cancelEdit() {
   editTitle.value = '';
   editUrl.value = '';
   editAuthor.value = [];
+  editAuthorText.value = '';
   editDate.value = '';
   editPublisher.value = '';
 }
@@ -173,6 +176,10 @@ async function saveEdit() {
   try {
     loading.value = true;
     errorMsg.value = null;
+    editAuthor.value = editAuthorText.value
+      .split(',')
+      .map((name) => name.trim())
+      .filter(Boolean);
     await ModuleService.update_module_source({
       id: editingId.value,
       title: editTitle.value.trim(),
@@ -300,7 +307,7 @@ onMounted(async () => {
                 <Input v-model="editUrl" type="url" placeholder="https://example.com" />
                 <Input v-model="editPublisher" type="text" placeholder="Publisher (e.g. Western Sydney University)" />
                 <Input v-model="editDate" type="date" placeholder="Date" />
-                <Input v-model="editAuthor" type="text" placeholder='Author JSON (e.g. {"family":"Paris","given":"T."})' />
+                <Input v-model="editAuthorText" type="text" placeholder="Authors separated by commas (e.g. Tom Paris, Kathryn Janeway)" />
               <div class="flex gap-2">
                 <button class="rounded bg-blue-700 px-3 py-1 text-xs hover:bg-blue-600" @click="saveEdit">Save</button>
                 <button class="rounded bg-gray-700 px-3 py-1 text-xs hover:bg-gray-600" @click="cancelEdit">Cancel</button>

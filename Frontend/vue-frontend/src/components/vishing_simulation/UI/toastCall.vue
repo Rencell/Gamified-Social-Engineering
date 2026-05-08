@@ -40,14 +40,14 @@ function decline() {
     </div>
 
     <div class="flex items-center gap-3 shrink-0">
-      <button
+      <!-- <button
         type="button"
         @click="decline"
         class="grid h-12 w-12 place-items-center rounded-full bg-red-500 hover:bg-red-600 text-white shadow"
         aria-label="Decline"
       >
         <PhoneOff class="h-5 w-5" />
-      </button>
+      </button> -->
 
       <button
         type="button"

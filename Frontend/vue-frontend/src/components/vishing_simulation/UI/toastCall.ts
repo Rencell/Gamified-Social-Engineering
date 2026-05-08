@@ -1,7 +1,7 @@
 import { h } from 'vue'
 import { toast } from 'vue-sonner'
 import ToastCall from './toastCall.vue'
-import { playSoundFx, SoundFx } from '@/composables/useSoundFx'
+import { disconnectSoundFx, playSoundFx, SoundFx } from '@/composables/useSoundFx'
 
 export function showIncomingCallToast(opts: {
   callerName?: string
@@ -22,10 +22,13 @@ export function showIncomingCallToast(opts: {
       id: 'incoming-call',
       duration: Infinity,
       position: 'top-right',
+      dismissible: false,
     },
   )
 }
 
 export function dismissIncomingCallToast() {
   toast.dismiss('incoming-call')
+  disconnectSoundFx();
 }
+
