@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { showExpToast } from '@/components/ui/sonner/ExpToast/ExpToast';
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 import { AlertTriangle, CheckCircle2, PhoneCall, X } from 'lucide-vue-next';
-import { computed, onUnmounted } from 'vue';
+import { computed } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 
@@ -73,12 +74,15 @@ const view = computed<ResultView>(() => {
 
 const nextRoute = computed<RouteLocationRaw>(() => {
     if (props.callResult === 'gave_information') {
+        playSoundFx(SoundFx.failure);
         return {
             path: '/vishing-simulation',
             query: { openQuiz: 'true' },
         };
+    } else if (props.callResult === 'refused') {
+        showExpToast();
     }
-    showExpToast();
+    
     return '/home';
 });
 

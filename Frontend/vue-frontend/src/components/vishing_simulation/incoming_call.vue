@@ -136,13 +136,12 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { Phone, PhoneOff, X } from 'lucide-vue-next'
+import { Phone, X } from 'lucide-vue-next'
 
 import Button from '@/components/ui/button/Button.vue'
 import Ongoing_call from './ongoing_call.vue'
 import Call_result from './dialog/call_result.vue'
 import { disconnectSoundFx, playSoundFx, SoundFx } from '@/composables/useSoundFx'
-import { disconnect } from 'process'
 
 type CallState = 'incoming' | 'active'
 
@@ -153,14 +152,8 @@ interface Props {
 }
 
 const neutralCallerNames = [
-    'Alex Morgan',
-    'Taylor Reed',
-    'Jordan Lee',
-    'Casey Quinn',
-    'Riley Brooks',
-    'Avery Lane',
-    'Skyler Hayes',
-    'Cameron Blake',
+    'Alex Kyle',
+    'UNKNOWN',
 ]
 
 const callerNumbers = [

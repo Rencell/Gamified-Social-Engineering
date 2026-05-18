@@ -42,7 +42,7 @@ tools = [
                     this function is called with a summary of the conversation. 
                     
                     **YOU MUST RESPONSE STRICTLY WITH ONE OF THESE STRINGS**:
-                    (REFUSED, GAVE_INFORMATION, UNAUDIBLE)""",
+                    (REFUSED, GAVE_INFORMATION, INCOMPLETE)""",
                 parameters=genai.types.Schema(
                     type=genai.types.Type.OBJECT,
                     properties={
@@ -51,6 +51,27 @@ tools = [
                         ),
                     },
                     required=["result"],
+                ),
+            ),
+            types.FunctionDeclaration(
+                name="sendPopUpNotification",
+                description="""
+                    **USE THIS FUNCTION**:
+                    - After system say they will send a notification to user
+                    
+                    this function is called with a notification message to be shown to user as a pop-up in the frontend.
+                    
+                    **EXAMPLE**:
+                    notification=true
+                    """,
+                parameters=genai.types.Schema(
+                    type=genai.types.Type.OBJECT,
+                    properties={
+                        "notification": genai.types.Schema(
+                            type=genai.types.Type.STRING
+                        ),
+                    },
+                    required=["notification"],
                 ),
             ),
         ]
@@ -63,8 +84,7 @@ _client = genai.Client(
 )
 
 
-def _build_live_connect_config(system_instruction: str) -> types.LiveConnectConfig:
-    chosen_voice = secrets.choice(SYSTEM_INSTRUCTION_VARIANTS.voices)
+def _build_live_connect_config(system_instruction: str, voice: str) -> types.LiveConnectConfig:
     return types.LiveConnectConfig(
         system_instruction=system_instruction,
         response_modalities=["AUDIO"],
@@ -72,7 +92,7 @@ def _build_live_connect_config(system_instruction: str) -> types.LiveConnectConf
         speech_config=types.SpeechConfig(
             voice_config=types.VoiceConfig(
                 prebuilt_voice_config=types.PrebuiltVoiceConfig(
-                    voice_name=chosen_voice
+                    voice_name=voice
                 )
             )
         ),
@@ -97,9 +117,17 @@ class GeminiAudioConsumer(AsyncWebsocketConsumer):
         self.session = None
 
         try:
-            chosen_instruction = SYSTEM_INSTRUCTION_VARIANTS.list
-            print(f"Chosen system instruction:\n{SYSTEM_INSTRUCTION_VARIANTS.list}\n---")
-            config = _build_live_connect_config(chosen_instruction)
+            chosen_variant = secrets.choice(SYSTEM_INSTRUCTION_VARIANTS.list)
+            system_instruction = chosen_variant["rule"]
+            voice = chosen_variant["voice"]
+            
+            # Substitute username into the rule
+            user = self.scope["user"]
+            username = user.username if user.is_authenticated else "User"
+            system_instruction = system_instruction.format(username=username)
+            
+            print(f"Chosen variant:\nIdentity: {chosen_variant['identity']}\nVoice: {voice}\n---")
+            config = _build_live_connect_config(system_instruction, voice)
             self._session_cm = _client.aio.live.connect(model=MODEL, config=config)
             self.session = await self._session_cm.__aenter__()
 
@@ -166,46 +194,60 @@ class GeminiAudioConsumer(AsyncWebsocketConsumer):
 
     async def _receiver_loop(self):
         while True:
-            if self.session is None:
+            try:
+                if self.session is None:
+                    await asyncio.sleep(0.01)
+                    continue
+
+                turn = self.session.receive()
+                async for response in turn:
+                    if response.tool_call:
+                        calls = response.tool_call.function_calls
+                        if not calls:
+                            return
+                        
+                        first_call = calls[0]
+                        
+                        print(f"Tool call received: {first_call.name} with args {first_call.args}")
+                        if first_call.name == "talkSummary":
+                            result = first_call.args.get("result", "")
+                            await self.send(text_data=json.dumps({"type": "text", "text": "end"}))
+                            await self.send(text_data=json.dumps({"type": "summary", "text": result}))
+                            await self._save_vishing_result(result)
+                            
+                            await self.close(code=1000) 
+                            return    
+                        
+                        if first_call.name == "sendPopUpNotification":
+                            notification = first_call.args.get("notification", "")
+                            await self.send(text_data=json.dumps({"type": "notification", "text": notification}))
+                            
+                            
+                    if response.data:
+                        await self.send(bytes_data=response.data)
+                    if response.text:
+                        await self.send(text_data=json.dumps({"type": "text", "text": response.text}))
+                        
                 await asyncio.sleep(0.01)
-                continue
-
-            turn = self.session.receive()
-            async for response in turn:
-                if response.tool_call:
-                    calls = response.tool_call.function_calls
-                    if not calls:
-                        return
-
-                    # Access the first item in the list
-                    first_call = calls[0]
-
-                    if first_call.name == "talkSummary":
-                        # Use getattr or direct attribute access since it's an object
-                        result = first_call.args.get("result", "")
-                        await self.send(text_data=json.dumps({"type": "text", "text": "end"}))
-                        await self.send(text_data=json.dumps({"type": "summary", "text": result}))
-                        await self._save_vishing_result(result)
-                        
-                        await self.close(code=1000) 
-                        return    
-                        
-                if response.data:
-                    await self.send(bytes_data=response.data)
-                if response.text:
-                    await self.send(text_data=json.dumps({"type": "text", "text": response.text}))
-
-            # Yield to the event loop between turns
-            await asyncio.sleep(0.01)
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                print(f"Error in _receiver_loop: {e}")
+                try:
+                    await self.send(text_data=json.dumps({"type": "summary", "text": "INCOMPLETE"}))
+                    # await self._save_vishing_result("INCOMPLETE")
+                except Exception:
+                    pass
+                break
 
     @database_sync_to_async
     def _save_vishing_result(self, result: str):
         user = self.scope.get("user")
         if not user or getattr(user, "is_anonymous", True):
-            return None  # or raise, if you want to require login
+            return None
 
         allowed = {k for (k, _label) in VishingScenario.STATUS}
         if result not in allowed:
-            result = "UNAUDIBLE"  # defensive fallback
+            result = "UNAUDIBLE"
 
         return VishingScenario.objects.create(user=user, status=result)

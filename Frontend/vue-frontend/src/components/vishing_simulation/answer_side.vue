@@ -68,6 +68,8 @@ const AUTO_SEND_SILENCE_MS = 1300;
 const MIN_CHARS_TO_SEND = 3;
 let autoSendTimer: number | null = null;
 const lastAutoSentText = ref('');
+const SILENCE_TIMEOUT_MS = 5000;
+let silenceTimer: number | null = null;
 
 function clearAutoSendTimer() {
   if (autoSendTimer != null) {
@@ -76,12 +78,31 @@ function clearAutoSendTimer() {
   }
 }
 
+function clearSilenceTimer() {
+  if (silenceTimer != null) {
+    window.clearTimeout(silenceTimer);
+    silenceTimer = null;
+  }
+}
+
+function startSilenceTimer() {
+  clearSilenceTimer();
+  silenceTimer = window.setTimeout(() => {
+    const current = (finalNote.value || note.value || '').trim();
+    if (current.length >= MIN_CHARS_TO_SEND) {
+      if (current !== lastAutoSentText.value) {
+        emitText(current);
+      }
+    } else {
+      emitText('USER_WENT_SILENT');
+    }
+  }, SILENCE_TIMEOUT_MS);
+}
+
 
 function clearTranscript() {
-  note.value = '';
-  finalNote.value = '';
-  error.value = null;
-  lastAutoSentText.value = '';
+
+  emitText('Hello');
 }
 
 function emitText(text: string) {
@@ -102,6 +123,7 @@ watch(
     if (current.length < MIN_CHARS_TO_SEND) return;
 
     clearAutoSendTimer();
+    startSilenceTimer();
     autoSendTimer = window.setTimeout(() => {
       const toSend = (finalNote.value || note.value).trim();
       if (toSend.length < MIN_CHARS_TO_SEND) return;
@@ -118,12 +140,16 @@ watch(
 watch(() => props.isSpeaking, (val) => {
   if (val) {
     clearAutoSendTimer();
+    clearSilenceTimer();
     return;
   }
+  // when speaking stops, start the silence timer
+  startSilenceTimer();
 });
 
 onBeforeUnmount(() => {
   clearAutoSendTimer();
+  clearSilenceTimer();
   stop();
 });
 

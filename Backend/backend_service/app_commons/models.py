@@ -41,20 +41,31 @@ class simulationGuide(models.Model):
         return self.title
     
     def save(self, *args, **kwargs):
-        if self.ordering == 0 and not self.pk: 
-            # Auto-increment for new items
-            latest = simulationGuide.objects.all().order_by('-ordering').first()
+        # Operate ordering within the same `type` group so each type has its own sequence.
+        if self.ordering == 0 and not self.pk:
+            # Auto-increment for new items within this type
+            latest = simulationGuide.objects.filter(type=self.type).order_by('-ordering').first()
             self.ordering = (latest.ordering + 1) if latest else 1
         elif self.pk:
-            # Item is being updated - check for ordering conflicts
+            # Item is being updated - check for ordering conflicts within types
             old_item = simulationGuide.objects.get(pk=self.pk)
             old_ordering = old_item.ordering
-            
-            # If ordering changed, check if new ordering is already taken
-            if self.ordering != old_ordering:
-                existing_with_same_order = simulationGuide.objects.filter(ordering=self.ordering).exclude(pk=self.pk).first()
+            old_type = old_item.type
+
+            # If ordering changed or the type changed, resolve conflicts per-type
+            if self.ordering != old_ordering or self.type != old_type:
+                # If new ordering conflicts within the new type, adjust other items
+                existing_with_same_order = simulationGuide.objects.filter(type=self.type, ordering=self.ordering).exclude(pk=self.pk).first()
                 if existing_with_same_order:
-                    # Swap orderings: give the other item the old ordering using update() to avoid recursion
-                    simulationGuide.objects.filter(pk=existing_with_same_order.pk).update(ordering=old_ordering)
-        
+                    # If staying in the same type, swap orderings
+                    if self.type == old_type:
+                        simulationGuide.objects.filter(pk=existing_with_same_order.pk).update(ordering=old_ordering)
+                    else:
+                        # Moving to a different type: shift down existing items at/after this ordering
+                        simulationGuide.objects.filter(type=self.type, ordering__gte=self.ordering).exclude(pk=self.pk).update(ordering=models.F('ordering') + 1)
+
+                # If we moved out of the old type, close the gap there
+                if self.type != old_type:
+                    simulationGuide.objects.filter(type=old_type, ordering__gt=old_ordering).exclude(pk=self.pk).update(ordering=models.F('ordering') - 1)
+
         super().save(*args, **kwargs)

@@ -5,6 +5,7 @@ type WsStatus = 'idle' | 'connecting' | 'open' | 'closed' | 'error'
 type TextEvent = { type: 'text'; text: string }
 type ErrorEvent = { type: 'error'; message: string }
 type SummaryEvent = { type: 'summary'; text: string }
+type NotificationEvent = { type: 'notification'; text: string }
 
 function isTextEvent(e: unknown): e is TextEvent {
   if (!e || typeof e !== 'object') return false
@@ -22,6 +23,12 @@ function isSummaryEvent(e: unknown): e is SummaryEvent {
   if (!e || typeof e !== 'object') return false
   const obj = e as Record<string, unknown>
   return obj.type === 'summary' && typeof obj.text === 'string'
+}
+
+function isNotificationEvent(e: unknown): e is NotificationEvent {
+  if (!e || typeof e !== 'object') return false
+  const obj = e as Record<string, unknown>
+  return obj.type === 'notification' && typeof obj.text === 'string'
 }
 
 function pcm16ToFloat32(pcm: Int16Array): Float32Array {
@@ -222,6 +229,13 @@ export function useGeminiWs() {
 
           if(isSummaryEvent(parsedUnknown)) {
             callResult.value?.push(parsedUnknown.text)
+            return
+          }
+
+          if(isNotificationEvent(parsedUnknown)) {
+            console.log("Notification event received:", parsedUnknown)
+            // alert(`Notification: ${parsedUnknown.text}`)
+            // sendJson({type: 'text', text: 'notification_showed'})
             return
           }
 
