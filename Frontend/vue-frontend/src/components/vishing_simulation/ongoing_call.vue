@@ -49,7 +49,7 @@
                 <span class="text-xs">Hold</span>
             </button>
         </div>
-
+        
         <div class="w-full max-w-xl mt-10">
             <AnswerSide @sent="sendMessage" :is-speaking="isSpeaking" />
         </div>
@@ -72,7 +72,8 @@ const {
   sendJson,
   isSpeaking,
   isDisconnected,
-  callResult
+  callResult,
+  vishingNotification
 } = useGeminiWs()
 
 const timer = ref(0);
@@ -95,7 +96,7 @@ const formattedTimer = computed(() => {
     return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
 })
 
-const emit = defineEmits(['end-call', 'result']);
+const emit = defineEmits(['end-call', 'result', 'send-notification']);
 
 const toggleMute = () => {
     isMuted.value = !isMuted.value;
@@ -123,7 +124,6 @@ onUnmounted(() => {
 
 });
 
-// End call UI if the websocket disconnects (closed OR error)
 watch(isDisconnected, (disconnected) => {
   if (disconnected){
     emit('end-call');
@@ -131,12 +131,16 @@ watch(isDisconnected, (disconnected) => {
   } 
 });
 
-// Forcefully end call after timeout if no result yet
 watch(timer, (currentTime) => {
   if (currentTime >= CALL_TIMEOUT ) {
     sendMessage('Goodbye, User ended the call.');
-    // disconnect();
   }
+});
+
+watch(vishingNotification, (newValue) => {
+    if (newValue) {
+        emit('send-notification', true);
+    }
 });
 
 </script>

@@ -1,5 +1,8 @@
 <template>
+    <div v-show="vishingNotification">
 
+        <Index :scenario="1" @result="handleResult($event)" />
+    </div>
     <div v-if="isVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
         <div
             class="relative w-full max-w-md overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 shadow-2xl border border-slate-800">
@@ -55,22 +58,7 @@
 
                 <!-- Actions -->
                 <div class="flex items-center justify-center gap-20 w-full">
-                    <!-- Decline Button -->
-                    <!-- <button @click="handleDecline" class="group relative flex flex-col items-center gap-3">
-                        <div class="relative">
-                            <div
-                                class="absolute inset-0 rounded-full bg-red-500/20 blur-xl group-hover:bg-red-500/30 transition-all" />
-                            <div
-                                class="relative flex h-16 w-16 items-center justify-center rounded-full bg-red-500 hover:bg-red-600 transition-colors shadow-lg">
-                                <PhoneOff class="h-7 w-7 text-white" />
-                            </div>
-                        </div>
-                        <span class="text-xs font-medium text-slate-400 group-hover:text-white transition-colors">
-                            Decline
-                        </span>
-                    </button> -->
-
-                    <!-- Accept Button -->
+                
                     <button @click="handleAccept" class="group relative flex flex-col items-center gap-3">
                         <div class="relative">
                             <div
@@ -119,6 +107,7 @@
             <div v-else >
                 <Ongoing_call 
                     @end-call="handleEndCall" 
+                    @send-notification="handleNotification($event)"
                     @result="handleResult($event)"
                     :caller-number="callerNumber" 
                     :caller-name="callerName" 
@@ -142,6 +131,7 @@ import Button from '@/components/ui/button/Button.vue'
 import Ongoing_call from './ongoing_call.vue'
 import Call_result from './dialog/call_result.vue'
 import { disconnectSoundFx, playSoundFx, SoundFx } from '@/composables/useSoundFx'
+import Index from '../PopupTypes/vishing/index.vue'
 
 type CallState = 'incoming' | 'active'
 
@@ -185,7 +175,7 @@ const callState = ref<CallState>('incoming')
 const isTransitioning = ref(false)
 const isResult = ref<boolean>(false)
 const callResult = ref<string[]>([])
-
+const vishingNotification = ref<boolean>(false)
 
 const callerName = computed(() => props.callerName ?? randomCallerName)
 const callerNumber = computed(() => props.callerNumber ?? randomCallerNumber)
@@ -224,7 +214,15 @@ function showVisibleAndResult(visible: boolean, result: boolean) {
 
 function handleResult(result: string[]) {
     callResult.value = result
+    handleEndCall();
+    handleNotification(false);
 }
+
+function handleNotification(result: boolean){
+    vishingNotification.value = result
+    // handleEndCall();
+}
+
 onMounted(() => {
      playSoundFx(SoundFx.Calling, true)
 })

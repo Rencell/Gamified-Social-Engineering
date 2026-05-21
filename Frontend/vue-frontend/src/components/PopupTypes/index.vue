@@ -14,9 +14,6 @@
 defineOptions({ name: 'PopupTypesIndex' })
 
 import { ref, computed, onMounted, type Component } from 'vue';
-// import popupService from "../services/popupService";
-
-// Import all 10 popup UIs (siblings of this index.vue)
 import Popup1 from "./popup1.vue";
 import Popup2 from "./popup2.vue";
 import Popup3 from "./popup3.vue";
@@ -31,7 +28,6 @@ import { PopupService } from '@/services';
 import { usePopupStore } from '@/stores/popup';
 import { toast } from 'vue-sonner';
 import { showExpToast } from '../ui/sonner/ExpToast/ExpToast';
-import { useRouter } from 'vue-router';
 import { showPopupFailed } from '../ui/sonner/popupFailed/PopupFailed';
 
 const props = defineProps<{ scenario: number }>();

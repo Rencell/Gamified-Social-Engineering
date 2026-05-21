@@ -99,6 +99,7 @@ const handleClose = () => {
 </script>
 
 <template>
+    
     <div class="fixed inset-0 z-50 grid place-items-center bg-black/60 backdrop-blur-sm p-6 font-display">
         <div class="relative w-full max-w-md rounded-2xl bg-white p-8 shadow-xl ring-1 ring-slate-200">
             <Button

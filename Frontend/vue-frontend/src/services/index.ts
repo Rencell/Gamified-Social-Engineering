@@ -15,5 +15,6 @@ export {default as MinigameService } from './minigameService.ts';
 export {default as AgreementService } from './agreementService.ts';
 // export {default as GoPhishService } from './goPhishService.ts';
 export {default as SimulationService } from './simulationService.ts';
+export {default as VishingService } from './vishingService.ts';
 
 

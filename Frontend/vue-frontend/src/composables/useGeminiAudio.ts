@@ -51,6 +51,7 @@ export function useGeminiWs() {
   const endRequested = ref(false)
   const messages = ref<Array<{ ts: number; kind: 'in' | 'out'; data: string }>>([])
   const callResult = ref<string[] | null>([])
+  const vishingNotification = ref<boolean>(false)
 
   // Parsed assistant text messages (from {type:"text"})
   const assistantTexts = ref<Array<{ ts: number; text: string }>>([])
@@ -234,8 +235,7 @@ export function useGeminiWs() {
 
           if(isNotificationEvent(parsedUnknown)) {
             console.log("Notification event received:", parsedUnknown)
-            // alert(`Notification: ${parsedUnknown.text}`)
-            // sendJson({type: 'text', text: 'notification_showed'})
+            vishingNotification.value = true
             return
           }
 
@@ -316,5 +316,6 @@ export function useGeminiWs() {
     sendJson,
     outputSampleRate,
     callResult,
+    vishingNotification
   }
 }
