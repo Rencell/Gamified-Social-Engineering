@@ -38,10 +38,8 @@ function pcm16ToFloat32(pcm: Int16Array): Float32Array {
 }
 
 function getURL() {
-  const url = new URL(import.meta.env.VITE_API_BASE)
-  // Trim accidental whitespace; trailing spaces can break WS upgrades.
-  const formatted_url = `ws://${url.host}/ws/gemini/audio/`
-  return formatted_url
+  const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws"
+  return `${wsProtocol}://${window.location.host}/ws/gemini/audio/`
 }
 
 export function useGeminiWs() { 
