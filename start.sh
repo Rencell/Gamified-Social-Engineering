@@ -5,11 +5,12 @@ source Backend/venv/Scripts/activate
 
 # Navigate to the backend directory and run the Django server
 cd Backend/backend_service
-src/services/vishingService.ts(6,81) &
+daphne -b 0.0.0.0 -p 8000 backend_service.asgi:application &
 
 # # Navigate to the frontend directory and start the Vue development server
 cd ../../
 npm --prefix Frontend/vue-frontend run dev
+
 
 
 

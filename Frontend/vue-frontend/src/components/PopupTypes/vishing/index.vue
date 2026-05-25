@@ -1,13 +1,11 @@
 <template>
-    <div :class="['absolute z-999', wrapperClass]"  >
-        <component
-        v-if="visible"  
-        :is="selectedPopup"
-        @click-action="handleClick"
-        @close-action="handleClose"
-        class="overflow-hidden"
-        />
-    </div>
+  <div :class="['absolute z-999', wrapperClass]">
+    <component v-if="visible" :is="selectedPopup" @click-action="handleClick" @close-action="handleClose"
+      class="overflow-hidden" />
+  </div>
+
+
+  
 </template>
 
 <script setup lang="ts">
