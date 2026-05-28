@@ -36,10 +36,12 @@ function pcm16ToFloat32(pcm: Int16Array): Float32Array {
   for (let i = 0; i < pcm.length; i++) out[i] = pcm[i] / 32768
   return out
 }
-
 function getURL() {
-  const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws"
-  return `${wsProtocol}://${window.location.host}/ws/gemini/audio/`
+  const url = new URL(import.meta.env.VITE_API_BASE)
+
+  const protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
+
+  return `${protocol}//${url.host}/ws/gemini/audio/`
 }
 
 export function useGeminiWs() { 
