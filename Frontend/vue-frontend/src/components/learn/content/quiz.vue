@@ -76,13 +76,12 @@ function deleteQuestion(index: number) {
         alert("You must have at least one question.");
     }
 }
-const here = computed(() => contentStore.test)
 
 </script>
 <template>
     <LearningContent>
-
         <QuizEdit 
+        v-show="Question.id !== 0"
         :questions="Question.props" 
         :quizComponent="componentMap[Question.type]"
         :editableComponent="editableComponentMap[Question.type as QuizType]" 

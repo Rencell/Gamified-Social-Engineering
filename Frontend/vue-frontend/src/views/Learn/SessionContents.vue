@@ -67,7 +67,7 @@ onMounted(async () => {
       if (isReload) {
         router.replace({
           path: route.path,
-          query: {} // clears all query params
+          query: {} 
         })
       }
     }

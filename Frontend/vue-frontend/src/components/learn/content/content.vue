@@ -58,7 +58,12 @@ const final = ref({
 });
 
 
-const finalpush = computed(() => [...contentStore.components, final.value]);
+const finalpush = computed(() => {
+  if (contentStore.components.length === 0) {
+    return [final.value];
+  }
+  return [...contentStore.components, final.value];
+});
 
 </script>
 

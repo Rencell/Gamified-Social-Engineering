@@ -113,7 +113,7 @@ onMounted(async () => {
 
     <div class="flex justify-center items-center">
       <div v-if="active" class="w-2xl flex">
-        <Button v-if="currentVisibleIndex < components.length - 1" class="ml-auto my-10" @click="showNextComponent">
+        <Button v-if="currentVisibleIndex < components.length - 1" class="mx-auto lg:mx-0 lg:ml-auto my-10" @click="showNextComponent">
           <MoveDown />
         </Button>
         <!-- <div v-else class="ml-auto my-10">
