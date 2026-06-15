@@ -110,6 +110,7 @@ const saveAgreementEdits = async (agreementId: number) => {
     state.isBusy = true;
     try {
         const updated = await AgreementService.agreements.update(agreementId, {
+            id: 0,
             title: state.title,
             description: state.description,
             agreement_section: aggreement.value.id,
@@ -161,7 +162,8 @@ const createConsent = async () => {
     if (!aggreement.value) return;
 
     try {
-        const payload: Omit<Agreement, 'id' | 'created_at'> = {
+        const payload: Agreement = {
+            id: 0,
             title: createTitle.value,
             description: createDescription.value,
             agreement_section: aggreement.value.id,
@@ -201,10 +203,11 @@ const saveAgreementSectionEdits = async () => {
     if (!aggreement.value) return;
     try {
         const updated = await AgreementService.agreementSections.update(aggreement.value.id, {
+            id: 0,
             type: aggreement.value.type,
             title: sectionTitle.value,
             content: sectionDescription.value,
-        });
+        } as AgreementSection);
         aggreement.value.title = updated.title;
         aggreement.value.content = updated.content;
         toggleEditingAgreementSection();

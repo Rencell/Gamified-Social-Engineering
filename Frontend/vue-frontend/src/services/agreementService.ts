@@ -13,7 +13,6 @@ export interface Agreement {
     title: string;
     agreement_section: number;
     description: string;
-    created_at: Date | string;
 }
 
 const END_POINT = "/api/common/";
