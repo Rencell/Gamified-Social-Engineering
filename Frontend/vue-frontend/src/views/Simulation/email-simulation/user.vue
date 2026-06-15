@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import { Card } from '@/components/ui/card';
-import RiskIndicator from '@/components/simulation/riskIndicator.vue'
 import { SimulationService } from '@/services';
 import type { GoPhishEvent } from '@/services/simulationService';
 import { computed, onMounted, ref } from 'vue';
 import type { GoPhish } from '@/services/simulationService';
-import { Button } from '@/components/ui/button';
-import { ShieldAlert, Mail, Clock, XCircle, Info, CircleQuestionMark } from 'lucide-vue-next';
+import { ShieldAlert } from 'lucide-vue-next';
 import DialogSimulation from '@/components/simulation/dialogSimulation.vue'
 import Loading from '@/components/loading.vue';
 import KpiMetrics from '@/components/simulation/UI/KpiMetrics.vue'
 import SimulationHistoryTable from '@/components/simulation/UI/SimulationHistoryTable.vue';
 import AvoidGuide from '@/components/simulation/UI/dialogue/avoidGuide.vue';
 import { useSimulationStore } from '@/stores/simulation';
+import { SimulationType } from '@/components/simulation/simulation-enum';
 
 defineOptions({
   name: 'EmailSimulationUser',
@@ -20,7 +18,6 @@ defineOptions({
 
 const phishingData = ref<GoPhish[]>([])
 const eventsData = ref<GoPhishEvent[]>([])
-
 
 const isOpen = ref(false);
 function toggleDialog() {
@@ -31,7 +28,7 @@ const isLoading = ref(true);
 onMounted(async () => {
 
     isLoading.value = true;
-    // Fetch simulation data when the component is mounted
+
     try {
         const response = await SimulationService.get_all();
         const consent = await SimulationService.get_consent();
@@ -49,7 +46,7 @@ const security_score = computed(() => {
     if (phishingData.value.length > 0) {
         return phishingData.value[0].security_score;
     }
-    return 0; // Default score if data is not available
+    return 0; 
 });
 
 const toggleshit = (async () => {
@@ -60,31 +57,9 @@ const toggleshit = (async () => {
     }
 });
 
-
-const showHistory = ref(false);
-function toggleShowHistory() {
-    showHistory.value = !showHistory.value;
-}
-
-const isInfoOpen = ref(false);
-function toggleInfo() {
-    isInfoOpen.value = !isInfoOpen.value;
-}
-
-const isCampaignInfoOpen = ref(false);
-function toggleCampaignInfo() {
-    isCampaignInfoOpen.value = !isCampaignInfoOpen.value;
-}
-
 interface Summary {
     label: string;
     value: number;
-}
-
-interface Email {
-    id: number;
-    message: string;
-    received_at: string;
 }
 
 const filter_type_email = computed(() => eventsData.value.filter(event => event.type === 'email'))
@@ -97,7 +72,7 @@ const summary = computed<Summary[]>(() => [
 
 const simulationStore = useSimulationStore();
 
-simulationStore.getDialogService('phishing');
+simulationStore.getDialogService(SimulationType.Email);
 
 </script>
 

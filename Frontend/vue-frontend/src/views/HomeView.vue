@@ -3,21 +3,18 @@ import shop from '/Home/shop.svg';
 import bag from '/Home/bag.svg';
 import coin from '/Home/coin.svg';
 import Profile from '@/components/home/profile.vue'
-import { computed, onMounted, ref } from 'vue';
+import { computed} from 'vue';
 
 import { useAuthStore } from '@/stores/auth';
 import CurrentLearning from '@/components/home/currentLearning.vue'
-import { Button } from '@/components/ui/button';
-
 const coins = computed(() => useAuthStore().User.coin || 0);
 
 import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
-import { showPopupFailed } from '@/components/ui/sonner/popupFailed/PopupFailed';
 </script>
 
 <template>
 
-    <div class="flex flex-col gap-5 p-2">
+    <div class="flex flex-col gap-5 p-2 px-0 sm:px-20">
         <div class="flex justify-between h-15">
             <router-link :to="{ name: 'Shop' }">
                 <div class="h-15 relative flex items-center"  @click="playSoundFx(SoundFx.Button)">

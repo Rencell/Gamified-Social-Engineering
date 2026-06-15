@@ -27,8 +27,7 @@ const restOfStats = ref<UserStats[]>([]); // Remaining users
 const leaderboard = async () => {
     const fetchedStats = await RewardService.get_stats();
     stats.value = fetchedStats
-        .filter((user: UserStats) => user.exp !== 0) // Exclude users with 0 exp
-        .sort((a: UserStats, b: UserStats) => (b.exp || 0) - (a.exp || 0));
+        .filter((user: UserStats) => user.exp !== 0) 
 
     // Split the stats into top 3 and the rest
     topThree.value = stats.value.slice(0, 3);

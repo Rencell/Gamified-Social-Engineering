@@ -12,7 +12,6 @@ export enum SoundFx {
     Calling,
     OfficeBackground,
     failure,
-
 }
 
 const sounds: Record<SoundFx, string> = {

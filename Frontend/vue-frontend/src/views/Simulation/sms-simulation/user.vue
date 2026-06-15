@@ -10,8 +10,8 @@ import Loading from '@/components/loading.vue';
 import KpiMetrics from '@/components/simulation/UI/KpiMetrics.vue'
 import SimulationHistoryTable from '@/components/simulation/UI/SimulationHistoryTable.vue';
 import AvoidGuide from '@/components/simulation/UI/dialogue/avoidGuide.vue';
-import Button from '@/components/ui/button/Button.vue';
 import { useSimulationStore } from '@/stores/simulation';
+import { SimulationType } from '@/components/simulation/simulation-enum';
 
 const phishingData = ref<GoPhishSMS[]>([])
 const eventsData = ref<GoPhishEvent[]>([])
@@ -32,7 +32,6 @@ const toggleConsent = (async (phone: string) => {
 
 const isLoading = ref(true);
 onMounted(async () => {
-    // Fetch simulation data when the component is mounted
     isLoading.value = true;
     try {
         const response = await SimulationService.get_all_sms();
@@ -51,13 +50,8 @@ const security_score = computed(() => {
     if (phishingData.value.length > 0) {
         return phishingData.value[0].security_score;
     }
-    return 0; // Default score if data is not available
+    return 0;
 });
-
-const showHistory = ref(false);
-function toggleShowHistory() {
-    showHistory.value = !showHistory.value;
-}
 
 interface Summary {
     label: string;
@@ -72,7 +66,7 @@ const summary = computed<Summary[]>(() => [
 
 const simulationStore = useSimulationStore();
 
-simulationStore.getDialogService('smishing');
+simulationStore.getDialogService(SimulationType.Smishing);
 
 </script>
 

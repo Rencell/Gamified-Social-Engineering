@@ -7,15 +7,13 @@ import KpiMetrics from '@/components/simulation/UI/KpiMetrics.vue'
 import Incoming_call from '@/components/vishing_simulation/incoming_call.vue';
 import AvoidGuide from '@/components/simulation/UI/dialogue/avoidGuide.vue';
 import { useSimulationStore } from '@/stores/simulation';
+import { SimulationType } from '@/components/simulation/simulation-enum';
 
 const phishingData = ref<VishingScenario[]>([]);
 const phishingDataTotal = ref<VishingScenarioTotal | null>(null);
 
-const isOpen = ref(false);
-
 const isLoading = ref(true);
 onMounted(async () => {
-    // Fetch simulation data when the component is mounted
     isLoading.value = true;
     try {
         const response = await SimulationService.get_vishing_scenarios();
@@ -33,7 +31,7 @@ const security_score = computed(() => {
     if (phishingDataTotal.value) {
         return phishingDataTotal.value.security_score;
     }
-    return 0; // Default score if data is not available
+    return 0;
 });
 
 interface Summary {
@@ -54,14 +52,13 @@ function triggerIncomingToast() {
 
 const simulationStore = useSimulationStore();
 
-simulationStore.getDialogService('vishing');
+simulationStore.getDialogService(SimulationType.Vishing);
 
 </script>
 
 <template>
     <Incoming_call v-if="showIncoming" @close="showIncoming = false" @decline="showIncoming = false" />
-<!--     
-    <Button @click="toggleshit">Toggle Dialog></Button> -->
+
     <div class="mx-auto max-w-7xl space-y-12 font-display relative">
        
         <AvoidGuide 
@@ -70,8 +67,7 @@ simulationStore.getDialogService('vishing');
 
         <KpiMetrics :phishingData="summary" title="Vishing" :security_score="security_score"/>
         
-        <!-- <SimulationHistoryTable :emails="filter_type_phone" title="Vishing History"/> -->
-         <button class="px-3 py-2 border rounded" @click="triggerIncomingToast">Trigger Incoming Call Toast</button>
+        <button class="px-3 py-2 border rounded" @click="triggerIncomingToast">Trigger Incoming Call Toast</button>
     </div>
 
     <div v-if="isLoading" class="absolute inset-0 flex flex-col items-center justify-center space-y-4">

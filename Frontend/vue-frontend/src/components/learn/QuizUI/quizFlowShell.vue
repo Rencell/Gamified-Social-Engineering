@@ -156,10 +156,10 @@ async function onFinish(finalScore: number, time_spent?: number) {
   playSoundFx(SoundFx.Celebration);
   if(useContentStore().contentItems.pass_rate! > (score.value / total_questions.value * 100)) {
     alert('You did not pass the quiz. Please try again.')
-    quizCompleted.value = true
     rewardState.value = 'no-reward'
     return;
   }
+  await moduleStore.completeModule();
 
   // Only award when the user improved their score
   const prevScore = await previousScore();
@@ -182,7 +182,6 @@ const resetQuiz = () => {
   score.value = 0
 }
 const nextLesson = async() => {
-  await moduleStore.completeModule();
   moduleStore.nextModule();
   
 }

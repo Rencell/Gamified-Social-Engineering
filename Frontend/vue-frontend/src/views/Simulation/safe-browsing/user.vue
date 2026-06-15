@@ -6,6 +6,7 @@ import KpiMetrics from '@/components/simulation/UI/KpiMetrics.vue'
 import AvoidGuide from '@/components/simulation/UI/dialogue/avoidGuide.vue';
 import type { SimulationGuide } from '@/services/simulationService';
 import { useSimulationStore } from '@/stores/simulation';
+import { SimulationType } from '@/components/simulation/simulation-enum';
 
 defineOptions({
     name: 'SafeBrowsingUser',
@@ -32,7 +33,7 @@ const summary = computed<Summary[]>(() => [
 
 const simulationStore = useSimulationStore();
 
-simulationStore.getDialogService('safeBrowsing');
+simulationStore.getDialogService(SimulationType.SafeBrowsing);
 </script>
 
 <template>

@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf.urls.static import static
 from django.conf import settings
+import os
+admin.site.site_url = os.getenv('FRONTEND_URL', 'http://localhost:5173')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

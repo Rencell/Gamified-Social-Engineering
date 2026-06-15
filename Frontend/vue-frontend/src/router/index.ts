@@ -43,6 +43,14 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/admin-site',
+      name: 'admin-site',
+      beforeEnter: (to, from, next) => {
+        window.location.href = import.meta.env.VITE_API_BASE + "/admin";
+      },
+      component: HomeView,
+    },
+    { 
       path: '/home',
       name: 'Home',
       beforeEnter: requireAuthenticated,

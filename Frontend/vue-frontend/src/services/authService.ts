@@ -7,6 +7,7 @@ export interface Authentication {
   exp: number
   coin: number
   level: number
+  rank: number
   is_admin: boolean
 }
 

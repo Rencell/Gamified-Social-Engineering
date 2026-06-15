@@ -17,6 +17,7 @@ export const useAuthStore = defineStore('auth', () => {
     email: '',
     exp: 0,
     coin: 0,
+    rank: 0,
     level: 1,
     is_admin: false,
   }) 
@@ -73,6 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
       coin: 0,
       level: 1,
       is_admin: false,
+      rank: 0,
     }
   }
 
@@ -103,6 +105,7 @@ export const useAuthStore = defineStore('auth', () => {
       exp: rewardRes.exp,
       coin: rewardRes.coins,
       level: rewardRes.level,
+      rank: rewardRes.rank,
       // role: 'admin',
     }
      

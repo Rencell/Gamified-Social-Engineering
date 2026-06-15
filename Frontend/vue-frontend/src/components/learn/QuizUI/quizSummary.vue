@@ -72,54 +72,54 @@ const retryQuiz = () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center p-4 w-full flex-col">
+  <div class="min-h-screen flex items-center justify-center p-3 sm:p-4 md:p-6 w-full flex-col">
     
-
-    <div class="w-xl max-w-xl mx-auto text-center space-y-4 animate-parent">
+    <div class="w-full max-w-2xl mx-auto text-center space-y-4 sm:space-y-6 animate-parent">
       <!-- Score and Title -->
-      <div class="space-y-5">
+      <div class="space-y-3 sm:space-y-5">
         <!-- <p class="text-slate-600 text-XS font-bold">SCORE</p> -->
-        <div class=" bg-accent/20 rounded-full w-15 h-15 mx-auto flex items-center justify-center">
-          <h1 class="text-white text-xl font-bold">
+        <div class="bg-accent/20 rounded-full w-12 h-12 sm:w-15 sm:h-15 mx-auto flex items-center justify-center">
+          <h1 class="text-white text-base sm:text-lg md:text-xl font-bold">
             <LearningSpan>{{ score }}/{{ length }}</LearningSpan>
           </h1>
         </div>
-        <h1 class="text-white text-2xl font-bold">{{ performanceMessage }}</h1>
+        <h1 class="text-white text-xl sm:text-2xl md:text-3xl font-bold px-2">{{ performanceMessage }}</h1>
       </div>
 
-      <div class="flex justify-center items-center relative">
-        <div class="size-50 relative z-10">
+      <!-- Rive Player Section -->
+      <div class="flex justify-center items-center relative py-4 sm:py-6">
+        <div class="size-32 sm:size-40 md:size-50 relative z-10">
           <RivePlayer :celebrate-state="false" />
         </div>
-        <img class="size-50 absolute opacity-30 animate-spin [animation-duration:15s]" :src="radial" />
-        <!-- <LearningImage :image="asset" /> -->
+        <img class="size-32 sm:size-40 md:size-50 absolute opacity-30 animate-spin [animation-duration:15s]" :src="radial" />
       </div>
 
-      <!-- Alert -->
+      <!-- Alert Messages -->
       <div v-if="rewardState === 'no-reward'"
-        class="flex gap-3 text-center justify-center items-center text-sm text-blue-400 border border-blue-600 rounded-lg p-3">
-        <Info />
+        class="flex gap-2 sm:gap-3 text-center justify-center items-center text-xs sm:text-sm text-blue-400 border border-blue-600 rounded-lg p-2 sm:p-3 mx-2">
+        <Info class="flex-shrink-0" />
         <p>Score more than your Max score to be rewarded</p>
       </div>
       <div v-if="rewardState === 'max-reward'"
-        class="flex gap-3 text-center justify-center items-center text-sm text-yellow-400 border border-yellow-600 rounded-lg p-3">
-        <Crown />
+        class="flex gap-2 sm:gap-3 text-center justify-center items-center text-xs sm:text-sm text-yellow-400 border border-yellow-600 rounded-lg p-2 sm:p-3 mx-2">
+        <Crown class="flex-shrink-0" />
         <p>You've mastered this quiz! No more reward to gain.</p>
       </div>
 
-      <!-- Stats -->
-
-      <div v-if="!toggleCoin && rewardState ==='reward'" class="grid grid-cols-2 gap-4 w-full ">
-        <Card class="border-2 border-ternary py-4" >
+      <!-- Reward Stats (Coins & XP) -->
+      <div v-if="!toggleCoin && rewardState === 'reward'" class="grid grid-cols-1
+      
+      sm:grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full px-2">
+        <Card class="border-2 border-ternary py-3 sm:py-4">
           <CardContent>
             <div class="flex justify-between items-center gap-2">
-              <div class="text-sm font-bold">LESSON COINS</div>
-              <div class="flex items-center gap-2 w-15">
-                <div class="w-9 h-9 rounded-full flex items-center justify-center">
+              <div class="text-xs sm:text-sm font-bold truncate">LESSON COINS</div>
+              <div class="flex items-center gap-1 sm:gap-2">
+                <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center flex-shrink-0">
                   <img :src="coins" class="w-full h-full text-white" />
                 </div>
                 <div class="text-left">
-                  <div class="text-white text-xl font-bold counter">
+                  <div class="text-white text-base sm:text-lg md:text-xl font-bold counter">
                     {{ totalCoin }}
                   </div>
                 </div>
@@ -128,17 +128,17 @@ const retryQuiz = () => {
           </CardContent>
         </Card>
   
-        <Card class="border-2 border-ternary py-4" >
+        <Card class="border-2 border-ternary py-3 sm:py-4">
           <CardContent>
             <div class="flex justify-between items-center gap-2">
-              <div class="text-sm font-bold">LESSON XP</div>
+              <div class="text-xs sm:text-sm font-bold truncate">LESSON XP</div>
   
-              <div class="flex items-center gap-2 w-15">
-                <div class="w-9 h-9 rounded-full flex items-center justify-center">
+              <div class="flex items-center gap-1 sm:gap-2">
+                <div class="w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center flex-shrink-0">
                   <img :src="my_xp" class="w-full h-full text-white" />
                 </div>
                 <div class="text-left">
-                  <div class="text-white text-xl font-bold counter">
+                  <div class="text-white text-base sm:text-lg md:text-xl font-bold counter">
                     {{ totalExp }}
                   </div>
                 </div>
@@ -148,47 +148,57 @@ const retryQuiz = () => {
         </Card>
       </div>
 
+      <!-- Stats Grid (Accuracy, Time, Attempts) -->
+      <div class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 w-full px-2">
+        <!-- Accuracy Card -->
+        <Card class="py-3 sm:py-4">
+          <CardContent class="flex flex-col items-center gap-1 sm:gap-2">
+            <img class="size-8 sm:size-10 md:size-12" src="https://cdn-icons-png.freepik.com/256/12635/12635783.png?semt=ais_white_label" alt="accuracy">
+            <div class="flex-1">
+              <p class="text-center font-bold text-lg sm:text-xl md:text-2xl">{{ percentage.toFixed(0) }}%</p>
+              <p class="font-semibold text-xs sm:text-sm">Accuracy</p>
+            </div>
+          </CardContent>
+        </Card>
 
-      <div class="grid grid-cols-3 gap-4 w-full ">
-        <Card>
-          <CardContent class="flex flex-col items-center sm:flex-row gap-2">
-            <img class="size-12" src="https://cdn-icons-png.freepik.com/256/12635/12635783.png?semt=ais_white_label" alt="">
+        <!-- Time Spent Card -->
+        <Card class="py-3 sm:py-4">
+          <CardContent class="flex flex-col items-center gap-1 sm:gap-2">
+            <img class="size-8 sm:size-10 md:size-12" src="https://media.lordicon.com/icons/wired/flat/46-timer-stopwatch.svg" alt="timer">
             <div class="flex-1">
-              <p class="text-center font-bold text-2xl">{{ percentage.toFixed(0) }}%</p>
-              <p class="font-semibold text-xs">Accuracy</p>
+              <p class="text-center font-bold text-lg sm:text-xl md:text-2xl">{{ Math.floor(timeSpent / 60) || 0 }}:{{ String(timeSpent % 60 || 0).padStart(2, '0') }}</p>
+              <p class="font-semibold text-xs sm:text-sm">Time Spent</p>
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent class="flex flex-col items-center sm:flex-row gap-2">
-            <img class=" size-12" src="https://media.lordicon.com/icons/wired/flat/46-timer-stopwatch.svg" alt="">
-            <div class="flex-2">
-              <p class="text-center font-bold text-2xl">{{ Math.floor(timeSpent / 60) || 0 }}:{{ String(timeSpent % 60 || 0).padStart(2, '0') }}</p>
-             
-              <p class="font-semibold text-xs">Time Spent </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent class="flex flex-col items-center sm:flex-row gap-2">
-            <img class="size-10" src="https://cdn-icons-png.flaticon.com/512/13951/13951389.png" alt="">
+
+        <!-- Attempts Card -->
+        <Card class="py-3 sm:py-4">
+          <CardContent class="flex flex-col items-center gap-1 sm:gap-2">
+            <img class="size-7 sm:size-9 md:size-10" src="https://cdn-icons-png.flaticon.com/512/13951/13951389.png" alt="attempts">
             <div class="flex-1">
-              <p class="text-center font-bold text-2xl">{{ attempts }}</p>
-              <p class="font-semibold text-xs">Attempts</p>
+              <p class="text-center font-bold text-lg sm:text-xl md:text-2xl">{{ attempts }}</p>
+              <p class="font-semibold text-xs sm:text-sm">Attempts</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <!-- Continue Button -->
-      <div class="space-y-4 mt-10">
-        <div>
-          <Button @click="nextLesson" size="lg"
-            class="w-full font-bold border-b-4 border-primary/30 transition-all duration-200">
-            Next Lesson
-          </Button>
-        </div>
-        <Button @click="retryQuiz" size="lg" variant="ghost" class="w-full font-medium bg-background">
+      <!-- Action Buttons -->
+      <div class="space-y-2 sm:space-y-3 mt-6 sm:mt-8 md:mt-10 px-2 w-full">
+        <Button 
+          @click="nextLesson" 
+          size="lg"
+          class="w-full font-bold border-b-4 border-primary/30 transition-all duration-200 text-sm sm:text-base"
+        >
+          Next Lesson
+        </Button>
+        <Button 
+          @click="retryQuiz" 
+          size="lg" 
+          variant="ghost" 
+          class="w-full font-medium bg-background text-sm sm:text-base"
+        >
           Retry Quiz
         </Button>
       </div>

@@ -9,6 +9,7 @@ import EditableText from '../Learning/EditableText.vue'
 import EditableInteractive from '../Learning/EditableInteractive.vue'
 import type { Content } from '@/services/contentService';
 import LearningBold from '../Learning/Highlight/LearningBold.vue';
+import { playSoundFx, SoundFx, useSoundFx } from '@/composables/useSoundFx';
 
 
 
@@ -30,6 +31,9 @@ const handleAnswerSelect = (optionId: string) => {
   selectedAnswer.value = optionId;
 };
 
+const isCorrect = computed(() => {
+  return selectedAnswer.value === props.mcq.answer;
+});
 const handleSubmit = () => {
   if (selectedAnswer.value) {
     isSubmitting.value = true; // Disable buttons
@@ -37,7 +41,14 @@ const handleSubmit = () => {
       showResult.value = true; // Show result after 1 second
       isSubmitting.value = false; // Re-enable buttons
       emit('showDown');
+      if (isCorrect.value) {
+        playSoundFx(SoundFx.Correct);
+      } else {
+        playSoundFx(SoundFx.Error);
+      }
+      
     }, 1000); // 1-second delay
+
   }
 };
 
@@ -45,9 +56,6 @@ const handleContinue = () => {
   isAnswered.value = true;
 };
 
-const isCorrect = computed(() => {
-  return selectedAnswer.value === props.mcq.answer;
-});
 
 const emit = defineEmits(['showDown', 'giveProps', 'signalDelete', "addComponent", "moveOrder"]);
 const { editable, my_text, updateProps, deleteComponent, addComponent, reorderComponent }

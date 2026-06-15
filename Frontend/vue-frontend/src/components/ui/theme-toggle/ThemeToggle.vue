@@ -69,10 +69,11 @@ onMounted(() => {
   <button
     type="button"
     :aria-label="props.ariaLabel"
-    :class="cn('inline-flex items-center justify-center rounded-md text-ternary hover:bg-accent/20', props.class)"
+    :class="cn('inline-flex items-center justify-center rounded-md text-ternary hover:bg-accent/20 cursor-pointer', props.class)"
     @click.stop="toggleTheme"
   >
     <Sun v-if="isDarkMode" :class="cn(props.iconClass)" />
     <Moon v-else :class="cn(props.iconClass)" />
+  
   </button>
 </template>
