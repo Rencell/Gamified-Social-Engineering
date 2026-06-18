@@ -135,9 +135,17 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
       });
       return true;
     } catch (err) {
-      console.error('Microphone access denied:', err);
-      error.value = 'Microphone access denied';
-      return false;
+      console.error(err);
+      try {
+        mediaStream.value = await navigator.mediaDevices.getUserMedia({
+          audio: true 
+        });
+        return true;
+      } catch (err2) {
+        console.error(err2);
+        error.value = 'Microphone access denied';
+        return false;
+      }
     }
   };
 

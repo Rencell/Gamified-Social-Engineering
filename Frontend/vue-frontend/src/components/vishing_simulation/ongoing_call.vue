@@ -126,6 +126,7 @@ onUnmounted(() => {
 
 watch(isDisconnected, (disconnected) => {
   if (disconnected){
+    disconnectSoundFx();
     emit('end-call');
     emit('result', callResult.value);
   } 
