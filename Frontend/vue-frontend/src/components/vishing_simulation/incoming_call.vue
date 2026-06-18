@@ -119,7 +119,7 @@
         
         
     <div v-if="isResult">
-        <Call_result :call-result="callResult[0].toLowerCase()" @close="handleResultClose" />
+        <Call_result :call-result="callResult" @close="handleResultClose" />
     </div>
 </template>
 
