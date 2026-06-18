@@ -16,7 +16,7 @@ function onClick() {
 </script>
 
 <template>
-  <div class="bg-white rounded-lg shadow-xl border-gray-300 border-1 p-6 max-w-sm w-sm mx-14 relative font-display motion-preset-fade">
+  <div class="bg-white rounded-lg shadow-xl border-gray-300 border-1 p-6 max-w-sm sm:w-sm sm:mx-14 mx-2 relative font-display motion-preset-fade">
       <div class="w-full flex justify-center"><img :src="image" alt="Popup illustration" class="mb-4 w-60 rounded-md" /></div>
       <!-- Close Button -->
       <button

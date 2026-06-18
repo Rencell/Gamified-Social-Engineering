@@ -119,7 +119,7 @@
         
         
     <div v-if="isResult">
-        <Call_result :call-result="callResult" @close="handleResultClose" />
+        <Call_result :call-result="callResult.toLowerCase()" @close="handleResultClose" />
     </div>
 </template>
 
@@ -213,7 +213,7 @@ function showVisibleAndResult(visible: boolean, result: boolean) {
 }
 
 function handleResult(result: string[]) {
-    callResult.value = result
+    callResult.value = result[0]
     handleEndCall();
     handleNotification(false);
 }

@@ -84,6 +84,7 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
     }, 250);
   };
 
+  
   if (recognition) {
     recognition.continuous = true;
     recognition.interimResults = true;
@@ -91,6 +92,8 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
 
     recognition.onresult = (event) => {
       if (isAISpeaking.value) {
+        note.value = '';
+        finalNote.value = '';
         return;
       }
 
@@ -124,6 +127,13 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
     };
   }
 
+  watch(isAISpeaking, (newVal) => {
+    if (newVal) {
+      stop()  // Stops listening
+    } else {
+      start() // Resumes listening
+    }
+  })  
 
 
   const start = async () => {
@@ -154,10 +164,6 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
       clearTimeout(restartTimer);
       restartTimer = null;
     }
-    // if (mediaStream.value) {
-    //   mediaStream.value.getTracks().forEach((track) => track.stop());
-    //   mediaStream.value = null;
-    // }
     try {
       recognition.stop();
     } catch {

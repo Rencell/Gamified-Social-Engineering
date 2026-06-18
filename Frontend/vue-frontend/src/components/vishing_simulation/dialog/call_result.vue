@@ -118,7 +118,7 @@ const handleClose = () => {
             >
                 <component :is="view.icon" class="h-8 w-8" :class="view.iconClass" />
             </div>
-
+            
             <h2 class="text-center text-xl font-semibold text-slate-900">
                 {{ view.title }}
             </h2>
@@ -132,7 +132,7 @@ const handleClose = () => {
             </p>
 
             <Button class="mt-6 w-full" :variant="view.buttonVariant" @click="handleNavigate">
-                {{ view.buttonText }}
+                {{ view.buttonText}}
             </Button>
         </div>
     </div>

@@ -119,7 +119,6 @@ watch(
     if (props.isSpeaking) {
       return;
     };
-
     const current = (finalNote.value || val || '').trim();
     if (current.length < MIN_CHARS_TO_SEND) return;
 
@@ -141,6 +140,7 @@ watch(
 watch(() => props.isSpeaking, (val) => {
   if (val) {
     isAISpeaking.value = true;
+    
     clearAutoSendTimer();
     clearSilenceTimer();
     return;
