@@ -124,30 +124,6 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
     };
   }
 
-  const initializeAudio = async () => {
-    try {
-      mediaStream.value = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true
-        }
-      });
-      return true;
-    } catch (err) {
-      console.error(err);
-      try {
-        mediaStream.value = await navigator.mediaDevices.getUserMedia({
-          audio: true 
-        });
-        return true;
-      } catch (err2) {
-        console.error(err2);
-        error.value = 'Microphone access denied';
-        return false;
-      }
-    }
-  };
 
 
   const start = async () => {
