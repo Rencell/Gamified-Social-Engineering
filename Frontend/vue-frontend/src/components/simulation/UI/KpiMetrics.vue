@@ -12,7 +12,6 @@
                 </div>
 
                 <RiskIndicator :score="security_score" :max-score="100" risk-level="low" />
-
             </Card>
         </section>
 

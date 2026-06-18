@@ -38,6 +38,8 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
   const note = ref('');
   const finalNote = ref('');
   const error = ref<string | null>(null);
+  const mediaStream = ref<MediaStream | null>(null);  // ← ADD THIS
+  const isAISpeaking = ref(false);
 
   // Resolve language: accept a string or a Ref<string>. Default to navigator.language.
   let langRef: Ref<string>;
@@ -88,7 +90,10 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
     recognition.lang = unref(langRef);
 
     recognition.onresult = (event) => {
-      
+      if (isAISpeaking.value) {
+        return;
+      }
+
       let interim = '';
       let finalText = '';
 
@@ -119,8 +124,30 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
     };
   }
 
-  const start = () => {
+  const initializeAudio = async () => {
+    try {
+      mediaStream.value = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        }
+      });
+      return true;
+    } catch (err) {
+      console.error('Microphone access denied:', err);
+      error.value = 'Microphone access denied';
+      return false;
+    }
+  };
+
+
+  const start = async () => {
     if (!recognition) return;
+
+    const audioReady = await initializeAudio();
+    if (!audioReady) return;
+
     error.value = null;
     shouldRestart = true;
     // ensure recognition uses current language before starting
@@ -143,9 +170,12 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
       clearTimeout(restartTimer);
       restartTimer = null;
     }
+    if (mediaStream.value) {
+      mediaStream.value.getTracks().forEach((track) => track.stop());
+      mediaStream.value = null;
+    }
     try {
       recognition.stop();
-      
     } catch {
       // ignore
     }
@@ -175,5 +205,6 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
     note,
     finalNote,
     error,
+    isAISpeaking
   };
 }

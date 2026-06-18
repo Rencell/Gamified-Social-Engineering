@@ -57,11 +57,10 @@ const props = defineProps<{
   isSpeaking: boolean;
 }>();
 const emit = defineEmits<{
-  /** Emits the text to be sent by the parent (ongoing_call.vue). */
   (e: 'sent', message: string): void;
 }>();
 
-const { isSupported, isListening, toggleListening, stop, note, finalNote, error } = useSpeechRecognition("fil-PH");
+const { isSupported, isListening, toggleListening, stop, note, finalNote, isAISpeaking } = useSpeechRecognition("fil-PH");
 
 // Auto-send config
 const AUTO_SEND_SILENCE_MS = 1300;
@@ -117,7 +116,9 @@ function emitText(text: string) {
 watch(
   note,
   (val) => {
-    if (props.isSpeaking) return;
+    if (props.isSpeaking) {
+      return;
+    };
 
     const current = (finalNote.value || val || '').trim();
     if (current.length < MIN_CHARS_TO_SEND) return;
@@ -139,11 +140,12 @@ watch(
 
 watch(() => props.isSpeaking, (val) => {
   if (val) {
+    isAISpeaking.value = true;
     clearAutoSendTimer();
     clearSilenceTimer();
     return;
   }
-  // when speaking stops, start the silence timer
+  isAISpeaking.value = false;
   startSilenceTimer();
 });
 
