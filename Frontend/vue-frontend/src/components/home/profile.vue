@@ -66,7 +66,7 @@ streakStore.cacheStreak();
                     <p class="text-3xl sm:text-5xl font-extrabold capitalize">{{ authStore.User.username }}</p>
 
                 </div>
-                <div class="absolute right-15 top-1/2 -translate-y-1/2 sm:translate-y-0">
+                <div class="absolute right-5 sm:right-15 top-1/2 -translate-y-1/2 sm:translate-y-0">
                     <div
                         class="overflow-hidden relative size-23 md:size-30 bg-slate-300/70 border-slate-200 border-5 rounded-full flex items-center justify-center">
                         <div class="w-24 sm:w-35 absolute">

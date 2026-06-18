@@ -14,6 +14,7 @@ import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 
 <template>
 
+    
     <div class="flex flex-col gap-5 p-2 px-0 sm:px-20">
         <div class="flex justify-between h-15">
             <router-link :to="{ name: 'Shop' }">

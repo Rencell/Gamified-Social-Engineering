@@ -38,7 +38,7 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
   const note = ref('');
   const finalNote = ref('');
   const error = ref<string | null>(null);
-  const mediaStream = ref<MediaStream | null>(null);  // ← ADD THIS
+  // const mediaStream = ref<MediaStream | null>(null);
   const isAISpeaking = ref(false);
 
   // Resolve language: accept a string or a Ref<string>. Default to navigator.language.
@@ -153,8 +153,8 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
   const start = async () => {
     if (!recognition) return;
 
-    const audioReady = await initializeAudio();
-    if (!audioReady) return;
+    // const audioReady = await initializeAudio();
+    // if (!audioReady) return;
 
     error.value = null;
     shouldRestart = true;
@@ -178,10 +178,10 @@ export default function useSpeechRecognition(language?: Ref<string> | string) {
       clearTimeout(restartTimer);
       restartTimer = null;
     }
-    if (mediaStream.value) {
-      mediaStream.value.getTracks().forEach((track) => track.stop());
-      mediaStream.value = null;
-    }
+    // if (mediaStream.value) {
+    //   mediaStream.value.getTracks().forEach((track) => track.stop());
+    //   mediaStream.value = null;
+    // }
     try {
       recognition.stop();
     } catch {

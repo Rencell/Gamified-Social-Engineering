@@ -286,10 +286,7 @@ onBeforeUnmount(() => {
               <span class="text-xs font-bold">{{ authStore.User.username }}</span>
             </div>
             <div class="flex items-center gap-2">
-              <ThemeToggle
-                class="h-9 w-9"
-                :storage-key="THEME_STORAGE_KEY"
-              />
+              <ThemeToggle class="h-9 w-9"/>
               <ChevronDown class="w-5 h-5" aria-hidden="true"></ChevronDown>
             </div>
           </button>

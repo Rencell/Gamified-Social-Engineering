@@ -44,7 +44,7 @@ watch(() => moduleStore.selectedModule, () => {
           <div class="h-1 w-11 bg-accent mt-4 "></div>
         </div>
 
-        <div class="sm:hidden flex justify-between w-full items-center">
+        <div class="sm:hidden flex justify-end w-full items-center">
           <div class="gap-2 py-2 flex ">
             <Button @click="router.back()" size="sm">
               <Home></Home>
@@ -58,12 +58,7 @@ watch(() => moduleStore.selectedModule, () => {
             </Button>
           </div>
 
-          <div class=" dark:bg-black bg-secondary rounded-lg">
-            <ThemeToggle
-              class="h-9 w-9"
-              storage-key="theme"
-            />
-          </div>
+          
         </div>
       </div>
       <hr class="border-background mb-10 ">
