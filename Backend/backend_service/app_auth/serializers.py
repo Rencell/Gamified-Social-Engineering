@@ -23,7 +23,7 @@ class CustomLoginSerializer(LoginSerializer):
         return attrs
     
 class CustomUserDetailsSerializer(UserDetailsSerializer):
-    is_admin = serializers.BooleanField(source='is_superuser', read_only=True)
+    is_admin = serializers.BooleanField(source='is_staff', read_only=True)
     
     class Meta(UserDetailsSerializer.Meta):
         fields = UserDetailsSerializer.Meta.fields + ('is_admin',)
