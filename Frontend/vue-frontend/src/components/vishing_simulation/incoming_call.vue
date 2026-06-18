@@ -174,7 +174,7 @@ const isVisible = ref(true)
 const callState = ref<CallState>('incoming')
 const isTransitioning = ref(false)
 const isResult = ref<boolean>(false)
-const callResult = ref<string[]>([])
+const callResult = ref<string>('')
 const vishingNotification = ref<boolean>(false)
 
 const callerName = computed(() => props.callerName ?? randomCallerName)
@@ -213,7 +213,7 @@ function showVisibleAndResult(visible: boolean, result: boolean) {
 }
 
 function handleResult(result: string[]) {
-    callResult.value = result[0]
+    callResult.value = result[0];
     handleEndCall();
     handleNotification(false);
 }
