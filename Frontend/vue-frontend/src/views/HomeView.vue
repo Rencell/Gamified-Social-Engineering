@@ -7,14 +7,14 @@ import { computed} from 'vue';
 
 import { useAuthStore } from '@/stores/auth';
 import CurrentLearning from '@/components/home/currentLearning.vue'
-const coins = computed(() => useAuthStore().User.coin || 0);
+
+const currentUser = useAuthStore().User;
+const coins = computed(() => currentUser.coin || 0);
 
 import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 </script>
 
 <template>
-
-    
     <div class="flex flex-col gap-5 p-2">
         <div class="flex justify-between h-15">
             <router-link :to="{ name: 'Shop' }">
@@ -39,7 +39,7 @@ import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
         </div>
 
         
-        <profile @click="playSoundFx(SoundFx.Button)" />
+        <profile @click="playSoundFx(SoundFx.Button)" :current-user="currentUser" />
         <current-learning />
 
     </div>

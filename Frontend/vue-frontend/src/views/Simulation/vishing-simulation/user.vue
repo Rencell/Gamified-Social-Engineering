@@ -57,6 +57,7 @@ simulationStore.getDialogService(SimulationType.Vishing);
 </script>
 
 <template>
+    <button class="px-3 py-2 border rounded" @click="triggerIncomingToast">Trigger Incoming Call Toast</button>
     <Incoming_call v-if="showIncoming" @close="showIncoming = false" @decline="showIncoming = false" />
 
     <div class="mx-auto max-w-7xl space-y-12 font-display relative">
@@ -67,7 +68,6 @@ simulationStore.getDialogService(SimulationType.Vishing);
 
         <KpiMetrics :phishingData="summary" title="Vishing" :security_score="security_score"/>
         
-        <button class="px-3 py-2 border rounded" @click="triggerIncomingToast">Trigger Incoming Call Toast</button>
     </div>
 
     <div v-if="isLoading" class="absolute inset-0 flex flex-col items-center justify-center space-y-4">

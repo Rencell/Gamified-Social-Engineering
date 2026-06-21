@@ -76,7 +76,6 @@ const onFinish = async (finalScore: number, timer: number) => {
         quizSummary.value = true
         return;
     }
-    
     await moduleStore.completeModule();
     
     if (finalScore > (await previousScore())) {

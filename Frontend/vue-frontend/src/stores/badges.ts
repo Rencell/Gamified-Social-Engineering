@@ -19,11 +19,11 @@ export const useBadgesStore = defineStore('badges', () => {
   const fetchBadges = async () => {
     try {
       isLoading.value = true;
-      const response = await BadgeService.get_all();
-      const response2 = await BadgeService.get_user_badge();
+      const getListBadges = await BadgeService.get_all();
+      const getUserCompletedBadges = await BadgeService.get_user_badge();
 
-      badges.value = response;
-      badgesUnlocked.value = response2;
+      badges.value = getListBadges;
+      badgesUnlocked.value = getUserCompletedBadges;
     } catch (error) {
       console.error('Error fetching badges:', error);
     } finally {

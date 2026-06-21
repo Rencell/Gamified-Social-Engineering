@@ -11,9 +11,7 @@ export const requireAuthenticated = async (
   next: NavigationGuardNext
 ) => {
 
-  const allowedRoutes = ['/home', '/learn'];
   const authStore = useAuthStore();
-  const isAuthValid = authStore.User.exp > 0;
   const route = useRoute();
   const levelStore = useLevelStore();
   const streakStore = useStreakStore();

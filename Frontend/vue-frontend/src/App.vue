@@ -28,7 +28,6 @@ const isFullscreen = computed(() => route.meta.layout === 'fullscreen')
 
 const initialized = ref(false);
 onMounted(async () => {
-  authStore.init()
   initialized.value = true;
 })
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, Flame, Shield } from 'lucide-vue-next';
+import { ArrowLeft, Check, Clock, Flame, Shield } from 'lucide-vue-next';
 import { useAuthStore } from '@/stores/auth';
 import { Button } from '@/components/ui/button';
 import fire from '/Learning/fire.svg';
@@ -116,10 +116,10 @@ onMounted(() => {
             </Card>
         </div>
         <div class="col-span-2 sm:col-start-2 flex flex-1">
-            <Card class="flex-1">
-                <CardContent class="sm:px-10">
-                    <div class="flex justify-between">
-                        <p class="font-bold mb-6 text-sm">Badges</p>
+            <Card class="flex-1 bg-transparent">
+                <CardContent class="px-0">
+                    <div class="flex justify-between px-6">
+                        <p class="font-bold mb-6 text-sm">Recent Achievements</p>
                         <RouterLink :to="{ name: 'Badges' }">
 
                             <Button aschild variant="outline">
@@ -128,12 +128,34 @@ onMounted(() => {
 
                         </RouterLink>
                     </div>
-                    <div class="grid grid-cols-5 gap-2">
-                        <div v-for="(badge, index) in badgeStore.badgesUnlocked" :key="index"
-                            class="flex justify-center">
-                            <img :src="badge.badge.image" class="w-30 h-30 object-contain"
-                                :alt="badge.badge.name ?? 'badge'" />
+                    <div class="space-y-2">
+                    <div
+                        v-for="(badge, index) in badgeStore.badgesUnlocked"
+                        :key="index"
+                        class="flex items-center gap-3 rounded-lg bg-secondary p-3 transition-all text-primary"
+                    >
+                        <!-- Badge Icon -->
+                        <div class="flex h-15 w-15 items-center justify-center rounded-lg bg-background backdrop-blur-md border-1 shadow-md ">
+                        <img 
+                            :src="badge.badge.image" 
+                            class="h-10 w-10 object-contain"
+                            :alt="badge.badge.name ?? 'badge'"
+                        />
                         </div>
+
+                        <!-- Badge Details -->
+                        <div class="flex-1">
+                            <p class="font-semibold">{{ badge.badge.name }}</p>
+                            <p class="text-xs font-medium text-primary/30">
+                                {{ badge.badge.description }}
+                            </p>
+                        </div>
+                        <!-- Badge Value -->
+                        <div class="flex items-center gap-1">
+                            <span class="text-sm font-semibold">{{ new Date(badge.completed_at!).toLocaleDateString() }}</span>
+                            <span class="text-sm"><Clock class="size-4 opacity-40"></Clock></span>
+                        </div>
+                    </div>
                     </div>
 
                 </CardContent>

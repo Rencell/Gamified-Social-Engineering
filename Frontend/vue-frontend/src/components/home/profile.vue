@@ -8,7 +8,7 @@ import Spinner from '@/components/ui/spinner/spinner.vue'
 import trophy from '/Icons/Trophy.svg?url'
 import { useStreakStore } from '@/stores/pageStreak';
 import fire from '/Learning/fire.svg';
-import { useAuthStore } from '@/stores/auth';
+import type { Authentication } from '@/services/authService';
 const levelStore = useLevelStore();
 const cosmeticStore = useCosmeticStore();
 
@@ -16,7 +16,7 @@ cosmeticStore.fetchCosmetics()
 
 const loading = ref(true)
 const loadedImage = ref<string>('')
-const authStore = useAuthStore();
+
 
 // Watch whenever S3 background changes
 watch(
@@ -44,6 +44,11 @@ watch(
     { immediate: true }
 )
 
+defineProps<{
+    currentUser: Authentication
+}>()
+
+
 const streakStore = useStreakStore();
 streakStore.cacheStreak();
 </script>
@@ -63,7 +68,7 @@ streakStore.cacheStreak();
                 <div
                     class="absolute sm:left-15 left-5 top-1/2 -translate-y-1/2 font-display font-bold flex flex-col text-white">
                     <div class="text-lg sm:text-2xl font-bold">Hi there!</div>
-                    <p class="text-3xl sm:text-5xl font-extrabold capitalize">{{ authStore.User.username }}</p>
+                    <p class="text-3xl sm:text-5xl font-extrabold capitalize">{{ currentUser.username }}</p>
 
                 </div>
                 <div class="absolute right-5 sm:right-15 top-1/2 -translate-y-1/2 sm:translate-y-0">
@@ -85,7 +90,7 @@ streakStore.cacheStreak();
                     <img :src="trophy" class="size-6 mx-auto" alt="">
                     <div>
                         <p class="font-display font-bold text-lg sm:text-xl">
-                            #{{ authStore.User.rank || 0 }}
+                            #{{ currentUser.rank || 0 }}
                         </p>
                         <p class="text-xs text-yellow-300 hidden sm:block">
                             Rank

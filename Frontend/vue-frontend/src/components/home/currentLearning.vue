@@ -9,10 +9,10 @@
                 <div class="flex justify-center items-center w-25">
                     <img :src="useImageUrl(latestLessonData?.image?.toString())!" class="w-full" alt="">
                 </div>
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-2 w-full">
                     <p class="flex-1 font-bold sm:text-left">{{ latestLessonData?.title }}</p>
                     <p class="flex-1 text-xs font-semibold opacity-40">{{lessonStore.latestPercentageLesson}}% Completed</p>
-                    <Progress class="h-4" :model-value="lessonStore.latestPercentageLesson"  />
+                    <Progress class="h-4 sm:w-md w-full" :model-value="lessonStore.latestPercentageLesson"  />
                 </div>
             </div>
 

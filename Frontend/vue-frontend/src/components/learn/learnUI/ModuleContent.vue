@@ -5,7 +5,6 @@ import { onMounted, ref, watch } from 'vue';
 import Content from '../content/content.vue'
 import { useModuleStore } from '@/stores/module';
 import { useRouter } from 'vue-router';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const moduleStore = useModuleStore();
 const router = useRouter();

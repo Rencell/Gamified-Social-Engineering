@@ -189,13 +189,10 @@ export const useModuleStore = defineStore('Module', () => {
     try {
       streakStore.postStreak()
       await unlockModule()
-
-      console.log('lesson unlocked:', lessonStore.currentLesson)
-
       // Only unlock the next lesson if all non-final modules are unlocked
       const canUnlockNextLesson = isFinalQuizUnlocked.value
       const isAllModulesUnlocked = modules.value.every((module) => !module.locked);
-      if (canUnlockNextLesson && isAllModulesUnlocked) {
+      if (canUnlockNextLesson && isAllModulesUnlocked && lessonStore.isNextLessonLocked()) {
         if (lesson) {
           pageCourseUnlockStore.setCourseDetails(
             lesson.title || '',
@@ -210,8 +207,6 @@ export const useModuleStore = defineStore('Module', () => {
           toast_notification('Congratulations! You have unlocked a new lesson.')
         }
       }
-
-      // await updateLessons()
     } catch (error) {
       console.error('Failed to complete module:', error)
     }

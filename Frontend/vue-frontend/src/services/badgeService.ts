@@ -10,6 +10,7 @@ export interface Badge {
   has_rule?: boolean
   rule?: BadgeRule
   lesson?: number
+  
 }
 
 export interface BadgeRule {
@@ -23,6 +24,7 @@ export interface BadgeRule {
 export interface UserBadge {
   user: number
   badge: Badge
+  completed_at?: string
 }
 
 const END_POINT = '/api/badges/'
