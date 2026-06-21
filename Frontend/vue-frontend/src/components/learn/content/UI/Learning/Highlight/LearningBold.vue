@@ -10,7 +10,7 @@ const props = defineProps({
 
 const formattedText = computed(() => {
   const safeText = props.text ?? ''  // convert null/undefined to ''
-  return safeText.replace(/\*\*(.*?)\*\*/g, '<span class="font-bold text-amber-700 dark:text-amber-300">$1</span>');
+  return safeText.replace(/\*\*(.*?)\*\*/g, '<span class="font-bold text-yellow-600 dark:text-amber-300">$1</span>');
 });
 
 </script>

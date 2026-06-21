@@ -47,7 +47,7 @@ function addQuestion() {
     const newDragPair = JSON.parse(JSON.stringify(props.propsMap));
     editQuestion.value.push(newDragPair);
     if(props.questions.length <= 10) {
-        contentStore.contentItems.quiz_limit = props.questions.length;
+        contentStore.contentQuiz.quiz_limit = props.questions.length;
     }
 }
 
@@ -59,12 +59,12 @@ function finalAddQuestion(type: keyof typeof defaultFinalTestProps) {
 const checkbox = ref(true);
 
 const isQuizLimitInvalid = computed(() => {
-    return (contentStore.contentItems.quiz_limit ?? 0) > props.questions.length;
+    return (contentStore.contentQuiz.quiz_limit ?? 0) > props.questions.length;
 });
 
 onMounted(() => {
     if(props.questions.length <= 10) {
-        contentStore.contentItems.quiz_limit = props.questions.length;
+        contentStore.contentQuiz.quiz_limit = props.questions.length;
     }
 });
 </script>
@@ -82,7 +82,7 @@ onMounted(() => {
                 <div class="flex items-center gap-2">
                     <p class="text-xs w-25">Quiz Limit:</p>
 
-                    <Input :disabled="checkbox" type="number" v-model="contentStore.contentItems.quiz_limit"
+                    <Input :disabled="checkbox" type="number" v-model="contentStore.contentQuiz.quiz_limit"
                         placeholder="Enter quiz limit"
                         :class="{ 'border-red-500 focus-visible:ring-red-500': isQuizLimitInvalid }" />
                 </div>
@@ -91,12 +91,12 @@ onMounted(() => {
                 <div class="flex items-center gap-2">
                     <p class="text-xs w-30">Pass rate:</p>
 
-                    <Input :disabled="checkbox" type="number" v-model="contentStore.contentItems.pass_rate"
+                    <Input :disabled="checkbox" type="number" v-model="contentStore.contentQuiz.pass_rate"
                         placeholder="Enter pass rate"
-                        :class="{ 'border-red-500 focus-visible:ring-red-500': (contentStore.contentItems.pass_rate || 1) > 100 }" />
+                        :class="{ 'border-red-500 focus-visible:ring-red-500': (contentStore.contentQuiz.pass_rate || 1) > 100 }" />
                     %
                 </div>
-                <p v-show="(contentStore.contentItems.pass_rate || 1) > 100" class="text-xs text-red-500">The ideal
+                <p v-show="(contentStore.contentQuiz.pass_rate || 1) > 100" class="text-xs text-red-500">The ideal
                     limit is 0-100%
                 </p>
                 <div v-for="(value, index) in editQuestion" :key="index" class="space-y-2">

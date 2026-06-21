@@ -41,6 +41,7 @@ QUIZ_GENERATION_RULES = """You are generating quiz items for a learning module.
     - the sentence length of question should be between 10 and 100 characters.
     - explanation must be at least 20 characters long when present.
     - IMPORTANT (merge behavior): if you are given an existing list of quiz items, generate ONLY new items and keep the same schema so the caller can append/merge all returned props into the existing list.
+    - FINAL IMPORTANT NOTE (Priority): ALWAYS watch if OptionalInstructions is provided in the context. If it is, incorporate those instructions into the quiz item generation as additional rules or constraints to follow.
     """.strip()
 
 

@@ -15,6 +15,7 @@ export const useAuthStore = defineStore('auth', () => {
     pk: 1,
     username: 'testuser',
     email: '',
+    daily_streak: 0,
     exp: 0,
     coin: 0,
     rank: 0,
@@ -73,6 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
       exp: 0,
       coin: 0,
       level: 1,
+      daily_streak: 0,
       is_admin: false,
       rank: 0,
     }
@@ -106,6 +108,7 @@ export const useAuthStore = defineStore('auth', () => {
       coin: rewardRes.coins,
       level: rewardRes.level,
       rank: rewardRes.rank,
+      daily_streak: rewardRes.daily_streak,
       // role: 'admin',
     }
      

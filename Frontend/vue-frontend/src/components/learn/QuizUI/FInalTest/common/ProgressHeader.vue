@@ -1,17 +1,17 @@
 <template>
-    <div class="space-y-5 sticky top-0 z-50 pt-10 bg-[#181c28]">
+    <div class="space-y-5 sticky top-0 z-50 pt-10 dark:bg-[#181c28]">
       <!-- Progress Bar -->
       <Progress class="w-2xl h-4 mx-auto " :modelValue="progress"></Progress>
   
       <!-- Timer -->
       <div class="ms-auto flex">
-        <div class="p-2 px-3 bg-secondary rounded-full flex items-center gap-2">
+        <div class="p-2 px-3 bg-secondary rounded-full flex items-center gap-2 bg-ternary">
           <img
             class="h-full size-8"
             src="https://cdn-icons-png.freepik.com/256/1207/1207479.png?semt=ais_white_label"
             alt=""
           />
-          <p class="font-semibold">{{ formattedTime }}</p>
+          <p class="font-semibold text-white">{{ formattedTime }}</p>
           
         </div>
       </div>

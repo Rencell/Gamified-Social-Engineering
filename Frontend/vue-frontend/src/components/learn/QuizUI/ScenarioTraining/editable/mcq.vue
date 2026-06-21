@@ -20,7 +20,7 @@ const currentQuestion = computed(() => props.question || null);
 const { previewUrl, changeUpdate, onFileChange, uploadImage } = useUploadContentQuiz();
 async function handleUpload() {
     await uploadImage(
-        { item: { id: contentStore.contentItems.id }, image: currentQuestion.value.image },
+        { item: { id: contentStore.contentQuiz.id }, image: currentQuestion.value.image },
         (data) => {
             currentQuestion.value.image = data.image;
         }

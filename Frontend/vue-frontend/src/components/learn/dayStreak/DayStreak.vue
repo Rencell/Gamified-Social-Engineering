@@ -1,10 +1,10 @@
 <template>
   <div class="flex-1">
-    <div class="h-fit bg-secondary rounded-xl p-7 space-y-5 border-b-4 border-1 border-ternary">
+    <div class="h-fit bg-secondary rounded-xl p-7 space-y-5">
       <p class="text-xl font-bold"> Day Streak</p>
       <p class="text-sm font-semibold text-primary/50">Do a lesson or quiz to keep the streak going</p>
       <div>
-        <Card class="bg-background/70 border-ternary border-2">
+        <Card class="bg-background/70">
           <CardContent class="grid grid-cols-7 gap-3">
             <div
               class="flex flex-col items-center gap-2"

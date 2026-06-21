@@ -65,8 +65,9 @@ const popupStore = usePopupStore();
         <sidebar />
         <main class="flex-1 overflow-y-auto scroll-hidden">
           <SidebarInset>
-            <div class="md:p-10 p-2 pt-9 mb-20 sm:mb-0">
-              <RouterView />
+            <div class="md:p-10 p-2 pt-9 mb-20 sm:mb-0 flex">
+              <div class="flex-1 max-w-6xl mx-auto">
+                <RouterView/></div>
   
             </div>
           </SidebarInset>

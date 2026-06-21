@@ -68,6 +68,33 @@ const retryQuiz = () => {
   emit('retryQuiz');
 };
 
+interface Rewards{
+  text: string;
+  value: number;
+  icon: string;
+  type: 'percentage' | 'time' | 'default';
+}
+const rewardIcons: Rewards[] = [
+
+  {
+    text: 'Accuracy',
+    value: percentage,
+    icon: "https://cdn-icons-png.freepik.com/256/12635/12635783.png?semt=ais_white_label",
+    type: 'percentage',
+  },
+  {
+    text: 'Time Spent',
+    value: props.timeSpent,
+    icon: "https://media.lordicon.com/icons/wired/flat/46-timer-stopwatch.svg",
+    type: 'time',
+  },
+  {
+    text: 'Time Spent',
+    value: props.attempts,
+    icon: "https://cdn-icons-png.flaticon.com/512/13951/13951389.png",
+    type: 'default',
+  },
+]
 
 </script>
 
@@ -80,7 +107,7 @@ const retryQuiz = () => {
         <!-- <p class="text-slate-600 text-XS font-bold">SCORE</p> -->
         <div class="bg-accent/20 rounded-full w-12 h-12 sm:w-15 sm:h-15 mx-auto flex items-center justify-center">
           <h1 class="text-white text-base sm:text-lg md:text-xl font-bold">
-            <LearningSpan>{{ score }}/{{ length }}</LearningSpan>
+            <span class="text-accent dark:text-yellow-500">{{ score }}/{{ length }}</span>
           </h1>
         </div>
         <h1 class="text-white text-xl sm:text-2xl md:text-3xl font-bold px-2">{{ performanceMessage }}</h1>
@@ -107,9 +134,7 @@ const retryQuiz = () => {
       </div>
 
       <!-- Reward Stats (Coins & XP) -->
-      <div v-if="!toggleCoin && rewardState === 'reward'" class="grid grid-cols-1
-      
-      sm:grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full px-2">
+      <div v-if="!toggleCoin && rewardState === 'reward'" class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full px-2">
         <Card class="border-2 border-ternary py-3 sm:py-4">
           <CardContent>
             <div class="flex justify-between items-center gap-2">
@@ -119,7 +144,7 @@ const retryQuiz = () => {
                   <img :src="coins" class="w-full h-full text-white" />
                 </div>
                 <div class="text-left">
-                  <div class="text-white text-base sm:text-lg md:text-xl font-bold counter">
+                  <div class="text-base sm:text-lg md:text-xl font-bold counter">
                     {{ totalCoin }}
                   </div>
                 </div>
@@ -138,7 +163,7 @@ const retryQuiz = () => {
                   <img :src="my_xp" class="w-full h-full text-white" />
                 </div>
                 <div class="text-left">
-                  <div class="text-white text-base sm:text-lg md:text-xl font-bold counter">
+                  <div class="text-base sm:text-lg md:text-xl font-bold counter">
                     {{ totalExp }}
                   </div>
                 </div>
@@ -151,34 +176,16 @@ const retryQuiz = () => {
       <!-- Stats Grid (Accuracy, Time, Attempts) -->
       <div class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 w-full px-2">
         <!-- Accuracy Card -->
-        <Card class="py-3 sm:py-4">
+        <Card class="py-3 sm:py-4 dark:bg-secondary bg-white/80 backdrop-blur shadow-md transform transition-all hover:scale-105" v-for="reward in rewardIcons" :key="reward.text">
           <CardContent class="flex flex-col items-center gap-1 sm:gap-2">
-            <img class="size-8 sm:size-10 md:size-12" src="https://cdn-icons-png.freepik.com/256/12635/12635783.png?semt=ais_white_label" alt="accuracy">
+            <img class="size-8 sm:size-10 md:size-12" :src="reward.icon" :alt="reward.text.toLowerCase()">
             <div class="flex-1">
-              <p class="text-center font-bold text-lg sm:text-xl md:text-2xl">{{ percentage.toFixed(0) }}%</p>
-              <p class="font-semibold text-xs sm:text-sm">Accuracy</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <!-- Time Spent Card -->
-        <Card class="py-3 sm:py-4">
-          <CardContent class="flex flex-col items-center gap-1 sm:gap-2">
-            <img class="size-8 sm:size-10 md:size-12" src="https://media.lordicon.com/icons/wired/flat/46-timer-stopwatch.svg" alt="timer">
-            <div class="flex-1">
-              <p class="text-center font-bold text-lg sm:text-xl md:text-2xl">{{ Math.floor(timeSpent / 60) || 0 }}:{{ String(timeSpent % 60 || 0).padStart(2, '0') }}</p>
-              <p class="font-semibold text-xs sm:text-sm">Time Spent</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <!-- Attempts Card -->
-        <Card class="py-3 sm:py-4">
-          <CardContent class="flex flex-col items-center gap-1 sm:gap-2">
-            <img class="size-7 sm:size-9 md:size-10" src="https://cdn-icons-png.flaticon.com/512/13951/13951389.png" alt="attempts">
-            <div class="flex-1">
-              <p class="text-center font-bold text-lg sm:text-xl md:text-2xl">{{ attempts }}</p>
-              <p class="font-semibold text-xs sm:text-sm">Attempts</p>
+              <p class="text-center font-bold text-lg sm:text-xl md:text-2xl">
+                <span v-if="reward.type == 'default'">{{ reward.value.toFixed(0) }}</span>
+                <span v-else-if="reward.type == 'percentage'">{{ reward.value.toFixed(0) }}%</span>
+                <span v-else-if="reward.type == 'time'">{{ Math.floor(reward.value / 60) || 0 }}:{{ String(reward.value % 60 || 0).padStart(2, '0') }}</span>
+              </p>
+              <p class="font-semibold text-xs sm:text-sm">{{ reward.text }}</p>
             </div>
           </CardContent>
         </Card>

@@ -134,7 +134,7 @@ describe('Content store', () => {
     expect(store.components.map((c) => c.id)).toEqual([1])
   })
 
-  it('fetchContentQuiz() sets contentItems', async () => {
+  it('fetchContentQuiz() sets contentQuiz', async () => {
     const quiz = { id: 55, question: 'Q' }
     ;(
       ContentService.get_quizzes as unknown as {
@@ -146,10 +146,10 @@ describe('Content store', () => {
     await store.fetchContentQuiz(9)
 
     expect(ContentService.get_quizzes).toHaveBeenCalledWith(9)
-    expect((store.contentItems as unknown as { id: number }).id).toBe(55)
+    expect((store.contentQuiz as unknown as { id: number }).id).toBe(55)
   })
 
-  it('updateContentsQuiz() calls update_quiz with current contentItems', async () => {
+  it('updateContentsQuiz() calls update_quiz with current contentQuiz', async () => {
     // The store calls alert() on success
     vi.stubGlobal('alert', vi.fn())
 
@@ -160,11 +160,11 @@ describe('Content store', () => {
     ).mockResolvedValue({})
 
     const store = useContentStore()
-    ;(store.contentItems as unknown as { id: number; payload: string }) = { id: 77, payload: 'payload' }
+    ;(store.contentQuiz as unknown as { id: number; payload: string }) = { id: 77, payload: 'payload' }
 
     await store.updateContentsQuiz()
 
-    expect(ContentService.update_quiz).toHaveBeenCalledWith(77, store.contentItems)
+    expect(ContentService.update_quiz).toHaveBeenCalledWith(77, store.contentQuiz)
 
     vi.unstubAllGlobals()
   })

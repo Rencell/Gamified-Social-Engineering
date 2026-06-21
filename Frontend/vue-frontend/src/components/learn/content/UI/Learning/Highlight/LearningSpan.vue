@@ -1,6 +1,6 @@
 <template>
 
-    <span class="font-bold text-[#fece08]">
+    <span class="font-bold text-yellow-500">
         <slot></slot>
     </span>
 </template>

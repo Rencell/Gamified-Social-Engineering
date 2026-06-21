@@ -26,7 +26,7 @@ const emit = defineEmits<{
             </div>
 
             <Button @click="emit('toggle')" size="sm" variant="secondary"
-                class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors">
+                class="absolute top-4 right-4 text-primary/70 hover:text-white transition-colors">
                 <X />
             </Button>
             <div class="flex flex-col gap-6 pt-10">

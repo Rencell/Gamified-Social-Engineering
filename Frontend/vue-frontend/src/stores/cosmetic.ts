@@ -33,10 +33,10 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
   const fetchCosmeticItems = async (): Promise<void> => {
     // Always ensure shop_list matches item_cosmetics.
     // If we've already fetched items, just rebuild shop_list.
-    if (item_cosmetics.value.length) {
-      shop_list.value = item_cosmetics.value.map((item) => ({ ...item, purchased: false }))
-      return
-    }
+    // if (item_cosmetics.value.length) {
+    //   shop_list.value = item_cosmetics.value.map((item) => ({ ...item, purchased: false }))
+    //   return
+    // }
 
     try {
       item_cosmetics.value = await CosmeticService.get_all()
@@ -138,6 +138,7 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
     }
   }
 
+
   const equipAvatar = computed(
     () =>
       cosmetics.value.find((cosmetic) => cosmetic.equipped_avatar)?.equipped_avatar?.item ?? null,
@@ -192,6 +193,10 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
         user: String(authStore.User?.pk ?? 0),
         item_id: item.id,
       })
+      await updateInventory();
+      setCosmetic(inventory_items.value.find(i => i.item.id === item.id)!);
+
+      fetchCosmeticItems();
       toast_notification('You have purchased a cosmetic!')
     } catch (err: unknown) {
       console.error('Error purchasing cosmetic:', err)

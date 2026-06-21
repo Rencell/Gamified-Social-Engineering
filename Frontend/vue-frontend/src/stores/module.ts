@@ -2,12 +2,20 @@ import { defineStore } from 'pinia'
 import { ModuleService } from '@/services'
 import type { ModuleTest } from '@/services/moduleService'
 import { useLessonStore } from './lesson'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, type Component, type ComponentPublicInstance } from 'vue'
 import { useAuthStore } from './auth'
 import { useSectionStore } from './sections'
 import { useStreakStore } from './pageStreak'
 import { useCourseUnlockStore } from './pageCourseUnlock'
 import { toast } from 'vue-sonner'
+
+
+interface ScrollComponent {
+  id: string | number;
+  component: any;
+  emits?: boolean;
+}
+
 export const useModuleStore = defineStore('Module', () => {
   const lessonStore = useLessonStore()
   const modules = ref<ModuleTest[]>([])
@@ -229,6 +237,7 @@ export const useModuleStore = defineStore('Module', () => {
       selectedModule.value = modules.value[currentIndex - 1]
     }
   }
+
 
   return {
     modules,

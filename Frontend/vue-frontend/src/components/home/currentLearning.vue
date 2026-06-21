@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col gap-3 mb-20">
-        <p class="text-lg sm:text-xl font-semibold">My Learning</p>
+        <p class="text-lg sm:text-xl font-bold">My Learning</p>
         <p class="text-ternary text-xs md:text-sm font-semibold"> Pick up where you left</p>
         
         <Card class="border-1 border-b-5 border-ternary bg-transparent hover:scale-102 transition-all duration-300">
@@ -9,10 +9,10 @@
                 <div class="flex justify-center items-center w-25">
                     <img :src="useImageUrl(latestLessonData?.image?.toString())!" class="w-full" alt="">
                 </div>
-                <div class="flex flex-col gap-2 w-full sm:w-50">
+                <div class="flex flex-col gap-2">
                     <p class="flex-1 font-bold sm:text-left">{{ latestLessonData?.title }}</p>
                     <p class="flex-1 text-xs font-semibold opacity-40">{{lessonStore.latestPercentageLesson}}% Completed</p>
-                    <Progress :model-value="lessonStore.latestPercentageLesson" bg="bg-violet-500"   />
+                    <Progress class="h-4" :model-value="lessonStore.latestPercentageLesson"  />
                 </div>
             </div>
 

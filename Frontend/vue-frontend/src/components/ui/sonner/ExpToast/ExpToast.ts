@@ -12,7 +12,7 @@ export function showExpToast(topic: SimulationTopic = SimulationTopic.Vishing){
     playSoundFx(SoundFx.NewExp);
     toast.custom(
         () => 
-            h(ExpToast, { progressDuration: DURATION, topic }),
+            h(ExpToast, { progressDuration: DURATION, topic, onClose: () => toast.dismiss('exp-toast'), }),
         {
             id: 'exp-toast',
             duration: DURATION,

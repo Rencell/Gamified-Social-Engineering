@@ -17,7 +17,7 @@
           :key="currentIndex"
           @isAnswered="toggleAnswered"
           @isCorrect="toggleCorrect"
-          @addScore="score += 1"
+          @addScore="addScore($event)"
         />
   
         <TwoImageTest
@@ -25,7 +25,7 @@
           :Question="currentTest"
           @isAnswered="toggleAnswered"
           @isCorrect="toggleCorrect"
-          @addScore="score += 1"
+          @addScore="addScore($event)"
         />
   
         <TrueFalse
@@ -33,7 +33,7 @@
           :Question="currentTest"
           @isAnswered="toggleAnswered"
           @isCorrect="toggleCorrect"
-          @addScore="score += 1"
+          @addScore="addScore($event)"
         />
         
         <div v-if="currentTest.type == 'email' || currentTest.type == 'sms'">
@@ -89,7 +89,7 @@
 <script setup lang="ts">
 import type { Test } from './type';
 import MultipleChoice from './multipleChoice.vue';
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
+import { computed, ref } from 'vue';
 import TwoImageTest from './twoImageTest.vue';
 import TrueFalse from './TrueFalse.vue';
 import ProgressHeader from './common/ProgressHeader.vue'
@@ -97,6 +97,7 @@ import ResultFooter from './common/resultFooter.vue'
 import Email from './email.vue';
 import Phone from './phone.vue';
 import Options from './common/options.vue';
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 const timerRef = ref<InstanceType<typeof ProgressHeader> | null>(null);
 
 const props = defineProps<{
@@ -121,11 +122,6 @@ const toggleCorrect = (value: boolean) => {
   isCorrect.value = value;
 }
 
-// Computed property for progress bar
-
-
-// Function to handle the next question or finish the quiz
-
 const toggleNext = () => {
   if (currentIndex.value < props.questions.length - 1) {
     currentIndex.value++;
@@ -136,5 +132,12 @@ const toggleNext = () => {
   isCorrect.value = false;
 };
 
-
+const addScore = (isCorrect: boolean) => {
+  if (isCorrect) {
+    score.value += 1;
+    playSoundFx(SoundFx.Correct);
+  }else{
+    playSoundFx(SoundFx.Error);
+  }
+};
 </script>

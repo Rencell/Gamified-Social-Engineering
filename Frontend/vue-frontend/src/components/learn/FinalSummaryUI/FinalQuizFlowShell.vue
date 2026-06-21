@@ -54,6 +54,7 @@ import { useContentStore } from '@/stores/content';
 const router = useRouter();
 const route = useRoute();
 const moduleStore = useModuleStore();
+const contentStore = useContentStore();
 const nextLesson = () => {
     router.push('/learn/' + route.params.lessonId);
 }
@@ -70,21 +71,16 @@ const onFinish = async (finalScore: number, timer: number) => {
     quizCompleted.value = true
     timeSpent.value = (60 * 15) - timer
 
-    console.log('Quiz finished with score:', currentQuizId.value);
-    if (useContentStore().contentItems.pass_rate! > (score.value / props.questions.length * 100)) {
+    if (contentStore.contentQuiz.pass_rate! > (score.value / props.questions.length) * 100) {
         await updateAttempts();
         quizSummary.value = true
         return;
     }
-    if (moduleStore.selectedModule?.locked) {
-        
-        await moduleStore.completeModule();
-    }
+    
+    await moduleStore.completeModule();
     
     if (finalScore > (await previousScore())) {
-        console.log('Final score:', finalScore);
         const prevScore = await previousScore();
-        console.log('Previous score:', prevScore);
         await updateAttempts();
 
         if (finalScore > prevScore) {

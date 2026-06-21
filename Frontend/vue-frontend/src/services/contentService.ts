@@ -62,8 +62,8 @@ const contentService = {
     }).then((res) => res.data),
 
     //Quiz generation
-    generate_quiz: (moduleId: number, quiz: QuizType, total: number): Promise<QuizGenerateAI> =>
-        session.post(END_POINT + 'content-items/generate_quiz_items/', { moduleId, quiz, total }).then((res) => res.data),
+    generate_quiz: (moduleId: number, quiz: QuizType, total: number, withInstruction: string = ''): Promise<QuizGenerateAI> =>
+        session.post(END_POINT + 'content-items/generate_quiz_items/', { moduleId, quiz, total, generate: withInstruction }).then((res) => res.data),
 }
 
 export default contentService

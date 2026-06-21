@@ -22,7 +22,7 @@ const contentItems = ref<QuizQuestion>({
     props: [],
 });
 
-const props = defineProps<{
+defineProps<{
     content_order: number;
     totalLength: number;
 }>();
@@ -34,7 +34,7 @@ const contentStore = useContentStore();
 onMounted(async () => {
     await moduleStore.fetchModules(route.params.lessonId as string);
     await contentStore.fetchContentQuiz(moduleStore.selectedModule?.id as number);
-    contentItems.value = contentStore.contentItems;
+    contentItems.value = contentStore.contentQuiz;
 })
 
 const Question = computed(() => contentItems.value);

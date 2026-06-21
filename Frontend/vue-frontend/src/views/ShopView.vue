@@ -89,17 +89,20 @@ const buyItem = async (item: Cosmetic & { purchased: boolean }) => {
     if (authStore.User.coin >= item.price) {
         await purchaseItem.purchaseCoinDeduct(item.price)
         await cosmeticStore.purchaseCosmetic(item);
-        await cosmeticStore.updateInventory();
+
+        // const inven_item = cosmeticStore.inventory_items.find(i => i.item.type === item?.type);
+
         authStore.User.coin -= item.price;
         item.purchased = true;
 
         // Remove the purchased item from the displayed list (store)
         cosmeticStore.removeFromShopList(item.id)
-        console.log('Purchase successful');
     };
 }
 
 onMounted(async () => {
     await cosmeticStore.fetchCosmeticItems()
+    await cosmeticStore.fetchCosmetics();
+    await cosmeticStore.fetchInventory();
 });
 </script>

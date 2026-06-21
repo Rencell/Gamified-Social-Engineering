@@ -77,7 +77,7 @@ const config = computed(() => riskConfig[props.riskLevel]);
       class="absolute -bottom-2 -translate-x-1/2 rotate-180 transform"
       :style="{ left: `${percentage}%` }"
     >
-      <div class="h-0 w-0 border-l-[8px] border-r-[8px] border-t-[12px] border-l-transparent border-r-transparent border-t-blue-400" />
+      <div class="h-0 w-0 border-l-[8px] border-r-[8px] border-t-[12px] border-l-transparent border-r-transparent border-t-yellow-400" />
     </div>
   </div>
 </template>

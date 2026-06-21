@@ -30,7 +30,7 @@ onMounted(async () => {
 
 <template>
 
-    <div class="p-2 sm:p-5">
+    <div>
         <p class="font-bold text-3xl mb-4">Learning</p>
 
         <div class="flex flex-col sm:flex-row gap-10 ">
@@ -63,7 +63,7 @@ onMounted(async () => {
             </div>
 
 
-            <div class="flex flex-col gap-4 flex-1 sticky top-0 self-start w-full">
+            <div class="flex flex-col gap-4 flex-1 sticky top-0 self-start w-full font-display">
                 <DayStreak />
                 <Metrics />
             </div>

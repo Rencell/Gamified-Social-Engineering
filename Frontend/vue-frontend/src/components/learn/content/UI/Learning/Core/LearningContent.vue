@@ -28,6 +28,14 @@
             <span v-if="hover" class="transition-all">Delete Content</span>
           </transition>
         </div>
+        <div v-if="contentStore.contentQuiz?.type != 'ModuleReward'" class="flex items-center gap-2">
+          <Button variant="outline" size="sm" class="h-8 w-8 p-0" @click="emit('toggleToQuiz')">
+            <Dices class="w-4 h-4 text-yellow-500" />
+          </Button>
+          <transition name="fade">
+            <span v-if="hover" class="transition-all">Go to Quiz</span>
+          </transition>
+        </div>
         <div v-if="isLastContent" class="flex items-center gap-2">
           <Button variant="outline" size="sm" class="h-8 w-8 p-0" @click="contentStore.createContent()">
             <Plus class="w-4 h-4 text-green-500" />
@@ -59,7 +67,7 @@
 
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, ChevronDown, ChevronUp, Edit2, Plus, Trash2 } from 'lucide-vue-next';
+import { ArrowLeft, ChevronDown, ChevronUp, Dices, Edit2, Plus, Trash2 } from 'lucide-vue-next';
 import { computed, provide, ref } from 'vue';
 import { useContentStore } from '@/stores/content';
 import { useAuthStore } from '@/stores/auth';
@@ -71,10 +79,11 @@ const props = defineProps<{
   contentId?: number | null
 }>();
 
-// Provide the `editable` property with a value of `true`
 const editable = ref(false);
 const hover = ref(false);
 provide('editable', editable);
+
+const emit = defineEmits(['toggleToQuiz']);
 
 const isLastContent = computed(() => {
   if (!props.contentId) return false; // If no contentId is provided, return false
@@ -93,7 +102,6 @@ const canMoveDown = computed(() => {
   const index = contentStore.components.findIndex(item => item.id === props.contentId);
   return index >= 0 && index < contentStore.contents.length - 1;
 });
-
 
 
 </script>

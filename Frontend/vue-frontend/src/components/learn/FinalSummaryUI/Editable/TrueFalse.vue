@@ -28,7 +28,7 @@ function hideImage() {
 
 async function handleUpload() {
     await uploadImage(
-        { item: { id: contentStore.contentItems.id }, image: quizData.value.image },
+        { item: { id: contentStore.contentQuiz.id }, image: quizData.value.image },
         (data) => {
             quizData.value.image = data.image;
         }

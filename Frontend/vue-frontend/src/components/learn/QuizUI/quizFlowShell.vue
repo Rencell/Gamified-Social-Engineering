@@ -154,7 +154,7 @@ async function onFinish(finalScore: number, time_spent?: number) {
   timeSpent.value     = (60 * 10) - (time_spent ?? 0)
 
   playSoundFx(SoundFx.Celebration);
-  if(useContentStore().contentItems.pass_rate! > (score.value / total_questions.value * 100)) {
+  if(useContentStore().contentQuiz.pass_rate! > (score.value / total_questions.value * 100)) {
     alert('You did not pass the quiz. Please try again.')
     rewardState.value = 'no-reward'
     return;

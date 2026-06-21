@@ -34,8 +34,7 @@ const generateQuiz = async() => {
 
   try {
     isGenerating.value = true
-    // If your store supports extra instructions, pass `promptInstructions.value` there.
-    await contentStore.generateQuizAI(moduleId, contentStore.contentItems.type, questionCount.value);
+    await contentStore.generateQuizAI(moduleId, contentStore.contentQuiz.type, questionCount.value, promptInstructions.value);
 
     // Close dialog on success
     isDialogOpen.value = false

@@ -14,7 +14,7 @@
                         </LearningBody>
                         <LearningBody class="flex flex-col gap-4">
                             
-                            <Card class="bg-background/50 border-2 border-ternary w-full sm:w-xl">
+                            <Card class="bg-background/50 backdrop-blur shadow-md border-ternary w-full sm:w-xl">
                                 <CardContent class="flex flex-col gap-5">
                                     <p class="flex gap-2 items-center">
                                         <Zap class="size-5 text-accent"></Zap>Level Requirements
@@ -27,18 +27,18 @@
                                         </div>
                                         <div class="flex justify-between">
                                             <p>Passing Score:</p>
-                                            <p class="text-accent">{{useContentStore().contentItems.pass_rate}}%</p>
+                                            <p class="text-accent">{{useContentStore().contentQuiz.pass_rate}}%</p>
                                         </div>
                                         <div class="flex justify-between">
                                             <p>Questions:</p>
-                                            <p>{{useContentStore().contentItems.quiz_limit}} Questions</p>
+                                            <p>{{useContentStore().contentQuiz.quiz_limit}} Questions</p>
                                         </div>
                                        
                                     </div>
                                 </CardContent>
                             </Card>
                             
-                            <Card class="bg-background/50 border-2 border-ternary w-full sm:w-xl">
+                            <Card class="bg-background/50 backdrop-blur shadow-md border-ternary w-full sm:w-xl">
                                 <CardContent class="flex flex-col gap-5">
                                     <p class="flex gap-2 items-center">
                                         <Trophy class="size-5 text-accent"></Trophy>Reward
@@ -77,16 +77,12 @@
 import { ChevronRight, Trophy, Zap } from 'lucide-vue-next';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
-import image from '/Human.webp'
-import image2 from '/Phishing.webp'
 import LearningContent from '../content/UI/Learning/Core/LearningContent.vue';
-import LearningSection from '../content/UI/Learning/Core/LearningSection.vue';
 import LearningHeader from '../content/UI/Learning/Core/LearningHeader.vue';
 import LearningSpan from '../content/UI/Learning/Highlight/LearningSpan.vue';
 import LearningBody from '../content/UI/Learning/Core/LearningBody.vue';
-import LearningList from '../content/UI/Learning/Listing/LearningList.vue';
 import { Button } from '@/components/ui/button';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useSectionStore } from '@/stores/sections';
 import { useContentStore } from '@/stores/content';
 

@@ -13,9 +13,7 @@ const moduleStore = useModuleStore();
 const lessonStore = useLessonStore();
 const lessonId = route.params.lessonId as string;
 const contentStore = useContentStore();
-const lesson = computed(() =>
-  lessonStore.lessons.find((lesson) => lesson.id === Number(lessonId))
-);
+
 const isLoading = ref(false);
 onMounted(async () => {
 
@@ -45,7 +43,6 @@ watch(
   () => moduleStore.selectedModule?.id,
   async (newModuleId, oldModuleId) => {
     if (newModuleId && newModuleId !== oldModuleId) {
-      console.log(`Module ID updated: ${newModuleId}`);
       await contentStore.fetchContents(newModuleId);
     }
   },
@@ -70,4 +67,5 @@ const finalpush = computed(() => {
 <template>
   <Loading v-if="isLoading"></Loading>
   <LessonReveal v-else :components="finalpush" :with-quiz="true" :key="moduleStore.selectedModule?.id!" />
+
 </template>

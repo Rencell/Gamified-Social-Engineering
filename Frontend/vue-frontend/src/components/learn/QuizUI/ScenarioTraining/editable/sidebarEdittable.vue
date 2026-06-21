@@ -42,20 +42,20 @@ function deleteQuestion(index: number) {
 const addStory = () => {
     editQuestion.value.push(defaultScenarioProps.Story)
     if(props.questions.length <= 10) {
-        contentStore.contentItems.quiz_limit = props.questions.length;
+        contentStore.contentQuiz.quiz_limit = props.questions.length;
     }
 }
 
 const addMCQ = () => {
     editQuestion.value.push(defaultScenarioProps.MCQ)
     if(props.questions.length <= 10) {
-        contentStore.contentItems.quiz_limit = props.questions.length;
+        contentStore.contentQuiz.quiz_limit = props.questions.length;
     }
 }
 const checkbox = ref(true);
 
 const isQuizLimitInvalid = computed(() => {
-    return (contentStore.contentItems.quiz_limit ?? 0) > props.questions.length;
+    return (contentStore.contentQuiz.quiz_limit ?? 0) > props.questions.length;
 });
 
 </script>
@@ -73,7 +73,7 @@ const isQuizLimitInvalid = computed(() => {
                 <div class="flex items-center gap-2">
                     <p class="text-xs w-25">Quiz Limit:</p>
 
-                    <Input :disabled="checkbox" type="number" v-model="contentStore.contentItems.quiz_limit"
+                    <Input :disabled="checkbox" type="number" v-model="contentStore.contentQuiz.quiz_limit"
                         placeholder="Enter quiz limit"
                         :class="{ 'border-red-500 focus-visible:ring-red-500': isQuizLimitInvalid }" />
                 </div>

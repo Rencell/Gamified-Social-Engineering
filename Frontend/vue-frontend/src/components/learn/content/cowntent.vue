@@ -1,6 +1,7 @@
 <template>
-  <LearningContent :content-id="content_order">
 
+  <LearningContent :content-id="content_order" @toggleToQuiz="emit('toggleToQuiz')">
+    
     
     <RecursiveContent v-for="item in sortedContentItems" 
       
@@ -11,7 +12,8 @@
       @onUpdate="handleContentUpdate" 
       @onDelete="handleDeleteComponent" 
       @onCreate="handleAddComponent"
-      @onReorder="handleReorderComponent" />
+      @onReorder="handleReorderComponent"
+       />
   </LearningContent>
 
   
@@ -25,6 +27,10 @@ import type { Content } from '@/services/contentService.ts';
 import { defaultPropsMap, type LearningType } from './UI/learningRegistry.ts';
 import { componentMap } from './UI/learningRegistry.ts';
 import LearningContent from './UI/Learning/Core/LearningContent.vue';
+import Button from '@/components/ui/button/Button.vue';
+import contentService from '@/services/contentService.ts';
+import { useContentStore } from '@/stores/content.ts';
+import { useModuleStore } from '@/stores/module.ts';
 
 interface ContentItem {
   id: number;
@@ -36,15 +42,19 @@ interface ContentItem {
   children?: ContentItem[];
 }
 
+const emit = defineEmits(['toggleToQuiz']);
+
 const props = defineProps<{
   content_order: number;
 }>();
 
 const contentItems = ref<Content[]>([]);
-
+const contentStore = useContentStore();
+const moduleStore  = useModuleStore();
 
 onMounted(async () => {
   
+  await contentStore.fetchContentQuiz(moduleStore.selectedModule?.id as number);
   await ContentService.get_contentitems_by_parent(props.content_order).then((response) => {
     contentItems.value = response;
   }).catch((error) => {

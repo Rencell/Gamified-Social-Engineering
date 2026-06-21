@@ -20,10 +20,10 @@
                     </div>
                 </div>
                 <div>
-                    <h2 class="text-white text-xl sm:text-2xl leading-tight font-bold text-balance font-display">
+                    <h2 class="text-xl sm:text-2xl leading-tight font-bold text-balance font-display">
                         {{ streakDays }} day Streak!
                     </h2>
-                    <p class="text-white/80 text-xs sm:text-sm mt-1 text-pretty font-display">
+                    <p class="text-xs sm:text-sm mt-1 text-pretty font-display">
                         Practice everyday so your streak won't reset
                     </p>
                 </div>
@@ -34,7 +34,7 @@
                     <div
                         v-for="(day, index) in weekDays"
                         :key="index"
-                        class="text-white/60 text-xs sm:text-sm font-medium text-center"
+                        class="text-primary/60 text-xs sm:text-sm font-medium text-center"
                     >
                         {{ day }}
                     </div>

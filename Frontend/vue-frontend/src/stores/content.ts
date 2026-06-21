@@ -12,7 +12,6 @@ export const useContentStore = defineStore('Content', () => {
   const moduleStore = useModuleStore()
   const contents = ref<any[]>([])
   const components = ref<{ id: number; component: any }[]>([])
-  const test = ref<any>(null)
 
 
   const toast_notification = (message: string) => {
@@ -24,7 +23,7 @@ export const useContentStore = defineStore('Content', () => {
       position: 'top-right',
     })
   }
-
+  
   const fetchContents = async (moduleId: number) => {
     try {
       const response = await ContentService.get_contents_by_module(moduleId)
@@ -57,13 +56,13 @@ export const useContentStore = defineStore('Content', () => {
     }
   }
 
-  const contentItems = ref<QuizQuestion>(null as any)
+  const contentQuiz = ref<QuizQuestion>(null as any)
 
   const fetchContentQuiz = async (contentId: number) => {
     try {
       const response = await ContentService.get_quizzes(contentId)
-      contentItems.value = response
-      console.log('Fetched quiz data:', contentItems.value)
+      contentQuiz.value = response
+      console.log('Fetched quiz data:', contentQuiz.value)
     } catch (error) {
       console.error('Error fetching quiz data:', error)
     }
@@ -71,7 +70,7 @@ export const useContentStore = defineStore('Content', () => {
 
   const updateContentsQuiz = async() => {
     try {
-      await ContentService.update_quiz(contentItems.value.id, contentItems.value)
+      await ContentService.update_quiz(contentQuiz.value.id, contentQuiz.value)
       alert('Quiz updated successfully!')
     } catch (error) {
       console.error('Error updating quiz content:', error)
@@ -160,15 +159,15 @@ export const useContentStore = defineStore('Content', () => {
 
   }
 
-  const generateQuizAI = async (moduleId: number, quiz: QuizType, total: number) => {
+  const generateQuizAI = async (moduleId: number, quiz: QuizType, total: number, withInstruction: string = '') => {
     try {
-      const response = await ContentService.generate_quiz(moduleId, quiz, total)
-      if(contentItems.value) {
-        response.output_text.forEach((newQuizItem: any) => {
-          contentItems.value.props.push(newQuizItem)
-        })
-      }
-      console.log('Quiz generated:', response.output_text)
+      const response = await ContentService.generate_quiz(moduleId, quiz, total, withInstruction)
+      
+      const items = Array.isArray(response.output_text)
+        ? response.output_text
+        : [response.output_text];
+
+      contentQuiz.value.props.push(...items);
       toast_notification('Quiz generated successfully!')
     } catch (error) {
       console.error("Failed to generate quiz:", error);
@@ -177,8 +176,7 @@ export const useContentStore = defineStore('Content', () => {
 
   return {
     contents,
-    test,
-    contentItems,
+    contentQuiz,
     fetchContents,
     fetchContentQuiz,
     components,

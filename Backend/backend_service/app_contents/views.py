@@ -70,6 +70,7 @@ class ContentItemViewSet(viewsets.ModelViewSet):
         module_id = request.data.get('moduleId')
         quiz = request.data.get('quiz')
         total = request.data.get('total', 1)
+        withInstruction = request.data.get('generate', 1)
         QUIZ_NUMBER_RULES = f""". Generate {total} quiz items inside one prop key."""
         
         if not module_id:
@@ -102,6 +103,7 @@ class ContentItemViewSet(viewsets.ModelViewSet):
             "context": {
                 "headlines": [h for h in headlines if h],
                 "facts": [f for f in facts if f],
+                "OptionalInstructions": withInstruction if withInstruction else ""
             }
         }
         

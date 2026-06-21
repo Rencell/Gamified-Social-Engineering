@@ -1,5 +1,5 @@
 <template>
-    <div class="sticky top-0 z-50 bg-[#181c28] pt-5 flex items-center justify-between mb-8">
+    <div class="sticky top-0 z-50 dark:bg-[#181c28] bg-background pt-5 flex items-center justify-between mb-8">
       <div class="flex-1 max-w-xl mx-auto">
         <Progress class="h-5" bg="bg-yellow-500" :model-value="(timeLeft / totalTime) * 100"></Progress>
         <div class="relative flex items-center justify-center mt-3">

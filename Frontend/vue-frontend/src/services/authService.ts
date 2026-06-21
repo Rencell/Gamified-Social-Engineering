@@ -4,6 +4,7 @@ export interface Authentication {
   pk: number
   username: string
   email: string
+  daily_streak: number
   exp: number
   coin: number
   level: number

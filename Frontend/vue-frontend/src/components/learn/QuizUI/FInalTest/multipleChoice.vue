@@ -42,9 +42,8 @@ const handleSubmit = () => {
         showResult.value = true;
         emit('isAnswered', true);
         emit('isCorrect', isCorrect.value);
-        if (isCorrect.value) {
-            emit('addScore');
-        }
+        emit('addScore', isCorrect.value);
+        
     }, 1000);
 
 }
@@ -108,7 +107,7 @@ const getCircleClass = (id: string) => {
                         ]">
                            <p class="w-8 h-8 flex items-center justify-center"> {{ option.id }}</p>
                         </div>
-                        <span class="text-slate-200 font-bold">{{ option.text }}</span>
+                        <span class="font-bold">{{ option.text }}</span>
                     </div>
                 </Card>
             </div>
