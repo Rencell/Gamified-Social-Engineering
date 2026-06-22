@@ -5,7 +5,7 @@
   
       <!-- Timer -->
       <div class="ms-auto flex">
-        <div class="p-2 px-3 bg-secondary rounded-full flex items-center gap-2 bg-ternary">
+        <div class="p-2 px-3 rounded-full flex items-center gap-2 bg-ternary">
           <img
             class="h-full size-8"
             src="https://cdn-icons-png.freepik.com/256/1207/1207479.png?semt=ais_white_label"

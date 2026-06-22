@@ -10,7 +10,7 @@
     />
     <!-- Quiz Content -->
    
-     <div class="relative flex flex-col items-center">
+     <div class="flex flex-col items-center">
         <MultipleChoice
           v-if="currentTest.type == 'multiple-choice'"
           :Question="currentTest"

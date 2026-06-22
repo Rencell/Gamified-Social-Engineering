@@ -5,6 +5,7 @@ import { RouterLink, useRoute } from 'vue-router'
 
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
+import appLogo from '/App_icon/Beware_Logo_Transparent.svg?url'
 import home from '/Icons/Home.svg?url'
 import learn from '/Icons/Learn.svg?url'
 import trophy from '/Icons/Trophy.svg?url'
@@ -264,52 +265,62 @@ onBeforeUnmount(() => {
           </SidebarGroupContent>
         </SidebarGroup>
 
+        
         <!-- Account Section -->
       </SidebarContent>
 
-      <SidebarFooter class="p-4 border-t dark:border-ternary border-ternary-500 ">
+      <SidebarFooter >
 
-        <div class="relative flex items-center justify-between rounded-lg border-2 dark:border-ternary/50 ">
-          <button
-            class="p-3 rounded-lg w-full flex items-center justify-between hover:bg-background cursor-pointer"
-            @click="toggleFooterMenu"
-            ref="panelRef"
-            type="button"
-            :id="accountMenuButtonId"
-            :aria-expanded="toggleFooter"
-            :aria-controls="accountMenuPanelId"
-            aria-haspopup="menu"
-            aria-label="Account menu"
-          >
-            <div class="flex items-center gap-2 text-sm text-primary">
-              <User class="h-7 w-7 text-ternary" aria-hidden="true" />
-              <span class="text-xs font-bold">{{ authStore.User.username }}</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <ThemeToggle class="h-9 w-9"/>
-              <ChevronDown class="w-5 h-5" aria-hidden="true"></ChevronDown>
-            </div>
-          </button>
-          <Transition name="transition-up">
-            <div v-if="toggleFooter"
-              :id="accountMenuPanelId"
-              role="menu"
-              :aria-labelledby="accountMenuButtonId"
-              class="w-full h-fit bg-background/80 backdrop-blur-lg border border-slate-700 rounded-lg absolute bottom-15 left-0 right-0 mt-4 shadow-lg"
-            >
-
-              <RouterLink
-                :to="{ name: 'logout' }"
-                role="menuitem"
-                class="flex items-center gap-2 my-3 p-2 text-sm hover:bg-accent hover:text-white cursor-pointer"
-              >
-                <img :src="logout" alt="" aria-hidden="true" class="h-7"> <span>Sign Out</span>
-              </RouterLink>
-
-            </div>
-          </Transition>
+        <div class="w-full flex flex-col items-center gap-1 text-center text-sm mb-6">
+          <div class="flex justify-center items-center">
+            <img :src="appLogo" class="size-15" alt="">
+            <p class=" text-2xl/snug font-extrabold "><span class="text-red-500">Be</span>Ware</p>
+          </div>
+          <div class="text-white/50 font-semibold text-xs">Gamified Social Engineering</div>
         </div>
 
+        <div class="p-4 border-t dark:border-ternary border-ternary-500 ">
+          <div class="relative flex items-center justify-between rounded-lg border-2 dark:border-ternary/50 ">
+            <button
+              class="p-3 rounded-lg w-full flex items-center justify-between hover:bg-background cursor-pointer"
+              @click="toggleFooterMenu"
+              ref="panelRef"
+              type="button"
+              :id="accountMenuButtonId"
+              :aria-expanded="toggleFooter"
+              :aria-controls="accountMenuPanelId"
+              aria-haspopup="menu"
+              aria-label="Account menu"
+            >
+              <div class="flex items-center gap-2 text-sm text-primary">
+                <User class="h-7 w-7 text-ternary" aria-hidden="true" />
+                <span class="text-xs font-bold">{{ authStore.User.username }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <ThemeToggle class="h-9 w-9"/>
+                <ChevronDown class="w-5 h-5" aria-hidden="true"></ChevronDown>
+              </div>
+            </button>
+            <Transition name="transition-up">
+              <div v-if="toggleFooter"
+                :id="accountMenuPanelId"
+                role="menu"
+                :aria-labelledby="accountMenuButtonId"
+                class="w-full h-fit bg-background/80 backdrop-blur-lg border border-slate-700 rounded-lg absolute bottom-15 left-0 right-0 mt-4 shadow-lg"
+              >
+
+                <RouterLink
+                  :to="{ name: 'logout' }"
+                  role="menuitem"
+                  class="flex items-center gap-2 my-3 p-2 text-sm hover:bg-accent hover:text-white cursor-pointer"
+                >
+                  <img :src="logout" alt="" aria-hidden="true" class="h-7"> <span>Sign Out</span>
+                </RouterLink>
+
+              </div>
+            </Transition>
+          </div>
+        </div>
       </SidebarFooter>
 
       <!-- <SidebarRail /> -->

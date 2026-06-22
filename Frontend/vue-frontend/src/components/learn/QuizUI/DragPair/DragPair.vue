@@ -1,38 +1,24 @@
 <template>
     <div class="min-h-screen py-10 sm:w-auto w-full">
         <Timer ref="timerRef" @time-up="finish($event)" />
-        <div class="w-full sm:w-2xl rounded-lg relative min-h-[90dvh] bg-secondary border-t-4 border-t-blue-500 flex flex-col">
-    
-            <div v-if="answered" class="px-4 py-2">
-                <div class="mb-2 ">
-                    <span class="font-bold" :class="isCorrect ? 'text-green-500' : 'text-red-500'">{{ isCorrect ? 'Correct!'
-                        : 'Incorrect' }}</span>
-                </div>
-                <div class="text-sm border-s-4 ps-4 flex justify-between items-center"
-                    :class="isCorrect ? 'border-green-500' : 'border-red-500'">
-                    <p>{{ question.feedback }}</p>
-                    <Button @click="nextQuestion()"
-                        :class="isCorrect ? 'bg-green-500' : 'bg-red-500 hover:bg-red-500/70'">Next</Button>
-                </div>
-    
-            </div>
+        <div class="w-full sm:w-2xl rounded-lg min-h-[80dvh] bg-secondary border-t-4 border-t-blue-500 flex flex-col">
     
             <!-- Game Area -->
             <div class="flex-1 relative p-6">
                 <!-- Top Card - Clickable -->
                 <Card
-                    class="absolute top-6 left-6 right-6 bg-background hover:bg-ternary hover:border-slate-600 p-6 text-center shadow-lg cursor-pointer transition-all duration-300"
+                    class="absolute top-6 left-6 right-6 bg-ternary/30 hover:bg-ternary hover:border-slate-600 p-6 text-center shadow-lg cursor-pointer transition-all duration-300"
                     :class="[
                         isAnimationFinished ? 'animate-in fade-in duration-500' : 'opacity-0',
                         loading ? 'opacity-50 cursor-wait' : ''
                     ]" @click="handleAnswerClick('top')">
-    
+
                     <!-- add countdown here -->
                     <h3 class="text-xl font-semibold text-white">{{ question.topAnswer }}</h3>
                     <div v-if="isTop" class="absolute inset-0 rounded-xl animate-pulse"
                         :class="[isCorrect ? 'bg-green-400/80 border-green-400/80' : 'bg-red-400/80 border-red-400/80']" />
                 </Card>
-    
+
                 <!-- Animated Question - Moves to selected answer -->
                 <div class="absolute inset-x-6 top-1/2 flex items-center justify-center pointer-events-none">
                     <div class="transition-all duration-1000 ease-out" :style="{
@@ -44,17 +30,17 @@
                             class="bg-background rounded-2xl p-6 border-gray-600 shadow-xl">
                             <ArrowUp v-if="isAnimationFinished" class="h-6 w-6 text-gray-400 mx-auto mb-4" />
                             <p class="text-white text-lg font-medium leading-relaxed px-4 select-none text-center">
-    
+
                                 <Typewriter :text="question.question" @animationEnd="onAnimationEnd" :delay="30" />
                             </p>
                             <ArrowDown v-if="isAnimationFinished" class="h-6 w-6 text-gray-400 mx-auto mt-4" />
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- Bottom Card - Clickable -->
                 <Card
-                    class="absolute bottom-6 left-6 right-6 bg-background hover:bg-ternary p-6 text-center shadow-lg cursor-pointer transition-all duration-300"
+                    class="absolute bottom-6 left-6 right-6 bg-ternary/30 hover:bg-ternary p-6 text-center shadow-lg cursor-pointer transition-all duration-300"
                     :class="[
                         isAnimationFinished ? 'animate-in fade-in duration-500' : 'opacity-0',
                         loading ? 'opacity-50 cursor-wait' : ''
@@ -63,11 +49,11 @@
                     <div v-if="isBottom" class="absolute inset-0 rounded-xl animate-pulse"
                         :class="[isCorrect ? 'bg-green-400/80 border-green-400/80' : 'bg-red-400/80 border-red-400/80']" />
                 </Card>
-    
             </div>
-    
+
         </div>
     </div>
+    <ResultFooter v-if="answered" :is-correct="isCorrect" :explanation="question.feedback ?? ''" @toggle-next="nextQuestion" />
 </template>
 
 <script setup lang="ts">
@@ -79,6 +65,7 @@ import { Typewriter } from '@/components/ui/typewriter'
 import type { Question } from './type'
 import Timer from '../timer.vue'
 import { playSoundFx, SoundFx } from "@/composables/useSoundFx"
+import ResultFooter from './ResultFooter.vue'
 
 defineOptions({
     name: "DragPair"
