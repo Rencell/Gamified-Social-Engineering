@@ -71,8 +71,7 @@
 
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import type { WordPair } from './type';
 import { Spinner } from '@/components/ui/spinner';
 import Timer from '../timer.vue'

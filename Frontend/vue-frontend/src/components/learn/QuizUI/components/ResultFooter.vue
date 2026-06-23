@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isAnswered" class="fixed rounded-b-none bottom-0 font-display z-50 flex flex-col gap-6 animate-in fade-in border-t-2 w-full sm:w-4xl p-5 backdrop-blur shadow-md"
+    <div class="fixed rounded-b-none bottom-0 font-display z-50 flex flex-col gap-6 animate-in fade-in border-t-2 w-full sm:w-4xl p-5 backdrop-blur shadow-md"
         :class="isCorrect ? ' bg-green-950' : 'bg-[#2c030b]'" >
         <div>
             <div class="mb-2 flex gap-2">
@@ -24,8 +24,8 @@
         </div>
 
         <!-- Continue Button -->
-        <Button :disabled="loading" v-if="isAnswered" class="mt-4 border-primary/50 text-sm"
-            :class="isCorrect ? 'bg-green-500' : 'bg-red-500'"
+        <Button :disabled="loading" class="mt-4 border-primary/50 text-sm"
+            :class="isCorrect ? 'bg-green-500 hover:bg-green-500/70' : 'bg-red-500 hover:bg-red-500/70'"
             @click="toggleNext">
             Continue
         </Button>
@@ -34,8 +34,9 @@
 
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 import { Check, X } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 
 const emit = defineEmits(['toggleNext']);
@@ -49,9 +50,17 @@ const toggleNext = ()   => {
     }, 1000); 
 };
 
+onMounted(() => {
+    // Play sound effect based on correctness
+    if (props.isCorrect) {
+        playSoundFx(SoundFx.Correct);
+    } else {
+        playSoundFx(SoundFx.Error);
+    }
+});
+
 const props = defineProps<{
     isCorrect: boolean;
     explanation: string;
-    isAnswered: boolean;
 }>();
 </script>

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import LearningImage from '../../content/UI/Learning/Image/LearningImage.vue';
 import { useImageUrl } from '@/composables/useImageUrl';
 import Timer from '../timer.vue'
+import ResultFooter from '../components/ResultFooter.vue';
 
 
 defineOptions({
@@ -70,11 +71,6 @@ const resetQuiz = () => {
 
 const emit = defineEmits(['finish']);
 
-
-const percentage = computed(() => {
-    return (testPosition.value + 1 / props.questions.length) * 100
-})
-
 const toggleFinish = () => {
         emit('finish', score.value, timerRef.value?.timeLeft || 0);
 }
@@ -90,7 +86,7 @@ const toggleFinish = () => {
         <Timer ref="timerRef" @time-up="toggleFinish" />
         <div :key="testPosition" class="space-y-8">
             <!-- Icon Section -->
-            <div class="flex items-center justify-center space-x-4 mb-6 ">
+            <div v-if="currentQuestion.image" class="flex items-center justify-center space-x-4 mb-6 ">
                 <LearningImage :image="useImageUrl(currentQuestion.image)!" />
             </div>
     
@@ -113,10 +109,10 @@ const toggleFinish = () => {
                     ]" @click="handleAnswerSelect(option.id)">
                         <div class="flex items-center gap-3">
                             <div :class="[
-                                'w-8 h-8 rounded-full flex items-center justify-center font-bold',
+                                'rounded-full flex items-center justify-center font-bold',
                                 selectedAnswer === option.id ? 'bg-accent text-white' : 'bg-slate-600 text-slate-300',
                             ]">
-                                {{ option.id }}
+                                <p class="size-8 flex justify-center items-center">{{ option.id }}</p>
                             </div>
                             <span class="text-slate-200 font-bold">{{ option.text }}</span>
                         </div>
@@ -125,31 +121,14 @@ const toggleFinish = () => {
             </div>
     
             <!-- Submit Button -->
-            <div v-if="selectedAnswer && !showResult" class="flex justify-center">
+            <div :class="{'hidden' : !(selectedAnswer && !showResult)}" class="flex justify-center">
                 <Button @click="handleSubmit" class="bg-accent w-full" size="lg">
                     Check
                 </Button>
             </div>
-    
-            <!-- Result -->
-            <div v-if="showResult" class="space-y-4 mb-5 ">
-                <div>
-                    <div class="mb-2">
-                        <span class="font-bold" :class="isCorrect ? 'text-green-500' : 'text-red-500'">{{ isCorrect ?
-                            'Correct!' : 'Incorrect' }}</span>
-                    </div>
-                    <div class="text-sm border-s-4 ps-4" :class="isCorrect ? 'border-green-500' : 'border-red-500'">
-                        <p>{{ currentQuestion.explanation }}</p>
-                    </div>
-                </div>
-    
-                <Button :disabled="loading" @click="resetQuiz" class="w-full" :class="isCorrect ? 'bg-green-500 hover:bg-green-500/70' : 'bg-red-500 hover:bg-red-500/70'">
-                    
-                    {{ testPosition >= props.questions.length - 1 ? 'Finish questions' : 'Continue' }}
-                </Button>
-            </div>
         </div>
     </div>
+    <ResultFooter v-if="showResult" @toggle-next="resetQuiz" :explanation="currentQuestion.explanation" :is-correct="isCorrect"/>
 
     
 </template>

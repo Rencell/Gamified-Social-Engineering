@@ -1,7 +1,7 @@
 <template>
     <div class="space-y-5 sticky top-0 z-50 pt-10 dark:bg-[#181c28]">
       <!-- Progress Bar -->
-      <Progress class="w-2xl h-4 mx-auto " :modelValue="progress"></Progress>
+      <Progress class="w-full sm:w-2xl h-4 mx-auto " :modelValue="progress"></Progress>
   
       <!-- Timer -->
       <div class="ms-auto flex">

@@ -114,7 +114,7 @@ const getCircleClass = (id: string) => {
         </div>
 
         <!-- Submit Button -->
-        <div v-if="selectedAnswer && !showResult" class="flex justify-center">
+        <div :class="{'hidden' : !(selectedAnswer && !showResult)}" class="flex justify-center">
             <Button @click="handleSubmit" class="bg-accent w-full" size="lg" :disabled="loading">
                 Check
             </Button>

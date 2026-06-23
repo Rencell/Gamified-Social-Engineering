@@ -76,7 +76,7 @@
         </div>
 
         <ResultFooter 
-          :isAnswered="isAnswered" 
+          v-if="isAnswered"
           :isCorrect="isCorrect" 
           :explanation="currentTest.explanation" 
           @toggleNext="toggleNext"
@@ -93,11 +93,11 @@ import { computed, ref } from 'vue';
 import TwoImageTest from './twoImageTest.vue';
 import TrueFalse from './TrueFalse.vue';
 import ProgressHeader from './common/ProgressHeader.vue'
-import ResultFooter from './common/resultFooter.vue'
 import Email from './email.vue';
 import Phone from './phone.vue';
 import Options from './common/options.vue';
 import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
+import ResultFooter from '../components/ResultFooter.vue';
 const timerRef = ref<InstanceType<typeof ProgressHeader> | null>(null);
 
 const props = defineProps<{

@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ 'flex-row-reverse': mcq.position == 'right' }" class="flex flex-col md:flex-row items-center gap-10">
+    <div  class="flex flex-col md:flex-row items-center gap-10">
         <LearningImage class="h-60" :image="useImageUrl(mcq.image)!" />
         <div>
             <div class="w-sm flex flex-col gap-2">
@@ -20,30 +20,16 @@
                         </CardContent>
                     </Card>
                 </div>
-                <div v-if="isAnswered" class="flex flex-col gap-4 animate-in fade-in">
-                    <div>
-                        <div class="mb-2">
-                            <span class="font-bold" :class="selectedAnswer == mcq.answer ? 'text-green-500' : 'text-red-500'">{{ isCorrect
-                                ?
-                                'Correct!' : 'Incorrect' }}</span>
-                        </div>
-                        <div class="text-sm border-s-4 ps-4" :class="selectedAnswer == mcq.answer ? 'border-green-500' : 'border-red-500'">
-                            <p>{{ mcq.explanation }}</p>
-                        </div>
-                    </div>
 
-                    <Button class="border-b-4 border-primary/50" @click="emit('toggleNext')">
-                        Continue
-                    </Button>
-                </div>
-
+                
                 <div v-if="!isAnswered" :class="{ 'ms-auto': mcq.position == 'left' }" class="mt-2">
                     <Button :disabled="!selectedAnswer || loading" @click="handleSubmit">Next</Button>
                 </div>
-
+                
             </div>
         </div>
     </div>
+    <ResultFooter v-if="isAnswered" :is-correct="isCorrect" :explanation="mcq.explanation ?? ''" @toggle-next="emit('toggleNext')" />
 </template>
 
 <script setup lang="ts">
@@ -55,6 +41,7 @@ import { ref } from 'vue';
 import { Typewriter } from '@/components/ui/typewriter';
 import { useImageUrl } from '@/composables/useImageUrl';
 import { playSoundFx, SoundFx, useSoundFx } from '@/composables/useSoundFx';
+import ResultFooter from '../components/ResultFooter.vue'
 const emit = defineEmits(['togglePrev', 'toggleNext', 'addScore']);
 const animationEnd = ref(false);
 const selectedAnswer = ref<string | null>(null);
@@ -75,10 +62,7 @@ const handleSubmit = () => {
         loading.value = false;
         if (props.mcq.answer === selectedAnswer.value) {
             isCorrect.value = true;
-            playSoundFx(SoundFx.Correct);
             emit('addScore');
-        }else {
-            playSoundFx(SoundFx.Error);
         }
         isAnswered.value = true;
     }, 2000);

@@ -59,13 +59,12 @@
 <script setup lang="ts">
 import { ref, computed } from "vue"
 import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { X, ArrowUp, ArrowDown, Ban, Edit, BookOpen, Shield } from "lucide-vue-next"
+import { ArrowUp, ArrowDown } from "lucide-vue-next"
 import { Typewriter } from '@/components/ui/typewriter'
 import type { Question } from './type'
 import Timer from '../timer.vue'
 import { playSoundFx, SoundFx } from "@/composables/useSoundFx"
-import ResultFooter from './ResultFooter.vue'
+import ResultFooter from '../components/ResultFooter.vue'
 
 defineOptions({
     name: "DragPair"
