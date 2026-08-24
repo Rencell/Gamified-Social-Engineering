@@ -41,6 +41,9 @@ const storyCount = computed(() =>
     props.questions.filter(q => q.type === 'story').length
 );
 
+const decreaseTime = () => {
+    timerRef.value?.decreaseTime(50);
+}
 </script>
 <template>
     <LearningContent>
@@ -55,6 +58,7 @@ const storyCount = computed(() =>
         :mcq="currentScenario" 
         @togglePrev="togglePrev"
         @toggleNext="toggleNext"
+        @wrong-answer="decreaseTime"
         @addScore="score += 1"/>
 
     </LearningContent>

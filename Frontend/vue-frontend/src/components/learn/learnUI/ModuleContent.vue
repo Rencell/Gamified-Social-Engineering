@@ -40,7 +40,7 @@ watch(() => moduleStore.selectedModule, () => {
     <div class="snap-start">
       <!-- Title and Accent Line -->
       <div class="flex gap-5 sticky -top-2 self-start z-20 font-bold mb-3 p-5 sm:p-11 pb-2 sm:relative transition-all duration-300" :class="[isHidden ? 'bg-transparent' : 'dark:bg-[#181c28] bg-slate-200']">
-        <div  :class="{'opacity-0': isHidden, 'opacity-100': !isHidden}" class="transition-opacity duration-300">
+        <div  :class="{'opacity-0 z-0': isHidden, 'opacity-100': !isHidden}" class="transition-opacity duration-300">
           <p class="text-xl sm:text-3xl ">
             {{ moduleStore.selectedModule?.title }}
           </p>

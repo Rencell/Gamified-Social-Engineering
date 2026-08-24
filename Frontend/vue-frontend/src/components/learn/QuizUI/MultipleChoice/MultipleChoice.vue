@@ -55,7 +55,7 @@ const handleSubmit = () => {
 }
 
 const resetQuiz = () => {
-    if (testPosition.value >= props.questions.length - 1) {
+    if (testPosition.value >= props.questions.length) {
         toggleFinish()
         return
     }
@@ -72,7 +72,7 @@ const resetQuiz = () => {
 const emit = defineEmits(['finish']);
 
 const toggleFinish = () => {
-        emit('finish', score.value, timerRef.value?.timeLeft || 0);
+    emit('finish', score.value, timerRef.value?.timeLeft || 0);
 }
 
 </script>

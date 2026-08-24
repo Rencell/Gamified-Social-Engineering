@@ -40,9 +40,8 @@ import { Button } from '@/components/ui/button';
 import { ref } from 'vue';
 import { Typewriter } from '@/components/ui/typewriter';
 import { useImageUrl } from '@/composables/useImageUrl';
-import { playSoundFx, SoundFx, useSoundFx } from '@/composables/useSoundFx';
 import ResultFooter from '../components/ResultFooter.vue'
-const emit = defineEmits(['togglePrev', 'toggleNext', 'addScore']);
+const emit = defineEmits(['togglePrev', 'toggleNext', 'addScore', 'wrongAnswer']);
 const animationEnd = ref(false);
 const selectedAnswer = ref<string | null>(null);
 const isAnswered = ref(false);
@@ -63,6 +62,8 @@ const handleSubmit = () => {
         if (props.mcq.answer === selectedAnswer.value) {
             isCorrect.value = true;
             emit('addScore');
+        }else{
+            emit('wrongAnswer');
         }
         isAnswered.value = true;
     }, 2000);
