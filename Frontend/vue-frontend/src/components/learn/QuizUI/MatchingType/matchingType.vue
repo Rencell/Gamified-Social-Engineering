@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen text-white p-4 w-xl">
+  <div class="min-h-screen text-white p-4 w-full sm:w-xl ">
     <!-- Header -->
     <Timer ref="timerRef" @time-up="toggleFinish($event)" />
 
@@ -71,11 +71,11 @@
 
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import type { WordPair } from './type';
 import { Spinner } from '@/components/ui/spinner';
 import Timer from '../timer.vue'
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 
 defineOptions({
   name: 'MatchingQuiz',
@@ -177,6 +177,7 @@ const handleCardClick = (word: string, type: 'a' | 'b') => {
     if (isPair) {
       matchedPairs.value.push(selectedCardA.value, selectedCardB.value);
       score.value += 1;
+      playSoundFx(SoundFx.Correct)
       if (matchedPairs.value.length === wordPairs.length * 2) {
         if (score.value < 0) {
           score.value = 0;
@@ -190,7 +191,12 @@ const handleCardClick = (word: string, type: 'a' | 'b') => {
       }
     } else {
       error.value = true;
-      score.value -= 1;
+      timerRef.value?.decreaseTime(20);
+      if (score.value > 0) {
+        score.value -= 1;
+      }
+      
+      playSoundFx(SoundFx.Error)
     }
     setTimeout(() => {
       error.value = false;

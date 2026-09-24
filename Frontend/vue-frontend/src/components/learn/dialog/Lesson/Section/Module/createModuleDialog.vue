@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -11,20 +11,18 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Plus } from 'lucide-vue-next';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Input, InputProfanity } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useLessonStore } from '@/stores/lesson';
 import type { ModuleTest } from '@/services/moduleService';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useModuleStore } from '@/stores/module';
-import { useRoute } from 'vue-router';
 import { useSectionStore } from '@/stores/sections';
 import DialogClose from '@/components/ui/dialog/DialogClose.vue';
+import { Spinner } from '@/components/ui/spinner';
 const lessonStore = useLessonStore();
 const moduleStore = useModuleStore();
 const sectionStore = useSectionStore();
-const route = useRoute();
 
 
 const props = defineProps<{
@@ -38,11 +36,16 @@ const formData = ref<Partial<ModuleTest>>({
     section: props.sectionId || null,
 });
 
+const inputProfanityFilter = ref(false);
+
 // Add validation state for title
 const errors = ref<{ title?: string }>({});
 const touched = ref<{ title: boolean }>({ title: false });
 
 const validate = () => {
+    if (inputProfanityFilter.value) {
+        return false;
+    }
     const e: typeof errors.value = {};
     if (!formData.value.title || formData.value.title.trim().length === 0) {
         e.title = 'Title is required.';
@@ -52,15 +55,26 @@ const validate = () => {
 };
 
 // Function to handle saving the form data
-const saveModule = () => {
+const loading = ref(false);
+const saveModule = async () => {
+    if (inputProfanityFilter.value) {
+        alert('Please remove inappropriate language from the title before saving.');
+        return;
+    }
     touched.value.title = true;
     if (!validate()) return;
     formData.value.lesson = lessonStore.currentLesson?.id || 0;
-    moduleStore.createModule(formData.value);
-    formData.value.title = '';
-    formData.value.final = false;
-    errors.value = {};
-    touched.value.title = false;
+    loading.value = true;
+    try {
+        await moduleStore.createModule(formData.value);
+        // reset form
+        formData.value.title = '';
+        formData.value.final = false;
+        errors.value = {};
+        touched.value.title = false;
+    } finally {
+        loading.value = false;
+    }
 };
 
 const hasFinalModule = computed(() => {
@@ -101,7 +115,7 @@ watch(() => formData.value.final, (newLesson) => {
             <div class="space-y-4">
                 <div class="space-y-2">
                     <Label>Title</Label>
-                    <Input v-model="formData.title" type="text" placeholder="Enter module title"
+                    <InputProfanity v-model="formData.title" v-model:is-profane="inputProfanityFilter" type="text" placeholder="Enter module title"
                            @blur="touched.title = true; validate()"
                            @input="touched.title && validate()" />
                     <p v-if="touched.title && errors.title" class="text-red-500 text-sm">{{ errors.title }}</p>
@@ -121,7 +135,14 @@ watch(() => formData.value.final, (newLesson) => {
                     </div>
                 </div>
                 <DialogClose as-child>
-                    <Button @click="saveModule" :disabled="!validate()" :class="[{ 'opacity-50 cursor-not-allowed': !validate() }]">Save Module</Button>
+                    <Button @click="saveModule" :disabled="!validate() || loading" :class="[{ 'opacity-50 cursor-not-allowed': !validate() || loading }]">
+                        <template v-if="loading">
+                            <Spinner class="mr-2" /> Saving...
+                        </template>
+                        <template v-else>
+                            Save Module
+                        </template>
+                    </Button>
                 </DialogClose>
             </DialogFooter>
         </DialogContent>

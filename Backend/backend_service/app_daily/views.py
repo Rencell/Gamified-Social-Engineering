@@ -16,6 +16,13 @@ class UserStreakViewSet(viewsets.ModelViewSet):
         user = request.user
         streak = UserStreak.objects.filter(user_id=user).first()
         if streak:
+            # Reset streak if a day was missed and user hasn't committed today
+            today = datetime.date.today()
+            if streak.last_activity_date is not None and streak.last_activity_date < (today - datetime.timedelta(days=1)):
+                streak.current_streak = 0
+                # Optionally clear the start date when the streak is broken
+                streak.streak_start_date = None
+                streak.save(update_fields=["current_streak", "streak_start_date"])
             serializer = self.get_serializer(streak)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"detail": "No streak found"}, status=status.HTTP_404_NOT_FOUND)
@@ -72,6 +79,11 @@ class UserStreakViewSet(viewsets.ModelViewSet):
         
         try:
             streak = UserStreak.objects.get(user_id=request.user)
+            # If a day was missed, reflect that immediately
+            if streak.last_activity_date is not None and streak.last_activity_date < (today - datetime.timedelta(days=1)):
+                streak.current_streak = 0
+                streak.streak_start_date = None
+                streak.save(update_fields=["current_streak", "streak_start_date"])
             is_streak_today = streak.last_activity_date == today
         except UserStreak.DoesNotExist:
             is_streak_today = False
@@ -87,7 +99,9 @@ class ActivityViewSet(viewsets.ModelViewSet):
     def active_days(self, request):
         user = request.user
         today = datetime.date.today()
-        start_of_week = today - datetime.timedelta(days=today.weekday() + 1)  # Sunday
+        # Compute week starting on Sunday
+        days_since_sunday = (today.weekday() + 1) % 7
+        start_of_week = today - datetime.timedelta(days=days_since_sunday)
         end_of_week = start_of_week + datetime.timedelta(days=6)
 
         activities = Activity.objects.filter(

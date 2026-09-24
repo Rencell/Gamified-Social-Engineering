@@ -62,8 +62,8 @@ const handleImageClick = (image: string) => {
   
     if (image === props.Question.answer) {
       isCorrect.value = true;
-      emit('addScore');
     }
+    emit('addScore', isCorrect.value);
     emit('isAnswered', true);
     emit('isCorrect', isCorrect.value);
     selectedImage.value = image;

@@ -1,4 +1,4 @@
-<script script setup lang="ts">
+<script setup lang="ts">
 import LearningContent from '../../content/UI/Learning/Core/LearningContent.vue';
 import type { ScenarioStep } from '@/components/learn/QuizUI/ScenarioTraining/type';
 import Story from './story.vue'
@@ -41,10 +41,13 @@ const storyCount = computed(() =>
     props.questions.filter(q => q.type === 'story').length
 );
 
+const decreaseTime = () => {
+    timerRef.value?.decreaseTime(50);
+}
 </script>
 <template>
     <LearningContent>
-        <Timer class="w-xl" ref="timerRef" @time-up="finish($event)"/>
+        <Timer class="w-full" ref="timerRef" @time-up="finish($event)"/>
         <Story v-if="currentScenario.type == 'story'" 
         :key="currentIndex"
         :data="currentScenario"
@@ -55,6 +58,7 @@ const storyCount = computed(() =>
         :mcq="currentScenario" 
         @togglePrev="togglePrev"
         @toggleNext="toggleNext"
+        @wrong-answer="decreaseTime"
         @addScore="score += 1"/>
 
     </LearningContent>

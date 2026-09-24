@@ -1,11 +1,4 @@
 <script setup lang="ts">
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useContentStore } from '@/stores/content';
-import { Plus } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import Story from './editable/story.vue'
 import Mcq from './editable/mcq.vue'
@@ -21,7 +14,6 @@ const currentQuestion = computed(() => props.questions[index.value] || null);
 const changeIndex = (newIndex: number) => {
     index.value = newIndex;
 }
-// const emit = defineEmits(['update:questions']);
 </script>
 
 <template>

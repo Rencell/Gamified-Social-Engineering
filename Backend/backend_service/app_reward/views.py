@@ -15,14 +15,14 @@ class UserStatsViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def by_user(self, request):
         user_id = request.query_params.get('user_id')
-        if not user_id:
-            return Response({'detail': 'user_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         stats = UserStats.objects.filter(user_id=user_id).first()
-        if stats:
-            serializer = self.get_serializer(stats)
-            return Response(serializer.data)
-        return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        if not stats or stats.user.is_superuser or stats.user.is_staff:
+            return Response({}, status=status.HTTP_200_OK)
+
+        serializer = self.get_serializer(stats)
+        return Response(serializer.data)
     
 class RewardLogViewSet(viewsets.ModelViewSet):
     queryset = RewardLog.objects.all()

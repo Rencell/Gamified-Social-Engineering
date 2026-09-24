@@ -10,7 +10,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Edit2, Plus, Wrench } from 'lucide-vue-next';
+import { Wrench } from 'lucide-vue-next';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -18,6 +18,7 @@ import { useLessonStore } from '@/stores/lesson';
 import type { Section } from '@/services/sectionService';
 import { useSectionStore } from '@/stores/sections';
 import DialogClose from '@/components/ui/dialog/DialogClose.vue';
+import { Spinner } from '@/components/ui/spinner';
 
 const props = defineProps<{
     section: Section
@@ -51,12 +52,19 @@ const sectionStore = useSectionStore();
 const lessonStore = useLessonStore();
 
 // Function to handle saving the form data
-const saveSection = () => {
+const loading = ref(false);
+const saveSection = async () => {
+    if (loading.value) return;
     touched.value = { name: true, description: true };
     if (!validate()) return;
 
     formData.value.lesson = lessonStore.currentLesson?.id || 0;
-    sectionStore.updateSection(formData.value as Section);
+    loading.value = true;
+    try {
+        await sectionStore.updateSection(formData.value as Section);
+    } finally {
+        loading.value = false;
+    }
 };
 
 </script>
@@ -99,7 +107,14 @@ const saveSection = () => {
             <DialogFooter>
                 <DialogClose as-child>
 
-                    <Button @click="saveSection" :disabled="!validate()" :class="[{ 'opacity-50 cursor-not-allowed': !validate() }]">Save Section</Button>
+                    <Button @click="saveSection" :disabled="!validate() || loading" :class="[{ 'opacity-50 cursor-not-allowed': !validate() || loading }]">
+                        <template v-if="loading">
+                            <Spinner class="mr-2" /> Saving...
+                        </template>
+                        <template v-else>
+                            Save Section
+                        </template>
+                    </Button>
                 </DialogClose>
             </DialogFooter>
         </DialogContent>

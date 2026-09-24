@@ -5,6 +5,7 @@ import Button from '../ui/button/Button.vue';
 import UpdateAssessment from './dialog/updateAssessment.vue'
 import { Badge } from '../ui/badge';
 import { computed } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 
 interface Props {
   id: number
@@ -21,12 +22,19 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const isUnlocked = computed(() => props.isUnlocked);
+const isUnlocked = computed(() => 
+{
+    if (useAuthStore().User.is_admin) return true
+    return props.isUnlocked;
+}
+);
+
+
 
 </script>
 
 <template>
-    <div class="p-3 rounded-xl" :style="{ backgroundColor: !isUnlocked ? 'var(--secondary)' : props.bg, opacity: isUnlocked ? 1 : 0.4 }">
+    <div class="p-3 rounded-xl" :style="{ backgroundColor: !isUnlocked ? 'var(--secondary)' : props.bg, opacity: isUnlocked ? 1 : 0.9 }">
         <!-- loading  -->
         <div class="flex flex-col-reverse md:flex-row justify-between font-display">
             
@@ -62,7 +70,8 @@ const isUnlocked = computed(() => props.isUnlocked);
 
         <!-- Text -->
         <div class="flex flex-col justi-between grow">
-            <h2 class="text-center font-bold text-2xl my-3">{{name}}</h2>
+            <h2 v-if="isUnlocked" class="text-center font-bold text-2xl my-3 text-white" >{{name}}</h2>
+            <h2 v-else class="text-center font-bold text-2xl my-3 text-black dark:text-white" >{{name}}</h2>
         </div>
     </div>
 </template>

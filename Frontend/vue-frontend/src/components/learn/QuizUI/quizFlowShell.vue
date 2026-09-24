@@ -1,8 +1,8 @@
 <template>
+   
   <QuizIntro v-if="quizIntro"
    @start-quiz="toggleStart" 
    :QuizIntro="introMeta" />
-
   <template v-else>
     <component class="slide-next" v-if="!quizCompleted" 
       :is="quizComponent" 
@@ -29,7 +29,6 @@
 import { computed, onMounted, ref } from 'vue';
 import QuizSummary from './quizSummary.vue'
 import QuizIntro from './quizIntro.vue';
-import { useLearningStore } from '@/stores/learning';
 import { useAuthStore } from '@/stores/auth';
 import { useRewardStore } from '@/stores/reward';
 import { QuizService } from '@/services';
@@ -45,11 +44,13 @@ import TwoImage from '/Learning/QuizType/TwoImage.png'
 import { shuffle } from '@/composables/shuffleData';
 import { useModuleStore } from '@/stores/module';
 import { useContentStore } from '@/stores/content';
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 
 interface QuizProps {
   quizComponent: any;
   questions: any[];
   quizLimit?: number;
+  quizType: string;
 }
 const props = defineProps<QuizProps>();
 
@@ -58,7 +59,6 @@ const emit = defineEmits(['completeModule', 'showDown']);
 
 // Stores
 const moduleStore = useModuleStore();
-const learningStore = useLearningStore();
 const rewardStore = useRewardStore();
 const authStore = useAuthStore();
 
@@ -80,45 +80,68 @@ const shuffleQuestions = ref(shuffle(natural_questions.value).slice(0, props.qui
 const total_questions = ref(shuffleQuestions.value.length)
 const max_score = ref(0)
 
+type IntroStep = {
+  title: string
+  description?: string
+  imageAlt?: string
+  image?: string
+}
+
 const introMeta = computed(() => {
-  const map: Record<string, { title: string; description: string, image: string }> = {
+  const map: Record<string, { title: string; description: string, introStep: IntroStep[], image: string }> = {
     MatchingQuiz: { 
       title: 'Matching Quiz', 
       description: 'Match all the words before the time runs out! Collect the reward ahead',
+      introStep: [
+        { title: 'Welcome to the Matching Quiz!', description: 'Match all the words before the time runs out!', image: '/Learning/QuizInstructions/MTI1.webp' },
+        { title: 'Mistakes', description: 'Every mistake decreases your time by 20 seconds.', image: '/Learning/QuizInstructions/MTI2.webp' }
+      ],
       image: matching
     },
     DragPair: { 
       title: 'Drag & Drop', 
       description: 'Drag the words to their correct positions.',
+      introStep: [
+        { title: 'Welcome to the Drag & Drop Quiz!', description: 'Drag the words to their correct positions.', image: '/Learning/QuizInstructions/DP1.webp' },
+      ],
       image: DragPair
     },
     DoDont: { 
       title: 'Do & Don\'t Quiz', 
       description: 'Select the correct answer for each question.',
+      introStep: [
+        { title: 'Welcome to the Do & Don\'t Quiz!', description: 'Select the correct answer for each question.', image: '/Learning/QuizInstructions/IS1.webp' },
+      ],
       image: DoDont
     },
     ScenarioTraining: { 
       title: 'Scenario Training Quiz', 
       description: 'Let us see how well you can identify these scenarios.',
+      introStep: [
+        { title: 'Welcome to the Scenario Training Quiz!', description: 'Let us see how well you can identify these scenarios.', image: '/Learning/QuizInstructions/IS1.webp' },
+      ],
       image: ScenarioTraining 
     },
     MultipleChoice: { 
       title: 'Multiple Choice', 
       description: 'Select the correct answer from the options provided.',
+      introStep: [],
       image: MultipleChoice
     },
     PhishingTactics: { 
       title: 'Guess the Tactic', 
       description: 'You have to identify the used Phishing tactics on the given Email or Smishing.',
+      introStep: [],
       image: GuessTactics
     },
     TwoImage: { 
       title: '2 Pics Quiz', 
       description: 'You have to identify the used Phishing tactics on the given Email or Smishing.',
+      introStep: [],
       image: TwoImage
     },
   }
-  return map[props.quizComponent.name] ?? map.MatchingQuiz
+  return map[props.quizType] ?? map.MatchingQuiz
 })
 
 
@@ -130,12 +153,13 @@ async function onFinish(finalScore: number, time_spent?: number) {
   showReward.value    = false
   timeSpent.value     = (60 * 10) - (time_spent ?? 0)
 
-  if(useContentStore().contentItems.pass_rate! > (score.value / total_questions.value * 100)) {
+  playSoundFx(SoundFx.Celebration);
+  if(useContentStore().contentQuiz.pass_rate! > (score.value / total_questions.value * 100)) {
     alert('You did not pass the quiz. Please try again.')
-    quizCompleted.value = true
     rewardState.value = 'no-reward'
     return;
   }
+  await moduleStore.completeModule();
 
   // Only award when the user improved their score
   const prevScore = await previousScore();
@@ -158,7 +182,6 @@ const resetQuiz = () => {
   score.value = 0
 }
 const nextLesson = async() => {
-  await moduleStore.completeModule();
   moduleStore.nextModule();
   
 }
@@ -171,7 +194,7 @@ const toggleStart = () => {
 let cachedPreviousScore: number | undefined
 async function previousScore() {
   if (cachedPreviousScore !== undefined) return cachedPreviousScore
-  const { pk: userId } = authStore.User.pk
+  const userId = authStore.User.pk
   const moduleOrder    = moduleStore.selectedModule?.id ?? 0
 
   try {
@@ -237,9 +260,6 @@ onMounted(async () => {
     shuffleQuestions.value = natural_questions.value; // Do not shuffle
   } else 
 
-  if (learningStore.selectedModule?.final) {
-    quizIntro.value = false;
-  }
 
   try {
     score.value         = await previousScore()

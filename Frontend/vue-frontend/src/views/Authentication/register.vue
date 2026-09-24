@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { reactive, ref } from "vue";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/stores/auth";
-import Attributes from '@/components/authentication/FormInput.vue'
 const authStore = useAuthStore();
 
 interface SignupForm {
@@ -59,7 +58,7 @@ const submit = async (): Promise<void> => {
 
     loading.value = true;
     try {
-        await authStore.registration(form);
+        // await authStore.registration(form);
         (Object.keys(errors) as Array<keyof typeof errors>).forEach(key => errors[key] = '');
         clearForm();
         emit('switchComponent', 'inbox');

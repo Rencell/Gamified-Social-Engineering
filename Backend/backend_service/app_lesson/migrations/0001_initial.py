@@ -5,15 +5,6 @@ from django.conf import settings
 from django.db import migrations, models
 
 
-def add_lesson_data(apps, schema_editor):
-    Lesson = apps.get_model('app_lesson', 'Lesson')
-    
-    # Create initial lessons
-    Lesson.objects.create(name="introToSocialEngineering")
-    Lesson.objects.create(name="phishing")
-    Lesson.objects.create(name="website")
-    Lesson.objects.create(name="socialmedia")
-    Lesson.objects.create(name="vishing")
     
     
     
@@ -54,5 +45,4 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(related_name='lesson', through='app_lesson.UserLessonProgress', to=settings.AUTH_USER_MODEL),
         ),
         
-        migrations.RunPython(add_lesson_data),
     ]

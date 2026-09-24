@@ -37,10 +37,10 @@ onMounted(() => {
 <template>
   <div class="min-h-screen bg-background grid grid-cols-1 lg:grid-cols-2 ">
     <!-- Left side - Illustration -->
-    <div class="hidden lg:flex lg:flex-1 items-center justify-center p-8 border-r border-slate-800">
+    <div class="hidden lg:flex lg:flex-1 items-center justify-center p-8 border-r dark:border-slate-800 ">
       <div class="max-w-xl">
 
-        <h1 class="text-2xl font-bold text-white mb-4">Join the global fight against cybercrime</h1>
+        <h1 class="text-2xl font-bold mb-4">Join the global fight against cybercrime</h1>
       </div>
     </div>
 

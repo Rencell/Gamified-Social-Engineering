@@ -10,7 +10,7 @@ import type { Lesson_test } from '@/services/lessonService';
 import DeleteAlert from '../dialog/Lesson/deleteAlert.vue'
 import LessonProgress from './LessonProgress.vue'
 import { computed, ref } from 'vue';
-import { Input } from '@/components/ui/input';
+import { Input, InputProfanity } from '@/components/ui/input';
 import LearningBold from '../content/UI/Learning/Highlight/LearningBold.vue';
 import { useAuthStore } from '@/stores/auth';
 
@@ -26,6 +26,7 @@ interface Props {
     lessonModuleUnlocked?: number
     lessonPercentage?: number
 }
+const inputProfanityFilter = ref<boolean[]>([]);
 
 // Add reactive state for expanded objectives
 const expandedObjectives = ref(false);
@@ -41,7 +42,7 @@ const props = defineProps<Props>()
 
 const bgDefined = () => {
     if (props.locked) {
-        return 'bg-secondary/30 border-[#35d1ac] ';
+        return 'dark:bg-secondary/30 bg-black/20 border-[#35d1ac] ';
     }
 
     if (props.bg) {
@@ -58,6 +59,10 @@ const toggleEditObjective = () => {
 };
 
 const save_objectives = async () => {
+    if (inputProfanityFilter.value.some((v) => v)) {
+        alert('Please remove inappropriate language from objectives before saving.');
+        return;
+    }
     await lessonStore.addObjective(course.value.objectives);
     editObjective.value = false;
 };
@@ -73,7 +78,7 @@ const save_objectives = async () => {
         <div class="flex items-center gap-4 justify-between mb-3">
 
             <div v-if="!locked" class="p-3">
-
+                
                 <LearnProgress class="w-50 sm:w-85" v-if="isLatest" :model-value="lessonModuleUnlocked!"
                     :tongue-color="props.bg" :module-count="moduleCount" position="right" :isLatest="isLatest">
                 </LearnProgress>
@@ -89,7 +94,7 @@ const save_objectives = async () => {
             <div>
                 <DeleteAlert :lesson-id="lessonStore.currentLesson?.id" />
                 <UpdateDialog v-if="lessonStore.currentLesson" :lesson="lessonStore.currentLesson" />
-            </div>
+            </div>  
         </div>
         <!-- images -->
         <div class="flex justify-center py-3 lg:py-6 grow-0 shrink-0 relative">
@@ -97,7 +102,7 @@ const save_objectives = async () => {
                 <img :class="['object-scale-down mx-auto w-50 sm:w-75 relative z-20', locked ? 'grayscale-100' : '']"
                     :src="image ? String(image) : '/Human.webp'" alt="">
 
-                <div class="size-50 bg-white absolute rounded-full blur-2xl opacity-30">
+                <div class="size-50 dark:bg-white bg-black absolute rounded-full blur-2xl opacity-50">
 
                 </div>
             </div>
@@ -105,7 +110,7 @@ const save_objectives = async () => {
 
         <!-- Text -->
         <div class="flex flex-col justi-between grow">
-            <h2 class="text-center font-bold text-2xl my-3">{{ title }}</h2>
+            <h2 class="text-center font-bold text-2xl my-3 text-white">{{ title }}</h2>
             <p class="text-center text-gray-400 mb-2 text-xs font-bold">{{ description }}</p>
         </div>
 
@@ -114,7 +119,7 @@ const save_objectives = async () => {
         <div class="border-t border-ternary pt-4">
             <button @click="expandedObjectives = !expandedObjectives"
                 class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-background/50 transition-colors text-left cursor-pointer">
-                <span class="font-semibold">Module Objectives</span>
+                <span class="font-semibold text-white">Module Objectives</span>
                 <ChevronDown :size="20" :class="`transition-transform ${expandedObjectives ? 'rotate-180' : ''}`" />
             </button>
 
@@ -137,8 +142,9 @@ const save_objectives = async () => {
                 <div v-else class="space-y-2">
                     <div v-for="(objective, index) in course.objectives" :key="index" class="flex gap-3 text-sm text-purple-100 items-center">
                         <span class="text-purple-400 font-bold min-w-fit">{{ index + 1 }}.</span>
-                        <Input 
+                        <InputProfanity 
                             v-model="course.objectives[index]" 
+                            v-model:is-profane="inputProfanityFilter[index]"
                             type="text"
                         />
                         <Button variant="destructive" @click="course.objectives.splice(index, 1)"><Trash2></Trash2></Button>

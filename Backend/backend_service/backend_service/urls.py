@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf.urls.static import static
 from django.conf import settings
+import os
+admin.site.site_url = os.getenv('FRONTEND_URL', 'http://localhost:5173')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -21,5 +23,7 @@ urlpatterns = [
     path('api/gophish/', include('gophish.urls')),
     path('api/popup/', include('app_popup.urls')),
     path('api/minigames/', include('app_minigame.urls')),
+    path('api/common/', include('app_commons.urls')),
+    path('api/vishing/', include('app_vishing.urls')),
     path("accounts/", include("allauth.urls")),
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

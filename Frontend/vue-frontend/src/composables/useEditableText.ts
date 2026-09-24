@@ -18,7 +18,6 @@ export function useEditableText(
   }
 
   const addComponent = (type: string) => {
-    alert(type);
     emit('addComponent', type, null) // Emit the add component signal to the parent
   }
 

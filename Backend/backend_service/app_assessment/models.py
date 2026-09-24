@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.db import transaction
 # Create your models here.
 class Assessment(models.Model):
     
@@ -46,7 +47,15 @@ class Question(models.Model):
     text = models.TextField()
     image = models.ImageField(upload_to='questions/images/', null=True, blank=True)
     order = models.PositiveIntegerField(default=0)
-
+    related_module = models.ForeignKey(
+        'app_modules.ModuleTest',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='linked_assessment_questions',
+        help_text='Optional: the module to recommend when users answer this question incorrectly'
+    )
+    
     def __str__(self):
         return self.text or f"{self.question_type} (#{self.order})"
     
@@ -62,9 +71,19 @@ class Option(models.Model):
     order = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return self.text or f"Option #{self.order}"    
-    
+        return self.text or f"Option #{self.order}"
 
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            if self.is_correct:
+                if self.pk:
+                    Option.objects.filter(question=self.question).exclude(pk=self.pk).update(is_correct=False)
+                else:
+                    Option.objects.filter(question=self.question).update(is_correct=False)
+            super().save(*args, **kwargs)
+        
+        
+    
 import secrets
 from django.utils import timezone
 
@@ -113,10 +132,27 @@ class AssessmentAnswer(models.Model):
     selected_option = models.ForeignKey(Option, on_delete=models.SET_NULL, null=True)
     is_correct = models.BooleanField(default=False)
     answered_at = models.DateTimeField(auto_now_add=True)
+    recommended_module = models.ForeignKey(
+        'app_modules.ModuleTest',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='recommended_answers'
+    )
 
     class Meta:
         db_table = 'assessment_answer'
         unique_together = ('session', 'question')
+        
+    def save(self, *args, **kwargs):
+        # Auto-populate recommended_module when the answer is incorrect and the question has a linked module
+        if not self.is_correct and not self.recommended_module and getattr(self, 'question', None):
+            try:
+                self.recommended_module = self.question.related_module
+            except Exception:
+                # defensive: if question not fully loaded, skip
+                pass
+        super().save(*args, **kwargs)
         
 class AssessmentComplete(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)

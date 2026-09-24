@@ -15,7 +15,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { Cosmetic } from '@/services/cosmeticService';
 import { useCosmeticStore } from '@/stores/cosmetic';
-import { useUploadContent } from '@/composables/useUploadContent';
 
 
 const formData = ref<Partial<Cosmetic>>({
@@ -26,10 +25,12 @@ const formData = ref<Partial<Cosmetic>>({
     rive_code: 0
 });
 
+const open = ref(false);
 // Function to handle saving the form data
 const cosmeticStore = useCosmeticStore();
-const saveCosmetic = () => {
-    cosmeticStore.createCosmetic(formData.value);
+const saveCosmetic = async() => {
+    await cosmeticStore.createCosmetic(formData.value);
+    open.value = false;
 };
 
 
@@ -47,7 +48,7 @@ function onFileChange(event: Event) {
 </script>
 
 <template>
-    <Dialog>
+    <Dialog v-model:open="open">
         <DialogTrigger asChild>
             <!-- This div will be clickable and trigger the dialog -->
             <div class="rounded-lg border-4 border-secondary border-dashed flex flex-col justify-center items-center p-4 cursor-pointer hover:border-accent hover:bg-accent/10 transition w-full h-full">

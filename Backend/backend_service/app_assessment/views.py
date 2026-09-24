@@ -14,12 +14,6 @@ class AssessmentViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
     
     
-    # def create(self, request, *args, **kwargs):
-    #     name = request.data.get('name')
-    #     if Assessment.objects.filter(name=name).exists():
-    #         return Response({'error': 'Assessment with this name already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-    #     return super().create(request, *args, **kwargs)
-    
     def get_object(self):
         lookup_value = self.kwargs.get('slug')
         if lookup_value.isdigit():
@@ -204,6 +198,57 @@ class AssessmentAnswerViewSet(viewsets.ModelViewSet):
         except AssessmentSession.DoesNotExist:
             return Response({'error': 'Session not found'}, status=404)
         
+    @action(detail=False, methods=['get'], url_path='recommended-modules')
+    def recommended_modules(self, request):
+       
+        session_id = request.query_params.get('session_id')
+        if not session_id:
+            return Response({'error': 'session_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        session = AssessmentSession.objects.filter(session_id=session_id).first()
+        if not session:
+            return Response({'error': 'Session not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        answers = (
+            AssessmentAnswer.objects
+            .filter(session=session, is_correct=False, recommended_module__isnull=False)
+            .select_related('recommended_module__lesson')
+        )
+
+        # De-dupe modules, then group by lesson
+        lesson_to_modules = {}
+        lesson_obj_by_id = {}
+        for ans in answers:
+            mod = ans.recommended_module
+            if not mod or not getattr(mod, 'lesson_id', None):
+                continue
+
+            lesson_id = mod.lesson_id
+            lesson_obj_by_id.setdefault(lesson_id, mod.lesson)
+            lesson_to_modules.setdefault(lesson_id, {})[mod.id] = mod
+
+        # Serialize grouped modules + lesson object
+        from app_modules.serializers import ModuleTestSerializer
+        from app_lesson.serializers import LessonTestSerializer
+
+        lessons_payload = []
+        for lesson_id, module_map in lesson_to_modules.items():
+            lesson_obj = lesson_obj_by_id.get(lesson_id)
+            lesson_ser = LessonTestSerializer(lesson_obj, context={'request': request}).data if lesson_obj else None
+
+            modules = list(module_map.values())
+            modules_ser = ModuleTestSerializer(modules, many=True, context={'request': request}).data
+
+            lessons_payload.append({'lesson': lesson_ser, 'modules': modules_ser})
+
+        # Sort by lesson_order when possible, otherwise keep stable by id
+        def _sort_key(item):
+            lesson = item.get('lesson') or {}
+            return (lesson.get('lesson_order') is None, lesson.get('lesson_order') or 0, lesson.get('id') or 0)
+
+        lessons_payload.sort(key=_sort_key)
+        return Response(lessons_payload, status=status.HTTP_200_OK)
+        
         
         
 class AssessmentCompleteViewSet(viewsets.ModelViewSet):
@@ -235,7 +280,6 @@ class AssessmentCompleteViewSet(viewsets.ModelViewSet):
         assessments.save()
         serializer = self.get_serializer(assessments, many=False)
         return Response(serializer.data)
-    
-    
-        
-   
+
+
+

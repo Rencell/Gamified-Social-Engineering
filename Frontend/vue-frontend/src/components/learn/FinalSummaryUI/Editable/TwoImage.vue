@@ -28,7 +28,7 @@ function setCorrectAnswer(id: "image1" | "image2") {
 
 async function handleUploadImage1() {
     await image1.uploadImage(
-        { item: { id: contentStore.contentItems.id }, image: quizData.value.image1 },
+        { item: { id: contentStore.contentQuiz.id }, image: quizData.value.image1 },
         (data) => {
             quizData.value.image1 = data.image;
         }
@@ -38,7 +38,7 @@ async function handleUploadImage1() {
 
 async function handleUploadImage2() {
     await image2.uploadImage(
-        { item: { id: contentStore.contentItems.id }, image: quizData.value.image2 },
+        { item: { id: contentStore.contentQuiz.id }, image: quizData.value.image2 },
         (data) => {
             quizData.value.image2 = data.image;
         }

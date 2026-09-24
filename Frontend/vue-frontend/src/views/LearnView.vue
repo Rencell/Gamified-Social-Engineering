@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import LessonCard from '@/components/learn/learnUI/LessonCard.vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { useLearningStore } from '@/stores/learning';
 import { onMounted, ref } from 'vue';
 import DayStreak from '@/components/learn/dayStreak/DayStreak.vue'
 import Metrics from '@/components/learn/metrics/metrics.vue'
-const learningStore = useLearningStore();
 const route = useRoute();
 
 
@@ -20,8 +18,6 @@ const isLoading = ref(true);
 onMounted(async () => {
     isLoading.value = true;
     try {
-        await learningStore.fetchLessons();
-        await learningStore.fetchLatestLesson();
 
         await lessonStore.fetchLessons();
         await lessonStore.fetchLatestLesson();
@@ -34,7 +30,7 @@ onMounted(async () => {
 
 <template>
 
-    <div class="p-2 sm:p-5">
+    <div>
         <p class="font-bold text-3xl mb-4">Learning</p>
 
         <div class="flex flex-col sm:flex-row gap-10 ">
@@ -46,8 +42,9 @@ onMounted(async () => {
 
                 <div v-else class="flex-2 grid grid-cols-1 gap-4">
                     <RouterLink v-for="(lesson, index) in lessonStore.lessons" :key="lesson.slug"
-                        :to="`${route.path}/${lesson.slug}`">
-
+                        :to="`${route.path}/${lesson.slug}`"
+                        >
+                        
                         <div>
                             <LessonCard :class="[useAuthStore().User.is_admin ? false : lesson?.locked
                                 ? 'opacity-50 cursor-not-allowed border-1 border-ternary rounded-4xl' :
@@ -66,7 +63,7 @@ onMounted(async () => {
             </div>
 
 
-            <div class="flex flex-col gap-4 flex-1 sticky top-0 self-start w-full">
+            <div class="flex flex-col gap-4 flex-1 sticky top-0 self-start w-full font-display">
                 <DayStreak />
                 <Metrics />
             </div>

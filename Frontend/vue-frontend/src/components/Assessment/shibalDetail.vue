@@ -11,6 +11,7 @@ import { useAuthStore } from '@/stores/auth';
 import AssessmentStartDialog from './AssessmentStartDialog.vue'
 import { useRewardStore } from '@/stores/reward';
 import Loading from '../loading.vue';
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 
 const props = defineProps<{
     id?: string;
@@ -56,6 +57,7 @@ onMounted(async () => {
 
 // Navigation functions
 const goBack = () => {
+    playSoundFx(SoundFx.Button)
     router.push('/assessments');
 };
 
@@ -158,7 +160,11 @@ const toggleShowModal = () => {
 }
 
 const authStore = useAuthStore();
-const isLevelElegible = computed(() => authStore.User.level <= (assessment.value?.required_level ?? 0));
+const isLevelElegible = computed(() => {
+    // Only compute eligibility for admins; non-admin users won't see the level requirement
+    if (authStore.User.is_admin) return false;
+    return authStore.User.level <= (assessment.value?.required_level ?? 0);
+});
 </script>
 
 <template>
@@ -254,7 +260,7 @@ const isLevelElegible = computed(() => authStore.User.level <= (assessment.value
                                     </template>
                                     <template v-else>
                                         <Input v-model.number="editableAssessment!.question_count" type="number"
-                                            class="w-20 h-6 text-sm" min="1" />
+                                            class="w-20 h-6 text-sm" min="1" readonly />
                                         <span class="text-sm">questions</span>
                                     </template>
                                 </div>
@@ -452,7 +458,7 @@ const isLevelElegible = computed(() => authStore.User.level <= (assessment.value
                         </div>
 
                         <div
-                            class="border border-border rounded-lg p-6 bg-background/50 space-y-4 sticky top-0 self-start">
+                            class="border border-border rounded-lg p-6 bg-secondary/50 space-y-4 sticky top-0 self-start">
                             <div class="w-full aspect-square rounded-lg bg-gradient-to-br flex items-center justify-center border"
                                 :style="{ backgroundColor: isEditing ? editableAssessment?.bg : assessment.bg }">
                                 <img :src="String(isEditing ? editableAssessment?.image : assessment.image)"

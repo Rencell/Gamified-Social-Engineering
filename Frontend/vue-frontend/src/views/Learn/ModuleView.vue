@@ -2,7 +2,6 @@
 import { ArrowLeft } from 'lucide-vue-next';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import ModuleCard from '@/components/learn/learnUI/ModuleCard.vue'
-import { useLearningStore } from '@/stores/learning'
 import { computed, onMounted, ref } from 'vue';
 import LessonDetailCard from '@/components/learn/learnUI/LessonDetailCard.vue';
 import { useModuleStore } from '@/stores/module';
@@ -15,11 +14,11 @@ import type { Section } from '@/services/sectionService';
 import SectionDivider from '@/components/learn/learnUI/SectionDivider.vue'
 import { useAuthStore } from '@/stores/auth';
 import Loading from '@/components/loading.vue';
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 
 
 const moduleStore = useModuleStore();
 const lessonStore = useLessonStore();
-const learningStore = useLearningStore()
 const route = useRoute()
 const sectionStore = useSectionStore();
 const lessonId = route.params.lessonId as string;
@@ -107,14 +106,15 @@ const getFirstLockedModule = (section: { modules: any[]; }) => {
 
     <div class="p-2 sm:p-0">
         <RouterLink :to="{ name: 'Learn' }">
-            <div class="flex gap-2 mb-5 text-sm items-center text-accent font-bold">
+            <div class="flex gap-2 mb-5 text-sm items-center text-accent font-bold" @click="playSoundFx(SoundFx.Button)">
                 <ArrowLeft :size="15"></ArrowLeft> Back
             </div>
         </RouterLink>
 
         <Loading v-if="isLoading"></Loading>
         <div v-else-if="!lessonStore.currentLesson" class="text-center py-4 text-foreground">No data available.</div>
-        <LessonDetailCard v-else :progress="learningStore.completionPercentage"
+        <LessonDetailCard v-else 
+            :progress="0"
             :description="lessonStore.currentLesson?.description" :title="lessonStore.currentLesson?.title"
             :image="lessonStore.currentLesson?.image" :bg="lessonStore.currentLesson?.bg"
             :locked="lessonStore.currentLesson?.locked" :module-count="moduleStore.modules.length" :isLatest="true"
@@ -143,6 +143,7 @@ const getFirstLockedModule = (section: { modules: any[]; }) => {
                         <CreateModuleDialog :section-id="section.id" />
 
                         <ModuleCard v-for="(module, key) in section.modules" :lessonkey="key + 1" :key="module.title"
+                            :section-index="index"
                             :module="module" :title="module.title"
                             :router-link="`/learn/${lessonId}/${section.id}/session`" :interactive="!module.locked"
                             @click="moduleStore.setSelectedModule(module)"

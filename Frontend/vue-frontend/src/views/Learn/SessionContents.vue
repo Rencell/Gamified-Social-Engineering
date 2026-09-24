@@ -5,11 +5,9 @@ import ModuleLayout from '@/components/learn/learnUI/ModuleLayout.vue';
 import ModuleSidebar from '@/components/learn/learnUI/ModuleSidebar.vue';
 import ModuleContent from '@/components/learn/learnUI/ModuleContent.vue';
 import ModuleSidebarItem from '@/components/learn/learnUI/ModuleSidebarItem.vue';
-import { useLearningStore } from '@/stores/learning';
 import { useRoute, useRouter } from 'vue-router';
 import { ChevronRight, Section } from 'lucide-vue-next';
 import { toast } from 'vue-sonner';
-const learningStore = useLearningStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -54,24 +52,22 @@ onMounted(async () => {
     await moduleStore.fetchModules(lessonId);
     await sectionStore.fetchSection(lessonStore.currentLesson?.id || 0);
     sectionStore.setSelectedSection(parseInt(sectionId));
-    if(sectionStore.selectedSection?.modules.length === 0) {
+    
+    if(moduleStore.selectedModule === null && sectionStore.selectedSection?.modules.length) {
       moduleStore.setSelectedModule(sectionStore.selectedSection?.modules[0] as ModuleTest);
       return;
     }
   
     if (route.query.openQuiz) {
-      // 👉 open your quiz
       console.log("Open quiz modal")
   
-      // Check if this page load was a refresh/reload
       const navEntries = performance.getEntriesByType("navigation")
       const isReload = navEntries.length && (navEntries[0] as PerformanceNavigationTiming).type === "reload"
   
       if (isReload) {
-        // 👉 remove only when it's a refresh
         router.replace({
           path: route.path,
-          query: {} // clears all query params
+          query: {} 
         })
       }
     }
@@ -90,22 +86,25 @@ const isFinalQuizUnlocked = computed(() => {
   }
 })
 
+
 const sectionModules = computed(() => {
     return sectionStore.sections
         .filter(section => section.id === parseInt(sectionId))
         .flatMap(section => section.modules);
 });
 
+
 </script>
 
 <template>
+  
   <div class="mt-4"></div>
   <div class="flex justify-center items-center flex-col p-2">
     <div class="flex w-full sm:w-7xl mb-4 text-sm flex-wrap">
       <div>Learn</div>
       <ChevronRight></ChevronRight>
       <RouterLink :to="{ name: 'Learn-Phishing', params: { lessonId: route.params.lessonId } }">
-        {{ route.params.lessonId }}
+        <span class="text-accent">{{ route.params.lessonId }}</span>
       </RouterLink>
       <ChevronRight></ChevronRight>
       <div>{{sectionStore.selectedSection?.name}}</div>

@@ -1,13 +1,8 @@
 <script setup lang="ts">
 import { ref, watchEffect, nextTick, onMounted, type ComponentPublicInstance, watch, computed } from 'vue';
 import Button from '@/components/ui/button/Button.vue';
-import { useLearningStore } from '@/stores/learning';
-import moneyBag from '/Home/money-bag.svg';
-import { ArrowBigDown, Check, MoveDown } from 'lucide-vue-next';
+import { MoveDown } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
-import { useLoadingPageStore } from '@/stores/pageLoading';
-const learningStore = useLearningStore();
-const loadingPageStore = useLoadingPageStore();
 interface ScrollComponent {
   id: string | number;
   component: any;
@@ -20,7 +15,6 @@ const props = withDefaults(defineProps<{
 }>(), {
   withQuiz: false,
 });
-
 
 const currentVisibleIndex = ref(0);
 
@@ -57,26 +51,24 @@ const showNextComponent = async () => {
     if (markComplete.value)
       return;
 
-    learningStore.activateModuleInteraction();
-    learningStore.nextModule();
+    // learningStore.activateModuleInteraction();
+    // learningStore.nextModule();
   }
 };
 
 // Scroll to the quiz component
 const scrollToQuiz = async () => {
-
   const quizIndex = props.components.findIndex((comp) => comp.component.__name === 'quiz'); // Identify the quiz component
   if (quizIndex !== -1) {
     currentVisibleIndex.value = quizIndex; // Update the visible index to the quiz
     await nextTick();
     const quizRef = componentRefs.value[quizIndex] as HTMLElement | null;
+    console.log("tangina",quizRef)
     if (quizRef) {
-      quizRef.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      quizRef.scrollIntoView({ behavior: 'instant', block: 'end' });
     }
   }
 };
-
-const count = computed(() => loadingPageStore.count);
 
 watch(
   () => props.components.length,
@@ -98,32 +90,29 @@ onMounted(async () => {
     }
   }
 });
-
-
-
 </script>
 
 <template>
+
   <div>
     <div v-for="(Comp, idx) in components" :key="Comp.id" class="reset-contents relative"
       :ref="el => componentRefs[idx] = el">
       <!-- Component -->
-      <component v-if="idx <= currentVisibleIndex" :is="Comp.component" @showDown="toggleActive"
-        @completeModule="toggleMarkComplete" :totalLength="components.length" :content_order="Comp.id" />
+      <component v-if="idx <= currentVisibleIndex" 
+        :is="Comp.component" 
+        @showDown="toggleActive"
+        @completeModule="toggleMarkComplete" 
+        @toggleToQuiz="scrollToQuiz"
+        :totalLength="components.length" 
+        :content_order="Comp.id" />
 
     </div>
 
     <div class="flex justify-center items-center">
       <div v-if="active" class="w-2xl flex">
-        <Button v-if="currentVisibleIndex < components.length - 1" class="ml-auto my-10" @click="showNextComponent">
+        <Button v-if="currentVisibleIndex < components.length - 1" class="mx-auto lg:mx-0 lg:ml-auto my-10" @click="showNextComponent">
           <MoveDown />
         </Button>
-        <!-- <div v-else class="ml-auto my-10">
-          <Button v-if="!withQuiz" :disabled="markComplete" @click="showNextComponent">
-            {{ markComplete ? 'Check as Completed' : 'Claim Reward' }}
-            <img :src="moneyBag" class="h-full" alt="">
-          </Button>
-        </div> -->
       </div>
     </div>
   </div>

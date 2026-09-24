@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-
+from django.core.validators import FileExtensionValidator
 
 class Item(models.Model):
     ITEM_TYPE_CHOICES = [
@@ -10,6 +10,13 @@ class Item(models.Model):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=20, choices=ITEM_TYPE_CHOICES)
     image = models.ImageField(upload_to='items/')
+    avatarfile = models.FileField(
+        upload_to='items/',
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(allowed_extensions=['svg', 'png', 'jpg', 'jpeg', 'webp', 'riv'])]
+    )
+    
     price = models.PositiveIntegerField(default=0)
     rive_code = models.PositiveIntegerField(default=0)
 

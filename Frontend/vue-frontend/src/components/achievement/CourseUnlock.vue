@@ -6,8 +6,8 @@
                 class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors">
                 <X />
             </Button>
-            <h2 class="text-2xl font-bold text-white mb-2">Awesome Work!</h2>
-            <p class="text-slate-400">You've unlocked something special</p>
+            <h2 class="text-2xl font-bold mb-2">Awesome Work! Keep it up</h2>
+            <p class="text-slate-400">You've unlocked something special badge</p>
 
             <!-- Display the current data item -->
             <div class="space-y-6 mb-5">
@@ -21,10 +21,10 @@
                 </div>
 
                 <div class="flex flex-col items-center space-y-2">
-                    <div class="text-yellow-400 font-extrabold text-lg animate-pulse">
+                    <div class="text-yellow-700 font-extrabold text-lg animate-pulse">
                         {{courseUnlock.courseName}}
                     </div>
-                    <div class="text-white text-sm">
+                    <div class="text-primary text-sm font-bold">
                        {{courseUnlock.courseDescription}}
                     </div>
                 </div>

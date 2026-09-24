@@ -22,7 +22,7 @@ const contentItems = ref<QuizQuestion>({
     props: [],
 });
 
-const props = defineProps<{
+defineProps<{
     content_order: number;
     totalLength: number;
 }>();
@@ -34,7 +34,7 @@ const contentStore = useContentStore();
 onMounted(async () => {
     await moduleStore.fetchModules(route.params.lessonId as string);
     await contentStore.fetchContentQuiz(moduleStore.selectedModule?.id as number);
-    contentItems.value = contentStore.contentItems;
+    contentItems.value = contentStore.contentQuiz;
 })
 
 const Question = computed(() => contentItems.value);
@@ -71,18 +71,19 @@ function changeQuestionType(newType: QuizType) {
 
 function deleteQuestion(index: number) {
     if (Question.value.props.length > 1) {
-        alert(index)
         Question.value.props.splice(index, 1); 
     } else {
         alert("You must have at least one question.");
     }
 }
+
 </script>
 <template>
     <LearningContent>
         <QuizEdit 
+        v-show="Question.id !== 0"
         :questions="Question.props" 
-        :quizComponent="componentMap[Question.type as QuizType]"
+        :quizComponent="componentMap[Question.type]"
         :editableComponent="editableComponentMap[Question.type as QuizType]" 
         :quiz-limit="contentItems.quiz_limit"
         :quizType="Question.type as QuizType"

@@ -42,9 +42,8 @@ const handleSubmit = () => {
         showResult.value = true;
         emit('isAnswered', true);
         emit('isCorrect', isCorrect.value);
-        if (isCorrect.value) {
-            emit('addScore');
-        }
+        emit('addScore', isCorrect.value);
+        
     }, 1000);
 
 }
@@ -83,11 +82,10 @@ const getCircleClass = (id: string) => {
 
         <!-- Icon Section -->
         
-        <div class="flex items-center justify-center space-x-4 mb-6 ">
+        <div v-if="useImageUrl(currentQuestion.image)" class="flex items-center justify-center space-x-4 mb-6 ">
             <LearningImage :image="useImageUrl(currentQuestion.image) as string" />
         </div>
-
-        <div class="w-full h-10">
+        <div class="w-full">
             <div class="text-2xl font-semibold mb-2 font-sans">
                 <Typewriter :text="currentQuestion.question" @animationEnd="onAnimationEnd" :delay="30" />
             </div>
@@ -104,19 +102,19 @@ const getCircleClass = (id: string) => {
                 ]" @click="handleAnswerSelect(option.id)">
                     <div class="flex items-center gap-3">
                         <div :class="[
-                            'w-8 h-8 rounded-full flex items-center justify-center font-bold',
+                            'rounded-full flex items-center justify-center font-bold',
                             getCircleClass(option.id)
                         ]">
-                            {{ option.id }}
+                           <p class="w-8 h-8 flex items-center justify-center"> {{ option.id }}</p>
                         </div>
-                        <span class="text-slate-200 font-bold">{{ option.text }}</span>
+                        <span class="font-bold">{{ option.text }}</span>
                     </div>
                 </Card>
             </div>
         </div>
 
         <!-- Submit Button -->
-        <div v-if="selectedAnswer && !showResult" class="flex justify-center">
+        <div :class="{'hidden' : !(selectedAnswer && !showResult)}" class="flex justify-center">
             <Button @click="handleSubmit" class="bg-accent w-full" size="lg" :disabled="loading">
                 Check
             </Button>

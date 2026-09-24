@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import type { Component } from 'vue';
 import type { LearningType } from './UI/learningRegistry';
 import type { Content } from '@/services/contentService';
 const emit = defineEmits(['onUpdate', 'onDelete', 'onCreate', 'onReorder']);
@@ -54,20 +54,10 @@ const handleReorderComponent = (id: number, direction: 'up' | 'down') => {
   emit('onReorder', id, direction);
 };
 
-interface ContentItem {
-  id: number;
-  type: string;
-  props: Record<string, any>;
-  item_order: number;
-  content: number;
-  parent: number | null;
-  children?: ContentItem[];
-}
-
-const props = defineProps<{
+defineProps<{
   item: Content;
   siblings: Content[];
-  componentMap: Record<string, any>;
+  componentMap: Record<string, Component>;
 }>();
 
 </script>

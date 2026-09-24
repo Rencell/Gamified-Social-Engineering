@@ -1,4 +1,3 @@
-
 from django.db import models
 from app_modules.models import Modules, ModuleTest
 # Model
@@ -79,4 +78,3 @@ class ContentQuizImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.content_quiz.type} - {self.content_quiz.id}"
-   

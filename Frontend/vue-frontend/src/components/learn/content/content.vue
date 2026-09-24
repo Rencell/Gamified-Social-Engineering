@@ -6,7 +6,6 @@ import { useRoute } from 'vue-router';
 import { useModuleStore } from '@/stores/module';
 import { useLessonStore } from '@/stores/lesson';
 import Quiz from './quiz.vue';
-import Content1 from './phishing/ProtectFromPhishing/Content1.vue'
 import Loading from '@/components/loading.vue';
 
 const route = useRoute();
@@ -14,9 +13,7 @@ const moduleStore = useModuleStore();
 const lessonStore = useLessonStore();
 const lessonId = route.params.lessonId as string;
 const contentStore = useContentStore();
-const lesson = computed(() =>
-  lessonStore.lessons.find((lesson) => lesson.id === Number(lessonId))
-);
+
 const isLoading = ref(false);
 onMounted(async () => {
 
@@ -46,7 +43,6 @@ watch(
   () => moduleStore.selectedModule?.id,
   async (newModuleId, oldModuleId) => {
     if (newModuleId && newModuleId !== oldModuleId) {
-      console.log(`Module ID updated: ${newModuleId}`);
       await contentStore.fetchContents(newModuleId);
     }
   },
@@ -58,18 +54,18 @@ const final = ref({
   component: Quiz,
 });
 
-const test = ref({
-  id: 10,
-  component: Content1,
-});
 
-// import index from './phishing/WhatIsPhishing/index.vue';
-const finalpush = computed(() => [...contentStore.components, final.value]);
+const finalpush = computed(() => {
+  if (contentStore.components.length === 0) {
+    return [final.value];
+  }
+  return [...contentStore.components, final.value];
+});
 
 </script>
 
 <template>
-  
   <Loading v-if="isLoading"></Loading>
   <LessonReveal v-else :components="finalpush" :with-quiz="true" :key="moduleStore.selectedModule?.id!" />
+
 </template>

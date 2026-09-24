@@ -1,3 +1,5 @@
+#python 3.12.6
+
 from dotenv import load_dotenv
 from pathlib import Path
 import os
@@ -5,7 +7,8 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENVIRONMENT = "PROD"
+# Detect environment from env var; defaults to LOCAL
+ENVIRONMENT = os.getenv("DJANGO_ENV", "LOCAL").upper()
 
 if ENVIRONMENT == "LOCAL":
     load_dotenv()
@@ -21,6 +24,9 @@ DEBUG = os.getenv('DEBUG','False').lower() == 'true'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
 
+# Honor forwarded proto from reverse proxy / tunneling service so Django treats requests as HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 # Application definition
 
@@ -46,6 +52,8 @@ INSTALLED_APPS = [
     'app_assessment',
     'app_popup',
     'app_minigame',
+    'app_commons',
+    'app_vishing',
     'gophish',
     'rest_framework',
     'rest_framework.authtoken',
@@ -62,6 +70,7 @@ INSTALLED_APPS = [
     
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
+    "channels"
 ]
 
 MIDDLEWARE = [
@@ -96,7 +105,23 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend_service.wsgi.application'
+ASGI_APPLICATION = "backend_service.asgi.application"
 
+CHANNEL_LAYERS = {
+    "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
+}
+
+# WebSocket settings (Channels)
+# These are separate from CORS/CSRF. Browsers send an `Origin` header for WS.
+# Keep this in sync with your SPA origins.
+WS_ALLOWED_ORIGINS = [
+    o.strip()
+    for o in os.getenv("WS_ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+    if o.strip()
+]
+
+# If True, require an authenticated Django session user for WS connections.
+WS_REQUIRE_AUTH = os.getenv("WS_REQUIRE_AUTH", "False").lower() == "true"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -199,13 +224,14 @@ ACCOUNT_SIGNUP_FIELDS = []  # Remove password requirements for social auto signu
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_LOGIN_METHOD = 'email'
 
-LOGIN_REDIRECT_URL = "http://localhost:5173/home"
-LOGOUT_REDIRECT_URL = "http://localhost:5173/"
+LOGIN_REDIRECT_URL = os.getenv("LOGIN_REDIRECT_URL", "http://localhost:5173/home")
+LOGOUT_REDIRECT_URL = os.getenv("LOGOUT_REDIRECT_URL", "http://localhost:5173/")
 
 
 ALLOWED_HOSTS += [
     'gamified-se.vercel.app',
     'tectonically-unsailed-jacquline.ngrok-free.dev',
+    'pfsnrpkgti.a.pinggy.link'
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -214,10 +240,24 @@ CORS_ALLOWED_ORIGINS = [
     'https://gamified-social-engineering-git-gh-page-rencells-projects.vercel.app',
     'https://gamified-se.vercel.app',
     'https://tectonically-unsailed-jacquline.ngrok-free.dev',
+    'https://pfsnrpkgti.a.pinggy.link'
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_COOKIE_DOMAIN = ['127.0.0.1:8000', 'localhost:8000', 'dev.org']
+# Remove the invalid list-based CSRF_COOKIE_DOMAIN and use None (host-only cookies)
+CSRF_COOKIE_DOMAIN = None
+
+# Session + CSRF cookies for cross-site frontend usage
+SESSION_COOKIE_SAMESITE = os.getenv("SESSION_COOKIE_SAMESITE", "None")
+CSRF_COOKIE_SAMESITE = os.getenv("CSRF_COOKIE_SAMESITE", "None")
+
+# Secure cookies on production HTTPS
+COOKIE_SECURE = os.getenv("COOKIE_SECURE", "True").lower() == "true"
+SESSION_COOKIE_SECURE = COOKIE_SECURE
+CSRF_COOKIE_SECURE = COOKIE_SECURE
+
+# If frontend needs to read csrftoken via JS, keep this False. If not needed, set True.
+CSRF_COOKIE_HTTPONLY = os.getenv("CSRF_COOKIE_HTTPONLY", "False").lower() == "true"
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
@@ -227,12 +267,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://gamified-social-engineering-git-gh-page-rencells-projects.vercel.app",
     "https://gamified-se.vercel.app",
     "https://tectonically-unsailed-jacquline.ngrok-free.dev",
+    'https://pfsnrpkgti.a.pinggy.link'
 ]
-
-CSRF_COOKIE_DOMAIN = None
-CSRF_COOKIE_SECURE = False  # Set to True in production if using HTTPS
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = 'Lax'  # Use 'Strict' or 'None' based on your requirements
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -294,10 +330,15 @@ SOCIALACCOUNT_PROVIDERS['google']['APP'] = {
 # Use custom adapter to link existing user accounts by email instead of raising duplicate error
 SOCIALACCOUNT_ADAPTER = 'app_auth.adapters.CustomSocialAccountAdapter'
 
-GOPHISH_URL = os.getenv("GOPHISH_URL", "https://127.0.0.1:3333")
+GOPHISH_URL = os.getenv("GOPHISH_URL", "https://be-aware.site:3333")
 GOPHISH_API_KEY = os.getenv("GOPHISH_API_KEY", "")
 GOPHISH_VERIFY_SSL = os.getenv("GOPHISH_VERIFY_SSL", "true").lower() in ("1","true","yes")
 
 
 IPROG_SMS_API_TOKEN = os.getenv("IPROG_SMS_API_TOKEN", "1231asd1")
 IPROG_SMS_BASE_URL = os.getenv("IPROG_SMS_BASE_URL", "https://www.iprogsms.com/api/v1/sms_messages")
+
+# OpenAI (server-side only)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")

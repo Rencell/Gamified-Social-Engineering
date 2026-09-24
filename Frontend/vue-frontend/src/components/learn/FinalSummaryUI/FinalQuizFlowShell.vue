@@ -17,13 +17,11 @@ import { onMounted, ref } from 'vue';
 import FinalSummary from './FinalSummary.vue'
 import FinalAchivements from './FinalAchivements.vue'
 import { Progress } from '@/components/ui/progress';
-import { useLearningStore } from '@/stores/learning';
 import { useAuthStore } from '@/stores/auth';
 import { useRewardStore } from '@/stores/reward';
 import { QuizService } from '@/services';
 
 const rewardStore = useRewardStore();
-const learningStore = useLearningStore();
 const authStore = useAuthStore();
 
 
@@ -48,16 +46,17 @@ const toggleStart = () => {
     quizIntro.value = false;
 }
 
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Intro from './Intro.vue';
 import { shuffle } from '@/composables/shuffleData';
 import { useModuleStore } from '@/stores/module';
 import { useContentStore } from '@/stores/content';
 const router = useRouter();
+const route = useRoute();
 const moduleStore = useModuleStore();
+const contentStore = useContentStore();
 const nextLesson = () => {
-    learningStore.activateModuleInteraction();
-    router.push('/learn');
+    router.push('/learn/' + route.params.lessonId);
 }
 
 const resetQuiz = () => {
@@ -72,21 +71,15 @@ const onFinish = async (finalScore: number, timer: number) => {
     quizCompleted.value = true
     timeSpent.value = (60 * 15) - timer
 
-    console.log('Quiz finished with score:', currentQuizId.value);
-    if (useContentStore().contentItems.pass_rate! > (score.value / props.questions.length * 100)) {
+    if (contentStore.contentQuiz.pass_rate! > (score.value / props.questions.length) * 100) {
         await updateAttempts();
         quizSummary.value = true
         return;
     }
-    if (moduleStore.selectedModule?.locked) {
-        
-        await moduleStore.completeModule();
-    }
+    await moduleStore.completeModule();
     
     if (finalScore > (await previousScore())) {
-        console.log('Final score:', finalScore);
         const prevScore = await previousScore();
-        console.log('Previous score:', prevScore);
         await updateAttempts();
 
         if (finalScore > prevScore) {
@@ -142,7 +135,7 @@ const saveQuizResult = async () => {
 let cachedPreviousScore: number | undefined
 const previousScore = async () => {
     if (cachedPreviousScore !== undefined) return cachedPreviousScore
-    const { pk: userId } = authStore.User.pk
+    const userId = authStore.User.pk
     const moduleOrder = moduleStore.selectedModule?.id ?? 0
 
     try {

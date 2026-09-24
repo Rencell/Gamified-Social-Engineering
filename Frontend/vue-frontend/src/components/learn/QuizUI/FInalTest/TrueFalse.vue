@@ -94,10 +94,9 @@ const handleSubmit = () => {
     isAnswered.value = true;
     emit('isAnswered', true);
     emit('isCorrect', isCorrect.value);
-    showContinue.value = true;
-    if (isCorrect.value) {
-      emit('addScore');
-    }
+    showContinue.value = true
+    emit('addScore', isCorrect.value);
+    
   }, 1000);
 
 };

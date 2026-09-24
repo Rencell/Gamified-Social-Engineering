@@ -70,15 +70,12 @@
 
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { Card, CardContent } from '@/components/ui/card';
 import { Typewriter } from '@/components/ui/typewriter';
-import { CircleCheck, CircleX, RotateCcw } from 'lucide-vue-next';
+import { CircleCheck, CircleX } from 'lucide-vue-next';
 import type { Question } from './type';
-import quizSummary from '../quizSummary.vue'
-import { useLearningStore } from '@/stores/learning';
 import Timer from '../timer.vue'
-const learningStore = useLearningStore();
 const timerRef = ref<InstanceType<typeof Timer> | null>(null);
 
 defineOptions({
@@ -88,10 +85,6 @@ const props = defineProps<{
     questions: Question[];
 }>();
 
-const nextLesson = () => {
-    learningStore.nextModule();
-    resetQuiz();
-};
 
 const emit = defineEmits(['finish'])
 const finish = () => {

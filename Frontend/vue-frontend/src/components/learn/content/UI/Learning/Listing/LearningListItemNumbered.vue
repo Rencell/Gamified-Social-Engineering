@@ -2,7 +2,7 @@
   <li v-if="!editable" class="flex items-center justify-between mb-4 last:mb-0">
     <div class="flex items-start">
       <span class="flex-shrink-0 w-4 h-4 rounded-full bg-[#299F69] text-white flex items-center justify-center text-xs font-bold mt-1 mr-6"></span>
-      <div class="text-gray-200 text-sm/loose font-medium">
+      <div class="dark:text-gray-200 text-slate-800 text-base/loose font-medium">
         <slot></slot>
         <LearningBold :text="my_text.text" />
       </div>

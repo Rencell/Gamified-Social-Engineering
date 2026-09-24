@@ -64,6 +64,16 @@ export const useLessonStore = defineStore('Lesson', () => {
     }
   }
 
+  const isNextLessonLocked = (): boolean => {
+    const currentIndex = lessons.value.findIndex(
+      l => l.id === currentLesson.value?.id
+    );
+
+    const nextLesson = lessons.value[currentIndex + 1];
+
+    return nextLesson?.locked || false;
+  };
+
   const unlockLesson = async (lessonId: number) => {
     try {
       if (lessons.value.length === 0) return
@@ -160,6 +170,7 @@ export const useLessonStore = defineStore('Lesson', () => {
   return {
     fetchLessons,
     fetchLatestLesson,
+    isNextLessonLocked,
     latestLesson,
     latestLessonStatus,
     latestPercentageLesson,

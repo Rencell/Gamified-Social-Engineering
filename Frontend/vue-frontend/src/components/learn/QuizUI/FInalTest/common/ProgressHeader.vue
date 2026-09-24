@@ -1,17 +1,17 @@
 <template>
-    <div class="space-y-5 sticky top-0 z-50 pt-10 bg-[#181c28]">
+    <div class="space-y-5 sticky top-0 z-50 pt-10 dark:bg-[#181c28]">
       <!-- Progress Bar -->
-      <Progress class="w-2xl h-4 mx-auto " :modelValue="progress"></Progress>
+      <Progress class="w-full sm:w-2xl h-4 mx-auto " :modelValue="progress"></Progress>
   
       <!-- Timer -->
       <div class="ms-auto flex">
-        <div class="p-2 px-3 bg-secondary rounded-full flex items-center gap-2">
+        <div class="p-2 px-3 rounded-full flex items-center gap-2 bg-ternary">
           <img
             class="h-full size-8"
             src="https://cdn-icons-png.freepik.com/256/1207/1207479.png?semt=ais_white_label"
             alt=""
           />
-          <p class="font-semibold">{{ formattedTime }}</p>
+          <p class="font-semibold text-white">{{ formattedTime }}</p>
           
         </div>
       </div>
@@ -36,7 +36,8 @@ const currentIndex = computed(() => props.currentIndex);
 // Timer variables
 const totalTime = (60*15); 
 const timeLeft = ref(totalTime);
-let timer: number | null = null;
+// Updated the type of `timer` to `ReturnType<typeof setInterval>` to fix the type error.
+let timer: ReturnType<typeof setInterval> | null = null;
 
 const progress = computed(() => {
   return ((currentIndex.value + 1) / props.length) * 100;

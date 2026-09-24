@@ -1,15 +1,29 @@
 import { defineStore } from 'pinia'
-import { ContentService } from '@/services'
+import { ContentService, ModuleService } from '@/services'
 import { ref } from 'vue'
 import Cowntent from '@/components/learn/content/cowntent.vue'
 import { useModuleStore } from './module'
 import type { QuizQuestion } from '@/services/contentService'
+import Citation from '@/components/learn/content/UI/Learning/Highlight/Citation.vue'
+import type { QuizType } from '@/components/learn/QuizUI/QuizRegistry'
+import { toast } from 'vue-sonner'
 
 export const useContentStore = defineStore('Content', () => {
   const moduleStore = useModuleStore()
   const contents = ref<any[]>([])
   const components = ref<{ id: number; component: any }[]>([])
 
+
+  const toast_notification = (message: string) => {
+    toast.success(message, {
+      action: {
+        label: 'Close',
+        onClick: () => console.log('Closed notification'),
+      },
+      position: 'top-right',
+    })
+  }
+  
   const fetchContents = async (moduleId: number) => {
     try {
       const response = await ContentService.get_contents_by_module(moduleId)
@@ -25,18 +39,30 @@ export const useContentStore = defineStore('Content', () => {
           component: Cowntent,
         })
       })
+
+      const resp = await ModuleService.get_module_sources(moduleId)
+      if(resp.length > 0) {
+
+        components.value.push({
+          id: 1000,
+          component: Citation,
+        })
+
+      }
+
+      
     } catch (error) {
       console.error('Error fetching contents:', error)
     }
   }
 
-  const contentItems = ref<QuizQuestion>(null as any)
+  const contentQuiz = ref<QuizQuestion>(null as any)
 
   const fetchContentQuiz = async (contentId: number) => {
     try {
       const response = await ContentService.get_quizzes(contentId)
-      contentItems.value = response
-      console.log('Fetched quiz data:', contentItems.value)
+      contentQuiz.value = response
+      console.log('Fetched quiz data:', contentQuiz.value)
     } catch (error) {
       console.error('Error fetching quiz data:', error)
     }
@@ -44,7 +70,7 @@ export const useContentStore = defineStore('Content', () => {
 
   const updateContentsQuiz = async() => {
     try {
-      await ContentService.update_quiz(contentItems.value.id, contentItems.value)
+      await ContentService.update_quiz(contentQuiz.value.id, contentQuiz.value)
       alert('Quiz updated successfully!')
     } catch (error) {
       console.error('Error updating quiz content:', error)
@@ -133,9 +159,24 @@ export const useContentStore = defineStore('Content', () => {
 
   }
 
+  const generateQuizAI = async (moduleId: number, quiz: QuizType, total: number, withInstruction: string = '') => {
+    try {
+      const response = await ContentService.generate_quiz(moduleId, quiz, total, withInstruction)
+      
+      const items = Array.isArray(response.output_text)
+        ? response.output_text
+        : [response.output_text];
+
+      contentQuiz.value.props.push(...items);
+      toast_notification('Quiz generated successfully!')
+    } catch (error) {
+      console.error("Failed to generate quiz:", error);
+    }
+  }
+
   return {
     contents,
-    contentItems,
+    contentQuiz,
     fetchContents,
     fetchContentQuiz,
     components,
@@ -143,5 +184,6 @@ export const useContentStore = defineStore('Content', () => {
     createContent,
     updateContentsQuiz,
     handleReorderComponent,
+    generateQuizAI
   }
 })

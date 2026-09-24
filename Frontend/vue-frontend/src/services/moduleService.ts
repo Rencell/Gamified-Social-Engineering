@@ -21,6 +21,16 @@ export interface ModuleTest {
   
 }
 
+export interface ModuleSource {
+  id: number;
+  module: number;
+  title: string;
+  url: string;
+  author: string[];
+  date: Date | string | null;
+  publisher: string;
+}
+
 const END_POINT = "/api/modules/";
 
 const moduleService = {
@@ -31,6 +41,8 @@ const moduleService = {
 
   get_all: (): Promise<Module[]> =>
     session.get(END_POINT + 'module-test/').then(res => res.data),
+  detail: (moduleId: number): Promise<ModuleTest> =>
+    session.get(END_POINT + `module-test/${moduleId}/`).then(res => res.data),
   get_all_test: ( lesson_slug: string ): Promise<ModuleTest[]> =>
     session.get(END_POINT + 'module-test/lesson/', { params: { lesson_slug } }).then(res => res.data),
   get_unlocked_modules_test: (): Promise<any> => session.get(END_POINT + 'module-test/unlocked/').then((res) => res.data),
@@ -40,10 +52,20 @@ const moduleService = {
     session.post(END_POINT + 'module-test/', module).then(res => res.data),
   update_module_test: (module: Partial<ModuleTest>): Promise<ModuleTest> =>
     session.put(END_POINT + `module-test/${module.id}/`, module).then(res => res.data), 
-  // User
-
+  
+  // Module Sources
+  get_module_sources: ( module_id: number ): Promise<ModuleSource[]> =>
+    session.get(END_POINT + 'module-source/get_by_module/', { params: { module_id } }).then(res => res.data),
+  create_module_source: (moduleSource: Partial<ModuleSource>): Promise<ModuleSource> =>
+    session.post(END_POINT + 'module-source/', moduleSource).then(res => res.data),
+  update_module_source: (moduleSource: Partial<ModuleSource>): Promise<ModuleSource> =>
+    session.patch(END_POINT + `module-source/${moduleSource.id}/`, moduleSource).then(res => res.data),
+  delete_module_source: (moduleSourceId: number): Promise<void> =>
+    session.delete(END_POINT + `module-source/${moduleSourceId}/`).then(() => {}),
+  //user
   unlock_module: (data: { module_test: number | null }): Promise<void> =>
     session.post(END_POINT + 'user-module-test-progress/', data).then(() => {}),
+  
 
 };
 

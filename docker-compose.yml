@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # --- DJANGO BACKEND ---
+  backend:
+    container_name: backend
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./Backend:/app
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  # --- VUE FRONTEND ---
+  frontend:
+    container_name: frontend
+    build:
+      context: ./Frontend/vue-frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./Frontend/vue-frontend:/app
+    ports:
+      - "5173:5173"
+    depends_on:
+      backend:
+        condition: service_healthy
+    
+

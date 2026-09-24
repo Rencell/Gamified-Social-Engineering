@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx';
 import { ChevronRight, LockKeyhole } from 'lucide-vue-next';
 
 defineProps({
@@ -25,7 +26,7 @@ defineProps({
       <p class="w-60 text-sm/relaxed text-white/30">When you have completed all the sections, you can take the exam.</p>
     </div>
     
-    <div class="text-sm flex gap-2 items-center mt-6" :class="lockedIndex ? 'cursor-not-allowed' : 'cursor-pointer'">
+    <div class="text-sm flex gap-2 items-center mt-6" :class="lockedIndex ? 'cursor-not-allowed' : 'cursor-pointer'" @click="playSoundFx(SoundFx.Transition)">
       <span v-if="!lockedIndex">
         <svg width="16" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" opacity="1"
           style="overflow: initial;">
@@ -39,7 +40,7 @@ defineProps({
       <span v-else>
         <LockKeyhole class="w-4 text-ternary"></LockKeyhole>
       </span>
-      <span class="font-medium hover:text-accent/40" :class="active ? 'text-accent' : 'text-secondary-foreground'">
+      <span class=" hover:text-accent/40" :class="active ? 'text-accent font-bold' : 'text-secondary- font-medium'">
         <slot></slot>
       </span>
       <span v-if="active">

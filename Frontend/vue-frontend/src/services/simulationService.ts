@@ -1,4 +1,5 @@
 import session from './api'
+import { serviceFactory } from './baseService'
 
 export interface GoPhish {
     emails_sent : number
@@ -47,7 +48,71 @@ export interface GoPhishTotalScoreSms {
     max_data_submitted: number;
 }
 
+export interface OverallDefenceWeights {
+    email: number;
+    sms: number;
+    popup: number;
+}
+
+export interface OverallDefenceComponents {
+    gophish_email: {
+        security_score: number;
+        emails_sent: number;
+        links_clicked: number;
+        data_submitted: number;
+    };
+    gophish_sms: {
+        security_score: number;
+        number_sent: number;
+        links_clicked: number;
+        data_submitted: number;
+    };
+    popup: {
+        security_score: number;
+        total_clicks: number;
+        total_closed: number;
+        popup_count: number;
+    };
+}
+
+export interface OverallDefenceResponse {
+    overall_score: number;
+    weights: OverallDefenceWeights;
+    components: OverallDefenceComponents;
+}
+
+
+export interface VishingScenario {
+    user: number;
+    status: string;
+    created_at: string;
+}
+export interface VishingScenarioTotal {
+    total: number;
+    gave_information: number;
+    refused: number;
+    security_score: number;
+}
+
+export interface SimulationGuide {
+    id: number;
+    title: string;
+    description: string;
+    type: string;
+    image: string;
+    image_alt_text: string;
+}
+
 const END_POINT = '/api/gophish/'
+
+
+const END_POINT_COMMON = "/api/common/";
+
+const simulationGuides = {
+    ...serviceFactory<SimulationGuide>(END_POINT_COMMON + 'simulation-guide/'),
+    get_type: (type: string): Promise<SimulationGuide[]> =>
+        session.get(END_POINT_COMMON + 'simulation-guide/', { params: { type } }).then((res) => res.data),
+};
 
 const gophishService = {
   get_all: (): Promise<GoPhish[]> => 
@@ -65,7 +130,18 @@ const gophishService = {
   update_email_consent: (email_consent: boolean): Promise<GoPhishConsent> =>
     session.post(END_POINT + 'gophish_consent/email/', { email_consent }).then((res) => res.data[0]),
   update_phone_consent: (phone_number: string): Promise<GoPhishConsent> =>
-    session.post(END_POINT + 'gophish_consent/phone/', { phone_number }).then((res) => res.data[0])
+    session.post(END_POINT + 'gophish_consent/phone/', { phone_number }).then((res) => res.data[0]),
+  get_overall_defence: (): Promise<OverallDefenceResponse> =>
+    session.get(END_POINT + 'gophish_user_score/overall_defence/').then((res) => res.data),
+
+  get_vishing_scenarios: (): Promise<VishingScenario[]> =>
+    session.get('/api/vishing/score/').then((res) => res.data),
+  get_vishing_scenarios_total: (): Promise<VishingScenarioTotal> =>
+    session.get('/api/vishing/score/summary/').then((res) => res.data),
+
+  simulationGuides: simulationGuides,
 }
+
+
 
 export default gophishService

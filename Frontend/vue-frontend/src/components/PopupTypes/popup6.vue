@@ -10,7 +10,7 @@ function onClick() { emit('click-action') }
 </script>
 
 <template>
-    <div class="relative text-black bg-white w-lg inset-0 shadow-lg mx-auto my-auto font-display">
+    <div class="relative text-black bg-white w-lg inset-0 shadow-lg mx-auto my-auto font-display ">
         <div class="absolute text-ternary/30 top-2 right-2 cursor-pointer" @click="onClose"><X class="size-5"></X></div>
         <div class="bg-red-600 text-center p-4 text-white text-xl font-semibold">
             <p>Security Alert</p>

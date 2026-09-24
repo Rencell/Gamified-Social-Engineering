@@ -49,43 +49,65 @@ const progressPercentage = computed(() => {
 const isFinishing = ref(false)
 let finishTimeout: number | undefined
 
+// New: prevent rapid next/submit presses
+const isNextCooldown = ref(false)
+let nextTimeout: number | undefined
+
 const handleQuestionAnswered = async () => {
-    
+    // Block if user hasn't selected an option, is finishing, or is in cooldown
+    if (!selectedOption.value || isFinishing.value || isNextCooldown.value) return
+
+    isNextCooldown.value = true
 
     // Move to next question or go to report if finished (after 3s pulse)
-    const totalQuestions = assessmentStore.currentQuestion.length;
-    const nextIndex = currentIndex.value + 1;
+    const totalQuestions = assessmentStore.currentQuestion.length
+    const nextIndex = currentIndex.value + 1
+
     if (nextIndex >= totalQuestions) {
-        isFinishing.value = true;
+        isFinishing.value = true
+
         await assessmentStore.save_question_answer({
             session_id: currentSession.value?.session_id as string,
             question_id: selectedQuestion.value.id as number,
             option_id: selectedOption.value ? selectedOption.value.id : null,
-        });
-        finishTimeout = window.setTimeout(() => {
-            router.push({ 
-            name: 'AssessmentReport', 
-            params: { 
-                a_id: assessmentStore.currentAssessment?.slug, 
-                s_id: currentSession.value?.session_id 
-            } 
-            });
-        }, 3000);
-        return;
+        })
+
+        // Keep the button disabled; add a 1s delay before starting the final 3s redirect timer
+        nextTimeout = window.setTimeout(() => {
+            finishTimeout = window.setTimeout(() => {
+                router.push({
+                    name: 'AssessmentReport',
+                    params: {
+                        a_id: assessmentStore.currentAssessment?.slug,
+                        s_id: currentSession.value?.session_id,
+                    },
+                })
+            }, 3000)
+        }, 1000)
+
+        return
     }
 
     await assessmentStore.save_question_answer({
         session_id: currentSession.value?.session_id as string,
         question_id: selectedQuestion.value.id as number,
         option_id: selectedOption.value ? selectedOption.value.id : null,
-    });
+    })
 
-    currentIndex.value = nextIndex;
+    // 1s delay before advancing to the next question
+    nextTimeout = window.setTimeout(() => {
+        currentIndex.value = nextIndex
+        selectedOption.value = null
+        isNextCooldown.value = false
+    }, 1000)
 }
 
 onUnmounted(() => {
     if (finishTimeout) {
         clearTimeout(finishTimeout)
+    }
+    if (nextTimeout) {
+        clearTimeout(nextTimeout)
     }
 })
 </script>
@@ -103,7 +125,7 @@ onUnmounted(() => {
 
         <!-- Fixed footer -->
         <div class="fixed bottom-0 left-0 right-0" v-if="!isFinishing">
-            <Footer @handle="handleQuestionAnswered" />
+            <Footer @handle="handleQuestionAnswered" :disabled="!selectedOption || isNextCooldown" />
         </div>
 
         <!-- Finishing overlay with pulse -->

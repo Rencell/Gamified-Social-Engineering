@@ -21,7 +21,7 @@
 import { ref, type PropType } from 'vue';
 import type { LearningType } from '../../learningRegistry.ts';
 import EditableCard from '../EditableCard.vue'
-import type { Content } from '@/services/contentService';
+import type { Content } from '@/services/contentService.ts';
 import { useEditableText } from '@/composables/useEditableText';
 
 const emit = defineEmits(['signalDelete', "addComponent"]);

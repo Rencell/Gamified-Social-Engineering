@@ -6,7 +6,7 @@ class CustomLoginSerializer(LoginSerializer):
     username = None
     email = serializers.EmailField(required=True)
     password = serializers.CharField(style={'input_type': 'password'}, required=True)
-
+    
     def validate(self, attrs):
         email = attrs.get('email')
         password = attrs.get('password')

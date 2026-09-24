@@ -3,6 +3,7 @@ import type { HTMLAttributes } from 'vue'
 import { Primitive, type PrimitiveProps } from 'reka-ui'
 import { cn } from '@/lib/utils'
 import { type ButtonVariants, buttonVariants } from '.'
+import { playSoundFx, SoundFx } from '@/composables/useSoundFx'
 
 interface Props extends PrimitiveProps {
   variant?: ButtonVariants['variant']
@@ -21,6 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
     :as="as"
     :as-child="asChild"
     :class="cn(buttonVariants({ variant, size }), props.class)"
+    @click="playSoundFx(SoundFx.Button)"
   >
     <slot />
   </Primitive>

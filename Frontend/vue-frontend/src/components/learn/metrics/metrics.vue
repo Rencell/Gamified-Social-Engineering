@@ -1,6 +1,6 @@
 <template>
     <div class="flex-1">
-        <div class="h-fit bg-secondary rounded-xl p-7 space-y-7 border-b-4 border-1 border-ternary">
+        <div class="h-fit bg-secondary rounded-xl p-7 space-y-7">
             <p class="text-xl font-bold">Skill Graph</p>
 
             <div class="flex justify-center">
@@ -9,7 +9,7 @@
             </div>
 
             <div>
-                <Card class="bg-background border-1 border-ternary">
+                <Card class="bg-background">
                     <CardContent class="p-4">
                         <div v-for="(item, index) in data" :key="index" class="flex items-center justify-between mb-4 last:mb-0">
                             <p class="text-sm font-medium">{{ item.text }}</p>

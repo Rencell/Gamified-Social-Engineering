@@ -26,13 +26,13 @@ const emit = defineEmits<{
             </div>
 
             <Button @click="emit('toggle')" size="sm" variant="secondary"
-                class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors">
+                class="absolute top-4 right-4 text-primary/70 hover:text-white transition-colors">
                 <X />
             </Button>
             <div class="flex flex-col gap-6 pt-10">
                 <p class="text-center font-bold text-2xl font-display">{{title}}</p>
 
-                <div class="flex justify-center gap-3 text-sm font-semibold text-white/80">
+                <div class="flex justify-center gap-3 text-sm font-semibold">
                     <div v-if="total_contents != 0" class="flex gap-1 items-center">
                         <Book class="size-4 "></Book>
                         {{ total_contents }} Contents</div>

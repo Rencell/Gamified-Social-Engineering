@@ -4,11 +4,14 @@ import { Button } from '@/components/ui/button';
 // Ensure multi-word component name to satisfy lint rule
 defineOptions({ name: 'AssessmentFooter' });
 
+const props = defineProps<{ disabled?: boolean }>();
+
 const emit = defineEmits<{
     (e: 'handle'): void;
 }>();
 
 const handleCheckClick = () => {
+    if (props.disabled) return;
     emit('handle');
 };
 
@@ -21,6 +24,7 @@ const handleCheckClick = () => {
             class="mt-4 border-primary/50 bg-blue-500 w-full sm:w-80 md:w-[28rem] lg:w-[36rem] xl:w-[48rem] p-3 sm:p-4 md:p-6 font-bold"
             @click="handleCheckClick"
             aria-label="Check"
+            :disabled="disabled"
         >
             Check
         </Button>

@@ -1,20 +1,19 @@
 <template>
-  
-    <div :class="['absolute z-50', wrapperClass]" >
+    <div :class="['absolute z-999', wrapperClass]"  >
         <component
-        v-if="visible"
+        v-if="visible"  
         :is="selectedPopup"
         @click-action="handleClick"
         @close-action="handleClose"
+        class="overflow-hidden"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, type Component } from 'vue';
-// import popupService from "../services/popupService";
+defineOptions({ name: 'PopupTypesIndex' })
 
-// Import all 10 popup UIs (siblings of this index.vue)
+import { ref, computed, onMounted, type Component } from 'vue';
 import Popup1 from "./popup1.vue";
 import Popup2 from "./popup2.vue";
 import Popup3 from "./popup3.vue";
@@ -27,6 +26,9 @@ import Popup9 from "./popup9.vue";
 import Popup10 from "./popup10.vue";
 import { PopupService } from '@/services';
 import { usePopupStore } from '@/stores/popup';
+import { toast } from 'vue-sonner';
+import { showExpToast } from '../ui/sonner/ExpToast/ExpToast';
+import { showPopupFailed } from '../ui/sonner/popupFailed/PopupFailed';
 
 const props = defineProps<{ scenario: number }>();
 const popupStore = usePopupStore();
@@ -96,15 +98,40 @@ onMounted(() => {
   startTime.value = Date.now();
 });
 
-async function handleClick() {
-  const reaction = startTime.value ? (Date.now() - startTime.value) / 1000 : 0;
-  await PopupService.mark_popup_as_seen(props.scenario, "clicked")
-  popupStore.openPopupModal = false;
+function toast_notification(message: string) {
+  toast.success(message, {
+    action: {
+      label: 'Close',
+      onClick: () => console.log('Closed notification'),
+    },
+    position: 'top-right',
+    duration: 3000,
+  })
 }
 
+async function handleClick() {
+  try {
+    await PopupService.mark_popup_as_seen(props.scenario, 'clicked')
+    showPopupFailed();
+  } catch (e) {
+    console.error('Failed to mark popup as seen (clicked):', e)
+    toast.error('Something went wrong. Please try again.', { position: 'top-right' })
+  } finally {
+    popupStore.openPopupModal = false;
+  }
+}
+
+
 async function handleClose() {
-  const reaction = startTime.value ? (Date.now() - startTime.value) / 1000 : 0;
-  await PopupService.mark_popup_as_seen(props.scenario, "closed")
-  popupStore.openPopupModal = false;
+  try {
+    await PopupService.mark_popup_as_seen(props.scenario, 'closed')
+    toast_notification('Nice! Popup dismissed.')
+    showExpToast();
+  } catch (e) {
+    console.error('Failed to mark popup as seen (closed):', e)
+    toast.error('Something went wrong. Please try again.', { position: 'top-right' })
+  } finally {
+    popupStore.openPopupModal = false;
+  }
 }
 </script>

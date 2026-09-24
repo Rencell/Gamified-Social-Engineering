@@ -7,7 +7,7 @@ import { Spinner } from './ui/spinner';
     <div class="w-full h-full flex justify-center items-center">
         <div class="flex gap-3 items-center font-display">
             <Spinner></Spinner>
-            <p class="font-semibold text-xl">Fetching Data</p>
+            <p class="font-semibold text-xl">Loading Data</p>
         </div>
     </div>
 </template>

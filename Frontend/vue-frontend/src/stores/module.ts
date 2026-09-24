@@ -2,12 +2,20 @@ import { defineStore } from 'pinia'
 import { ModuleService } from '@/services'
 import type { ModuleTest } from '@/services/moduleService'
 import { useLessonStore } from './lesson'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, type Component, type ComponentPublicInstance } from 'vue'
 import { useAuthStore } from './auth'
 import { useSectionStore } from './sections'
 import { useStreakStore } from './pageStreak'
 import { useCourseUnlockStore } from './pageCourseUnlock'
 import { toast } from 'vue-sonner'
+
+
+interface ScrollComponent {
+  id: string | number;
+  component: any;
+  emits?: boolean;
+}
+
 export const useModuleStore = defineStore('Module', () => {
   const lessonStore = useLessonStore()
   const modules = ref<ModuleTest[]>([])
@@ -30,14 +38,17 @@ export const useModuleStore = defineStore('Module', () => {
   const fetchModules = async (lessonId: string) => {
     try {
       modules.value = await ModuleService.get_all_test(lessonId)
-      console.log(modules.value)
 
+      
       const unlockedModules = await ModuleService.get_unlocked_modules_test()
-
+      
+      
       modules.value = modules.value.map((module) => ({
         ...module,
         locked: !unlockedModules.includes(module.slug),
       }))
+
+      
 
       modules.value = sortModules(modules.value)
     } catch (error) {
@@ -145,7 +156,7 @@ export const useModuleStore = defineStore('Module', () => {
 
   const updateModule = async (moduleData: Partial<ModuleTest>) => {
     try {
-      const updatedModule = await ModuleService.update_module_test(moduleData)
+      await ModuleService.update_module_test(moduleData)
       sectionStore.setSelectedSection(moduleData.section || 0)
       sectionStore.selectedSection?.modules.map((mod) => {
         if (mod.id === moduleData.id) {
@@ -178,20 +189,10 @@ export const useModuleStore = defineStore('Module', () => {
     try {
       streakStore.postStreak()
       await unlockModule()
-
-      console.log('lesson unlocked:', lessonStore.currentLesson)
-
-      let currentLesson
-      
-      if (lessonStore.currentLesson ) {
-        currentLesson = lessonStore.currentLesson 
-        currentLesson.completed_modules = (currentLesson.completed_modules || 0) + 1
-      }
-
-      const isFinalModule = currentLesson &&
-        (currentLesson.completed_modules ?? 0) >= (currentLesson.total_modules ?? 0)
-
-      if (isFinalModule) {
+      // Only unlock the next lesson if all non-final modules are unlocked
+      const canUnlockNextLesson = isFinalQuizUnlocked.value
+      const isAllModulesUnlocked = modules.value.every((module) => !module.locked);
+      if (canUnlockNextLesson && isAllModulesUnlocked && lessonStore.isNextLessonLocked()) {
         if (lesson) {
           pageCourseUnlockStore.setCourseDetails(
             lesson.title || '',
@@ -203,10 +204,9 @@ export const useModuleStore = defineStore('Module', () => {
           await lessonStore.unlockLesson(lesson?.id as number)
           lesson.locked = false
           streakStore.postStreak()
+          toast_notification('Congratulations! You have unlocked a new lesson.')
         }
       }
-
-      // await updateLessons()
     } catch (error) {
       console.error('Failed to complete module:', error)
     }
@@ -232,6 +232,7 @@ export const useModuleStore = defineStore('Module', () => {
       selectedModule.value = modules.value[currentIndex - 1]
     }
   }
+
 
   return {
     modules,

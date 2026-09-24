@@ -3,14 +3,11 @@ import { Button } from '@/components/ui/button'
 import { useRouter } from 'vue-router'
 import { Checkbox } from '../ui/checkbox'
 import { ref } from 'vue'
-import DialogSimulation from '../simulation/dialogSimulation.vue'
 import DialogConsent from '../simulation/onboarding/dialogConsent.vue'
 import { SimulationService } from '@/services'
-import { set } from '@vueuse/core'
 import { Spinner } from '../ui/spinner'
+import { ThemeToggle } from '../ui/theme-toggle'
 
-
-const emit = defineEmits(['next', 'prev'])
 
 const router = useRouter()
 
@@ -39,37 +36,47 @@ const goToSmsSimulationConsent = (isConsent: boolean) => {
 
 const checked = ref(false);
 
+// Theme toggle is handled by <ThemeToggle />
+const THEME_STORAGE_KEY = 'theme'
+
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col items-center justify-center gap-7 px-6 py-12 text-center motion-preset-fade ">
+  <div
+    class="flex min-h-[100svh] flex-col items-center justify-center gap-6 px-4 py-8 text-center motion-preset-fade sm:gap-7 sm:px-6 sm:py-12"
+  >
+  <ThemeToggle
+    class="h-9 w-9 absolute top-4 right-4 sm:top-6 sm:right-6"
+    :storage-key="THEME_STORAGE_KEY"
+  />
     <!-- Avatar Grid -->
-    <div class="mb-8 flex justify-center w-sm">
-        <img src="/Guides/email.webp" alt="">
+    <div class="mb-4 flex w-full justify-center sm:mb-8">
+      <img
+        src="/Guides/email.webp"
+        alt=""
+        class="h-auto w-full max-w-xs object-contain sm:max-w-sm"
+      >
     </div>
 
     <!-- Content -->
-    <div class="max-w-2xl space-y-6 w-md mb-8">
-      <h1 class="text-2xl font-bold leading-tight text-foreground md:text-3xl font-display">
+    <div class="mb-6 w-full max-w-2xl space-y-5 sm:mb-8 sm:space-y-6">
+      <h1 class="font-display text-2xl font-bold leading-tight text-foreground sm:text-3xl">
         Do you want to participate in Email Phishing simulations?
       </h1>
 
-      <div class="flex justify-center items-center"><Checkbox v-model="checked"></Checkbox><DialogConsent /></div>
+      <div class="flex items-center justify-center gap-2">
+        <Checkbox v-model="checked"></Checkbox>
+        <DialogConsent />
+      </div>
     </div>
 
     <!-- Navigation -->
-    <div class=" grid grid-cols-2 gap-3 w-full max-w-md">
-
-        <Button 
-            :disabled="!checked" 
-            variant="secondary" size="lg" 
-            @click="goToSmsSimulationConsent(true)">
-            <Spinner v-if="loading" :size="'sm'"></Spinner>
-            Continue
-        </Button>
-        <Button size="lg" @click="goToSmsSimulationConsent(false)">
-            No, thanks
-        </Button>
+    <div class="grid w-full max-w-md grid-cols-1 gap-3 sm:grid-cols-2">
+      <Button :disabled="!checked" variant="secondary" size="lg" @click="goToSmsSimulationConsent(true)">
+        <Spinner v-if="loading" :size="'sm'"></Spinner>
+        Continue
+      </Button>
+      <Button size="lg" @click="goToSmsSimulationConsent(false)"> No, thanks </Button>
     </div>
   </div>
 </template>
