@@ -1,34 +1,43 @@
 <template>
     <div class="h-fit">
         <p class="font-bold text-3xl mb-4">Mini Games</p>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-14 md:gap-4">
-            <template v-for="game in games" :key="game.id">
-                <RouterLink v-if="!game.locked" :to="{ name: 'MiniGamesDetail', params: { gameId: game.id } }"
-                    :class="[game.cardClass]"
+        <Loading v-if="loading"></Loading>
+        <div v-else class="grid grid-cols-1 md:grid-cols-4 gap-14 md:gap-4 md:gap-y-10">
+            <template v-for="game in minigame" :key="game.id">
+                <!-- Playable card when user level equals required_level -->
+                <RouterLink v-if="canPlay(game)"
+                    :to="{ name: 'MiniGamesDetail', params: { gameId: game.id } }"
+                    :style="{ backgroundColor: game.card_color }"
                     class="relative h-70 rounded-2xl p-5 hover:scale-105 transition-transform duration-300 ease-in-out">
                     <div class="relative">
-                        <p class="pb-4 text-xl font-bold">{{ game.name }}</p>
-                        <div class="h-1 w-10 bg-white absolute bottom-0"></div>
+                        <p class="pb-4 text-xl font-bold" :style="{ color: getTextColor(game.card_color) }">{{ game.name }}</p>
+                        <div class="h-1 w-10 absolute bottom-0" :style="{ backgroundColor: getTextColor(game.card_color) }"></div>
                     </div>
 
                     <div class=" h-full flex items-center justify-center">
-                        <img :src="game.image" class="h-full size-40" :alt="`${game.name} Thumbnail`">
+                        <img :src="game.thumbnail!" class="h-full size-45" :alt="`${game.name} Thumbnail`">
                     </div>
-                    <div class="h-10 w-30 rounded-full bg-accent absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white font-bold shadow-lg hover:bg-accent-dark cursor-pointer"
-                        :class="game.locked ? 'bg-secondary cursor-not-allowed' : ''">
+                    <div class="h-10 w-30 rounded-full bg-accent absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white font-bold shadow-lg hover:bg-accent-dark cursor-pointer">
                         <Play class="fill-white size-4 me-2"></Play>
-                        {{ game.locked ? 'Locked' : 'Play' }}
+                        Play
                     </div>
                 </RouterLink>
-                <div v-else :class="[game.cardClass, 'bg-secondary cursor-not-allowed']"
-                    class="relative h-70 rounded-2xl p-5" aria-disabled="true">
+
+                <!-- Locked card when user level does not equal required_level -->
+                <div v-else
+                    :style="{ backgroundColor: game.card_color }"
+                    class="relative h-70 rounded-2xl p-5 bg-secondary cursor-not-allowed opacity-60"
+                    aria-disabled="true">
+                    <div class="bg-ternary rotate-20 absolute -right-5 top-0 rounded-full p-1 px-5">
+                        Level {{ game.required_level ?? '-' }}
+                    </div>
                     <div class="relative">
-                        <p class="pb-4 text-xl font-bold">{{ game.name }}</p>
-                        <div class="h-1 w-10 bg-white absolute bottom-0"></div>
+                        <p class="pb-4 text-xl font-bold" :style="{ color: getTextColor(game.card_color) }">{{ game.name }}</p>
+                        <div class="h-1 w-10 absolute bottom-0" :style="{ backgroundColor: getTextColor(game.card_color) }"></div>
                     </div>
 
-                    <div>
-                        <img :src="game.image" :alt="`${game.name} Thumbnail`">
+                    <div class=" h-full flex items-center justify-center">
+                        <img :src="game.thumbnail!" class="h-full size-45 filter grayscale" :alt="`${game.name} Thumbnail`">
                     </div>
                     <div
                         class="h-10 w-30 rounded-full bg-ternary absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white font-bold shadow-lg cursor-not-allowed">
@@ -43,45 +52,71 @@
 </template>
 
 <script setup lang="ts">
-import rocket from '/MiniGames/Rocket.svg';
-import guessWord from '/MiniGames/GuessWord.svg';
-import { Lock, Play } from 'lucide-vue-next';
+// removed unused image imports
+import { Play, Lock } from 'lucide-vue-next';
 import { RouterLink } from 'vue-router';
-import Whack from '@/components/MiniGames/WhackaMole/whack.vue'
-import { ref } from 'vue';
-import { Button } from '@/components/ui/button';
-import Game from '@/components/MiniGames/WhackaMole/game.vue'
-import faceImage from '/MiniGames/mole.svg';
+import { onMounted, ref } from 'vue';
+import { MinigameService } from '@/services';
+import type { Minigame } from '@/services/minigameService';
+import Loading from '@/components/loading.vue';
+import { useAuthStore } from '@/stores/auth';
 
+const authStore = useAuthStore();
+const loading = ref(false);
+const minigame = ref<Minigame[]>([])
+onMounted(() => {
+    loading.value = true;
+    try {
+        MinigameService.get_minigame().then(data => {
+            minigame.value = data;
+        });
+    } finally {
+        loading.value = false;
+    }
+});
 
-const games = [
-    {
-        id: 'rocket',
-        name: 'Rocket Password',
-        image: rocket,
-        cardClass: 'bg-[#131c30]',
-        locked: false,
-    },
-    {
-        id: 'guessWord',
-        name: 'Guess Word',
-        image: guessWord,
-        cardClass: 'bg-[#75bd3d]',
-        locked: false,
-    },
-    {
-        id: 'whack',
-        name: 'Whack a Mole',
-        image: faceImage,
-        cardClass: 'bg-[#f6c298]',
-        locked: false,
-    },
-    {
-        id: 'crossPuzzle',
-        name: 'Cross Puzzle',
-        image: guessWord,
-        cardClass: 'bg-[#75bd3d]',
-        locked: true,
-    },
-];
+// Helper to determine if the game is playable based on user level
+type MinigameWithReq = Minigame & { required_level: number | null };
+function canPlay(game: MinigameWithReq): boolean {
+  const userLevel = authStore?.User?.level as number | undefined;
+  const requiredLevel = game.required_level;
+  if (userLevel == null || requiredLevel == null) return false;
+  return userLevel >= requiredLevel;
+}
+
+// Compute text color (black/white) based on background brightness
+function getTextColor(bgColor?: string): string {
+  if (!bgColor) return '#ffffff';
+  const rgb = parseColorToRGB(bgColor);
+  if (!rgb) return '#ffffff';
+  const luminance = 0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b; // Rec. 709
+  return luminance > 180 ? '#000000' : '#ffffff';
+}
+
+function parseColorToRGB(color: string): { r: number; g: number; b: number } | null {
+  const c = color.trim().toLowerCase();
+  // #rgb or #rrggbb
+  const hexMatch = c.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+  if (hexMatch) {
+    let hex = hexMatch[1];
+    if (hex.length === 3) {
+      hex = hex.split('').map(ch => ch + ch).join('');
+    }
+    const num = parseInt(hex, 16);
+    return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+  }
+  // rgb(r,g,b) or rgba(r,g,b,a)
+  const rgbMatch = c.match(/^rgba?\(([^)]+)\)$/);
+  if (rgbMatch) {
+    const parts = rgbMatch[1].split(',').map(p => parseFloat(p.trim()));
+    if (parts.length >= 3) {
+      return { r: clamp255(parts[0]), g: clamp255(parts[1]), b: clamp255(parts[2]) };
+    }
+  }
+  return null;
+}
+
+function clamp255(v: number): number {
+  return Math.max(0, Math.min(255, Math.round(v)));
+}
 </script>

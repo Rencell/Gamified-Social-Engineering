@@ -82,11 +82,5 @@ const handleImageClick = (image: string) => {
     }, 1000);
 };
 
-const resetQuiz = () => {
-
-}
-const finishQuiz = () => {
-
-}
 
 </script>

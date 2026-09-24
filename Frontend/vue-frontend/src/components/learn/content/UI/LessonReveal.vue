@@ -64,38 +64,38 @@ const showNextComponent = async () => {
 
 // Scroll to the quiz component
 const scrollToQuiz = async () => {
-  
+
   const quizIndex = props.components.findIndex((comp) => comp.component.__name === 'quiz'); // Identify the quiz component
   if (quizIndex !== -1) {
     currentVisibleIndex.value = quizIndex; // Update the visible index to the quiz
     await nextTick();
     const quizRef = componentRefs.value[quizIndex] as HTMLElement | null;
     if (quizRef) {
-      quizRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      quizRef.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
   }
 };
- const count = computed(() => loadingPageStore.count);
+
+const count = computed(() => loadingPageStore.count);
+
 watch(
   () => props.components.length,
   async (newLength, oldLength) => {
     if (newLength > oldLength && router.query.openQuiz === 'true') {
-      if (count.value > 0) return; // Prevent multiple triggers
       await scrollToQuiz();
-      loadingPageStore.count++;
+      // loadingPageStore.count++;
     }
   }
 );
 
 const router = useRoute();
-onMounted(async() => {
-  if(props.components.length > 1){
-    
+onMounted(async () => {
+  if (props.components.length > 1) {
+
     if (router.query.openQuiz === 'true') {
-        if (count.value > 0) return; // Prevent multiple triggers
-        await scrollToQuiz();
-        loadingPageStore.count++;
-      }
+      await scrollToQuiz();
+      // loadingPageStore.count++;
+    }
   }
 });
 
@@ -108,13 +108,9 @@ onMounted(async() => {
     <div v-for="(Comp, idx) in components" :key="Comp.id" class="reset-contents relative"
       :ref="el => componentRefs[idx] = el">
       <!-- Component -->
-      <component v-if="idx <= currentVisibleIndex" 
-        :is="Comp.component" 
-        @showDown="toggleActive"
-        @completeModule="toggleMarkComplete" 
-        :totalLength="components.length" 
-        :content_order="Comp.id" />
-        
+      <component v-if="idx <= currentVisibleIndex" :is="Comp.component" @showDown="toggleActive"
+        @completeModule="toggleMarkComplete" :totalLength="components.length" :content_order="Comp.id" />
+
     </div>
 
     <div class="flex justify-center items-center">

@@ -70,7 +70,7 @@ const mcq: MCQ = {
         { id: 'A', text: 'True' },
         { id: 'B', text: 'False' }
     ],
-    correctAnswer: 'A'
+    answer: 'A'
 };
 
 const emit = defineEmits(['showDown']);

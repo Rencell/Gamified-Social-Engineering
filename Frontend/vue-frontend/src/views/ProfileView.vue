@@ -54,8 +54,11 @@ onMounted(() => {
             <Card class="flex-1">
                 <CardContent class="px-5 sm:px-10">
                     <!-- Header -->
-                    <p class="font-bold mb-0 sm:mb-6 text-xl">Exp Points</p>
-
+                    <div class="flex justify-between items-center mb-6">
+                        <p class="font-bold mb-0 sm:mb-6 text-xl">Exp Points</p>
+                        
+                        <p class="font-bold mb-0 sm:mb-6 text-xs">Current Exp: <span class="text-yellow-500">{{ currentXP }}</span></p>
+                    </div>
                     <!-- Level Progression -->
                     <div class="flex items-center justify-between h-full">
                         <!-- Current Level -->

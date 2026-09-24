@@ -131,7 +131,6 @@ async function onFinish(finalScore: number, time_spent?: number) {
   timeSpent.value     = (60 * 10) - (time_spent ?? 0)
 
   if(useContentStore().contentItems.pass_rate! > (score.value / total_questions.value * 100)) {
-    alert(1)
     alert('You did not pass the quiz. Please try again.')
     quizCompleted.value = true
     rewardState.value = 'no-reward'

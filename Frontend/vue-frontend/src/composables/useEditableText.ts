@@ -2,11 +2,7 @@ import { ref, inject } from 'vue'
 
 export function useEditableText(
   initialText: any,
-  emit: DefineEmits<{
-    giveProps: (text: string) => void
-    signalDelete: () => void
-    moveOrder: (id: number, direction: 'up' | 'down') => void
-  }>,
+  emit: any,
 ) {
   const editable = inject('editable', false) // Inject the editable state
   const my_text = ref(initialText) // Reactive text value
@@ -14,7 +10,6 @@ export function useEditableText(
   const updateProps = ($event: any) => {
     my_text.value = $event // Merge the updated properties
     console.log('Updated text:', $event)
-    alert(1)
     emit('giveProps', $event) // Emit the updated text to the parent
   }
 
@@ -23,6 +18,7 @@ export function useEditableText(
   }
 
   const addComponent = (type: string) => {
+    alert(type);
     emit('addComponent', type, null) // Emit the add component signal to the parent
   }
 

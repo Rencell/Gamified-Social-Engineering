@@ -24,7 +24,7 @@ import LearningContent from '../../UI/Learning/Core/LearningContent.vue';
 import LearningHeader from '../../UI/Learning/Core/LearningHeader.vue';
 import LearningSection from '../../UI/Learning/Core/LearningSection.vue';
 import LearningQuote from '../../UI/Learning/Highlight/LearningQuote.vue'
-import NextCard from '../../UI/Interactive/phishing/NextCard.vue'
+import NextCard from '../../UI/Interactive/NextCard.vue'
 import asset1 from '/Learning/Content/phishing/Protect/Content1/list1.webp'
 import asset2 from '/Learning/Content/phishing/Protect/Content1/list2.webp'
 import asset3 from '/Learning/Content/phishing/Protect/Content1/list3.webp'

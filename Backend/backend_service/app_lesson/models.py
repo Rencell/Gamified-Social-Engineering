@@ -22,15 +22,16 @@ class UserLessonProgress(models.Model):
 
     def __str__(self):
         return str(self.lesson)
-    
 class LessonTest(models.Model):
     
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True, null=True)
     image = models.ImageField(upload_to='lesson_tests/images/', null=True, blank=True)
-    bg = models.CharField(max_length=7)  # Assuming hex color codes
+    bg = models.CharField(max_length=7, default='#5a2653')  # Assuming hex color codes
     lesson_order = models.PositiveIntegerField(blank=True, null=True)
+    objective = models.JSONField(default=list)
     description = models.TextField()
+    
 
     class Meta:
         db_table = 'lesson_test'

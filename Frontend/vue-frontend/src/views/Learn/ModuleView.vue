@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft} from 'lucide-vue-next';
+import { ArrowLeft } from 'lucide-vue-next';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import ModuleCard from '@/components/learn/learnUI/ModuleCard.vue'
 import { useLearningStore } from '@/stores/learning'
@@ -13,21 +13,24 @@ import { useSectionStore } from '@/stores/sections';
 import CreateSectionDialog from '@/components/learn/dialog/Lesson/Section/createSectionDialog.vue'
 import type { Section } from '@/services/sectionService';
 import SectionDivider from '@/components/learn/learnUI/SectionDivider.vue'
-import moduleService from '@/services/moduleService';
+import { useAuthStore } from '@/stores/auth';
+import Loading from '@/components/loading.vue';
 
 
-const moduleStore   = useModuleStore();
-const lessonStore   = useLessonStore();
+const moduleStore = useModuleStore();
+const lessonStore = useLessonStore();
 const learningStore = useLearningStore()
-const route         = useRoute()
-const sectionStore  = useSectionStore();
+const route = useRoute()
+const sectionStore = useSectionStore();
 const lessonId = route.params.lessonId as string;
 
 
-const quizzes_progress  = ref<(Quiz & { percentage?: number })[]>()
+const quizzes_progress = ref<(Quiz & { percentage?: number })[]>()
 const lesson_percentage = ref(0)
-const sectionProgress   = ref<Record<number, number>>({});
-const sectionRefs       = ref<Record<number, boolean>>({});
+const sectionProgress = ref<Record<number, number>>({});
+const sectionRefs = ref<Record<number, boolean>>({});
+const isLoading = ref(true);
+
 
 // Toggle visibility for a specific section
 const toggleSectionVisibility = (sectionId: number) => {
@@ -35,21 +38,22 @@ const toggleSectionVisibility = (sectionId: number) => {
 };
 
 onMounted(async () => {
-    if (lessonStore.lessons.length === 0) {
-        await lessonStore.fetchLessons();
-    }
-
-    lessonStore.setCurrentLesson(lessonId);
-    await moduleStore.fetchModules(lessonId);
-
-    await sectionStore.fetchSection(lessonStore.currentLesson?.id || 0);
-    sectionStore.sections.forEach((section) => {
-        sectionRefs.value[section.id] = true; // Default to visible
-    });
-
+    isLoading.value = true;
     try {
+        if (lessonStore.lessons.length === 0) {
+            await lessonStore.fetchLessons();
+        }
+
+        lessonStore.setCurrentLesson(lessonId);
+        if(!lessonStore.currentLesson) return;
+        await moduleStore.fetchModules(lessonId);
+        await sectionStore.fetchSection(lessonStore.currentLesson?.id || 0);
+        sectionStore.sections.forEach((section) => {
+            sectionRefs.value[section.id] = true; // Default to visible
+        });
+        await get_all_modules();
         const map = moduleStore.modules.map(m => m.id).filter((id): id is number => id !== null);
-        
+
         await quizService.get_by_ids(map).then(res => {
             quizzes_progress.value = res;
         }).catch(err => {
@@ -66,37 +70,41 @@ onMounted(async () => {
             sectionProgress.value[section.id] = Math.round(totalProgress / moduleCount);
             lesson_percentage.value = Math.round((lesson_percentage.value + sectionProgress.value[section.id]));
         });
-        
+
         lesson_percentage.value = Math.round(lesson_percentage.value / sectionStore.sections.length);
     } catch (err) {
         console.error("Error in fetching lessons or modules:", err);
+    } finally {
+        isLoading.value = false;
     }
 })
 
 
 const isFinalLocked = (section: Section) => {
+
     const nonFinal = section.modules.filter(m => !m.final)
     const anyUnlocked = nonFinal.every(m => m.locked === false)
 
     return anyUnlocked
 }
 
-const tayp = ref<any>(null)
 const get_all_modules = async () => {
     try {
         const modules = await sectionStore.fetchSection(lessonStore.currentLesson?.id || 0);
-        tayp.value = sectionStore.sections
         console.log("All Modules:", modules);
     } catch (error) {
         console.error("Error fetching all modules:", error);
     }
 }
 
-get_all_modules();
-
+// helper function that returns the first locked module of a section
+const getFirstLockedModule = (section: { modules: any[]; }) => {
+    return section.modules.find(m => m.locked === true)
+}
 </script>
 
 <template>
+
     <div class="p-2 sm:p-0">
         <RouterLink :to="{ name: 'Learn' }">
             <div class="flex gap-2 mb-5 text-sm items-center text-accent font-bold">
@@ -104,7 +112,9 @@ get_all_modules();
             </div>
         </RouterLink>
 
-        <LessonDetailCard :progress="learningStore.completionPercentage"
+        <Loading v-if="isLoading"></Loading>
+        <div v-else-if="!lessonStore.currentLesson" class="text-center py-4 text-foreground">No data available.</div>
+        <LessonDetailCard v-else :progress="learningStore.completionPercentage"
             :description="lessonStore.currentLesson?.description" :title="lessonStore.currentLesson?.title"
             :image="lessonStore.currentLesson?.image" :bg="lessonStore.currentLesson?.bg"
             :locked="lessonStore.currentLesson?.locked" :module-count="moduleStore.modules.length" :isLatest="true"
@@ -117,7 +127,14 @@ get_all_modules();
                 <CreateSectionDialog />
                 <hr class="my-5" />
             </div>
-            <div v-for="(section, index) in sectionStore.sections" :key="section.name">
+
+            <Loading v-if="isLoading"></Loading>
+
+            <div v-else-if="sectionStore.sections.length === 0" class="text-center py-12">
+                <h2 class="text-lg font-bold text-foreground">No section set for this module.</h2>
+            </div>
+
+            <div v-else v-for="(section, index) in sectionStore.sections" :key="section.name">
 
                 <SectionDivider :index="index" :section="section" :section-progress="sectionProgress[section.id] || 0"
                     :sectionRefs="sectionRefs[section.id]" @toggle="toggleSectionVisibility(section.id)">
@@ -129,9 +146,11 @@ get_all_modules();
                             :module="module" :title="module.title"
                             :router-link="`/learn/${lessonId}/${section.id}/session`" :interactive="!module.locked"
                             @click="moduleStore.setSelectedModule(module)"
-                            :locked-index="module.final ? !isFinalLocked(section) : false"
+                            :locked-index="!useAuthStore().User.is_admin ? (!lessonStore.currentLesson?.locked ? (module.final ? !isFinalLocked(section) : false) : !useAuthStore().User.is_admin) : false"
                             :quiz-status="quizzes_progress?.find(q => q.module === module.id)"
-                            :quiz-progress="module.accuracy" />
+                            :quiz-progress="module.accuracy"
+                            :highlight="lessonStore.currentLesson?.locked ? false : module.id === getFirstLockedModule(section)?.id" />
+
                     </div>
                 </SectionDivider>
             </div>

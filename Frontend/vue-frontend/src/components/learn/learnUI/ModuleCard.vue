@@ -5,13 +5,14 @@ import learns from '/Icons/Learns.svg?url'
 import { ChevronDown, ChevronUp, Clock, LockKeyhole, Play, RotateCcw, SquarePen, Target } from 'lucide-vue-next';
 import UpdateModuleDialog from '../dialog/Lesson/Section/Module/updateModuleDialog.vue'
 import type { ModuleTest } from '@/services/moduleService';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import ProgressCircle from './ProgressCircle.vue'
 import DeleteModuleAlert from '../dialog/Lesson/Section/Module/deleteModuleAlert.vue';
 import ModuleViewDialog from '../dialog/Lesson/Section/Module/moduleViewDialog.vue'
 import { useLoadingPageStore } from '@/stores/pageLoading';
 import Badge from '@/components/ui/badge/Badge.vue';
 import type { Quiz } from '@/services/quizService';
+import { useAuthStore } from '@/stores/auth';
 
 
 const props = defineProps({
@@ -46,6 +47,10 @@ const props = defineProps({
     quizProgress: {
         type: Number,
         default: 0
+    },
+    highlight: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -69,14 +74,21 @@ const formatTime = (time: number | undefined): string => {
 };
 
 
+
 </script>
 
 <template>
-    <div class="flex gap-3 group">
-        <div class="grow my-2 p-2 flex items-center rounded-xl bg-secondary gap-6">
+    
+    <div class="flex gap-3 group ">
+        <div class="relative grow my-2 p-2 flex items-center rounded-xl bg-secondary gap-6" :class="highlight ? 'border-3 border-accent' : ''">
+            <div v-show="props.highlight" class="absolute -top-5 right-1/2 bg-accent p-3 rounded-lg animate-bounce font-bold text-sm">
+                Start
+
+                <div class="w-3 h-3 bg-accent absolute top-9.5 left-1/2 transform -translate-x-1/2 rotate-132"></div>
+            </div>
 
             <div class="flex items-center justify-center pl-5 space-x-3">
-                <div class="p-1 px-2 rounded-full flex items-center "
+                <div v-if="useAuthStore().User.is_admin" class="p-1 px-2 rounded-full flex items-center "
                     :class="!showSettings ? 'bg-ternary' : 'bg-secondary'">
                     <Button @click="showSettings = !showSettings" size="sm" variant="ghost">
                         <SquarePen class="size-4" />
@@ -129,25 +141,9 @@ const formatTime = (time: number | undefined): string => {
                     </Button>
                     <div v-else class="text-ternary text-sm font-semibold flex">
                         Complete the previous lessons to unlock
-
-                        <!-- <div class="flex items-center">
-                            <img src="/Learning/crown_locked.svg" class="size-10" alt="">
-                            <img src="/Learning/crown_locked.svg" class="size-10" alt="">
-                            <img src="/Learning/crown_locked.svg" class="size-10" alt="">
-                        </div>
-                        <Button asChild variant="ghost" size="lg"
-                            class="w-full sm:w-auto font-semibold border-1 border-ternary">
-                            <RouterLink :to="routerLink">
-                                <Play :size="18" fill="white"></Play>
-                                <p class="font-bold">Learn</p>
-                            </RouterLink>
-
-                        </Button> -->
                     </div>
 
                     <div v-if="!lockedIndex">
-                        <!-- <Circle class="text-slate-600"  v-if="!interactive" /> -->
-                        <!-- <CircleCheck v-else class="text-green-400" fill="green" /> -->
                         <ProgressCircle :progress="quizStatus?.accuracy ? parseFloat(quizStatus.accuracy.toFixed(1)) : 0" size="lg" />
 
                     </div>

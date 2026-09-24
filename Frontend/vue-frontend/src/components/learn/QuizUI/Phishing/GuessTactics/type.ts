@@ -8,7 +8,8 @@ export interface Tactic {
     sender: string;
     subject: string;
     date: string;
-    content: string;
+    link: string;
+    content: string[];
     options: Option[];
     correctAnswer: string;
 }

@@ -4,19 +4,31 @@ from dj_rest_auth.registration.views import SocialLoginView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.views.decorators.csrf import ensure_csrf_cookie
+from rest_framework.authtoken.models import Token
+from rest_framework import status
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
 
-
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from allauth.socialaccount.providers.oauth2.client import OAuth2Client
-
-class GoogleLogin(SocialLoginView): # if you want to use Authorization Code Grant, use this
+# Implicit/token flow: frontend sends access_token directly
+class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
-    # callback_url = "http://https://gamified-social-engineering.onrender.com/accounts/google/login/callback/"
-    callback_url = "http://localhost:8000/accounts/google/login/callback/"
-    client_class = OAuth2Client
 
-class GoogleLogin(SocialLoginView): # if you want to use Implicit Grant, use this
-    adapter_class = GoogleOAuth2Adapter
+    def get_response(self):
+        # Create or get auth token
+        token, _ = Token.objects.get_or_create(user=self.user)
+
+        # Newness is determined earlier in the pipeline (pre_social_login)
+        is_new = bool(getattr(self.request, "is_new_user", False))
+
+        # Return only key and is_new
+        return Response(
+            {
+                "key": token.key,
+                "is_new": is_new
+            },
+            status=status.HTTP_200_OK
+        )
+
+

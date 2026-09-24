@@ -4,31 +4,69 @@
             <ArrowLeft :size="15"></ArrowLeft> Back
         </div>
     </RouterLink>
-    <component class="border-7 border-ternary" :is="game"></component>
+    
+    <component class="border-7 border-ternary rounded-2xl" :is="game"></component>
+
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, ref, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
-import RocketGame from '@/components/MiniGames/Rocket/rocketGame.vue';
-import GuessWord from '@/components/MiniGames/GuessWord/guessWord.vue';
-import Whack from '@/components/MiniGames/WhackaMole/game.vue';
-import Error from '@/components/MiniGames/errorPage.vue'
+import Error from '@/components/MiniGames/errorPage.vue';
 import { ArrowLeft } from 'lucide-vue-next';
+import { MinigameService } from '@/services';
+import type { Minigame } from '@/services/minigameService';
+import { useAuthStore } from '@/stores/auth';
+const modules = import.meta.glob('/src/components/MiniGames/**/game.vue') as Record<string, () => Promise<{ default: import('vue').Component }>>;
 
-const route = useRoute()
+const route = useRoute();
 const gameId = route.params.gameId as string;
+const authStore = useAuthStore();
+const thegame = ref('');
 
-const game  = computed(() => {
-    if (gameId === 'rocket') {
-        return RocketGame
-    }else if (gameId === 'guessWord') {
-        return GuessWord
+function sanitizeToPath(id: string) {
+  return (id || '').replace(/\\+/g, '/').replace(/\/+$/, '') + '/'
+}
+
+onMounted(() => {
+    const numericId = Number(gameId);
+    const directPath = sanitizeToPath(typeof gameId === 'string' ? gameId : '');
+    const directModulePath = `/src/components/MiniGames/${directPath}game.vue`;
+
+    // If a local component exists for the given param, prefer it directly.
+    if (modules[directModulePath]) {
+      thegame.value = directPath;
+      return;
     }
-    else if (gameId === 'whack') {
-        return Whack
+
+    if (!Number.isNaN(numericId)) {
+        MinigameService.get_minigame_by_id(numericId).then((minigame: Minigame) => {
+            // Enforce lock: if user level != required_level, show Error component
+            const userLevel = authStore?.User?.level ?? 0;
+            const req = minigame.required_level ?? null;
+            if (req === null || userLevel !<= req) {
+                thegame.value = '';
+                return;
+            }
+
+            const path = (minigame.route_path || '').replace(/\\+/g, '/').replace(/\/+$/, '') + '/';
+            thegame.value = path;
+        }).catch(() => {
+            // Fallback to direct path if local component exists, otherwise error
+            thegame.value = modules[directModulePath] ? directPath : '';
+        });
+    } else {
+        thegame.value = directPath;
     }
-    return Error
-})
+});
+
+const game = computed(() => {
+    if (!thegame.value) return Error;
+    const path = `/src/components/MiniGames/${thegame.value}game.vue`;
+    if (modules[path]) {
+        return defineAsyncComponent(modules[path]);
+    }
+    return Error;
+});
 
 </script>

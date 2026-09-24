@@ -96,8 +96,8 @@ export const useLearningStore = defineStore('learning', () => {
     try {
       const data = await LessonService.get_latest_lesson()
       latestPercentageLesson.value = data.percentage
-      const foundLesson = lessons.value?.find((lesson) => lesson.lesson_order === data.lesson)
-      latestLesson.value = foundLesson ? [foundLesson] : null
+      // const foundLesson = lessons.value?.find((lesson) => lesson.lesson_order === data.lesson)
+      // latestLesson.value = foundLesson ? [foundLesson] : null
 
       console.log('Latest lesson fetched:', latestLesson.value)
     } catch (error) {

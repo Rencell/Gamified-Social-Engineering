@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { GripVertical, ImageIcon, Plus, Check, Trash2 } from 'lucide-vue-next';
 import { Badge } from '@/components/ui/badge';
 import SidebarEdittable from '../SidebarEdittable.vue';
+import { defaultPropsMap } from '../QuizRegistry';
 
 const props = defineProps<{
     questions: any[];
@@ -84,8 +85,7 @@ function setCorrectAnswer(id: number) {
             :questions="props.questions"
             :currentIndex="currentIndex"
             @update:currentIndex="currentIndex = $event"
-            @toggleOnCreateQuestion="$emit('toggleOnCreateQuestion')"
-            @toggleOnDeleteQuestion="$emit('toggleOnDeleteQuestion', $event)"
+            :propsMap="defaultPropsMap.DoDont"
         />
     </div>
 </template>

@@ -89,7 +89,7 @@ const mcq: MCQ = {
         { id: 'B', text: 'Following the victim to gain their personal information' },
         { id: 'C', text: 'An act to impersonate a famous person' }
     ],
-    correctAnswer: 'A'
+    answer: 'A'
 };
 
 </script>

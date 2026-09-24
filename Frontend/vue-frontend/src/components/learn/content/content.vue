@@ -6,26 +6,38 @@ import { useRoute } from 'vue-router';
 import { useModuleStore } from '@/stores/module';
 import { useLessonStore } from '@/stores/lesson';
 import Quiz from './quiz.vue';
+import Content1 from './phishing/ProtectFromPhishing/Content1.vue'
+import Loading from '@/components/loading.vue';
+
 const route = useRoute();
 const moduleStore = useModuleStore();
 const lessonStore = useLessonStore();
 const lessonId = route.params.lessonId as string;
 const contentStore = useContentStore();
-
-
+const lesson = computed(() =>
+  lessonStore.lessons.find((lesson) => lesson.id === Number(lessonId))
+);
+const isLoading = ref(false);
 onMounted(async () => {
-  if (lessonStore.lessons.length === 0) {
-    await lessonStore.fetchLessons();
-  }
 
-  lessonStore.setCurrentLesson(lessonId);
-  await moduleStore.fetchModules(lessonId);
-
-  final.value.id = lessonStore.currentLesson?.id || 9;
+  isLoading.value = true;
+  try {
+    if (lessonStore.lessons.length === 0) {
+      await lessonStore.fetchLessons();
+    }
   
-  // Fetch contents for the initial module
-  if (moduleStore.selectedModule?.id) {
-    await contentStore.fetchContents(moduleStore.selectedModule.id);
+    lessonStore.setCurrentLesson(lessonId);
+    await moduleStore.fetchModules(lessonId);
+  
+    final.value.id = lessonStore.currentLesson?.id || 9;
+    
+    // Fetch contents for the initial module
+    if (moduleStore.selectedModule?.id) {
+      await contentStore.fetchContents(moduleStore.selectedModule.id);
+    }
+
+  }finally {
+    isLoading.value = false;
   }
 });
 
@@ -46,9 +58,18 @@ const final = ref({
   component: Quiz,
 });
 
+const test = ref({
+  id: 10,
+  component: Content1,
+});
+
+// import index from './phishing/WhatIsPhishing/index.vue';
 const finalpush = computed(() => [...contentStore.components, final.value]);
+
 </script>
 
 <template>
-  <LessonReveal :components="finalpush" :with-quiz="true" :key="moduleStore.selectedModule?.id!" />
+  
+  <Loading v-if="isLoading"></Loading>
+  <LessonReveal v-else :components="finalpush" :with-quiz="true" :key="moduleStore.selectedModule?.id!" />
 </template>

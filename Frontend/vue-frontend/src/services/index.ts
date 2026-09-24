@@ -9,4 +9,11 @@ export {default as BadgeService } from './badgeService.ts';
 export {default as StreakService } from './streakService.ts';
 export {default as ContentService } from './contentService.ts'; 
 export {default as ServiceService } from './sectionService.ts'; 
+export {default as AssessmentService } from './assessmentService.ts';
+export {default as PopupService } from './popupService.ts';
+export {default as MinigameService } from './minigameService.ts';
+
+// export {default as GoPhishService } from './goPhishService.ts';
+export {default as SimulationService } from './simulationService.ts';
+
 

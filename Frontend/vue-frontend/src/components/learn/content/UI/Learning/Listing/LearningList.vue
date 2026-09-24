@@ -115,5 +115,29 @@ const { editable, deleteComponent, reorderComponent } = useEditableText(null,emi
   animation-delay: 1.6s;
 }
 
+.animate-parent>*:nth-child(6) {
+  animation-delay: 1.8s;
+}
+
+.animate-parent>*:nth-child(7) {
+  animation-delay: 2.0s;
+}
+
+.animate-parent>*:nth-child(8) {
+  animation-delay: 2.2s;
+}
+
+.animate-parent>*:nth-child(9) {
+  animation-delay: 2.4s;
+}
+
+.animate-parent>*:nth-child(10) {
+  animation-delay: 2.6s;
+}
+
+.animate-parent>*:nth-child(11) {
+  animation-delay: 2.8s;
+}
+
 /* ...you can extend this further or use JS for dynamic staggering */
 </style>

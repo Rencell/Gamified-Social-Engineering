@@ -1,9 +1,13 @@
 <template>
  
-  <div class="rounded-full border-4 animate-spin " :class="[
-    colorClass,
-    sizeClass
-  ]"></div>
+ <div class="relative flex items-center justify-center">
+    <div class="rounded-full border-4 animate-spin " :class="[
+      colorClass,
+      sizeClass
+    ]">
+    </div>
+    <div class="absolute font-bold text-2xl">{{text}}</div>
+ </div>
 </template>
 
 <script setup lang="ts">
@@ -12,6 +16,7 @@ import { computed } from 'vue'
 const props = defineProps<{
   variant?: 'default' | 'white',
   size?: 'sm' | 'lg' | 'xl'
+  text?: string
 }>()
 
 const colorClass = computed(() => {

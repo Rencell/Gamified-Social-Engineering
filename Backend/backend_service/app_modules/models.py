@@ -74,4 +74,4 @@ class UserModuleTestProgress(models.Model):
         db_table = 'user_module_test_progress'
 
     def __str__(self):
-        return str(self.module)
+        return str(self.module_test)

@@ -40,7 +40,7 @@ import image from '/Learning/Content/phishing/RedFlags/PhishingEmail.png'
 import { ref } from 'vue';
 import { computed } from 'vue';
 import { set } from '@vueuse/core';
-import ToolTip from '../../UI/Interactive/phishing/ToolTip.vue'
+import ToolTip from '../../UI/Interactive/ToolTipImage.vue'
 import type { TooltipData } from '../../UI/Interactive/phishing/type'
 
 const areas: TooltipData[] = [

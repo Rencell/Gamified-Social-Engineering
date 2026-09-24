@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, onBeforeUnmount } from 'vue';
+import { onMounted, ref, onBeforeUnmount, watch } from 'vue';
 import { Rive, StateMachineInput } from '@rive-app/canvas';
 import { useCosmeticStore } from '@/stores/cosmetic';
 
@@ -72,6 +72,16 @@ onMounted(() => {
     },
   });
 });
+
+watch(
+  () => cosmeticStore.avatarRive,
+  (newVal) => {
+    if (numberInput) {
+      numberInput.value = newVal ?? 0;
+    }
+  },
+  { immediate: false }
+);
 
 onBeforeUnmount(() => {
   riveInstance?.cleanup();

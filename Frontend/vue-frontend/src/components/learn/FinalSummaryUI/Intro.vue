@@ -12,7 +12,7 @@
                             Ready for a challenge? Test your growing knowledge and skills.
 
                         </LearningBody>
-                        <LearningBody>
+                        <LearningBody class="flex flex-col gap-4">
                             
                             <Card class="bg-background/50 border-2 border-ternary w-full sm:w-xl">
                                 <CardContent class="flex flex-col gap-5">
@@ -33,14 +33,31 @@
                                             <p>Questions:</p>
                                             <p>{{useContentStore().contentItems.quiz_limit}} Questions</p>
                                         </div>
-                                        <div class="flex justify-between">
-                                            <p>Advanced to:</p>
-                                            <p class="text-accent">Phishing</p>
-                                        </div>
+                                       
                                     </div>
                                 </CardContent>
                             </Card>
+                            
+                            <Card class="bg-background/50 border-2 border-ternary w-full sm:w-xl">
+                                <CardContent class="flex flex-col gap-5">
+                                    <p class="flex gap-2 items-center">
+                                        <Trophy class="size-5 text-accent"></Trophy>Reward
+                                    </p>
 
+                                    <div class="text-sm space-y-4 font-bold">
+                                        <div class="flex justify-between">
+                                            <p>Coins:</p>
+                                            <p>+20 Coins</p>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <p>Exp:</p>
+                                            <p >+20 Exp</p>
+                                        </div>
+                                       
+                                    </div>
+                                </CardContent>
+                            </Card>
+                                
                         </LearningBody>
 
                     <div class="flex w-full ">
@@ -57,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronRight, Zap } from 'lucide-vue-next';
+import { ChevronRight, Trophy, Zap } from 'lucide-vue-next';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import image from '/Human.webp'

@@ -7,15 +7,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { GripVertical, ImageIcon, Plus, Check, Trash2 } from 'lucide-vue-next';
 import { Badge } from '@/components/ui/badge';
 import SidebarEdittable from '../SidebarEdittable.vue';
+import { defaultPropsMap } from '../QuizRegistry';
 
 const props = defineProps<{
     questions: any[];
 }>();
 
 const currentIndex = ref(0);
-const quizData = computed(() => props.questions[currentIndex.value] || null);
+const editQuestion = computed(() => props.questions);
+const quizData = computed(() => editQuestion.value[currentIndex.value] || null);
 
-defineEmits(['toggleOnCreateQuestion', 'toggleOnDeleteQuestion']);
+defineEmits(['toggleOnDeleteQuestion']);
 
 function setCorrectAnswer(id: string) {
     quizData.value.correctAnswer = id;
@@ -87,15 +89,32 @@ function setCorrectAnswer(id: string) {
                     </div>
                 </CardContent>
             </Card>
-        </div>
 
+            <Card class="bg-background">
+                <CardHeader>
+                    <CardTitle class="flex items-center gap-2">
+                       Feedbaack
+                        <Badge variant="secondary" class="text-xs">
+                            Required
+                        </Badge>
+                    </CardTitle>
+                </CardHeader>
+                <CardContent class="space-y-4">
+                   <div>
+                        <label class="text-sm font-medium text-foreground mb-2 block">Explanation</label>
+                        <Textarea placeholder="Enter your question here..." v-model="quizData.feedback"
+                            class="min-h-[100px] resize-none" />
+                    </div>
+                </CardContent>
+            </Card>
+
+        </div>
         <!-- Sidebar -->
         <SidebarEdittable
             :questions="props.questions"
+            :propsMap="defaultPropsMap.DragPair"
             :currentIndex="currentIndex"
             @update:currentIndex="currentIndex = $event"
-            @toggleOnCreateQuestion="$emit('toggleOnCreateQuestion')"
-            @toggleOnDeleteQuestion="$emit('toggleOnDeleteQuestion', $event)"
         />
     </div>
 </template>

@@ -1,4 +1,3 @@
-
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "tailwindcss-motion";
@@ -155,6 +154,48 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+}
+
+/* Global scrollbar styles */
+/* Firefox */
+html {
+  scrollbar-width: thin; /* auto | thin | none */
+  scrollbar-color: var(--accent) var(--background);
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+/* Size */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+/* Thumb */
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--accent) 85%, var(--foreground));
+  border-radius: var(--radius);
+  border: 2px solid var(--background);
+}
+/* Thumb hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+/* Corner */
+::-webkit-scrollbar-corner {
+  background: var(--background);
+}
+
+/* Optional: overscroll behavior to avoid bounce in nested containers */
+html, body {
+  overscroll-behavior: none;
+}
+
+/* Utility: smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
 
 @layer base {

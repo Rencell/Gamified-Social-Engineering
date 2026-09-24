@@ -1,4 +1,4 @@
-const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+const baseUrl = import.meta.env.VITE_API_BASE || "http://localhost:8000";
 
 export function useImageUrl(path?: string): string | null {
   if (!path) return null;

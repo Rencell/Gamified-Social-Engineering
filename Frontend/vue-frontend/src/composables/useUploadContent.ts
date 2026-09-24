@@ -36,7 +36,7 @@ export function useUploadContent() {
         const formData = new FormData();
         formData.append("image", selectedFile.value as Blob);
         if (props.item && props.item.id !== undefined) {
-            formData.append("content_quiz", String(props.item.id));
+            formData.append("content_item", String(props.item.id));
         } else {
             console.error("props.item is undefined or missing 'id'");
             return;

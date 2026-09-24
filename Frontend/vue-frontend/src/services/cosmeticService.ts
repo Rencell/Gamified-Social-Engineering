@@ -4,7 +4,7 @@ export interface Cosmetic {
   id: number
   name: string
   type: string
-  image: string
+  image: string | File | undefined
   price: number
   rive_code: number
 }
@@ -35,6 +35,12 @@ const END_POINT = '/api/cosmetics/'
 
 const cosmeticService = {
   get_all: (): Promise<Cosmetic[]> => session.get(END_POINT + 'item/').then((res) => res.data),
+  create_item: (cosmetic: Partial<Cosmetic>): Promise<Cosmetic> =>
+    session.post(END_POINT + 'item/', cosmetic).then((res) => res.data),
+  update_item: (cosmeticId: number, cosmetic: FormData): Promise<Cosmetic> =>
+    session.patch(END_POINT + 'item/' + cosmeticId + '/', cosmetic ).then((res) => res.data),
+  delete_item: (cosmeticId: number): Promise<void> =>
+    session.delete(END_POINT + 'item/' + cosmeticId + '/').then((res) => res.data),
   get_inventory: (): Promise<CosmeticInventory[]> =>
     session.get(END_POINT + 'backpack-item/').then((res) => res.data),
   user_cosmetic: (): Promise<UserCosmetic[]> =>

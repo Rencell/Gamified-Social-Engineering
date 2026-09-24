@@ -4,9 +4,7 @@ const CSRF_COOKIE_NAME: string = 'csrftoken';
 const CSRF_HEADER_NAME: string = 'X-CSRFToken';
 
 const session: AxiosInstance = axios.create({
-  baseURL: import.meta.env.PROD
-    ? "https://gamified-social-engineering.onrender.com"
-    : "http://localhost:8000",
+  baseURL: import.meta.env.VITE_API_BASE,
   xsrfCookieName: CSRF_COOKIE_NAME,
   xsrfHeaderName: CSRF_HEADER_NAME,
   withCredentials: true,

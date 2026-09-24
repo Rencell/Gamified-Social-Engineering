@@ -5,10 +5,12 @@ import Button from '@/components/ui/button/Button.vue';
 import ModuleSidebarItem from './ModuleSidebarItem.vue';
 import { useLearningStore } from '@/stores/learning';
 import { ref, Transition } from 'vue';
+import { useModuleStore } from '@/stores/module';
 
 const learningStore = useLearningStore();
-
+const moduleStore = useModuleStore();
 const hideSideBar = ref(false);
+
 
 </script>
 
@@ -38,10 +40,10 @@ const hideSideBar = ref(false);
                         <p class="font-semibold text-xl">All lessons</p>
 
                         <div class="gap-2 flex">
-                            <Button size="sm" variant="outline">
+                            <Button size="sm" variant="outline" @click="moduleStore.previousModule()">
                                 <ChevronLeft :size="17"></ChevronLeft>
                             </Button>
-                            <Button size="sm" variant="outline">
+                            <Button size="sm" variant="outline" @click="moduleStore.nextModule()">
                                 <ChevronRight :size="17"></ChevronRight>
                             </Button>
                         </div>

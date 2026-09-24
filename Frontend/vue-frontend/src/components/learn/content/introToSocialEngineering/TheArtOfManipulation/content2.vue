@@ -80,7 +80,7 @@ const mcq: MCQ = {
         { id: 'B', text: 'Fear and Urgency' },
         { id: 'C', text: 'Curiosity' }
     ],
-    correctAnswer: 'A'
+    answer: 'A'
 };
 
 const emit = defineEmits(['showDown']);

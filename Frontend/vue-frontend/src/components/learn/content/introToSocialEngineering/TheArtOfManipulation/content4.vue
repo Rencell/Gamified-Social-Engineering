@@ -83,7 +83,7 @@ const mcq: MCQ = {
         { id: 'B', text: 'Sorry, I can’t plug in unknown devices. Let’s turn this over to IT so they can handle it safely.' },
         { id: 'C', text: 'Maybe later, I’m busy right now. But I’ll check it when I get a chance.' }
     ],
-    correctAnswer: 'B'
+    answer: 'B'
 };
 
 onMounted(() => {
