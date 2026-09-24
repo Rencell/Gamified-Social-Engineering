@@ -2,7 +2,7 @@
     <div  class="flex flex-col md:flex-row items-center gap-10">
         <LearningImage class="h-60" :image="useImageUrl(mcq.image)!" />
         <div>
-            <div class="w-sm flex flex-col gap-2">
+            <div class="w-full flex flex-col gap-2">
                 <Typewriter :text="mcq.question" @animation-end="animationEnd = true" class="font-bold text-lg" />
                 <div class="space-y-3" :class="animationEnd ? 'animate-in fade-in duration-500' : 'opacity-0'">
                     <Card v-for="(option, index) in mcq.options" :key="index" :class="[

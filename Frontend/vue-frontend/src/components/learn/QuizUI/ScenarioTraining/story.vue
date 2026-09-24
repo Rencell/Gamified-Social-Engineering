@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import tailgaiting from '/Learning/Content/introToSocialEngineering/CommonAttacks/tailgating.png'
 import LearningHeader from '../../content/UI/Learning/Core/LearningHeader.vue';
 import LearningImage from '../../content/UI/Learning/Image/LearningImage.vue';
 import LearningBody from '../../content/UI/Learning/Core/LearningBody.vue';

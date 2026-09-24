@@ -9,8 +9,7 @@
     <slot></slot>
     
     <template v-if="useAuthStore().User.is_admin">
-      <div v-if="!editable" class="absolute top-0 left-5 flex flex-col gap-2" @mouseenter="hover = true"
-        @mouseleave="hover = false">
+      <div v-if="!editable" class="absolute top-0 left-5 flex sm:flex-col flex-row gap-2">
         <div class="flex items-center gap-2">
           <Button variant="outline" size="sm" @click="editable = !editable" class="h-8 w-8 p-0">
             <Edit2 class="w-4 h-4 text-blue-500" />
@@ -66,43 +65,56 @@
 </template>
 
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, ChevronDown, ChevronUp, Dices, Edit2, Plus, Trash2 } from 'lucide-vue-next';
-import { computed, provide, ref } from 'vue';
-import { useContentStore } from '@/stores/content';
-import { useAuthStore } from '@/stores/auth';
+  import { Button } from '@/components/ui/button';
+  import { ArrowLeft, ChevronDown, ChevronUp, Dices, Edit2, Plus, Trash2 } from 'lucide-vue-next';
+  import { computed, provide, ref } from 'vue';
+  import { useContentStore } from '@/stores/content';
+  import { useAuthStore } from '@/stores/auth';
 
 
-const contentStore = useContentStore();
-const props = defineProps<{
-  toggleAddContent?: boolean
-  contentId?: number | null
-}>();
+  const contentStore = useContentStore();
+  const props = defineProps<{
+    toggleAddContent?: boolean
+    contentId?: number | null
+  }>();
 
-const editable = ref(false);
-const hover = ref(false);
-provide('editable', editable);
+  const editable = ref(false);
+  const hover = ref(false);
+  provide('editable', editable);
 
-const emit = defineEmits(['toggleToQuiz']);
+  const emit = defineEmits(['toggleToQuiz']);
 
-const isLastContent = computed(() => {
-  if (!props.contentId) return false; // If no contentId is provided, return false
-  const lastContentId = contentStore.contents[contentStore.contents.length - 1]?.id;
-  return props.contentId === lastContentId;
-});
+  const isLastContent = computed(() => {
+    if (!props.contentId) return false; // If no contentId is provided, return false
+    const lastContentId = contentStore.contents[contentStore.contents.length - 1]?.id;
+    return props.contentId === lastContentId;
+  });
 
 
 
-const canMoveUp = computed(() => {
-  const index = contentStore.components.findIndex(item => item.id === props.contentId);
-  return index;
-});
+  const canMoveUp = computed(() => {
+    const index = contentStore.components.findIndex(item => item.id === props.contentId);
+    return index;
+  });
 
-const canMoveDown = computed(() => {
-  const index = contentStore.components.findIndex(item => item.id === props.contentId);
-  return index >= 0 && index < contentStore.contents.length - 1;
-});
+  const canMoveDown = computed(() => {
+    const index = contentStore.components.findIndex(item => item.id === props.contentId);
+    return index >= 0 && index < contentStore.contents.length - 1;
+  });
 
+  const isTouchDevice = () => {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  };
+
+  const handleMouseEnter = () => {
+    if (isTouchDevice()) return;
+    hover.value = true;
+  };
+
+  const handleMouseLeave = () => {
+    if (isTouchDevice()) return;
+    hover.value = false;
+  };
 
 </script>
 

@@ -82,7 +82,6 @@ const formatTime = (time: number | undefined): string => {
 </script>
 
 <template>
-
     <div class="flex gap-3 group ">
         <div class="relative grow my-2 p-2 flex items-center rounded-xl bg-secondary gap-6"
             :class="highlight && sectionIndex === 0 ? 'border-3 border-accent' : ''">
