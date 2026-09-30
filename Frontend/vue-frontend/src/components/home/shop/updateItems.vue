@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -10,12 +9,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Pen, Plus } from 'lucide-vue-next';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { Cosmetic } from '@/services/cosmeticService';
 import { useCosmeticStore } from '@/stores/cosmetic';
-import { useUploadContent } from '@/composables/useUploadContent';
+import { Pen } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 
 

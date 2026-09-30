@@ -36,7 +36,6 @@
 
                 <div class="text-center space-y-2">
                     <h1 class="text-sm font-bold">{{ value.name }}</h1>
-                    
                 </div>
 
                 <div>

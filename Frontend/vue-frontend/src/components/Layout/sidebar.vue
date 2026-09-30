@@ -18,6 +18,7 @@ import assessment from '/Icons/assess.svg?url'
 import malware from '/Icons/malware.svg?url'
 
 import logout from '/sidebar/door.svg'
+import Admin from '/sidebar/gears.png'
 
 import { User, ChevronDown } from 'lucide-vue-next'
 import {
@@ -309,6 +310,13 @@ onBeforeUnmount(() => {
                 class="w-full h-fit bg-background/80 backdrop-blur-lg border border-slate-700 rounded-lg absolute bottom-15 left-0 right-0 mt-4 shadow-lg"
               >
 
+                <RouterLink
+                  v-if="authStore.User.is_admin"
+                  :to="{ name: 'admin-site' }"
+                  class="flex items-center gap-2 my-3 p-2 text-sm hover:bg-accent hover:text-white cursor-pointer"
+                >
+                  <img :src="Admin" alt="" aria-hidden="true" class="h-6"> <span>Admin Panel</span>
+                </RouterLink>
                 <RouterLink
                   :to="{ name: 'logout' }"
                   role="menuitem"

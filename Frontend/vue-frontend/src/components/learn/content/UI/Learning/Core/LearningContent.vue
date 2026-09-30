@@ -20,9 +20,10 @@
           </transition>
         </div>
         <div class="flex items-center gap-2">
-          <Button variant="outline" size="sm" class="h-8 w-8 p-0" @click="contentStore.deleteContent(props.contentId!)">
+          <!-- <Button variant="outline" size="sm" class="h-8 w-8 p-0" @click="contentStore.deleteContent(props.contentId!)">
             <Trash2 class="w-4 h-4 text-red-500" />
-          </Button>
+          </Button> -->
+          <DeleteAlert :ContentId="props.contentId!" />
           <transition name="fade">
             <span v-if="hover" class="transition-all">Delete Content</span>
           </transition>
@@ -70,6 +71,7 @@
   import { computed, provide, ref } from 'vue';
   import { useContentStore } from '@/stores/content';
   import { useAuthStore } from '@/stores/auth';
+import DeleteAlert from '@/components/learn/dialog/Lesson/Section/Module/Content/deleteAlert.vue'
 
 
   const contentStore = useContentStore();

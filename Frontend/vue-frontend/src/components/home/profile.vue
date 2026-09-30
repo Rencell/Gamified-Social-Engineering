@@ -63,7 +63,7 @@ streakStore.cacheStreak();
                 <div v-if="loading" class="flex justify-center items-center h-full">
                     <Spinner />
                 </div>
-                <div class="absolute inset-0 bg-black/30 rounded-t-lg"></div>
+                <div class="absolute inset-0 bg-black/20 rounded-t-lg"></div>
 
                 <div
                     class="absolute sm:left-15 left-5 top-1/2 -translate-y-1/2 font-display font-bold flex flex-col text-white">

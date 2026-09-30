@@ -129,33 +129,36 @@ onMounted(() => {
                         </RouterLink>
                     </div>
                     <div class="space-y-2">
-                    <div
-                        v-for="(badge, index) in badgeStore.badgesUnlocked"
-                        :key="index"
-                        class="flex items-center gap-3 rounded-lg bg-secondary p-3 transition-all text-primary"
-                    >
-                        <!-- Badge Icon -->
-                        <div class="flex h-15 w-15 items-center justify-center rounded-lg bg-background backdrop-blur-md border-1 shadow-md ">
-                        <img 
-                            :src="badge.badge.image" 
-                            class="h-10 w-10 object-contain"
-                            :alt="badge.badge.name ?? 'badge'"
-                        />
+                        <div v-if="!badgeStore.badgesUnlocked.length" class="text-center py-8">
+                            <p class="text-ternary text-sm font-display">Learn more like how to earn achievements.</p>
                         </div>
+                        <div
+                            v-for="(badge, index) in badgeStore.badgesUnlocked"
+                            :key="index"
+                            class="flex items-center gap-3 rounded-lg bg-secondary p-3 transition-all text-primary"
+                        >
+                            <!-- Badge Icon -->
+                            <div class="flex h-15 w-15 items-center justify-center rounded-lg bg-background backdrop-blur-md border-1 shadow-md ">
+                            <img 
+                                :src="badge.badge.image" 
+                                class="h-10 w-10 object-contain"
+                                :alt="badge.badge.name ?? 'badge'"
+                            />
+                            </div>
 
-                        <!-- Badge Details -->
-                        <div class="flex-1">
-                            <p class="font-semibold">{{ badge.badge.name }}</p>
-                            <p class="text-xs font-medium text-primary/30">
-                                {{ badge.badge.description }}
-                            </p>
+                            <!-- Badge Details -->
+                            <div class="flex-1">
+                                <p class="font-semibold">{{ badge.badge.name }}</p>
+                                <p class="text-xs font-medium text-primary/30">
+                                    {{ badge.badge.description }}
+                                </p>
+                            </div>
+                            <!-- Badge Value -->
+                            <div class="flex items-center gap-1">
+                                <span class="text-sm font-semibold">{{ new Date(badge.completed_at!).toLocaleDateString() }}</span>
+                                <span class="text-sm"><Clock class="size-4 opacity-40"></Clock></span>
+                            </div>
                         </div>
-                        <!-- Badge Value -->
-                        <div class="flex items-center gap-1">
-                            <span class="text-sm font-semibold">{{ new Date(badge.completed_at!).toLocaleDateString() }}</span>
-                            <span class="text-sm"><Clock class="size-4 opacity-40"></Clock></span>
-                        </div>
-                    </div>
                     </div>
 
                 </CardContent>

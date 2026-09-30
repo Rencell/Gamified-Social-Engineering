@@ -31,13 +31,6 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
   }
 
   const fetchCosmeticItems = async (): Promise<void> => {
-    // Always ensure shop_list matches item_cosmetics.
-    // If we've already fetched items, just rebuild shop_list.
-    // if (item_cosmetics.value.length) {
-    //   shop_list.value = item_cosmetics.value.map((item) => ({ ...item, purchased: false }))
-    //   return
-    // }
-
     try {
       item_cosmetics.value = await CosmeticService.get_all()
       shop_list.value = item_cosmetics.value.map((item) => ({ ...item, purchased: false }))
@@ -89,6 +82,10 @@ export const useCosmeticStore = defineStore('cosmetic', () => {
       item_cosmetics.value = item_cosmetics.value.map((item) =>
         item.id === updateCosmetic.id ? updateCosmetic : item,
       )
+      shop_list.value = shop_list.value.map((item) =>
+        item.id === updateCosmetic.id ? { ...updateCosmetic, purchased: item.purchased } : item,
+      )
+      
       toast_notification('Cosmetic updated successfully')
     } catch (err: unknown) {
       const e = err as { message?: string }

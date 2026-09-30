@@ -5,7 +5,7 @@ import moneyBag from '/Home/money-bag.svg';
 import { Card } from '@/components/ui/card';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import LearningSpan from '../content/UI/Learning/Highlight/LearningSpan.vue';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRewardStore } from '@/stores/reward';
 import LearningSection from '../content/UI/Learning/Core/LearningSection.vue';
 import LearningHeader from '../content/UI/Learning/Core/LearningHeader.vue';
@@ -13,24 +13,38 @@ import { useModuleStore } from '@/stores/module';
 import { useContentStore } from '@/stores/content';
 import { QuizService } from '@/services';
 import { useAuthStore } from '@/stores/auth';
+import { Coins } from 'lucide-vue-next';
 const rewardStore = useRewardStore();
 const moduleStore = useModuleStore();
 const contentStore = useContentStore();
 const authStore = useAuthStore();
 
-// const isRewardClaimed = computed(() => moduleStore.selectedModule?.locked);
-
 
 const coinAnimate = ref(false);
-const totalModule = computed(() => contentStore.components.length);
+const totalModule = computed(() => contentStore.components.length - 1);
 const rewardState = ref(true)
+const showXp = ref(true);
+let rewardInterval: ReturnType<typeof setInterval> | undefined;
+
+onMounted(() => {
+  rewardInterval = setInterval(() => {
+    showXp.value = !showXp.value;
+  }, 2500);
+});
+
+onUnmounted(() => {
+  if (rewardInterval) clearInterval(rewardInterval);
+});
+
+const isAlreadyClaimed = computed(() => moduleStore.selectedModule?.locked);
+
 
 const toggleReward = async () => {
 
   if(!moduleStore.selectedModule) return
   await isRewardClaimed(moduleStore.selectedModule.id || 0)
 
-  if(!moduleStore.selectedModule?.locked) {
+  if(!isAlreadyClaimed.value) {
     moduleStore.nextModule();
   } else {
     moduleStore.completeModule()
@@ -106,21 +120,27 @@ const saveQuizResult = async () => {
             </div>
             <div class="flex justify-between">
               <p class="text-sm font-semibold">Level 1 Multiplier</p>
-              <p>x 10</p>
+              <p>x 2</p>
             </div>
           </div>
           <div class="flex-1 text-center space-y-1">
             <p class="text-xs font-bold">
-              <LearningSpan>EARNED</LearningSpan>
+              <LearningSpan>{{ !isAlreadyClaimed ? 'CLAIMED' : 'EARNED' }}</LearningSpan>
             </p>
-            <p class="text-xl font-bold counter">120 XP</p>
+            <Transition name="reward-fade" mode="out-in">
+              <p v-if="showXp" key="xp" class="text-xl font-bold counter">{{ !isAlreadyClaimed ? 0 : totalModule * 4 }} XP</p>
+              <div v-else class="flex gap-2 counter items-center justify-center">
+                <p key="coins" class="text-xl font-bold counter">{{ !isAlreadyClaimed ? 0 : totalModule * 2 }} </p>
+                <Coins />
+              </div>
+            </Transition>
           </div>
         </CardContent>
       </Card>
       <!-- Coin Animation -->
       <div v-show="coinAnimate" class="coin-animation-container">
         <div class="coin text-slate-900 text-xs flex items-center justify-center" v-for="n in 5" :key="n">
-          +20
+          +{{totalModule * 2}}
         </div>
 
       </div>
@@ -155,6 +175,16 @@ const saveQuizResult = async () => {
   border-radius: 50%;
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
   animation: drop 1s ease-in;
+  opacity: 0;
+}
+
+.reward-fade-enter-active,
+.reward-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.reward-fade-enter-from,
+.reward-fade-leave-to {
   opacity: 0;
 }
 

@@ -400,12 +400,18 @@ const isLevelElegible = computed(() => {
                                 </template>
                             </div>
 
+                            
                             <template v-if="!isEditing">
-                                <ul class="list-disc pl-5 space-y-2 text-muted-foreground">
-                                    <li v-for="(value, key) in assessment.instructions" :key="key">
-                                        {{ value }}
-                                    </li>
+                                <ul v-if="assessment.instructions?.length" class="list-disc pl-5 space-y-2 text-muted-foreground">
+                                    <div>
+                                        <li v-for="(value, key) in assessment.instructions" :key="key">
+                                            <p class="font-display">{{ value }}</p>
+                                        </li>
+                                    </div>
                                 </ul>
+                                <div v-else>
+                                    <p class="text-ternary font-display">No instructions available.</p>
+                                </div>
                             </template>
 
                             <template v-else>

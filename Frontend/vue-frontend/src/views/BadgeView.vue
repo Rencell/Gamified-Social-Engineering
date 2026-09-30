@@ -100,7 +100,10 @@ onMounted(async () => {
               {{ claiming[badge.name] ? 'Claiming…' : 'Claim' }}
             </button>
 
-            <Lock v-else class="text-white" :size="18" :aria-label="`Locked badge: ${badge.name}`" />
+            <div v-else class="flex flex-col items-center gap-1">
+              <Lock class="text-white" :size="18" :aria-label="`Locked badge: ${badge.name}`" />
+              <p class="text-white text-xs">Locked</p>
+            </div>
           </div>
         </div>
       </div>
